@@ -30,7 +30,7 @@ import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.accounting.producttoaccountmapping.service.ProductToGLAccountMappingWritePlatformService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -118,7 +118,7 @@ public class RecurringDepositProductWritePlatformServiceJpaRepositoryImpl implem
             this.context.authenticatedUser();
             this.fromApiJsonDataValidator.validateForRecurringDepositUpdate(command.json());
 
-            final RecurringDepositProduct product = this.recurringDepositProductRepository.findOne(productId);
+            final RecurringDepositProduct product = this.recurringDepositProductRepository.findById(productId).orElse(null);
             if (product == null) { throw new RecurringDepositProductNotFoundException(productId); }
             product.setHelpers(this.chartAssembler);
 
@@ -175,7 +175,7 @@ public class RecurringDepositProductWritePlatformServiceJpaRepositoryImpl implem
     public CommandProcessingResult delete(final Long productId) {
 
         this.context.authenticatedUser();
-        final RecurringDepositProduct product = this.recurringDepositProductRepository.findOne(productId);
+        final RecurringDepositProduct product = this.recurringDepositProductRepository.findById(productId).orElse(null);
         if (product == null) { throw new RecurringDepositProductNotFoundException(productId); }
 
         this.recurringDepositProductRepository.delete(product);

@@ -1,0 +1,532 @@
+/**
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements. See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership. The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+buildscript {
+    ext {
+        springBootVersion = "2.1.7.RELEASE"
+        camelVersion = "2.24.1"
+        jacksonVersion = "2.9.9"
+        codehausJacksonVersion = "1.9.13"
+        springVersion = "5.1.9.RELEASE"
+        springSecurityVersion = "5.1.6.RELEASE"
+        springDataVersion = "2.1.10.RELEASE"
+        jerseyVersion = "2.29"
+        slf4jVersion = "1.7.28"
+        nettyVersion = "4.1.39.Final"
+        lombokVersion = "1.18.8"
+        microMeterVersion = "1.2.0"
+        awsSdkVersion = "1.11.602"
+    }
+    repositories {
+        mavenCentral()
+        jcenter()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "cz.habarta.typescript-generator:typescript-generator-gradle-plugin:2.+"
+        classpath "gradle.plugin.com.palantir.gradle.docker:gradle-docker:0.22.1"
+        classpath "org.owasp:dependency-check-gradle:5.2.1"
+        classpath "gradle.plugin.nl.javadude.gradle.plugins:license-gradle-plugin:0.14.0"
+        classpath "gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.64"
+        classpath "com.radcortez.gradle:openjpa-gradle-plugin:3.1.0"
+    }
+}
+
+plugins {
+    id "net.ltgt.apt" version "0.21"
+    id "io.spring.dependency-management" version "1.0.8.RELEASE"
+    id "com.github.ben-manes.versions" version "0.22.0"
+    id "com.gorylenko.gradle-git-properties" version "2.1.0"
+    id "com.github.jk1.dependency-license-report" version "1.9"
+    id "fr.brouillard.oss.gradle.jgitver" version "0.9.1"
+    id "maven-publish"
+    id "org.openapi.generator" version "4.1.0"
+    id "org.nosphere.apache.rat" version "0.5.0"
+    id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
+}
+
+import com.github.jk1.license.render.CsvReportRenderer
+import com.github.jk1.license.render.InventoryHtmlReportRenderer
+import com.github.jk1.license.filter.LicenseBundleNormalizer
+import se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask
+
+licenseReport {
+    renderers = [new InventoryHtmlReportRenderer(), new CsvReportRenderer()]
+    filters = [new LicenseBundleNormalizer()]
+}
+
+allprojects  {
+    apply plugin: "java"
+    apply plugin: "idea"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "org.owasp.dependencycheck"
+    apply plugin: "com.github.hierynomus.license"
+    apply plugin: "se.bjurr.gitchangelog.git-changelog-gradle-plugin"
+    apply plugin: "org.openapi.generator"
+    apply plugin: "maven-publish"
+    apply plugin: "fr.brouillard.oss.gradle.jgitver"
+    apply plugin: "org.nosphere.apache.rat"
+
+    group = "org.apache.fineract"
+    version = "1.3.1-SNAPSHOT"
+
+    jgitver {
+        strategy "MAVEN"
+    }
+
+    task sourcesJar(type: Jar) {
+        from sourceSets.main.allJava
+        archiveClassifier = "sources"
+    }
+
+    task javadocJar(type: Jar) {
+        from javadoc
+        archiveClassifier = "javadoc"
+    }
+
+    repositories {
+        mavenLocal()
+
+        // maven { url "https://nexus.pelotoninnovations.com/repository/maven-public" }
+        maven { url "http://jcenter.bintray.com" }
+        maven { url "https://dl.bintray.com/palantir/releases" }
+        maven { url "https://jitpack.io" }
+        maven { url "http://maven.wso2.org/nexus/content/repositories/releases/" }
+        maven { url "http://repo.maven.apache.org/maven2" }
+        maven { url "http://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts" }
+        maven { url "https://s3.amazonaws.com/redshift-maven-repository/release/" }
+    }
+
+    rat {
+        // xmlOutput = false
+        // htmlOutput = false
+        // plainOutput = true
+        verbose = false
+        reportDir = new File(buildDir, "reports/rat")
+        excludes = [
+            "**/licenses/**",
+            "**/*.md",
+            "**/*.github/*",
+            "**/MANIFEST.MF",
+            "**/*.txt",
+            "**/*.log",
+            "**/fineractdev-eclipse-preferences.epf",
+            "**/template-expected.html",
+            "**/template.mustache",
+            "**/.classpath",
+            "**/.project",
+            "**/.idea/**",
+            "**/*.ipr",
+            "**/*.iws",
+            "**/.settings/**",
+            "**/.vscode/**",
+            "**/bin/**",
+            "**/.git/**",
+            "**/.gitignore",
+            "**/.gitkeep",
+            "**/*.iml",
+            //Notice files
+            "**/NOTICE_RELEASE",
+            "**/NOTICE_SOURCE",
+            // Swagger License
+            "**/src/main/resources/swagger-ui/**",
+            // gradle
+            "**/.gradle/**",
+            "**/gradlew",
+            "**/gradlew.bat",
+            "**/gradle/wrapper/gradle-wrapper.properties",
+            "**/caches/**",
+            "**/daemon/**",
+            "**/native/**",
+            "**/wrapper/**",
+            "**/build/**",
+
+            //Api Docs
+            "**/api-docs/*.*",
+            "**/docs/system-architecture/.htaccess",
+            "**/docs/system-architecture/404.html",
+            "**/docs/system-architecture/index.html",
+            "**/docs/system-architecture/**/*.xml",
+            "**/bootstrap-3.0.0/assets/application.js",
+            "**/system-architecture/js/plugins.js",
+            "**/docs/interoperation/specification/json/*.json",
+
+            //Apache License
+            "**/bootstrap-3.0.0/assets/less.js",
+            "**/css/bootstrap-3.0.0/**/*.*",
+
+            //Public Domain See http://www.JSON.org/js.html
+            "**/bootstrap-3.0.0/assets/json2.js.htm",
+
+            // MIT License
+            "**/modernizr-2.6.2.min.js",
+            "**/css/normalize.css",
+            "**/assets/filesaver.js",
+            "**/css/fonts/glyphicons-halflings-regular.svg",
+            "**/assets/jszip.js",
+            "**/assets/jquery.js",
+            "**/api-docs/jquery-1.7.min.js",
+            "**/css/toc-0.1.2/**/*.*",
+            "**/docs/system-architecture/css/main.css",
+            "**/system-architecture/js/vendor/jquery-1.9.1.min.js",
+            "**/system-architecture/js/vendor/toc-0.1.2/jquery.toc.min.js",
+            "**/assets/respond.min.js",
+            "**/assets/html5shiv.js",
+
+            //BSD License
+            "**/assets/uglify.js",
+            //Ignore out folder
+            "**/out/**"
+        ]
+    }
+
+    license {
+        header rootProject.file("APACHE_LICENSETEXT.md")
+        strictCheck true
+        ignoreFailures true
+        ext.year = "2005-${Calendar.getInstance().get(Calendar.YEAR)}"
+        ext.name = "Apache Fineract"
+        ext.email = "info@fineract.io"
+        exclude "**/generated/**/*.java"
+        include "**/*.java"
+    }
+
+    downloadLicenses {
+        ext.apacheTwo = license("Apache License, Version 2.0", "https://enterprise.dejacode.com/licenses/public/apache-2.0")
+        ext.bsd = license("BSD 2 License", "https://enterprise.dejacode.com/licenses/public/bsd-simplified")
+        ext.bsd3 = license("BSD 3 License", "https://enterprise.dejacode.com/licenses/public/bsd-new")
+        ext.mit = license("MIT License", "https://enterprise.dejacode.com/licenses/public/mit")
+        ext.mpl = license("Mozilla Public License 2.0", "https://enterprise.dejacode.com/licenses/public/mpl-2.0")
+        ext.epl = license("Eclipse Public License", "https://enterprise.dejacode.com/licenses/public/epl-1.0")
+        ext.lgpl = license("Lesser GNU Public License", "https://enterprise.dejacode.com/licenses/public/lgpl-2.1")
+        ext.gpl = license("GNU Public License", "https://enterprise.dejacode.com/licenses/public/gpl-2.0")
+        ext.cddl = license("CDDL", "https://enterprise.dejacode.com/licenses/public/cddl-1.0")
+        ext.cc0 = license("Creative Commons 0", "https://enterprise.dejacode.com/licenses/public/cc0-1.0")
+
+        // includeProjectDependencies = true
+
+        licenses = [
+            (group("org.glassfish.jersey")) : epl,
+            (group("org.glassfish.jersey.core")) : epl,
+            (group("org.glassfish.jersey.media")) : epl,
+            (group("org.glassfish.jersey.ext")) : epl,
+            (group("org.glassfish.jersey.inject")) : epl,
+            (group("org.glassfish.jersey.containers")) : epl,
+            (group("org.glassfish.hk2")) : epl,
+            (group("com.github.xeroapi")) : mit,
+            (group("com.plivo")) : mit,
+            (group("com.github.xeroapi")) : mit,
+            (group("org.codehaus.castor")) : apacheTwo,
+        ]
+
+        aliases = [
+            (apacheTwo) : ["The Apache Software License, Version 2.0", "Apache 2", "Apache License Version 2.0", "Indiana University Extreme! Lab Software License, vesion 1.1.1", "Apache Software License - Version 2.0", "Apache License v2.0", "Apache License, version 2.0", "Apache License v2", "Apache 2.0", "Apache 2.0 License", "Apache Software License, version 2.0", "Apache Software License, version 1.1", "Apache License, Version 2.0", "Apache-2.0", "Apache License, 2.0", "The Apache License, Version 2.0", "ASL 2.0", "Apache License 2.0", license("Apache License, Version 2.0", "https://enterprise.dejacode.com/licenses/public/apache-2.0")],
+            (bsd) : ["BSD", "BSD-2-Clause", "BSD 2 License", "BSD 2 License", "BSD License", "Modified BSD", "BSD 2-Clause", "BSD 2 License", license("BSD 2 License", "https://enterprise.dejacode.com/licenses/public/bsd-simplified")],
+            (bsd3) : ["BSD New license", "New BSD License", "BSD 3 License", "The BSD License", "BSD 3 License", "The (New) BSD License", "BSD 3-clause", "BSD 3-Clause", "3-Clause BSD License", "BSD 3 License", license("BSD 3 License", "https://enterprise.dejacode.com/licenses/public/bsd-new")],
+            (mit) : ["MIT", "The MIT License (MIT)", "The MIT License", "MIT License", "MIT license", "jQuery license", license("MIT License", "https://enterprise.dejacode.com/licenses/public/mit")],
+            (mpl) : ["MPL", "MPL 1.1", "Mozilla Public License, Version 2.0", "Mozilla Public License 2.0", "MPL 2.0 or EPL 1.0", "Mozilla Public License 2.0", "Mozilla Public License", "Mozilla Public License 2.0", license("Mozilla Public License 2.0", "https://enterprise.dejacode.com/licenses/public/mpl-2.0")],
+            (epl) : ["EPL", "Eclipse Public License 1.0", "EDL 1.0", "EPL 2.0", "Eclipse Public License - Version 1.0", "Eclipse Public License, Version 1.0", "Eclipse Distribution License - v 1.0", "Eclipse Public License - v 1.0", "Eclipse Public License v1.0", license("Eclipse Public License", "https://enterprise.dejacode.com/licenses/public/epl-1.0")],
+            (lgpl) : ["Lesser GNU Public License", "Lesser GNU Public License", "LGPL 2.1", "LGPL", "LGPL, version 2.1", "Lesser General Public License, version 3 or greater", "Lesser GNU Public License", "LGPL-2.1", "Lesser GNU Public License", "GNU Lesser General Public License", "GNU Lesser General Public Licence", "GNU Lesser General Public License, Version 2.1", license("Lesser GNU Public License", "https://enterprise.dejacode.com/licenses/public/lgpl-2.1")],
+            (gpl) : ["The GNU General Public License", "GNU Public License\t", "GNU Public License", "CDDL + GPLv2 with classpath exception", "CDDL + GPLv2 with classpath exception", "CDDL/GPLv2+CE", "CDDL + GPLv2 with classpath exception", "The GNU General Public License (GPL), Version 2, With Classpath Exception", "GPL v2", "GPL2 w/ CPE", "The GNU General Public License, v2 with FOSS exception", "GNU General Public Library", "CDDL+GPL License", "Dual license consisting of the CDDL v1.1 and GPL v2", license("GNU Public License", "https://enterprise.dejacode.com/licenses/public/gpl-2.0")],
+            (cddl) : ["COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0 License agreement", "CDDL 1.1", "Common Development and Distribution License (CDDL) v1.0", "CDDL", "COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0", license("CDDL", "https://enterprise.dejacode.com/licenses/public/cddl-1.0")],
+            (cc0) : ["Public Domain", "Public Domain, per Creative Commons CC0", "CC0 1.0 Universal License", "CC0", license("Creative Commons 0", "https://enterprise.dejacode.com/licenses/public/cc0-1.0")]
+        ]
+
+        dependencyConfiguration = "compile"
+    }
+
+    dependencyCheck {
+
+        // let's ignore errors to make builds in Jenkins more stable
+        failOnError = false
+        // OWASP Dependency Check plugin for Jenkins needs an XML report,
+        // but humans may also need an HTML one
+        format = "ALL"
+
+        // set up a quality gate for vulnerabilities with high severity level:
+        // let's consider that a vulnerability has a high severity level if its CVSS score is higher than 7
+        // the build is going to fail if vulnerabilities with high severity level found
+        // failBuildOnCVSS = 7
+
+        // specify a list of known issues which contain:
+        // false-positives
+        // confirmed vulnerabilities which are not fixed yet, but we have a ticket for that
+        // suppressionFile = "dependency-check-known-issues.xml"
+    }
+
+    dependencyManagement {
+
+        dependencies {
+            dependency "com.vdurmont:semver4j:3.0.0"
+            dependency "org.reflections:reflections:0.9.11"
+            dependency "org.apache.poi:poi:4.1.0"
+            dependency "org.apache.poi:poi-ooxml:4.1.0"
+            dependency "org.apache.poi:poi-ooxml-schemas:4.1.0"
+            dependency "org.apache.openjpa:openjpa:3.1.0"
+            dependency "org.apache.openjpa:openjpa-tools:3.1.0"
+            dependency "org.apache.openjpa:openjpa-features:3.1.0"
+            dependency "org.apache.openjpa:openjpa-all:3.1.0"
+            dependency "org.apache.openjpa:apache-openjpa:3.1.0"
+            dependency "org.apache.openjpa:openjpa-jest:3.1.0"
+            dependency "org.apache.openjpa:openjpa-slice:3.1.0"
+            dependency "org.apache.openjpa:openjpa-xmlstore:3.1.0"
+            dependency "org.apache.openjpa:openjpa-persistence-locking:3.1.0"
+            dependency "org.apache.openjpa:openjpa-persistence-jdbc:3.1.0"
+            dependency "org.apache.openjpa:openjpa-kernel:3.1.0"
+            dependency "org.apache.openjpa:openjpa-lib:3.1.0"
+            dependency "org.apache.openjpa:openjpa-integration-jmx:3.1.0"
+            dependency "org.apache.bval:org.apache.bval.bundle:2.0.2"
+            dependency "org.apache.tika:tika-core:1.22"
+            dependency "com.google.guava:guava:19.0"
+            dependency "org.aspectj:aspectjrt:1.9.4"
+            dependency "org.aspectj:aspectjweaver:1.9.4"
+            dependency "org.hibernate:hibernate-validator:6.0.14.Final"
+            dependency "org.hibernate:hibernate-validator-annotation-processor:6.0.14.Final"
+            dependency "io.cucumber:cucumber-java:4.7.1"
+            dependency "io.cucumber:cucumber-junit:4.7.1"
+            dependency "io.cucumber:cucumber-spring:4.7.1"
+            dependency "mysql:mysql-connector-java:8.0.17"
+            dependency "org.mariadb.jdbc:mariadb-java-client:2.4.3"
+            dependency "javax.cache:cache-api:1.1.1"
+            dependency "com.github.ben-manes.caffeine:caffeine:2.8.0"
+            dependency "com.github.ben-manes.caffeine:jcache:2.8.0"
+            dependency "io.micrometer:micrometer-core:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-jersey2:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-test:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-spring-legacy:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-appoptics:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-azure-monitor:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-humio:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-dynatrace:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-kairos:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-elastic:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-stackdriver:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-wavefront:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-statsd:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-signalfx:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-prometheus:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-new-relic:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-jmx:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-influx:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-graphite:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-ganglia:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-cloudwatch:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-datadog:${microMeterVersion}"
+            dependency "io.micrometer:micrometer-registry-atlas:${microMeterVersion}"
+            dependency "org.ow2.asm:asm-all:5.2"
+            dependency "org.ow2.asm:asm-util:5.2"
+            dependency "org.ow2.asm:asm-tree:5.2"
+            dependency "org.ow2.asm:asm-analysis:5.2"
+            dependency "org.ow2.asm:asm-commons:5.2"
+            dependency "org.jolokia:jolokia-core:1.6.0"
+            dependency "org.jolokia:jolokia-war:1.6.0"
+            // dependency "org.glassfish.hk2.external:javax.inject:2.5.0-b62"
+            dependency "org.glassfish.jersey.ext:jersey-spring5:${jerseyVersion}"
+            dependency "javax.ws.rs:javax.ws.rs-api:2.1-m09"
+            dependency "org.springframework.security.oauth:spring-security-oauth2:2.3.6.RELEASE"
+            dependency "org.springframework.security:spring-security-jwt:1.0.10.RELEASE"
+            dependency "com.lowagie:itext:2.1.7"
+            dependency "org.json:json:20180813"
+            dependency "io.jsonwebtoken:jjwt:0.9.1"
+            dependency "org.bouncycastle:bcpkix-jdk15on:1.62"
+            dependency "org.bouncycastle:bcprov-jdk15on:1.62"
+            dependency "com.querydsl:querydsl-core:4.2.1"
+            dependency "com.querydsl:querydsl-apt:4.2.1"
+            dependency "com.querydsl:querydsl-sql:4.2.1"
+            dependency "com.querydsl:querydsl-sql-spring:4.2.1"
+            dependency "com.querydsl:querydsl-sql-codegen:4.2.1"
+            dependency "com.querydsl:querydsl-codegen:4.2.1"
+            dependency "com.querydsl:querydsl-jpa:4.2.1"
+            dependency "com.querydsl:querydsl-jpa-codegen:4.2.1"
+            dependency "org.projectlombok:lombok:${lombokVersion}"
+            dependency "org.projectlombok:lombok-utils:${lombokVersion}"
+            dependency "xerces:xercesImpl:2.11.0"
+            dependency "org.apache.thrift:libthrift:0.9.3"
+            dependency "joda-time:joda-time:2.10.3"
+            dependency "org.joda:joda-convert:2.0.1"
+            dependency "com.squareup.retrofit2:retrofit:2.6.1"
+            dependency "com.squareup.retrofit2:retrofit-mock:2.6.1"
+            dependency "com.squareup.retrofit2:retrofit-adapters:2.6.1"
+            dependency "com.squareup.retrofit2:retrofit-converters:2.6.1"
+            dependency "com.squareup.retrofit2:converter-jackson:2.6.1"
+            dependency "com.squareup.retrofit2:adapter-java8:2.6.1"
+            dependency "com.squareup.retrofit2:converter-simplexml:2.6.1"
+            dependency "com.squareup.retrofit2:converter-jaxb:2.6.1"
+            dependency "com.squareup.retrofit2:converter-scalars:2.6.1"
+            dependency "com.squareup.retrofit2:converter-gson:2.6.1"
+            dependency "com.squareup.retrofit2:adapter-rxjava2:2.6.1"
+            dependency "org.apache.oltu.oauth2:org.apache.oltu.oauth2.common:1.0.1"
+            dependency "org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:1.0.1"
+            dependency "org.apache.oltu.oauth2:org.apache.oltu.oauth2.httpclient4:1.0.1"
+            dependency "xpp3:xpp3:1.1.4c"
+            dependency "io.swagger:swagger-core:1.5.22"
+            dependency "io.swagger:swagger-annotations:1.5.22"
+            dependency "io.swagger:swagger-jersey-jaxrs:1.5.22"
+            dependency "com.google.code.gson:gson:2.8.5"
+            dependency "io.gsonfire:gson-fire:1.8.0"
+            dependency "org.threeten:threetenbp:1.4.0"
+            dependency "com.github.spullara.mustache.java:compiler:0.9.6"
+            dependency "io.reactivex.rxjava2:rxjava:2.2.2"
+            dependency "com.squareup.okhttp3:okhttp:4.1.0"
+            dependency "com.squareup.okhttp3:okcurl:4.1.0"
+            dependency "com.squareup.okhttp3:logging-interceptor:4.1.0"
+            dependency "com.squareup.okhttp3:okhttp-apache:4.1.0"
+            dependency "com.squareup.okhttp3:okhttp-android-support:4.1.0"
+            dependency "com.squareup.okhttp3:okhttp-urlconnection:4.1.0"
+            dependency "com.squareup.okhttp3:okhttp-sse:3.14.2"
+            dependency "org.apache.httpcomponents:httpclient:4.5.9"
+            dependency "org.apache.httpcomponents:httpmime:4.5.9"
+            dependency "com.netflix.ribbon:ribbon-core:2.3.0"
+            dependency "com.netflix.ribbon:ribbon-eureka:2.3.0"
+            dependency "com.netflix.ribbon:ribbon-httpclient:2.3.0"
+            dependency "com.netflix.ribbon:ribbon-loadbalancer:2.3.0"
+            dependency "com.googlecode.libphonenumber:libphonenumber:8.10.17"
+            dependency "com.googlecode.libphonenumber:prefixmapper:2.123"
+            dependency "javax.xml.bind:jaxb-api:2.3.1"
+            dependency "com.sun.xml.bind:jaxb-core:2.3.0.1"
+            dependency "com.sun.xml.bind:jaxb-impl:2.3.2"
+            dependency "com.sun.activation:javax.activation:1.2.0"
+            dependency "javax.transaction:javax.transaction-api:1.3"
+            dependency "com.sun.xml.ws:jaxws-ri:2.3.1"
+            dependency "javax.annotation:javax.annotation-api:1.3.2"
+            dependency "com.google.code.findbugs:jsr305:3.0.2"
+            dependency "com.fasterxml:classmate:1.3.1"
+            dependency "com.h2database:h2:1.4.197"
+            dependency "org.ehcache:ehcache:3.8.0"
+            dependency "org.flywaydb:flyway-core:6.0.0"
+            dependency "com.jayway.jsonpath:json-path:2.4.0"
+            dependency "org.mnode.ical4j:ical4j:3.0.9"
+            dependency "org.slf4j:slf4j-api:${slf4jVersion}"
+            dependency "org.slf4j:slf4j-simple:${slf4jVersion}"
+            dependency "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
+            dependency "org.slf4j:jul-to-slf4j:${slf4jVersion}"
+            dependency "org.slf4j:log4j-over-slf4j:${slf4jVersion}"
+            dependency "ch.qos.logback:logback-core:1.2.3"
+            dependency "ch.qos.logback:logback-classic:1.2.3"
+            dependency "net.logstash.logback:logstash-logback-encoder:6.1"
+            dependency "com.googlecode.json-simple:json-simple:1.1.1"
+            dependency "org.codehaus.janino:janino:2.7.8"
+            dependency "commons-beanutils:commons-beanutils:1.9.2"
+            dependency "commons-io:commons-io:2.6"
+            dependency "commons-codec:commons-codec:1.13"
+            dependency "commons-lang:commons-lang:2.6"
+            dependency "org.apache.commons:commons-email:1.5"
+            dependency "org.apache.commons:commons-lang3:3.9"
+            dependency "org.javassist:javassist:3.19.0-GA"
+            dependency "org.ow2.asm:asm:5.0.4"
+            dependency "javax.servlet:javax.servlet-api:4.0.1"
+            dependency "org.openjdk.jmh:jmh-core:1.21"
+            dependency "org.openjdk.jmh:jmh-generator-annprocess:1.21"
+            dependency "junit:junit:4.12"
+            dependency "io.rest-assured:rest-assured:4.0.0"
+            dependency "io.rest-assured:json-schema-validator:4.0.0"
+            dependency "org.mockito:mockito-core:2.24.0"
+            dependency "org.mockito:mockito-inline:3.0.0"
+            dependency "org.mockito:mockito-junit-jupiter:2.23.0"
+            dependency "com.mockrunner:mockrunner-jms:2.0.1"
+            dependency "com.mockrunner:mockrunner-jdbc:2.0.1"
+            dependency "com.jayway.restassured:rest-assured:2.9.0"
+            dependency "net.bytebuddy:byte-buddy:1.10.1"
+            dependency "org.hamcrest:hamcrest-all:1.3"
+            dependency "org.exparity:hamcrest-date:2.0.4"
+            dependency "org.assertj:assertj-core:3.11.1"
+            dependency "com.google.code.findbugs:jsr305:3.0.2"
+            dependency "com.nimbusds:nimbus-jose-jwt:7.7"
+            dependency "com.amazon.redshift:redshift-jdbc42-no-awssdk:1.2.32.1056"
+        }
+
+        imports {
+            mavenBom "com.fasterxml.jackson:jackson-bom:${jacksonVersion}"
+            mavenBom "org.springframework.security:spring-security-bom:${springSecurityVersion}"
+            mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:Greenwich.RELEASE"
+            mavenBom "org.springframework:spring-framework-bom:${springVersion}"
+            mavenBom "org.testcontainers:testcontainers-bom:1.12.0"
+            mavenBom "org.glassfish.hk2:hk2-bom:2.6.0"
+            mavenBom "org.glassfish.jersey:jersey-bom:${jerseyVersion}"
+            mavenBom "io.netty:netty-bom:${nettyVersion}"
+            mavenBom "org.glassfish.jaxb:jaxb-bom:2.3.2"
+            mavenBom "org.apache.camel:camel-bom:${camelVersion}"
+            mavenBom "com.amazonaws:aws-java-sdk-pom:${awsSdkVersion}"
+        }
+    }
+}
+
+subprojects {
+    apply plugin: "java"
+
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    task packageSources(type: Jar) {
+        classifier = "sources"
+        from sourceSets.main.allSource
+    }
+
+    artifacts.archives packageSources
+
+    test {
+        maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+
+        reports {
+            junitXml.enabled = true
+            html.enabled = true
+        }
+    }
+
+    sourceSets {
+        integrationTest {
+            compileClasspath += sourceSets.main.output
+            runtimeClasspath += sourceSets.main.output
+            java.srcDir file("src/integrationTest/java")
+            resources.srcDir file("src/integrationTest/resources")
+        }
+    }
+
+    configurations {
+        integrationTestImplementation.extendsFrom implementation
+        integrationTestRuntimeOnly.extendsFrom runtimeOnly
+    }
+
+    configurations.all {
+        dependencies {
+            compile "org.slf4j:slf4j-api"
+            compile("ch.qos.logback:logback-classic") {
+                exclude(module: "slf4j-api")
+            }
+            compileOnly "org.slf4j:log4j-over-slf4j"
+            compileOnly "org.slf4j:jcl-over-slf4j"
+            compileOnly "org.slf4j:jul-to-slf4j"
+            compileOnly "org.projectlombok:lombok"
+            testCompileOnly "org.projectlombok:lombok"
+            annotationProcessor "org.projectlombok:lombok"
+            annotationProcessor "com.querydsl:querydsl-apt"
+            testAnnotationProcessor "org.projectlombok:lombok"
+            testAnnotationProcessor "com.querydsl:querydsl-apt"
+        }
+    }
+}
+
+task changelog(type: GitChangelogTask) {
+    file = new File("CHANGELOG.md")
+}

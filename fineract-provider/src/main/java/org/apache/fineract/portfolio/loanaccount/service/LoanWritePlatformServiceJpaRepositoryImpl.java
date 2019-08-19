@@ -31,7 +31,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
@@ -894,7 +894,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                     loanId);
         }
         checkClientOrGroupActive(loan);
-        final LoanTransaction transactionToAdjust = this.loanTransactionRepository.findOne(transactionId);
+        final LoanTransaction transactionToAdjust = this.loanTransactionRepository.findById(transactionId).orElse(null);
         if (transactionToAdjust == null) { throw new LoanTransactionNotFoundException(transactionId); }
         this.businessEventNotifierService.notifyBusinessEventToBeExecuted(BUSINESS_EVENTS.LOAN_ADJUST_TRANSACTION,
                 constructEntityMap(BUSINESS_ENTITY.LOAN_ADJUSTED_TRANSACTION, transactionToAdjust));
@@ -1846,7 +1846,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
     }
 
     private LoanCharge retrieveLoanChargeBy(final Long loanId, final Long loanChargeId) {
-        final LoanCharge loanCharge = this.loanChargeRepository.findOne(loanChargeId);
+        final LoanCharge loanCharge = this.loanChargeRepository.findById(loanChargeId).orElse(null);
         if (loanCharge == null) { throw new LoanChargeNotFoundException(loanChargeId); }
 
         if (loanCharge.hasNotLoanIdentifiedBy(loanId)) { throw new LoanChargeNotFoundException(loanChargeId, loanId); }

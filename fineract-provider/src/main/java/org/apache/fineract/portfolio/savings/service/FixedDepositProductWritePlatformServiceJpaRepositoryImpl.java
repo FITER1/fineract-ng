@@ -30,7 +30,7 @@ import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.accounting.producttoaccountmapping.service.ProductToGLAccountMappingWritePlatformService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -118,7 +118,7 @@ public class FixedDepositProductWritePlatformServiceJpaRepositoryImpl implements
             this.context.authenticatedUser();
             this.fromApiJsonDataValidator.validateForFixedDepositUpdate(command.json());
 
-            final FixedDepositProduct product = this.fixedDepositProductRepository.findOne(productId);
+            final FixedDepositProduct product = this.fixedDepositProductRepository.findById(productId).orElse(null);
             if (product == null) { throw new FixedDepositProductNotFoundException(productId); }
             product.setHelpers(this.chartAssembler);
 
@@ -175,7 +175,7 @@ public class FixedDepositProductWritePlatformServiceJpaRepositoryImpl implements
     public CommandProcessingResult delete(final Long productId) {
 
         this.context.authenticatedUser();
-        final FixedDepositProduct product = this.fixedDepositProductRepository.findOne(productId);
+        final FixedDepositProduct product = this.fixedDepositProductRepository.findById(productId).orElse(null);
         if (product == null) { throw new FixedDepositProductNotFoundException(productId); }
 
         this.fixedDepositProductRepository.delete(product);

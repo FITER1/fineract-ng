@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -176,7 +176,7 @@ public class LoanScheduleAssembler {
     public LoanApplicationTerms assembleLoanTerms(final JsonElement element) {
         final Long loanProductId = this.fromApiJsonHelper.extractLongNamed("productId", element);
 
-        final LoanProduct loanProduct = this.loanProductRepository.findOne(loanProductId);
+        final LoanProduct loanProduct = this.loanProductRepository.findById(loanProductId).orElse(null);
         if (loanProduct == null) { throw new LoanProductNotFoundException(loanProductId); }
 
         return assembleLoanApplicationTermsFrom(element, loanProduct);
@@ -254,7 +254,7 @@ public class LoanScheduleAssembler {
          * meeting freq multiples
          */
         if ((loanType.isJLGAccount() || loanType.isGroupAccount()) && calendarId != null) {
-            calendar = this.calendarRepository.findOne(calendarId);
+            calendar = this.calendarRepository.findById(calendarId).orElse(null);
             if (calendar == null) { throw new CalendarNotFoundException(calendarId); }
             final PeriodFrequencyType meetingPeriodFrequency = CalendarUtils.getMeetingPeriodFrequencyType(calendar.getRecurrence());
             validateRepaymentFrequencyIsSameAsMeetingFrequency(meetingPeriodFrequency.getValue(), repaymentFrequencyType,

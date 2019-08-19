@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Random;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.conn.HttpHostConnectException;
 
 import com.jayway.restassured.RestAssured;

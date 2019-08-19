@@ -37,7 +37,7 @@ import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -70,8 +70,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
-import retrofit.RetrofitError;
 
 @Service
 public class HookWritePlatformServiceJpaRepositoryImpl
@@ -123,7 +121,7 @@ public class HookWritePlatformServiceJpaRepositoryImpl
             if (command.hasParameter(templateIdParamName)) {
                 final Long ugdTemplateId = command
                         .longValueOfParameterNamed(templateIdParamName);
-                ugdTemplate = this.ugdTemplateRepository.findOne(ugdTemplateId);
+                ugdTemplate = this.ugdTemplateRepository.findById(ugdTemplateId).orElse(null);
                 if (ugdTemplate == null) {
                     throw new TemplateNotFoundException(ugdTemplateId);
                 }
@@ -169,7 +167,7 @@ public class HookWritePlatformServiceJpaRepositoryImpl
                     final Long ugdTemplateId = command
                             .longValueOfParameterNamed(templateIdParamName);
                     final Template ugdTemplate = this.ugdTemplateRepository
-                            .findOne(ugdTemplateId);
+                            .findById(ugdTemplateId).orElse(null);
                     if (ugdTemplate == null) {
                         changes.remove(templateIdParamName);
                         throw new TemplateNotFoundException(ugdTemplateId);
@@ -236,7 +234,7 @@ public class HookWritePlatformServiceJpaRepositoryImpl
     }
 
     private Hook retrieveHookBy(final Long hookId) {
-        final Hook hook = this.hookRepository.findOne(hookId);
+        final Hook hook = this.hookRepository.findById(hookId).orElse(null);
         if (hook == null) {
             throw new HookNotFoundException(hookId);
         }
@@ -329,16 +327,19 @@ public class HookWritePlatformServiceJpaRepositoryImpl
                     final WebHookService service = ProcessorHelper
                             .createWebHookService(fieldValue);
                     service.sendEmptyRequest();
-                } catch (RetrofitError re) {
+                } catch (Exception re) {
                     // Swallow error if it's because of method not supported or
                     // if url throws 404 - required for integration test,
                     // url generated on 1st POST request
+                    // TODO: @aleks fix this
+                    /*
                     if (re.getResponse() == null) {
                         String errorMessage = "url.invalid";
                         baseDataValidator.reset()
                                 .failWithCodeNoParameterAddedToErrorCode(
                                         errorMessage);
                     }
+                    */
                 }
             }
         }

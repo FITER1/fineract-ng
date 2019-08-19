@@ -18,21 +18,17 @@
  */
 package org.apache.fineract.infrastructure.core.domain;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.joda.time.DateTime;
 import org.springframework.data.domain.Auditable;
 import org.springframework.data.jpa.domain.AbstractAuditable;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.Date;
+import java.util.Optional;
+
+// TODO: @aleks fix this (check for default implementations with Temporal/Instant etc.); replace Joda with java.time.*
 
 /**
  * A custom copy of {@link AbstractAuditable} to override the column names used
@@ -47,7 +43,7 @@ import org.springframework.data.jpa.domain.AbstractAuditable;
  *            the type of the auditing type's identifier
  */
 @MappedSuperclass
-public abstract class AbstractAuditableCustom<U, PK extends Serializable> extends AbstractPersistableCustom<PK> implements Auditable<AppUser, Long> {
+public abstract class AbstractAuditableCustom<U, PK extends Serializable> extends AbstractPersistableCustom<PK> implements Auditable<AppUser, Long, Instant> {
 
     private static final long serialVersionUID = 141481953116476081L;
 
@@ -73,9 +69,9 @@ public abstract class AbstractAuditableCustom<U, PK extends Serializable> extend
      * @see org.springframework.data.domain.Auditable#getCreatedBy()
      */
     @Override
-    public AppUser getCreatedBy() {
+    public Optional<AppUser> getCreatedBy() {
 
-        return this.createdBy;
+        return Optional.of(this.createdBy);
     }
 
     /*
@@ -96,9 +92,8 @@ public abstract class AbstractAuditableCustom<U, PK extends Serializable> extend
      * @see org.springframework.data.domain.Auditable#getCreatedDate()
      */
     @Override
-    public DateTime getCreatedDate() {
-
-        return null == this.createdDate ? null : new DateTime(this.createdDate);
+    public Optional<Instant> getCreatedDate() {
+        return Optional.of(this.createdDate).map(d -> Instant.ofEpochMilli(d.getTime()));
     }
 
     /*
@@ -109,9 +104,9 @@ public abstract class AbstractAuditableCustom<U, PK extends Serializable> extend
      * .DateTime)
      */
     @Override
-    public void setCreatedDate(final DateTime createdDate) {
+    public void setCreatedDate(final Instant createdDate) {
 
-        this.createdDate = null == createdDate ? null : createdDate.toDate();
+        this.createdDate = null == createdDate ? null : new Date(createdDate.toEpochMilli());
     }
 
     /*
@@ -120,9 +115,9 @@ public abstract class AbstractAuditableCustom<U, PK extends Serializable> extend
      * @see org.springframework.data.domain.Auditable#getLastModifiedBy()
      */
     @Override
-    public AppUser getLastModifiedBy() {
+    public Optional<AppUser> getLastModifiedBy() {
 
-        return this.lastModifiedBy;
+        return Optional.of(this.lastModifiedBy);
     }
 
     /*
@@ -144,9 +139,9 @@ public abstract class AbstractAuditableCustom<U, PK extends Serializable> extend
      * @see org.springframework.data.domain.Auditable#getLastModifiedDate()
      */
     @Override
-    public DateTime getLastModifiedDate() {
+    public Optional<Instant> getLastModifiedDate() {
 
-        return null == this.lastModifiedDate ? null : new DateTime(this.lastModifiedDate);
+        return Optional.of(this.lastModifiedDate).map(d -> Instant.ofEpochMilli(d.getTime()));
     }
 
     /*
@@ -157,8 +152,7 @@ public abstract class AbstractAuditableCustom<U, PK extends Serializable> extend
      * .time.DateTime)
      */
     @Override
-    public void setLastModifiedDate(final DateTime lastModifiedDate) {
-
-        this.lastModifiedDate = null == lastModifiedDate ? null : lastModifiedDate.toDate();
+    public void setLastModifiedDate(Instant lastModifiedDate) {
+        this.lastModifiedDate = null == lastModifiedDate ? null : new Date(lastModifiedDate.toEpochMilli());
     }
 }

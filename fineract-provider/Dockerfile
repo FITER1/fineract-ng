@@ -15,15 +15,11 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-build/*
-.gradle/*
+FROM azul/zulu-openjdk:12
+MAINTAINER Aleksandar Vidakovic <cheetah@monkeysintown.com>
 
-# Incremental "docker build" is faster if we can modify the Dockerfile
-# without "COPY ." re-transferring everything into the builder container.
-Dockerfile
+ENV PATH /opt/fineract:$PATH
 
-# https://github.com/containers/buildah/issues/1582
-.git/*
-.git/*/*
-.git/*/*/*
-.git/*/*/*/*
+WORKDIR /opt/fineract
+
+ADD fineract-provider-*.tgz /opt/

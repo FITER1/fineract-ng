@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.loanaccount.loanschedule.service;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,17 +74,17 @@ public class LoanScheduleHistoryWritePlatformServiceImpl implements LoanSchedule
             final BigDecimal penaltyCharges = repaymentScheduleInstallment.getPenaltyChargesCharged(currency).getAmount();
 
             Date createdOnDate = null;
-            if (repaymentScheduleInstallment.getCreatedDate() != null) {
-                createdOnDate = repaymentScheduleInstallment.getCreatedDate().toDate();
+            if (repaymentScheduleInstallment.getCreatedDate().isPresent()) {
+                createdOnDate = new Date(repaymentScheduleInstallment.getCreatedDate().map(Instant::getEpochSecond).orElse(0L));
             }
 
-            final AppUser createdByUser = repaymentScheduleInstallment.getCreatedBy();
-            final AppUser lastModifiedByUser = repaymentScheduleInstallment.getLastModifiedBy();
+            final AppUser createdByUser = repaymentScheduleInstallment.getCreatedBy().orElse(null);
+            final AppUser lastModifiedByUser = repaymentScheduleInstallment.getLastModifiedBy().orElse(null);
 
             Date lastModifiedOnDate = null;
 
-            if (repaymentScheduleInstallment.getLastModifiedDate() != null) {
-                lastModifiedOnDate = repaymentScheduleInstallment.getLastModifiedDate().toDate();
+            if (repaymentScheduleInstallment.getLastModifiedDate().isPresent()) {
+                lastModifiedOnDate = new Date(repaymentScheduleInstallment.getLastModifiedDate().map(Instant::getEpochSecond).orElse(0L));
             }
 
             LoanRepaymentScheduleHistory loanRepaymentScheduleHistory = LoanRepaymentScheduleHistory.instance(loan, loanRescheduleRequest,
@@ -100,7 +101,7 @@ public class LoanScheduleHistoryWritePlatformServiceImpl implements LoanSchedule
             LoanRescheduleRequest loanRescheduleRequest) {
         List<LoanRepaymentScheduleHistory> loanRepaymentScheduleHistoryList = createLoanScheduleArchive(repaymentScheduleInstallments,
                 loan, loanRescheduleRequest);
-        this.loanRepaymentScheduleHistoryRepository.save(loanRepaymentScheduleHistoryList);
+        this.loanRepaymentScheduleHistoryRepository.saveAll(loanRepaymentScheduleHistoryList);
 
     }
 

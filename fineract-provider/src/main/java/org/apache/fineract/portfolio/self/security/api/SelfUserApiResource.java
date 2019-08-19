@@ -21,7 +21,7 @@ package org.apache.fineract.portfolio.self.security.api;
 
 import com.google.gson.reflect.TypeToken;
 import io.swagger.annotations.*;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;

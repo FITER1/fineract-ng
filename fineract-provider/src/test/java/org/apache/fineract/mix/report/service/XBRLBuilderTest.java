@@ -58,8 +58,8 @@ public class XBRLBuilderTest {
     public void setUp() throws Exception {
 
         this.readNamespaceService = Mockito.mock(NamespaceReadPlatformServiceImpl.class);
-        when(this.readNamespaceService.retrieveNamespaceByPrefix(Matchers.anyString())).thenReturn(
-                new NamespaceData(1l, "mockedprefix", "mockedurl"));
+        // TODO: @aleks fix this; this is throwing an UnnecessaryStubbingException (aka we are not using this stub)
+        // when(this.readNamespaceService.retrieveNamespaceByPrefix(Matchers.anyString())).thenReturn(new NamespaceData(1l, "mockedprefix", "mockedurl"));
 
     }
 

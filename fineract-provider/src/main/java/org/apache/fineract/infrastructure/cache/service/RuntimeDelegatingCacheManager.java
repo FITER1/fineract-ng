@@ -46,12 +46,12 @@ import org.springframework.stereotype.Component;
 @Component(value = "runtimeDelegatingCacheManager")
 public class RuntimeDelegatingCacheManager implements CacheManager {
 
-    private final EhCacheCacheManager ehcacheCacheManager;
+    private final CacheManager ehcacheCacheManager;
     private final CacheManager noOpCacheManager = new NoOpCacheManager();
     private CacheManager currentCacheManager;
 
     @Autowired
-    public RuntimeDelegatingCacheManager(final EhCacheCacheManager ehCacheCacheManager) {
+    public RuntimeDelegatingCacheManager(final CacheManager ehCacheCacheManager) {
         this.ehcacheCacheManager = ehCacheCacheManager;
         this.currentCacheManager = this.noOpCacheManager;
     }
@@ -121,6 +121,11 @@ public class RuntimeDelegatingCacheManager implements CacheManager {
     }
 
     private void clearEhCache() {
-        this.ehcacheCacheManager.getCacheManager().clearAll();
+        this.ehcacheCacheManager.getCacheNames().forEach(name -> {
+            Cache c = this.ehcacheCacheManager.getCache(name);
+            if(c!=null) {
+                c.clear();
+            }
+        });
     }
 }

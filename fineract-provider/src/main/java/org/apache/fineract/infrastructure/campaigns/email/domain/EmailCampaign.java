@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.infrastructure.campaigns.email.domain;
 
-import org.apache.commons.lang.ObjectUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;

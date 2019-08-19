@@ -59,7 +59,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.UnsupportedParameterException;
@@ -162,10 +162,10 @@ public class DepositAccountAssembler {
 
         SavingsProduct product = null;
         if (depositAccountType.isFixedDeposit()) {
-            product = this.fixedDepositProductRepository.findOne(productId);
+            product = this.fixedDepositProductRepository.findById(productId).orElse(null);
             if (product == null) { throw new FixedDepositProductNotFoundException(productId); }
         } else if (depositAccountType.isRecurringDeposit()) {
-            product = this.recurringDepositProductRepository.findOne(productId);
+            product = this.recurringDepositProductRepository.findById(productId).orElse(null);
             if (product == null) { throw new RecurringDepositProductNotFoundException(productId); }
         }
 

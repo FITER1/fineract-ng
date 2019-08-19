@@ -36,7 +36,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import retrofit.Callback;
+import retrofit2.Callback;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

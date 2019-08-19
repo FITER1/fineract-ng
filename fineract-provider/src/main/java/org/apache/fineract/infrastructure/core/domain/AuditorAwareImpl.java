@@ -26,13 +26,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.Optional;
+
 public class AuditorAwareImpl implements AuditorAware<AppUser> {
 
     @Autowired
     private AppUserRepository userRepository;
 
     @Override
-    public AppUser getCurrentAuditor() {
+    public Optional<AppUser> getCurrentAuditor() {
 
         AppUser currentUser = null;
         final SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -46,10 +48,10 @@ public class AuditorAwareImpl implements AuditorAware<AppUser> {
         } else {
             currentUser = retrieveSuperUser();
         }
-        return currentUser;
+        return Optional.of(currentUser);
     }
 
     private AppUser retrieveSuperUser() {
-        return this.userRepository.findOne(Long.valueOf("1"));
+        return this.userRepository.findById(1L).orElse(null);
     }
 }

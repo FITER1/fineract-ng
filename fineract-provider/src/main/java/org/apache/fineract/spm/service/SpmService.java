@@ -70,7 +70,7 @@ public class SpmService {
 
     public Survey findById(final Long id) {
         this.securityContext.authenticatedUser();
-        Survey survey = this.surveyRepository.findOne(id);
+        Survey survey = this.surveyRepository.findById(id).orElse(null);
         if (survey == null) {
             throw new SurveyNotFoundException(id);
         }

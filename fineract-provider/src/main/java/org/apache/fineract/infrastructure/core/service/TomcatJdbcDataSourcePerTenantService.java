@@ -18,19 +18,16 @@
  */
 package org.apache.fineract.infrastructure.core.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
 import org.apache.fineract.infrastructure.core.boot.JDBCDriverConfig;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenantConnection;
-import org.apache.tomcat.jdbc.pool.PoolConfiguration;
-import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Implementation that returns a new or existing tomcat 7 jdbc connection pool
@@ -56,6 +53,7 @@ public class TomcatJdbcDataSourcePerTenantService implements RoutingDataSourceSe
 
     @Override
     public DataSource retrieveDataSource() {
+        // TODO: @aleks fix this
 
         // default to tenant database datasource
         DataSource tenantDataSource = this.tenantDataSource;
@@ -83,10 +81,12 @@ public class TomcatJdbcDataSourcePerTenantService implements RoutingDataSourceSe
 
     // creates the data source oltp and report databases
     private DataSource createNewDataSourceFor(final FineractPlatformTenantConnection tenantConnectionObj) {
+        // TODO: @aleks fix this
+
+        /*
         // see
         // http://www.tomcatexpert.com/blog/2010/04/01/configuring-jdbc-pool-high-concurrency
 
-        // see also org.apache.fineract.DataSourceProperties.setDefaults()
     	 String jdbcUrl = this.driverConfig.constructProtocol(tenantConnectionObj.getSchemaServer(), tenantConnectionObj.getSchemaServerPort(), tenantConnectionObj.getSchemaName()) ;
         //final String jdbcUrl = tenantConnectionObj.databaseURL();
         final PoolConfiguration poolConfiguration = new PoolProperties();
@@ -108,10 +108,9 @@ public class TomcatJdbcDataSourcePerTenantService implements RoutingDataSourceSe
         poolConfiguration.setAbandonWhenPercentageFull(tenantConnectionObj.getAbandonWhenPercentageFull());
         poolConfiguration.setDefaultAutoCommit(true);
         
-        /**
-         * Vishwas- Do we need to enable the below properties and add
-         * ResetAbandonedTimer for long running batch Jobs?
-         **/
+        // Vishwas- Do we need to enable the below properties and add
+        // ResetAbandonedTimer for long running batch Jobs?
+
         // poolConfiguration.setMaxActive(tenant.getMaxActive());
         // poolConfiguration.setMinIdle(tenant.getMinIdle());
         // poolConfiguration.setMaxIdle(tenant.getMaxIdle());
@@ -124,5 +123,7 @@ public class TomcatJdbcDataSourcePerTenantService implements RoutingDataSourceSe
                 + "org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer;org.apache.tomcat.jdbc.pool.interceptor.SlowQueryReport");
 
         return new org.apache.tomcat.jdbc.pool.DataSource(poolConfiguration);
+        */
+        return null;
     }
 }

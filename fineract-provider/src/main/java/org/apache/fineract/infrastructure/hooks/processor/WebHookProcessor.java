@@ -30,7 +30,7 @@ import org.apache.fineract.infrastructure.hooks.domain.HookConfiguration;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.stereotype.Service;
 
-import retrofit.Callback;
+import retrofit2.Callback;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;

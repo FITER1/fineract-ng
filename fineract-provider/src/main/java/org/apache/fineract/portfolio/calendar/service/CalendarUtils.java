@@ -32,12 +32,12 @@ import net.fortuna.ical4j.model.DateList;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.NumberList;
 import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.WeekDayList;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.RRule;
 
+import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
@@ -55,6 +55,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import com.google.gson.JsonElement;
 
+// TODO: @aleks check if the Enum.name() changes are ok here
 public class CalendarUtils {
 
     static {
@@ -262,7 +263,7 @@ public class CalendarUtils {
             for (@SuppressWarnings("rawtypes")
             final Iterator iterator = weekDayList.iterator(); iterator.hasNext();) {
                 final WeekDay weekDay = (WeekDay) iterator.next();
-                humanReadable += DayNameEnum.from(weekDay.getDay()).getCode();
+                humanReadable += DayNameEnum.from(weekDay.getDay().name()).getCode();
             }
 
         } else if (recur.getFrequency().equals(Recur.MONTHLY)) {
@@ -281,7 +282,7 @@ public class CalendarUtils {
             if (nthDay != null && weekDay != null) {
                 NthDayType nthDayType = NthDayType.fromInt(nthDay);
                 NthDayNameEnum nthDayName = NthDayNameEnum.from(nthDayType.toString());
-                DayNameEnum weekdayType = DayNameEnum.from(weekDay.getDay());
+                DayNameEnum weekdayType = DayNameEnum.from(weekDay.getDay().name());
                 if (recur.getInterval() == 1 || recur.getInterval() == -1) {
                     humanReadable = "Monthly on " + nthDayName.getCode().toLowerCase() + " " + weekdayType.getCode().toLowerCase();
                 } else {
@@ -454,7 +455,7 @@ public class CalendarUtils {
 
     public static CalendarFrequencyType getFrequency(final String recurringRule) {
         final Recur recur = CalendarUtils.getICalRecur(recurringRule);
-        return CalendarFrequencyType.fromString(recur.getFrequency());
+        return CalendarFrequencyType.fromString(recur.getFrequency().name());
     }
 
     public static CalendarWeekDaysType getRepeatsOnDay(final String recurringRule) {
@@ -463,7 +464,7 @@ public class CalendarUtils {
         if (weekDays.isEmpty()) return CalendarWeekDaysType.INVALID;
         // supports only one day
         WeekDay weekDay = (WeekDay) weekDays.get(0);
-        return CalendarWeekDaysType.fromString(weekDay.getDay());
+        return CalendarWeekDaysType.fromString(weekDay.getDay().name());
     }
     public static NthDayType getRepeatsOnNthDayOfMonth(final String recurringRule) {
         final Recur recur = CalendarUtils.getICalRecur(recurringRule);

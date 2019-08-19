@@ -18,25 +18,14 @@
  */
 package org.apache.fineract.infrastructure.core.boot;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
-import org.apache.catalina.connector.Connector;
-import org.apache.commons.io.FileUtils;
-import org.apache.coyote.http11.Http11NioProtocol;
-import org.springframework.boot.context.embedded.EmbeddedServletContainerFactory;
-import org.springframework.boot.context.embedded.tomcat.TomcatEmbeddedServletContainerFactory;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 
 @Configuration
 public class EmbeddedTomcatWithSSLConfiguration {
 
     // http://docs.spring.io/spring-boot/docs/1.1.5.RELEASE/reference/htmlsingle/#howto-enable-multiple-connectors-in-tomcat
 
+    /*
     @Bean
     public EmbeddedServletContainerFactory servletContainer() {
         TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory();
@@ -92,15 +81,6 @@ public class EmbeddedTomcatWithSSLConfiguration {
 
         try {
             URL url = resource.getURL();
-            /**
-             * // If this creates filenames that are too long on Win, // then
-             * could just use resource.getFilename(), // even though not unique,
-             * real risk prob. min.bon String tempDir =
-             * System.getProperty("java.io.tmpdir"); tempDir = tempDir + "/" +
-             * getClass().getSimpleName() + "/"; String path = url.getPath();
-             * String uniqName = path.replace("file:/", "").replace('!', '_');
-             * String tempFullPath = tempDir + uniqName;
-             **/
             // instead of File.createTempFile(prefix?, suffix?);
             File targetFile = new File(resource.getFilename());
             long len = resource.contentLength();
@@ -117,4 +97,5 @@ public class EmbeddedTomcatWithSSLConfiguration {
         }
 
     }
+    */
 }

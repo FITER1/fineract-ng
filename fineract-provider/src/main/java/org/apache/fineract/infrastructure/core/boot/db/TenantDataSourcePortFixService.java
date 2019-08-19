@@ -18,8 +18,6 @@
  */
 package org.apache.fineract.infrastructure.core.boot.db;
 
-import javax.sql.DataSource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+
+import javax.sql.DataSource;
 
 /**
  * Service which "fixes up" the schemaServerPort in the tenants table of the
@@ -58,12 +58,6 @@ public class TenantDataSourcePortFixService {
     @Value("${" + ENABLED + ":true}")
     private boolean enabled;
 
-	// required=false is important here, because in
-	// WebApplicationInitializerConfiguration for classic WAR there
-	// is (intentionally) no MariaDB4j nor a DataSourceProperties
-	// bean (because in the WAR we're using a DS from JNDI)
-	private @Autowired(required = false) DataSourceProperties dsp;
-
 	private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -72,25 +66,26 @@ public class TenantDataSourcePortFixService {
     }
 
     public void fixUpTenantsSchemaServerPort() {
-	if (!enabled)  {
-		logger.info("No schema_server_port UPDATE made to tenant_server_connections table of the mifosplatform-tenants schema, because " + ENABLED + " = false");
-		return;
+    	/*
+		if (!enabled)  {
+			logger.info("No schema_server_port UPDATE made to tenant_server_connections table of the mifosplatform-tenants schema, because " + ENABLED + " = false");
+			return;
+		}
+		if (dsp == null) {
+			// we don't have any generic mechanism to know the DB port, given just a tenant DataSource
+			logger.debug("No schema_server_port UPDATE made to tenant_server_connections table of the mifosplatform-tenants schema (because neither MariaDB4j nor our own Spring Boot DataSourceConfiguration is used in a traditional WAR)");
+			return;
+		}
+			int r = jdbcTemplate
+					.update("UPDATE tenant_server_connections SET schema_server = ?, schema_server_port = ?, schema_username = ?, schema_password = ?",
+							dsp.getHost(), dsp.getPort(), dsp.getUsername(), dsp.getPassword());
+		if ( r == 0 )
+			logger.warn("UPDATE tenant_server_connections SET ... did not update ANY rows - something is probably wrong");
+		else
+				logger.info("Upated "
+						+ r
+						+ " rows in the tenant_server_connections table of the mifosplatform-tenants schema to the real current host: "
+						+ dsp.getHost() + ", port: " + dsp.getPort());
+		*/
 	}
-	if (dsp == null) {
-		// we don't have any generic mechanism to know the DB port, given just a tenant DataSource
-		logger.debug("No schema_server_port UPDATE made to tenant_server_connections table of the mifosplatform-tenants schema (because neither MariaDB4j nor our own Spring Boot DataSourceConfiguration is used in a traditional WAR)");
-		return;
-	}
-		int r = jdbcTemplate
-				.update("UPDATE tenant_server_connections SET schema_server = ?, schema_server_port = ?, schema_username = ?, schema_password = ?",
-						dsp.getHost(), dsp.getPort(), dsp.getUsername(), dsp.getPassword());
-	if ( r == 0 )
-		logger.warn("UPDATE tenant_server_connections SET ... did not update ANY rows - something is probably wrong");
-	else
-			logger.info("Upated "
-					+ r
-					+ " rows in the tenant_server_connections table of the mifosplatform-tenants schema to the real current host: "
-					+ dsp.getHost() + ", port: " + dsp.getPort());
-    }
-
 }

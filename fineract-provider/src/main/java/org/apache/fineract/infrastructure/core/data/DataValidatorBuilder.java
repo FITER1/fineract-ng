@@ -19,9 +19,9 @@
 package org.apache.fineract.infrastructure.core.data;
 
 import com.google.gson.JsonArray;
-import net.fortuna.ical4j.model.ValidationException;
 import net.fortuna.ical4j.model.property.RRule;
-import org.apache.commons.lang.StringUtils;
+import net.fortuna.ical4j.validate.ValidationException;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 import org.quartz.CronExpression;
 import org.springframework.util.ObjectUtils;

@@ -27,7 +27,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.time.StopWatch;
+import org.apache.commons.lang3.time.StopWatch;
 import org.apache.fineract.infrastructure.cache.domain.CacheType;
 import org.apache.fineract.infrastructure.cache.service.CacheWritePlatformService;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
@@ -96,8 +96,7 @@ public class TenantAwareBasicAuthenticationFilter extends BasicAuthenticationFil
         this.notificationReadPlatformService = notificationReadPlatformService;
     }
 
-    @Override
-    public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain) throws IOException, ServletException {
+    public void doFilterInternal(final ServletRequest req, final ServletResponse res, final FilterChain chain) throws IOException, ServletException {
 
         final HttpServletRequest request = (HttpServletRequest) req;
         final HttpServletResponse response = (HttpServletResponse) res;
@@ -114,7 +113,7 @@ public class TenantAwareBasicAuthenticationFilter extends BasicAuthenticationFil
 
                 String tenantIdentifier = request.getHeader(this.tenantRequestHeader);
 
-                if (org.apache.commons.lang.StringUtils.isBlank(tenantIdentifier)) {
+                if (org.apache.commons.lang3.StringUtils.isBlank(tenantIdentifier)) {
                     tenantIdentifier = request.getParameter("tenantIdentifier");
                 }
 

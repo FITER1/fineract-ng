@@ -18,21 +18,20 @@
  */
 package org.apache.fineract.batch.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.apache.fineract.batch.domain.BatchRequest;
 import org.apache.fineract.batch.domain.BatchResponse;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.jayway.jsonpath.JsonModel;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
 
+// TODO: @aleks fix this
 /**
  * Provides methods to create dependency map among the various batchRequests. It
  * also provides method that takes care of dependency resolution among related
@@ -136,7 +135,7 @@ public class ResolutionHelper {
         // Create a duplicate request
         final BatchRequest br = request;
 
-        final JsonModel responseJsonModel = JsonModel.model(parentResponse.getBody());
+        // final JsonModel responseJsonModel = JsonModel.model(parentResponse.getBody());
 
         // Gets the body from current Request as a JsonObject
         final JsonObject jsonRequestBody = this.fromJsonHelper.parse(request.getBody()).getAsJsonObject();
@@ -147,7 +146,7 @@ public class ResolutionHelper {
         // parameter
         for (Entry<String, JsonElement> element : jsonRequestBody.entrySet()) {
             final String key = element.getKey();
-            final JsonElement value = resolveDependentVariables(element, responseJsonModel);
+            final JsonElement value = resolveDependentVariables(element/*, responseJsonModel*/);
             jsonResultBody.add(key, value);
         }
 
@@ -169,7 +168,7 @@ public class ResolutionHelper {
             
             for (String parameter : parameters) {
                 if (parameter.contains("$.")) {
-                    final String resParamValue = responseJsonModel.get(parameter).toString();
+                    final String resParamValue = ""; /*responseJsonModel.get(parameter).toString();*/
                     relativeUrl = relativeUrl.replace(parameter, resParamValue);
                     br.setRelativeUrl(relativeUrl+queryParams);
                 }
@@ -179,53 +178,53 @@ public class ResolutionHelper {
         return br;
     }
 
-    private JsonElement resolveDependentVariables(final Entry<String, JsonElement> entryElement, final JsonModel responseJsonModel) {
+    private JsonElement resolveDependentVariables(final Entry<String, JsonElement> entryElement/*, final JsonModel responseJsonModel*/) {
         JsonElement value = null;
 
         final JsonElement element = entryElement.getValue();
 
         if (element.isJsonObject()) {
             final JsonObject jsObject = element.getAsJsonObject();
-            value = processJsonObject(jsObject, responseJsonModel);
+            value = processJsonObject(jsObject/*, responseJsonModel*/);
         } else if (element.isJsonArray()) {
             final JsonArray jsElementArray = element.getAsJsonArray();
-            value = processJsonArray(jsElementArray, responseJsonModel);
+            value = processJsonArray(jsElementArray/*, responseJsonModel*/);
         } else {
-            value = resolveDependentVariable(element, responseJsonModel);
+            value = resolveDependentVariable(element/*, responseJsonModel*/);
         }
         return value;
     }
 
-    private JsonElement processJsonObject(final JsonObject jsObject, final JsonModel responseJsonModel) {
+    private JsonElement processJsonObject(final JsonObject jsObject/*, final JsonModel responseJsonModel*/) {
         JsonObject valueObj = new JsonObject();
         for (Entry<String, JsonElement> element : jsObject.entrySet()) {
             final String key = element.getKey();
-            final JsonElement value = resolveDependentVariable(element.getValue(), responseJsonModel);
+            final JsonElement value = resolveDependentVariable(element.getValue()/*, responseJsonModel*/);
             valueObj.add(key, value);
         }
         return valueObj;
     }
 
-    private JsonArray processJsonArray(final JsonArray elementArray, final JsonModel responseJsonModel) {
+    private JsonArray processJsonArray(final JsonArray elementArray/*, final JsonModel responseJsonModel*/) {
 
         JsonArray valueArr = new JsonArray();
 
         for (JsonElement element : elementArray) {
             if (element.isJsonObject()) {
                 final JsonObject jsObject = element.getAsJsonObject();
-                valueArr.add(processJsonObject(jsObject, responseJsonModel));
+                valueArr.add(processJsonObject(jsObject/*, responseJsonModel*/));
             }
         }
 
         return valueArr;
     }
 
-    private JsonElement resolveDependentVariable(final JsonElement element, final JsonModel responseJsonModel) {
+    private JsonElement resolveDependentVariable(final JsonElement element /*, final JsonModel responseJsonModel*/) {
         JsonElement value = element;
         String paramVal = element.getAsString();
         if (paramVal.contains("$.")) {
             // Get the value of the parameter from parent response
-            final String resParamValue = responseJsonModel.get(paramVal).toString();
+            final String resParamValue = ""; /*responseJsonModel.get(paramVal).toString();*/
             value = this.fromJsonHelper.parse(resParamValue);
         }
         return value;

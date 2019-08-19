@@ -18,26 +18,18 @@
  */
 package org.apache.fineract.infrastructure.hooks.processor;
 
+import okhttp3.OkHttpClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+import javax.net.ssl.*;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import retrofit.Callback;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.OkClient;
-import retrofit.client.Response;
-
-import com.squareup.okhttp.OkHttpClient;
 
 @SuppressWarnings("unused")
 public class ProcessorHelper {
@@ -80,8 +72,9 @@ public class ProcessorHelper {
 					return true;
 				}
 			};
-			client.setHostnameVerifier(hostnameVerifier);
-			client.setSslSocketFactory(ctx.getSocketFactory());
+			// TODO: fix this
+			// client.hostnameVerifier(hostnameVerifier);
+			// client.sslSocketFactory(ctx.getSocketFactory());
 		} catch (final Exception e) {
 		}
 
@@ -98,14 +91,14 @@ public class ProcessorHelper {
 
 		return new Callback() {
 			@Override
-			public void success(final Object o, final Response response) {
+			public void onResponse(Call call, Response response) {
 				logger.info("URL : " + url + "\tStatus : "
-						+ response.getStatus());
+					+ response.code());
 			}
 
 			@Override
-			public void failure(final RetrofitError retrofitError) {
-				logger.info(retrofitError.getMessage());
+			public void onFailure(Call call, Throwable t) {
+				logger.warn(t.getMessage());
 			}
 		};
 	}
@@ -114,10 +107,15 @@ public class ProcessorHelper {
 
 		final OkHttpClient client = ProcessorHelper.createClient();
 
-		final RestAdapter restAdapter = new RestAdapter.Builder()
-				.setEndpoint(url).setClient(new OkClient(client)).build();
+		Retrofit.Builder builder = new Retrofit.Builder()
+			.baseUrl(url)
+			.client(client)
+			// .addConverterFactory(JacksonConverterFactory.create())
+		;
 
-		return restAdapter.create(WebHookService.class);
+		Retrofit retrofit = builder.build();
+
+		return retrofit.create(WebHookService.class);
 	}
 
 }

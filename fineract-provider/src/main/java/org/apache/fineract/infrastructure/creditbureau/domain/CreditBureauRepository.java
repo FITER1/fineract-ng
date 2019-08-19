@@ -25,6 +25,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface CreditBureauRepository
 		extends JpaRepository<CreditBureau, Long>, JpaSpecificationExecutor<CreditBureau> {
 
-	// CreditBureau findOne(long id);
+	// CreditBureau findById(long id).orElse(null);
 
 }

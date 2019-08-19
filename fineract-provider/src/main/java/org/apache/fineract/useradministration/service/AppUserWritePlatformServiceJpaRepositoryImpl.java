@@ -28,7 +28,7 @@ import java.util.Set;
 import javax.persistence.EntityExistsException;
 import javax.persistence.PersistenceException;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -194,7 +194,7 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
 
             this.fromApiJsonDeserializer.validateForUpdate(command.json());
 
-            final AppUser userToUpdate = this.appUserRepository.findOne(userId);
+            final AppUser userToUpdate = this.appUserRepository.findById(userId).orElse(null);
 
             if (userToUpdate == null) { throw new UserNotFoundException(userId); }
 
@@ -312,7 +312,7 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
         if (!ObjectUtils.isEmpty(rolesArray)) {
             for (final String roleId : rolesArray) {
                 final Long id = Long.valueOf(roleId);
-                final Role role = this.roleRepository.findOne(id);
+                final Role role = this.roleRepository.findById(id).orElse(null);
                 if (role == null) { throw new RoleNotFoundException(id); }
                 allRoles.add(role);
             }
@@ -326,7 +326,7 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
     @Caching(evict = { @CacheEvict(value = "users", allEntries = true), @CacheEvict(value = "usersByUsername", allEntries = true) })
     public CommandProcessingResult deleteUser(final Long userId) {
 
-        final AppUser user = this.appUserRepository.findOne(userId);
+        final AppUser user = this.appUserRepository.findById(userId).orElse(null);
         if (user == null || user.isDeleted()) { throw new UserNotFoundException(userId); }
 
         user.delete();

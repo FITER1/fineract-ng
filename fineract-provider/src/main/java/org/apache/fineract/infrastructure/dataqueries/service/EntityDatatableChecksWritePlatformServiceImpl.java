@@ -23,7 +23,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import org.apache.commons.lang.exception.ExceptionUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -258,7 +258,7 @@ public class EntityDatatableChecksWritePlatformServiceImpl implements EntityData
     @Override
     public CommandProcessingResult deleteCheck(final Long entityDatatableCheckId) {
 
-        final EntityDatatableChecks check = this.entityDatatableChecksRepository.findOne(entityDatatableCheckId);
+        final EntityDatatableChecks check = this.entityDatatableChecksRepository.findById(entityDatatableCheckId).orElse(null);
         if (check == null) { throw new EntityDatatableChecksNotFoundException(entityDatatableCheckId); }
 
         this.entityDatatableChecksRepository.delete(check);

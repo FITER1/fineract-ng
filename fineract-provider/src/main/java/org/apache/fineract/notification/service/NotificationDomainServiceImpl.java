@@ -26,6 +26,7 @@ import org.apache.fineract.notification.data.NotificationData;
 import org.apache.fineract.notification.data.TopicSubscriberData;
 import org.apache.fineract.notification.eventandlistener.NotificationEventService;
 import org.apache.fineract.notification.eventandlistener.SpringEventPublisher;
+import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OfficeRepository;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants;
@@ -49,12 +50,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import javax.jms.Queue;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class NotificationDomainServiceImpl implements NotificationDomainService {
@@ -589,7 +585,8 @@ public class NotificationDomainServiceImpl implements NotificationDomainService 
 		List<Long> subscriberIds = new ArrayList<>();
 		Long entityId = officeId;
 		String entityType= "";
-		if (officeRepository.findOne(entityId).getParent() == null) {
+		Optional<Office> office = officeRepository.findById(entityId);
+		if (office.isPresent() && office.get().getParent() == null) {
 			entityType = "OFFICE";
 		} else {
 			entityType = "BRANCH";
