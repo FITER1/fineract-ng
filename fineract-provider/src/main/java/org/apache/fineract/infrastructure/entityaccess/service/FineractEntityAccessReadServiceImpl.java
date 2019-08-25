@@ -23,9 +23,8 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.dataqueries.service.GenericDataServiceImpl;
-import org.apache.fineract.infrastructure.entityaccess.FineractEntityAccessConstants;
 import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityAccessData;
 import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityRelationData;
 import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityToEntityMappingData;
@@ -34,7 +33,6 @@ import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityAcce
 import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityRelation;
 import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityRelationRepositoryWrapper;
 import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityType;
-import org.apache.fineract.infrastructure.entityaccess.exception.FineractEntityAccessConfigurationException;
 import org.apache.fineract.infrastructure.entityaccess.exception.FineractEntityMappingConfigurationException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.useradministration.domain.AppUser;
@@ -54,7 +52,7 @@ public class FineractEntityAccessReadServiceImpl implements FineractEntityAccess
     private final FineractEntityRelationRepositoryWrapper fineractEntityRelationRepository;
 
     @Autowired
-    public FineractEntityAccessReadServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
+    public FineractEntityAccessReadServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
     		final FineractEntityRelationRepositoryWrapper fineractEntityRelationRepository) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);

@@ -37,7 +37,7 @@ import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.monetary.service.CurrencyReadPlatformService;
 import org.apache.fineract.portfolio.charge.data.ChargeData;
@@ -66,7 +66,7 @@ public class ShareProductReadPlatformServiceImpl implements ProductReadPlatformS
     private final PaginationHelper<ProductData> shareProductDataPaginationHelper = new PaginationHelper<>();
 
     @Autowired
-    public ShareProductReadPlatformServiceImpl(final RoutingDataSource dataSource,
+    public ShareProductReadPlatformServiceImpl(final FineractRoutingDatasource dataSource,
             final CurrencyReadPlatformService currencyReadPlatformService, final ChargeReadPlatformService chargeReadPlatformService,
             final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService,
             final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService,

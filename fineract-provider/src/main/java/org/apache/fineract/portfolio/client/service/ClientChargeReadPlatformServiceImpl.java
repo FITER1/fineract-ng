@@ -27,7 +27,7 @@ import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
@@ -52,7 +52,7 @@ public class ClientChargeReadPlatformServiceImpl implements ClientChargeReadPlat
     private final ClientChargeMapper clientChargeMapper;
 
     @Autowired
-    public ClientChargeReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource) {
+    public ClientChargeReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientChargeMapper = new ClientChargeMapper();

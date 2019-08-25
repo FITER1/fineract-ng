@@ -18,38 +18,30 @@
  */
 package org.apache.fineract.commands.provider;
 
+import org.apache.fineract.TestWithoutDatabaseConfiguration;
 import org.apache.fineract.commands.exception.UnsupportedCommandException;
 import org.apache.fineract.commands.handler.NewCommandSourceHandler;
-import org.apache.fineract.commands.provider.CommandHandlerProvider;
-import org.apache.fineract.infrastructure.configuration.spring.TestsWithoutDatabaseAndNoJobsConfiguration;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.ConfigurableEnvironment;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
-// TODO: @aleks fix this (Java config everywhere)
-// @RunWith(SpringJUnit4ClassRunner.class)
-// @WebAppConfiguration
-// @ActiveProfiles("basicauth")
-// @ContextConfiguration(classes = TestsWithoutDatabaseAndNoJobsConfiguration.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestWithoutDatabaseConfiguration.class)
 public class CommandHandlerProviderTest {
 
-    // TODO: @aleks fix this (Java config everywhere)
-    // @Autowired
+    @Autowired
     private CommandHandlerProvider commandHandlerProvider;
 
     public CommandHandlerProviderTest() {
         super();
     }
 
-    // @Test
+    @Test
     public void shouldRegisterHandler() {
         try {
             final Long testCommandId = 815L;

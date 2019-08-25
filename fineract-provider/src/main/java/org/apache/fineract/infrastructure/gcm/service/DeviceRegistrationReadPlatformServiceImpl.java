@@ -18,12 +18,8 @@
  */
 package org.apache.fineract.infrastructure.gcm.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.gcm.domain.DeviceRegistrationData;
 import org.apache.fineract.infrastructure.gcm.exception.DeviceRegistrationNotFoundException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -35,6 +31,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+
 @Service
 public class DeviceRegistrationReadPlatformServiceImpl implements
 		DeviceRegistrationReadPlatformService {
@@ -45,7 +45,7 @@ public class DeviceRegistrationReadPlatformServiceImpl implements
 	@Autowired
 	public DeviceRegistrationReadPlatformServiceImpl(
 			final PlatformSecurityContext context,
-			final RoutingDataSource dataSource) {
+			final FineractRoutingDatasource dataSource) {
 		this.context = context;
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}

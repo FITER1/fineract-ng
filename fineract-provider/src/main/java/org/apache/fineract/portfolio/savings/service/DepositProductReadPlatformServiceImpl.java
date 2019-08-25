@@ -26,7 +26,7 @@ import java.util.Collection;
 import org.apache.fineract.accounting.common.AccountingEnumerations;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartData;
@@ -54,7 +54,7 @@ public class DepositProductReadPlatformServiceImpl implements DepositProductRead
     private final DepositProductLookupMapper depositProductLookupsRowMapper = new DepositProductLookupMapper();
 
     @Autowired
-    public DepositProductReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
+    public DepositProductReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
             final InterestRateChartReadPlatformService chartReadPlatformService) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);

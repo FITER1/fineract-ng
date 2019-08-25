@@ -16,23 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.infrastructure.configuration.spring;
+package org.apache.fineract;
 
-import javax.sql.DataSource;
-
-import org.apache.fineract.infrastructure.core.boot.AbstractApplicationConfiguration;
 import org.apache.fineract.infrastructure.core.service.TenantDatabaseUpgradeService;
 import org.apache.fineract.infrastructure.jobs.service.JobRegisterService;
 import org.mockito.Mockito;
-import org.springframework.context.annotation.Bean;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.annotation.*;
 
-/**
- * Spring @Configuration which does not require a running database. It also does
- * not load any job configuration (as they are in the DB), thus nor starts any
- * background jobs. For some integration tests, this may be perfectly sufficient
- * (and faster to run such tests).
- */
-public class TestsWithoutDatabaseAndNoJobsConfiguration extends AbstractApplicationConfiguration {
+import javax.sql.DataSource;
+
+import static org.mockito.Mockito.mock;
+
+@Configuration
+@PropertySource("classpath:application-test.properties")
+@EnableAutoConfiguration
+@ComponentScan("org.apache.fineract")
+public class TestWithoutDatabaseConfiguration {
 
     /**
      * Override TenantDatabaseUpgradeService binding, because the real one has a @PostConstruct
@@ -40,12 +40,8 @@ public class TestsWithoutDatabaseAndNoJobsConfiguration extends AbstractApplicat
      */
     @Bean
     public TenantDatabaseUpgradeService tenantDatabaseUpgradeService() {
-        return new TenantDatabaseUpgradeService(null, null, null) {
-            @Override
-            public void upgradeAllTenants() {
-                // NOOP
-            }
-        };
+        TenantDatabaseUpgradeService mockTenantDatabaseUpgradeService = mock(TenantDatabaseUpgradeService.class);
+        return mockTenantDatabaseUpgradeService;
     }
 
     /**
@@ -55,7 +51,7 @@ public class TestsWithoutDatabaseAndNoJobsConfiguration extends AbstractApplicat
      */
     @Bean
     public JobRegisterService jobRegisterServiceImpl() {
-        JobRegisterService mockJobRegisterService = Mockito.mock(JobRegisterService.class);
+        JobRegisterService mockJobRegisterService = mock(JobRegisterService.class);
         return mockJobRegisterService;
     }
 
@@ -64,7 +60,7 @@ public class TestsWithoutDatabaseAndNoJobsConfiguration extends AbstractApplicat
      */
     @Bean
     public DataSource tenantDataSourceJndi() {
-        DataSource mockDataSource = Mockito.mock(DataSource.class, Mockito.RETURNS_MOCKS);
+        DataSource mockDataSource = mock(DataSource.class, Mockito.RETURNS_MOCKS);
         return mockDataSource;
     }
 }

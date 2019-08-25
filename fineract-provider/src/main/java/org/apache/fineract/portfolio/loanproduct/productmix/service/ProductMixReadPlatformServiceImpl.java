@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.loanproduct.data.LoanProductData;
 import org.apache.fineract.portfolio.loanproduct.productmix.data.ProductMixData;
@@ -45,7 +45,7 @@ public class ProductMixReadPlatformServiceImpl implements ProductMixReadPlatform
     private final LoanProductReadPlatformService loanProductReadPlatformService;
 
     @Autowired
-    public ProductMixReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
+    public ProductMixReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
             final LoanProductReadPlatformService loanProductReadPlatformService) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);

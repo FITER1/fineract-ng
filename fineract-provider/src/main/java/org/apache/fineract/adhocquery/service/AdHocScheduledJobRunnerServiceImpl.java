@@ -20,15 +20,11 @@ package org.apache.fineract.adhocquery.service;
 
 import org.apache.fineract.adhocquery.data.AdHocData;
 import org.apache.fineract.adhocquery.domain.ReportRunFrequency;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
-import org.joda.time.Months;
-import org.joda.time.Years;
+import org.joda.time.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +43,7 @@ public class AdHocScheduledJobRunnerServiceImpl implements AdHocScheduledJobRunn
     private final JdbcTemplate jdbcTemplate;
     
     @Autowired
-    public AdHocScheduledJobRunnerServiceImpl(final RoutingDataSource dataSource,
+    public AdHocScheduledJobRunnerServiceImpl(final FineractRoutingDatasource dataSource,
     		final AdHocReadPlatformService adHocReadPlatformService
             ) {
     	this.jdbcTemplate = new JdbcTemplate(dataSource);

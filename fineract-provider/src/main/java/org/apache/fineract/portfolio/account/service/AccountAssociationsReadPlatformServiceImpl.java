@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.portfolio.account.data.AccountAssociationsData;
 import org.apache.fineract.portfolio.account.data.PortfolioAccountData;
 import org.apache.fineract.portfolio.account.domain.AccountAssociationType;
@@ -46,7 +46,7 @@ public class AccountAssociationsReadPlatformServiceImpl implements AccountAssoci
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public AccountAssociationsReadPlatformServiceImpl(final RoutingDataSource dataSource) {
+    public AccountAssociationsReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

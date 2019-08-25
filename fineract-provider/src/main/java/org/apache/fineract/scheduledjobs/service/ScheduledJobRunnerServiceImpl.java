@@ -18,24 +18,12 @@
  */
 package org.apache.fineract.scheduledjobs.service;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.text.SimpleDateFormat;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.fineract.accounting.glaccount.domain.TrialBalance;
 import org.apache.fineract.accounting.glaccount.domain.TrialBalanceRepositoryWrapper;
-import org.apache.fineract.portfolio.loanaccount.api.LoanApiConstants;
-import org.joda.time.LocalDate;
-import org.joda.time.DateTime;
-
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSourceServiceFactory;
 import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
@@ -50,6 +38,7 @@ import org.apache.fineract.portfolio.savings.service.SavingsAccountChargeReadPla
 import org.apache.fineract.portfolio.savings.service.SavingsAccountWritePlatformService;
 import org.apache.fineract.portfolio.shareaccounts.service.ShareAccountDividendReadPlatformService;
 import org.apache.fineract.portfolio.shareaccounts.service.ShareAccountSchedularService;
+import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -62,6 +51,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 @Service(value = "scheduledJobRunnerService")
 public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService {
 
@@ -69,7 +66,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
     private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     private final DateTimeFormatter formatterWithTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
-    private final RoutingDataSourceServiceFactory dataSourceServiceFactory;
+    private final FineractRoutingDatasource routingDataSource;
     private final SavingsAccountWritePlatformService savingsAccountWritePlatformService;
     private final SavingsAccountChargeReadPlatformService savingsAccountChargeReadPlatformService;
     private final DepositAccountReadPlatformService depositAccountReadPlatformService;
@@ -79,14 +76,14 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
     private final TrialBalanceRepositoryWrapper trialBalanceRepositoryWrapper;
 
     @Autowired
-    public ScheduledJobRunnerServiceImpl(final RoutingDataSourceServiceFactory dataSourceServiceFactory,
+    public ScheduledJobRunnerServiceImpl(final FineractRoutingDatasource routingDataSource,
             final SavingsAccountWritePlatformService savingsAccountWritePlatformService,
             final SavingsAccountChargeReadPlatformService savingsAccountChargeReadPlatformService,
             final DepositAccountReadPlatformService depositAccountReadPlatformService,
             final DepositAccountWritePlatformService depositAccountWritePlatformService,
             final ShareAccountDividendReadPlatformService shareAccountDividendReadPlatformService,
             final ShareAccountSchedularService shareAccountSchedularService, final TrialBalanceRepositoryWrapper trialBalanceRepositoryWrapper) {
-        this.dataSourceServiceFactory = dataSourceServiceFactory;
+        this.routingDataSource = routingDataSource;
         this.savingsAccountWritePlatformService = savingsAccountWritePlatformService;
         this.savingsAccountChargeReadPlatformService = savingsAccountChargeReadPlatformService;
         this.depositAccountReadPlatformService = depositAccountReadPlatformService;
@@ -101,7 +98,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
     @CronTarget(jobName = JobName.UPDATE_LOAN_SUMMARY)
     public void updateLoanSummaryDetails() {
 
-        final JdbcTemplate jdbcTemplate = new JdbcTemplate(this.dataSourceServiceFactory.determineDataSourceService().retrieveDataSource());
+        final JdbcTemplate jdbcTemplate = new JdbcTemplate(this.routingDataSource);
 
         final StringBuilder updateSqlBuilder = new StringBuilder(900);
         updateSqlBuilder.append("update m_loan ");
@@ -184,7 +181,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
     @CronTarget(jobName = JobName.UPDATE_LOAN_PAID_IN_ADVANCE)
     public void updateLoanPaidInAdvance() {
 
-        final JdbcTemplate jdbcTemplate = new JdbcTemplate(this.dataSourceServiceFactory.determineDataSourceService().retrieveDataSource());
+        final JdbcTemplate jdbcTemplate = new JdbcTemplate(this.routingDataSource);
 
         jdbcTemplate.execute("truncate table m_loan_paid_in_advance");
 
@@ -274,7 +271,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
     @CronTarget(jobName = JobName.UPDATE_NPA)
     public void updateNPA() {
 
-        final JdbcTemplate jdbcTemplate = new JdbcTemplate(this.dataSourceServiceFactory.determineDataSourceService().retrieveDataSource());
+        final JdbcTemplate jdbcTemplate = new JdbcTemplate(this.routingDataSource);
 
         final StringBuilder resetNPASqlBuilder = new StringBuilder(900);
         resetNPASqlBuilder.append("update m_loan loan ");
@@ -331,7 +328,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
     @Override
     @CronTarget(jobName = JobName.GENERATE_RD_SCEHDULE)
     public void generateRDSchedule() {
-        final JdbcTemplate jdbcTemplate = new JdbcTemplate(this.dataSourceServiceFactory.determineDataSourceService().retrieveDataSource());
+        final JdbcTemplate jdbcTemplate = new JdbcTemplate(this.routingDataSource);
         final Collection<Map<String, Object>> scheduleDetails = this.depositAccountReadPlatformService.retriveDataForRDScheduleCreation();
         String insertSql = "INSERT INTO `m_mandatory_savings_schedule` (`savings_account_id`, `duedate`, `installment`, `deposit_amount`, `completed_derived`, `created_date`, `lastmodified_date`) VALUES ";
         StringBuilder sb = new StringBuilder();
@@ -422,7 +419,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
 
     @CronTarget(jobName = JobName.UPDATE_TRAIL_BALANCE_DETAILS)
     public void updateTrialBalanceDetails() throws JobExecutionException {
-        final JdbcTemplate jdbcTemplate = new JdbcTemplate(this.dataSourceServiceFactory.determineDataSourceService().retrieveDataSource());
+        final JdbcTemplate jdbcTemplate = new JdbcTemplate(this.routingDataSource);
         final StringBuilder tbGapSqlBuilder = new StringBuilder(500);
         tbGapSqlBuilder.append("select distinct(je.transaction_date) ")
                 .append("from acc_gl_journal_entry je ")

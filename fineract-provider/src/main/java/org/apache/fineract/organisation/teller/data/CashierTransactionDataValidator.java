@@ -23,7 +23,7 @@ import java.util.Date;
 
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.organisation.teller.domain.Cashier;
 import org.apache.fineract.organisation.teller.domain.Teller;
@@ -48,7 +48,7 @@ public class CashierTransactionDataValidator {
 	@Autowired
 	public CashierTransactionDataValidator(
 			final TellerManagementReadPlatformService tellerManagementReadPlatformService,
-			final RoutingDataSource dataSource) {
+			final FineractRoutingDatasource dataSource) {
 		this.tellerManagementReadPlatformService = tellerManagementReadPlatformService;
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}

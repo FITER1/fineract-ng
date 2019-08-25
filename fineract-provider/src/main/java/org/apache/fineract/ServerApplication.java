@@ -18,13 +18,13 @@
  */
 package org.apache.fineract;
 
-import org.apache.fineract.infrastructure.core.boot.AbstractApplicationConfiguration;
-import org.apache.fineract.infrastructure.core.boot.ApplicationExitUtil;
-import org.apache.fineract.infrastructure.core.boot.EmbeddedTomcatWithSSLConfiguration;
-import org.apache.fineract.infrastructure.core.boot.db.DataSourceConfiguration;
 import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Import;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.context.annotation.FilterType;
 
 /**
  * Fineract main() application which launches Fineract in an embedded Tomcat HTTP
@@ -39,14 +39,50 @@ import org.springframework.context.annotation.Import;
  * It's the old/classic Mifos (non-X) Workspace 2.0 reborn for Fineract! ;-)
  *
  */
+@SpringBootApplication
+@EnableAspectJAutoProxy(proxyTargetClass = true)
+@ComponentScans({
+	@ComponentScan("org.apache.fineract.accounting"),
+	@ComponentScan("org.apache.fineract.commands.provider"),
+	@ComponentScan("org.apache.fineract.commands.handler"),
+	@ComponentScan("org.apache.fineract.commands.service"),
+	@ComponentScan("org.apache.fineract.commands"),
+	@ComponentScan("org.apache.fineract.audit"),
+	@ComponentScan("org.apache.fineract.infrastructure.creditbureau"),
+	@ComponentScan("org.apache.fineract.infrastructure"),
+	@ComponentScan("org.apache.fineract.scheduledjobs"),
+	@ComponentScan("org.apache.fineract.organisation"),
+	@ComponentScan("org.apache.fineract.interoperation"),
+	@ComponentScan("org.apache.fineract.portfolio.loanaccount"),
+	@ComponentScan("org.apache.fineract.portfolio.savingsaccount"),
+	@ComponentScan("org.apache.fineract.portfolio"),
+	@ComponentScan("org.apache.fineract.useradministration"),
+	@ComponentScan("org.apache.fineract.mix"),
+	@ComponentScan("org.apache.fineract.notification"),
+	@ComponentScan("org.apache.fineract.template"),
+	@ComponentScan("org.apache.fineract.template.service"),
+	@ComponentScan("org.apache.fineract.useradministration"),
+	@ComponentScan("org.apache.fineract.batch,"),
+	@ComponentScan("org.apache.fineract.adhocquery"),
+	@ComponentScan("org.apache.fineract.infrastructure.campaigns"),
+	@ComponentScan("org.apache.fineract.spm")
+	/*
+	@ComponentScan(excludeFilters = {
+		@ComponentScan.Filter(type = FilterType.ANNOTATION, pattern = "org.springframework.stereotype.Controller")
+	})
+    */
+})
+@EnableAutoConfiguration(
+	// TODO: @aleks find out if we really need to exclude these
+	/*
+	exclude = {
+		DataSourceAutoConfiguration.class,
+		HibernateJpaAutoConfiguration.class,
+		DataSourceTransactionManagerAutoConfiguration.class,
+		FlywayAutoConfiguration.class
+	}*/)
 public class ServerApplication {
-
-	@Import({ DataSourceConfiguration.class, EmbeddedTomcatWithSSLConfiguration.class })
-	private static class Configuration extends AbstractApplicationConfiguration { }
-
 	public static void main(String[] args) throws Exception {
-		ConfigurableApplicationContext ctx = SpringApplication.run(Configuration.class, args);
-		ApplicationExitUtil.waitForKeyPressToCleanlyExit(ctx);
+		SpringApplication.run(ServerApplication.class, args);
 	}
-
 }

@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -51,7 +51,7 @@ public class NotificationReadPlatformServiceImpl implements NotificationReadPlat
             tenantNotificationResponseHeaderCache = new HashMap<>();
 
     @Autowired
-    public NotificationReadPlatformServiceImpl(final RoutingDataSource dataSource,
+    public NotificationReadPlatformServiceImpl(final FineractRoutingDatasource dataSource,
     		final PlatformSecurityContext context,
     		final ColumnValidator columnValidator) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);

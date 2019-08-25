@@ -18,14 +18,9 @@
  */
 package org.apache.fineract.portfolio.collateral.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.collateral.data.CollateralData;
@@ -37,6 +32,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
 @Service
 public class CollateralReadPlatformServiceImpl implements CollateralReadPlatformService {
 
@@ -45,7 +45,7 @@ public class CollateralReadPlatformServiceImpl implements CollateralReadPlatform
     private final LoanRepositoryWrapper loanRepositoryWrapper;
 
     @Autowired
-    public CollateralReadPlatformServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
+    public CollateralReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
             final LoanRepositoryWrapper loanRepositoryWrapper) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);

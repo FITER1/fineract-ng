@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
@@ -55,7 +55,7 @@ public class OfficeReadPlatformServiceImpl implements OfficeReadPlatformService 
     @Autowired
     public OfficeReadPlatformServiceImpl(final PlatformSecurityContext context,
             final CurrencyReadPlatformService currencyReadPlatformService,
-            final RoutingDataSource dataSource,
+            final FineractRoutingDatasource dataSource,
             final ColumnValidator columnValidator) {
         this.context = context;
         this.currencyReadPlatformService = currencyReadPlatformService;

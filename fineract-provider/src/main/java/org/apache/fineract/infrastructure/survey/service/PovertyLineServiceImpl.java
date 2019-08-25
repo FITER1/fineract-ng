@@ -23,7 +23,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.survey.data.LikeliHoodPovertyLineData;
 import org.apache.fineract.infrastructure.survey.data.PovertyLineData;
 import org.apache.fineract.infrastructure.survey.data.PpiPovertyLineData;
@@ -39,7 +39,7 @@ public class PovertyLineServiceImpl implements PovertyLineService {
     private final DataSource dataSource;
 
     @Autowired
-    PovertyLineServiceImpl(final RoutingDataSource dataSource) {
+    PovertyLineServiceImpl(final FineractRoutingDatasource dataSource) {
         this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(this.dataSource);
 

@@ -23,7 +23,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.survey.data.LikelihoodData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -37,7 +37,7 @@ public class ReadLikelihoodServiceImpl implements ReadLikelihoodService {
     private final DataSource dataSource;
 
     @Autowired
-    ReadLikelihoodServiceImpl(final RoutingDataSource dataSource) {
+    ReadLikelihoodServiceImpl(final FineractRoutingDatasource dataSource) {
         this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(this.dataSource);
 

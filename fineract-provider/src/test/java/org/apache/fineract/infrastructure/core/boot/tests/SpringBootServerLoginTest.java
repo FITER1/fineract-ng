@@ -29,17 +29,18 @@ import org.apache.fineract.common.RestAssuredFixture;
 import org.junit.Ignore;
 import org.junit.Test;
 
+// TODO: @aleks fix this
 /**
  * This is an integration test for the Spring Boot launch stuff.
  * 
  * @see ServerApplication
  */
-public class SpringBootServerLoginTest extends AbstractSpringBootWithMariaDB4jIntegrationTest {
+public class SpringBootServerLoginTest {
 
     protected RestAssuredFixture util;
 
     @Test
-    @Ignore("Failing on Cloubees")
+    @Ignore("Failing on Cloudbees")
     public void hasPlatformStarted() {
         util = new RestAssuredFixture(8443);
         List<Map<String, String>> response = util.httpGet("/users");

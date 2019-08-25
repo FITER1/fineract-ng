@@ -18,14 +18,13 @@
  */
 package org.apache.fineract.infrastructure.core.service;
 
-import org.apache.fineract.infrastructure.core.boot.JDBCDriverConfig;
-import org.apache.fineract.infrastructure.core.boot.db.TenantDataSourcePortFixService;
+import org.apache.fineract.infrastructure.core.boot.FineractSettings;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenantConnection;
 import org.apache.fineract.infrastructure.security.service.TenantDetailsService;
-import org.flywaydb.core.api.FlywayException;
+import org.flywaydb.core.Flyway;
+import org.flywaydb.core.api.configuration.FluentConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -41,16 +40,14 @@ public class TenantDatabaseUpgradeService {
 
     private final TenantDetailsService tenantDetailsService;
     protected final DataSource tenantDataSource;
-    protected final TenantDataSourcePortFixService tenantDataSourcePortFixService;
-    
-    @Autowired private JDBCDriverConfig driverConfig ;
+
+    @Autowired
+    private FineractSettings settings;
     
     @Autowired
-    public TenantDatabaseUpgradeService(final TenantDetailsService detailsService,
-            @Qualifier("tenantDataSourceJndi") final DataSource dataSource, TenantDataSourcePortFixService tenantDataSourcePortFixService) {
+    public TenantDatabaseUpgradeService(final TenantDetailsService detailsService, final DataSource dataSource) {
         this.tenantDetailsService = detailsService;
         this.tenantDataSource = dataSource;
-        this.tenantDataSourcePortFixService = tenantDataSourcePortFixService;
     }
 
     @PostConstruct
@@ -60,20 +57,13 @@ public class TenantDatabaseUpgradeService {
         for (final FineractPlatformTenant tenant : tenants) {
             final FineractPlatformTenantConnection connection = tenant.getConnection();
             if (connection.isAutoUpdateEnabled()) {
-                // TODO: @aleks fix this
-                // final Flyway flyway = new Flyway();
-                String connectionProtocol = driverConfig.constructProtocol(connection.getSchemaServer(), connection.getSchemaServerPort(), connection.getSchemaName()) ;
-                // DriverDataSource source = new DriverDataSource(this.getClass().getClassLoader(), driverConfig.getDriverClassName(), connectionProtocol, connection.getSchemaUsername(), connection.getSchemaPassword());
-                // flyway.setDataSource(source);
-                // flyway.setLocations("sql/migrations/core_db");
-                // flyway.setOutOfOrder(true);
-                try {
-                    // flyway.migrate();
-                } catch (FlywayException e) {
-                    String betterMessage = e.getMessage() + "; for Tenant DB URL: " + connectionProtocol + ", username: "
-                            + connection.getSchemaUsername();
-                    throw new FlywayException(betterMessage, e.getCause());
-                }
+                final String url = String.format("%s:%s://%s:%s/%s", settings.getJdbc().getProtocol(), settings.getJdbc().getSubProtocol(), connection.getSchemaServer(), connection.getSchemaServerPort(), connection.getSchemaName()); // TODO: use just one property that contains the whole JDBC url; way easier than splitting this up
+                final FluentConfiguration configuration = new FluentConfiguration()
+                    .dataSource(url, connection.getSchemaUsername(), connection.getSchemaPassword())
+                    .locations("sql/migrations/core_db")
+                    .outOfOrder(true);
+                final Flyway flyway = configuration.load();
+                flyway.migrate();
             }
         }
     }
@@ -83,15 +73,14 @@ public class TenantDatabaseUpgradeService {
      * itself.
      */
     private void upgradeTenantDB() {
-        // TODO: @aleks fix this
-        /*
-        final Flyway flyway = new Flyway();
-        flyway.setDataSource(tenantDataSource);
-        flyway.setLocations("sql/migrations/list_db");
-        flyway.setOutOfOrder(true);
+        final FluentConfiguration configuration = new FluentConfiguration()
+            .dataSource(tenantDataSource)
+            .locations("sql/migrations/list_db")
+            .outOfOrder(true);
+        final Flyway flyway = configuration.load();
         flyway.migrate();
-         */
 
-        tenantDataSourcePortFixService.fixUpTenantsSchemaServerPort();
+        // TODO: @aleks why would you need this?!?
+        // tenantDataSourcePortFixService.fixUpTenantsSchemaServerPort();
     }
 }

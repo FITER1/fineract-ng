@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.portfolio.self.loanaccount.service;
 
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -30,7 +30,7 @@ public class AppuserLoansMapperReadServiceImpl implements
 	private final JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	public AppuserLoansMapperReadServiceImpl(final RoutingDataSource dataSource) {
+	public AppuserLoansMapperReadServiceImpl(final FineractRoutingDatasource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 

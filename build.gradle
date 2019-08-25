@@ -145,7 +145,7 @@ allprojects  {
             "**/NOTICE_RELEASE",
             "**/NOTICE_SOURCE",
             // Swagger License
-            "**/src/main/resources/swagger-ui/**",
+            "**/src/main/resources/static/swagger-ui/**",
             // gradle
             "**/.gradle/**",
             "**/gradlew",
@@ -156,6 +156,7 @@ allprojects  {
             "**/native/**",
             "**/wrapper/**",
             "**/build/**",
+            "**/.gradletasknamecache",
 
             //Api Docs
             "**/api-docs/*.*",
@@ -449,6 +450,9 @@ allprojects  {
             dependency "com.google.code.findbugs:jsr305:3.0.2"
             dependency "com.nimbusds:nimbus-jose-jwt:7.7"
             dependency "com.amazon.redshift:redshift-jdbc42-no-awssdk:1.2.32.1056"
+            dependency "com.avides.springboot.testcontainer:springboot-testcontainer-activemq:0.1.0-RC5"
+            dependency "com.avides.springboot.testcontainer:springboot-testcontainer-mysql:0.1.0-RC11"
+            dependency "com.avides.springboot.testcontainer:springboot-testcontainer-awss3mock:0.1.0-RC5"
         }
 
         imports {

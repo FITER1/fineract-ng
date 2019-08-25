@@ -23,7 +23,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.portfolio.meeting.attendance.data.ClientAttendanceData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,7 +36,7 @@ public class ClientAttendanceReadPlatformServiceImpl implements ClientAttendance
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ClientAttendanceReadPlatformServiceImpl(final RoutingDataSource dataSource) {
+    public ClientAttendanceReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

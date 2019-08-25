@@ -29,7 +29,7 @@ import org.apache.fineract.accounting.common.AccountingEnumerations;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.portfolio.tax.data.TaxComponentData;
 import org.apache.fineract.portfolio.tax.data.TaxComponentHistoryData;
 import org.apache.fineract.portfolio.tax.data.TaxGroupData;
@@ -52,7 +52,7 @@ public class TaxReadPlatformServiceImpl implements TaxReadPlatformService {
     private final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService;
 
     @Autowired
-    public TaxReadPlatformServiceImpl(final RoutingDataSource dataSource,
+    public TaxReadPlatformServiceImpl(final FineractRoutingDatasource dataSource,
             final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.accountingDropdownReadPlatformService = accountingDropdownReadPlatformService;

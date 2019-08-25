@@ -18,19 +18,17 @@
  */
 package org.apache.fineract.infrastructure.core.boot;
 
-import org.apache.fineract.infrastructure.security.filter.TwoFactorAuthenticationFilter;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
-public class WebTwoFactorXmlConfiguration {
+public class SecurityConfiguration {
 
     @Bean
-    public FilterRegistrationBean twoFactorFilterBean(TwoFactorAuthenticationFilter filter) {
-        FilterRegistrationBean registrationBean = new FilterRegistrationBean(filter);
-        registrationBean.setEnabled(false);
-        return registrationBean;
+    public PasswordEncoder passwordEncoder() {
+        // NOTE: org.springframework.security.authentication.encoding.ShaPasswordEncoder doesn't exist anymore and is not considered secure
+        return new BCryptPasswordEncoder();
     }
 }

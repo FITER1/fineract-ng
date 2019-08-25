@@ -18,30 +18,25 @@
  */
 package org.apache.fineract.notification;
 
-import com.mockrunner.mock.jms.MockQueue;
+import org.apache.fineract.TestWithJmsConfiguration;
 import org.apache.fineract.notification.data.NotificationData;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.jms.core.MessageCreator;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
-
-// TODO: @aleks fix this (use test containers)
 @RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = TestWithJmsConfiguration.class)
 public class SenderTest {
 
-    // TODO: @aleks fix this (Java config everywhere)
-    // @Autowired
-    private JmsTemplate jmsTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(SenderTest.class);
 
-    // @Autowired
-    private MockQueue mockQueue;
+    @Autowired
+    private JmsTemplate jmsTemplate;
 
     @Test
     public void notificationCreation() {
@@ -65,14 +60,9 @@ public class SenderTest {
                 null
         );
 
-        /*
-        jmsTemplate.send(mockQueue, new MessageCreator() {
-            @Override
-            public Message createMessage(Session session) throws JMSException {
-                System.out.println("Message send successfully");
-                return session.createObjectMessage(notificationData);
-            }
+        jmsTemplate.send(session -> {
+            logger.info("Message send successfully");
+            return session.createObjectMessage(notificationData);
         });
-        */
     }
 }

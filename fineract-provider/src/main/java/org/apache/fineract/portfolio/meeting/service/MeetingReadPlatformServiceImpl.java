@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
 import org.apache.fineract.portfolio.meeting.data.MeetingData;
 import org.apache.fineract.portfolio.meeting.exception.MeetingNotFoundException;
@@ -41,7 +41,7 @@ public class MeetingReadPlatformServiceImpl implements MeetingReadPlatformServic
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public MeetingReadPlatformServiceImpl(final RoutingDataSource dataSource) {
+    public MeetingReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

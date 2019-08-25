@@ -23,7 +23,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.address.data.FieldConfigurationData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class FieldConfigurationReadPlatformServiceImpl implements FieldConfigura
 
 	@Autowired
 	public FieldConfigurationReadPlatformServiceImpl(final PlatformSecurityContext context,
-			final RoutingDataSource dataSource) {
+			final FineractRoutingDatasource dataSource) {
 		this.context = context;
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}

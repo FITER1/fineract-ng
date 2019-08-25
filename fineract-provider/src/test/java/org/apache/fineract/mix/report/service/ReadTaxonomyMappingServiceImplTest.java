@@ -18,17 +18,17 @@
  */
 package org.apache.fineract.mix.report.service;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.mix.service.XBRLResultServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.ArrayList;
+
+import static org.junit.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ReadTaxonomyMappingServiceImplTest {
@@ -37,7 +37,7 @@ public class ReadTaxonomyMappingServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
-        final RoutingDataSource dataSource = Mockito.mock(RoutingDataSource.class);
+        final FineractRoutingDatasource dataSource = Mockito.mock(FineractRoutingDatasource.class);
         this.readService = new XBRLResultServiceImpl(dataSource, null, null);
 
     }

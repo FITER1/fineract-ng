@@ -39,7 +39,7 @@ import javax.ws.rs.core.StreamingOutput;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
 import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
 import org.apache.fineract.infrastructure.dataqueries.data.ReportParameterData;
@@ -80,7 +80,7 @@ public class ReadReportingServiceImpl implements ReadReportingService {
     private final ColumnValidator columnValidator;
 
     @Autowired
-    public ReadReportingServiceImpl(final PlatformSecurityContext context, final RoutingDataSource dataSource,
+    public ReadReportingServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
             final GenericDataService genericDataService, final ReportingProcessServiceProvider reportingProcessServiceProvider,
             final ColumnValidator columnValidator) {
 

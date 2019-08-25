@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
@@ -51,7 +51,7 @@ public class LoanScheduleHistoryReadPlatformServiceImpl implements LoanScheduleH
     private final PlatformSecurityContext context;
 
     @Autowired
-    public LoanScheduleHistoryReadPlatformServiceImpl(final RoutingDataSource dataSource, final PlatformSecurityContext context) {
+    public LoanScheduleHistoryReadPlatformServiceImpl(final FineractRoutingDatasource dataSource, final PlatformSecurityContext context) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }

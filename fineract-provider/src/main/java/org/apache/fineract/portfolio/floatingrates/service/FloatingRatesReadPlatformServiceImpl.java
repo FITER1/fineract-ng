@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.portfolio.floatingrates.data.FloatingRateData;
 import org.apache.fineract.portfolio.floatingrates.data.FloatingRatePeriodData;
 import org.apache.fineract.portfolio.floatingrates.data.InterestRatePeriodData;
@@ -45,7 +45,7 @@ public class FloatingRatesReadPlatformServiceImpl implements
 
 	@Autowired
 	public FloatingRatesReadPlatformServiceImpl(
-			final RoutingDataSource dataSource) {
+			final FineractRoutingDatasource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 

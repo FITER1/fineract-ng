@@ -16,18 +16,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.infrastructure.core.boot.db;
+package org.apache.fineract.infrastructure.core.boot;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
-/**
- * Configuration for a DataSource.
- */
+@Profile("oauth")
 @Configuration
-public class DataSourceConfiguration {
-	private static final Logger logger = LoggerFactory.getLogger(DataSourceConfiguration.class);
+public class SecurityOauthConfiguration extends WebSecurityConfigurerAdapter {
+    // TODO: @aleks implement this
 
-	// TODO: @aleks fix this
+    @Bean
+    public TokenStore tokenStore(FineractRoutingDatasource dataSource) {
+        return new JdbcTokenStore(dataSource);
+    }
 }

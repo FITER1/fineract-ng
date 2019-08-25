@@ -28,7 +28,7 @@ import java.util.List;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.organisation.staff.data.StaffData;
 import org.apache.fineract.organisation.staff.service.StaffReadPlatformService;
 import org.apache.fineract.portfolio.account.data.PortfolioAccountData;
@@ -58,7 +58,7 @@ public class GuarantorReadPlatformServiceImpl implements GuarantorReadPlatformSe
     private final LoanRepositoryWrapper loanRepositoryWrapper;
 
     @Autowired
-    public GuarantorReadPlatformServiceImpl(final RoutingDataSource dataSource, final ClientReadPlatformService clientReadPlatformService,
+    public GuarantorReadPlatformServiceImpl(final FineractRoutingDatasource dataSource, final ClientReadPlatformService clientReadPlatformService,
             final StaffReadPlatformService staffReadPlatformService, final LoanRepositoryWrapper loanRepositoryWrapper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientReadPlatformService = clientReadPlatformService;

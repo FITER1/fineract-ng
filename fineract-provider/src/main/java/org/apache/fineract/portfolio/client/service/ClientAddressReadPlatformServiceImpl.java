@@ -18,17 +18,17 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.address.data.ClientAddressData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
 
 @Service
 public class ClientAddressReadPlatformServiceImpl implements ClientAddressReadPlatformService {
@@ -38,7 +38,7 @@ public class ClientAddressReadPlatformServiceImpl implements ClientAddressReadPl
 
 	@Autowired
 	public ClientAddressReadPlatformServiceImpl(final PlatformSecurityContext context,
-			final RoutingDataSource dataSource) {
+			final FineractRoutingDatasource dataSource) {
 		this.context = context;
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}

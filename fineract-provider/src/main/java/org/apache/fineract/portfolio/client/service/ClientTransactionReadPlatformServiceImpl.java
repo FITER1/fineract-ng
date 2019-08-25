@@ -18,16 +18,11 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.client.data.ClientTransactionData;
@@ -43,6 +38,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+
 @Service
 public class ClientTransactionReadPlatformServiceImpl implements ClientTransactionReadPlatformService {
 
@@ -51,7 +51,7 @@ public class ClientTransactionReadPlatformServiceImpl implements ClientTransacti
     private final PaginationHelper<ClientTransactionData> paginationHelper;
 
     @Autowired
-    public ClientTransactionReadPlatformServiceImpl(final RoutingDataSource dataSource) {
+    public ClientTransactionReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientTransactionMapper = new ClientTransactionMapper();
         this.paginationHelper = new PaginationHelper<>();

@@ -28,7 +28,7 @@ import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.RoutingDataSource;
+import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.dataqueries.data.DatatableCheckStatusData;
 import org.apache.fineract.infrastructure.dataqueries.data.DatatableChecksData;
@@ -61,7 +61,7 @@ public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatat
     private final PaginationHelper<EntityDataTableChecksData> paginationHelper = new PaginationHelper<>();
 
     @Autowired
-    public EntityDatatableChecksReadPlatformServiceImpl(final RoutingDataSource dataSource,
+    public EntityDatatableChecksReadPlatformServiceImpl(final FineractRoutingDatasource dataSource,
             final LoanProductReadPlatformService loanProductReadPlatformService,
             final SavingsProductReadPlatformService savingsProductReadPlatformService,
             final EntityDatatableChecksRepository entityDatatableChecksRepository,
