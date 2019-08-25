@@ -21,6 +21,7 @@ package org.apache.fineract.infrastructure.core.boot;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -58,5 +59,14 @@ public class SecurityBasicConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").fullyAuthenticated()
                 .antMatchers("/api/**").hasAuthority("TWOFACTOR_AUTHENTICATED")
         ;
+    }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+            .antMatchers("/", "/index.html")
+            .antMatchers("/static/**")
+            .antMatchers("/resources/**")
+            .antMatchers("/favicon.ico");
     }
 }
