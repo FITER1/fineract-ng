@@ -49,7 +49,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Set;
 
-@Path("/standinginstructions")
+@Path("standinginstructions")
 @Component
 @Scope("singleton")
 @Api(value = "Standing Instructions", description = "Standing instructions (or standing orders) refer to instructions a bank account holder (\"the payer\") gives to his or her bank to pay a set amount at regular intervals to another's (\"the payee's\") account.\n" + "\n" + "Note: At present only savings account to savings account and savings account to Loan account transfers are permitted.")

@@ -36,7 +36,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-@Path("/notifications")
+@Path("notifications")
 @Component
 @Scope("singleton")
 public class NotificationApiResource {

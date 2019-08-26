@@ -54,7 +54,7 @@ import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
-@Path("/savingsaccounts/{savingsId}/transactions")
+@Path("savingsaccounts/{savingsId}/transactions")
 @Component
 @Scope("singleton")
 public class SavingsAccountTransactionsApiResource {

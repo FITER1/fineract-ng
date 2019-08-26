@@ -325,12 +325,13 @@ public class ConfigurationDomainServiceJpa implements ConfigurationDomainService
     }
 
     private GlobalConfigurationPropertyData getGlobalConfigurationPropertyData(final String propertyName) {
-        String identifier = ThreadLocalContextUtil.getTenant().getTenantIdentifier();
-        String key = identifier + "_" + propertyName;
-        if (!configurations.containsKey(key)) {
+        // TODO: @aleks remove all references to ThreadLocalContextUtil
+        // String identifier = ThreadLocalContextUtil.getTenant().getTenantIdentifier();
+        // String key = identifier + "_" + propertyName;
+        if (!configurations.containsKey(propertyName)) {
             GlobalConfigurationProperty configuration = this.globalConfigurationRepository.findOneByNameWithNotFoundDetection(propertyName);
-            configurations.put(key, configuration.toData());
+            configurations.put(propertyName, configuration.toData());
         }
-        return configurations.get(key);
+        return configurations.get(propertyName);
     }
 }

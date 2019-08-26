@@ -18,17 +18,8 @@
  */
 package org.apache.fineract.infrastructure.security.api;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
-
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
 import io.swagger.annotations.*;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.serialization.ToApiJsonSerializer;
 import org.apache.fineract.infrastructure.security.constants.TwoFactorConstants;
@@ -39,7 +30,6 @@ import org.apache.fineract.useradministration.data.RoleData;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.useradministration.domain.Role;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,9 +38,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import com.sun.jersey.core.util.Base64;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
 
-@Path("/authentication")
+@Path("authentication")
 @Component
 @Profile("basicauth")
 @Scope("singleton")
@@ -91,7 +88,13 @@ public class AuthenticationApiResource {
                 permissions.add(grantedAuthority.getAuthority());
             }
 
-            final byte[] base64EncodedAuthenticationKey = Base64.encode(username + ":" + password);
+            byte[] base64EncodedAuthenticationKey = null;
+
+            try {
+                base64EncodedAuthenticationKey = new Base64().encode((username + ":" + password).getBytes());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             final AppUser principal = (AppUser) authenticationCheck.getPrincipal();
             final Collection<RoleData> roles = new ArrayList<>();

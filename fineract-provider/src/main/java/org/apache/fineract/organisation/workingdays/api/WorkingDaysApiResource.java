@@ -42,7 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/workingdays")
+@Path("workingdays")
 @Component
 @Scope("singleton")
 @Api(value = "Working days", description = "The days of the week that are workdays.\n" + "\n" + "Rescheduling of repayments when it falls on a non-working is turned on /off by enable/disable reschedule-future-repayments parameter in Global configurations.\n" + "\n" + "Allow transactions on non-working days is configurable by enabling/disbaling the allow-transactions-on-non_workingday parameter in Global configurations.")
@@ -95,7 +95,7 @@ public class WorkingDaysApiResource {
     }
 
     @GET
-    @Path("/template")
+    @Path("template")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     @ApiOperation(value = "Working Days Template", notes = "This is a convenience resource. It can be useful when building maintenance user interface screens for working days.\n" + "\n" + "Example Request:\n" + "\n" + "workingdays/template")

@@ -43,8 +43,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-@Path("/collectionsheet")
-@Component
+@Path("collectionsheet")
 @Scope("singleton")
 @Api(value = "Collection Sheet", description = "")
 public class CollectionSheetApiResourse {

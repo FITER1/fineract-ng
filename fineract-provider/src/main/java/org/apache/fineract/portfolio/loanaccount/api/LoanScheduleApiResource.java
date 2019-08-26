@@ -40,7 +40,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.util.HashSet;
 
-@Path("/loans/{loanId}/schedule")
+@Path("loans/{loanId}/schedule")
 @Component
 @Scope("singleton")
 @Api(value = "Loan Rescheduling", description = "Loan Term Variations provides the ability to change due dates, amounts and number of instalments before loan approval.")

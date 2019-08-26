@@ -54,7 +54,7 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Path("/jobs")
+@Path("jobs")
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
 @Component

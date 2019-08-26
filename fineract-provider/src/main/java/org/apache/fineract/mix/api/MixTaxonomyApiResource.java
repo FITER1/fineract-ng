@@ -42,7 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/mixtaxonomy")
+@Path("mixtaxonomy")
 @Component
 @Scope("singleton")
 @Api(value = "Mix Taxonomy", description = "")

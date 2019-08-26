@@ -49,7 +49,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/" + ReportMailingJobConstants.REPORT_MAILING_JOB_RESOURCE_NAME)
+@Path(ReportMailingJobConstants.REPORT_MAILING_JOB_RESOURCE_NAME)
 @Component
 @Scope("singleton")
 @Api(value = "Report Mailing Jobs", description = "This resource allows you to create a scheduled job that runs a report and sents it by email to specified email addresses.\n" + "\n" + "The scheduled job can be configured to run once or on a regular basis (once a day, twice a week, etc).")

@@ -40,7 +40,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Path("/self/surveys/scorecards")
+@Path("self/surveys/scorecards")
 @Component
 @Scope("singleton")
 public class SelfScorecardApiResource {

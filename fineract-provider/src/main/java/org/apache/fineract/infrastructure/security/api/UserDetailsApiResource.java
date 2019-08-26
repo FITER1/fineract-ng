@@ -50,7 +50,7 @@ import org.springframework.stereotype.Component;
 /*
  * Implementation of Oauth2 authentication APIs, loaded only when "oauth" profile is enabled. 
  */
-@Path("/userdetails")
+@Path("userdetails")
 @Component
 @Profile("oauth")
 @Scope("singleton")

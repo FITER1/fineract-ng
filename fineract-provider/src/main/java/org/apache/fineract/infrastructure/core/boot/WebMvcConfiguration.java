@@ -23,12 +23,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-@Configuration
-@EnableWebMvc
-public class WebMvcConfiguration implements WebMvcConfigurer {
+// @Configuration
+// @EnableWebMvc
+public class WebMvcConfiguration /*implements WebMvcConfigurer*/ {
+    /*
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**", "/resources/**")
             .addResourceLocations("/static/", "/resources/");
     }
+    */
 }

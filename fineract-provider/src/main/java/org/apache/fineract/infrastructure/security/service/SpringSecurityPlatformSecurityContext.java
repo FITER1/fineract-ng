@@ -58,7 +58,7 @@ public class SpringSecurityPlatformSecurityContext implements PlatformSecurityCo
     };
 
     @Autowired
-    SpringSecurityPlatformSecurityContext(final ConfigurationDomainService configurationDomainService) {
+    public SpringSecurityPlatformSecurityContext(final ConfigurationDomainService configurationDomainService) {
         this.configurationDomainService = configurationDomainService;
     }
 

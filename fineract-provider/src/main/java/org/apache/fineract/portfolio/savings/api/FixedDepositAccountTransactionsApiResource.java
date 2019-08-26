@@ -55,7 +55,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/fixeddepositaccounts/{fixedDepositAccountId}/transactions")
+@Path("fixeddepositaccounts/{fixedDepositAccountId}/transactions")
 @Component
 @Scope("singleton")
 public class FixedDepositAccountTransactionsApiResource {

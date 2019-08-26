@@ -44,7 +44,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by Cieyou on 3/12/14.
  */
-@Path("/likelihood")
+@Path("likelihood")
 @Component
 @Scope("singleton")
 @Api(value = "Likelihood")

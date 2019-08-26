@@ -40,11 +40,11 @@
 		</encoder>
 	</appender>
 
+	<logger name="org.springframework.web" level="DEBUG" />
 	<!--
 	<logger name="org.apache.fineract" level="DEBUG" />
 	<logger name="org.springframework.jdbc.datasource" level="DEBUG" />
 	<logger name="org.springframework.boot.actuate.audit.listener" level="DEBUG" />
-	<logger name="org.springframework.web" level="DEBUG" />
 	-->
 	<logger name="org.ehcache" level="ERROR" />
 

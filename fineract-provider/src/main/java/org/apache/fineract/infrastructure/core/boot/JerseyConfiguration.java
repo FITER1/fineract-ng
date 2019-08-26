@@ -23,6 +23,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import lombok.extern.slf4j.Slf4j;
+import org.glassfish.jersey.media.multipart.MultiPartFeature;
+import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -34,9 +36,11 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Path;
+import javax.ws.rs.ext.Provider;
+import java.util.Arrays;
 
 @Slf4j
-@ApplicationPath("/api")
+@ApplicationPath("/api/v1")
 @Configuration
 public class JerseyConfiguration extends ResourceConfig {
 
@@ -45,13 +49,32 @@ public class JerseyConfiguration extends ResourceConfig {
 
     @PostConstruct
     public void init() {
+        final String[] providerBeans = this.applicationContext.getBeanNamesForAnnotation(Provider.class);
         final String[] resourceBeans = this.applicationContext.getBeanNamesForAnnotation(Path.class);
 
-        for(String resourceBean : resourceBeans) {
-            final Object resource = this.applicationContext.findAnnotationOnBean(resourceBean, Path.class);
+        // register(RequestContextFilter.class);
+        // register(JacksonFeature.class);
+        // register(FormDataParamInjectionFeature.class);
+        register(MultiPartFeature.class);
+        register(SseFeature.class);
+
+        Arrays.stream(providerBeans).forEach(providerBean -> {
+            final Object provider = this.applicationContext.getBean(providerBean);
+
+            // log.warn("Register provider: {} - {}", resourceBean, resource.getClass().getName());
+
+            if(provider.getClass().getPackage().toString().startsWith("org.apache.fineract")) {
+                register(provider);
+            }
+        });
+
+        Arrays.stream(resourceBeans).forEach(resourceBean -> {
+            final Object resource = this.applicationContext.getBean(resourceBean);
+
+            // log.warn("Register resource: {} - {}", resourceBean, resource.getClass().getName());
 
             register(resource);
-        }
+        });
     }
     @Bean
     @Primary

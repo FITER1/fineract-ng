@@ -47,7 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/permissions")
+@Path("permissions")
 @Component
 @Scope("singleton")
 @Api(value = "Permissions", description = "An API capability to support management of application permissions for user administration.\n" + "\n" + "There is no Apache Fineract functionality for creating or deleting permissions. Permissions come pre-installed.\n" + "\n" + "Permissions are not updated, except in the case of enabling or disabling non-read transactions for Maker Checker functionality")

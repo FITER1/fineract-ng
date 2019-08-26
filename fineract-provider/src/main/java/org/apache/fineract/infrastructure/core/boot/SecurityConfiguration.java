@@ -18,15 +18,33 @@
  */
 package org.apache.fineract.infrastructure.core.boot;
 
+import org.apache.fineract.infrastructure.security.vote.SelfServiceUserAccessVote;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.AccessDecisionManager;
+import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.security.access.prepost.PreInvocationAuthorizationAdvice;
+import org.springframework.security.access.prepost.PreInvocationAuthorizationAdviceVoter;
+import org.springframework.security.access.vote.AffirmativeBased;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.access.vote.UnanimousBased;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.GlobalMethodSecurityConfiguration;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.provider.vote.ScopeVoter;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
-public class SecurityConfiguration {
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class SecurityConfiguration extends GlobalMethodSecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -41,5 +59,25 @@ public class SecurityConfiguration {
         authenticationProvider.setPasswordEncoder(passwordEncoder);
 
         return authenticationProvider;
+    }
+
+    @Override
+    @Bean
+    public AuthenticationManager authenticationManager() throws Exception {
+        return super.authenticationManager();
+    }
+
+    @Bean
+    public AccessDecisionManager accessDecisionManager(PreInvocationAuthorizationAdvice pre) {
+        List<AccessDecisionVoter<? extends Object>> decisionVoters = new ArrayList<>();
+        decisionVoters.add(new PreInvocationAuthorizationAdviceVoter(pre));
+        decisionVoters.add(new ScopeVoter());
+        decisionVoters.add(new RoleVoter());
+        decisionVoters.add(new AuthenticatedVoter());
+        decisionVoters.add(new WebExpressionVoter());
+        decisionVoters.add(new SelfServiceUserAccessVote());
+
+        return new AffirmativeBased(decisionVoters);
+        // return new UnanimousBased(decisionVoters);
     }
 }

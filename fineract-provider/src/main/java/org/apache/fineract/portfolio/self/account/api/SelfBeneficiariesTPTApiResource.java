@@ -45,7 +45,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Path("/self/beneficiaries/tpt")
+@Path("self/beneficiaries/tpt")
 @Component
 @Scope("singleton")
 @Api(value = "Beneficiary Third Party Transfer", description = "")

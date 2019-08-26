@@ -42,8 +42,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Path("/floatingrates")
-@Component
+@Path("floatingrates")
 @Scope("singleton")
 @Api(value = "Floating Rates", description = "It lets you create, list, retrieve and upload the floating rates")
 public class FloatingRatesApiResource {

@@ -49,7 +49,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Path("/loans/{loanId}/transactions")
+@Path("loans/{loanId}/transactions")
 @Component
 @Scope("singleton")
 @Api(value = "Loan Transactions", description = "Capabilities include loan repayment's, interest waivers and the ability to 'adjust' an existing transaction. An 'adjustment' of a transaction is really a 'reversal' of existing transaction followed by creation of a new transaction with the provided details.")

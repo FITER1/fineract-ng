@@ -66,7 +66,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-@Path("/fixeddepositproducts")
+@Path("fixeddepositproducts")
 @Component
 @Scope("singleton")
 @Api(value = "Fixed Deposit Product", description = "This is one of the advanced term deposit product offered by MFI's. The Fixed Deposit Products (aka FD) product offerings are modeled using this API.\n" + "\n" + "The FD products are deposit accounts which are held for a fixed term – like 1 year, 2 years etc.\n" + "\n" + "When creating fixed deposit accounts, the details from the fixed deposit product are used to auto fill details of the fixed deposit account application process.")

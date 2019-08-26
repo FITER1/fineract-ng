@@ -39,7 +39,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 
-@Path("/taxes/component")
+@Path("taxes/component")
 @Component
 @Scope("singleton")
 @Api(value = "Tax Components", description = "This defines the Tax Components")

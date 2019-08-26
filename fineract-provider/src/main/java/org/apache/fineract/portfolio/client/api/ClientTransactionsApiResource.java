@@ -41,7 +41,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-@Path("/clients/{clientId}/transactions")
+@Path("clients/{clientId}/transactions")
 @Component
 @Api(value = "Client Transaction", description = "Client Transactions refer to transactions made directly againt a Client's internal account. Currently, these transactions are only created as a result of charge payments/waivers. You are allowed to undo a transaction, however you cannot explicitly create one. ")
 public class ClientTransactionsApiResource {

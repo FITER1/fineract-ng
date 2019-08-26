@@ -48,7 +48,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Path("/loans/{loanId}/charges")
+@Path("loans/{loanId}/charges")
 @Component
 @Scope("singleton")
 @Api(value = "Loan Charges", description = "Its typical for MFIs to add extra costs for their loan products. They can be either Fees or Penalties.\n" + "\n" + "Loan Charges are instances of Charges and represent either fees and penalties for loan products. Refer Charges for documentation of the various properties of a charge, Only additional properties ( specific to the context of a Charge being associated with a Loan) are described here")

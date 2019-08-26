@@ -50,7 +50,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/clients/{clientId}/familymembers")
+@Path("clients/{clientId}/familymembers")
 @Component
 @Scope("singleton")
 public class ClientFamilyMembersApiResources 
@@ -78,7 +78,7 @@ public class ClientFamilyMembersApiResources
 	}
 	
 	@GET
-	@Path("/{familyMemberId}")
+	@Path("{familyMemberId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String getFamilyMember(@Context final UriInfo uriInfo,@PathParam("familyMemberId") final Long familyMemberId) {
@@ -109,7 +109,7 @@ public class ClientFamilyMembersApiResources
 	}
 	
 	@GET
-	@Path("/template")
+	@Path("template")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String getTemplate(@Context final UriInfo uriInfo,@PathParam("clientId") final long clientId) {
@@ -125,7 +125,7 @@ public class ClientFamilyMembersApiResources
 	
 	
 	@PUT
-	@Path("/{familyMemberId}")
+	@Path("{familyMemberId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String updateClientFamilyMembers(@PathParam("familyMemberId") final long familyMemberId, final String apiRequestBodyAsJson) {
@@ -154,7 +154,7 @@ public class ClientFamilyMembersApiResources
 	
 	
 	@DELETE
-	@Path("/{familyMemberId}")
+	@Path("{familyMemberId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String deleteClientFamilyMembers(@PathParam("familyMemberId") final long familyMemberId, final String apiRequestBodyAsJson) {

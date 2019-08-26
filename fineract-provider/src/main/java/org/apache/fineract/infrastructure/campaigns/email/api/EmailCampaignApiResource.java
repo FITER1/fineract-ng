@@ -55,7 +55,7 @@ import java.util.HashSet;
  * Time: 15:17
  * To change this template use File | Settings | File Templates.
  */
-@Path("/email/campaign")
+@Path("email/campaign")
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
 @Component

@@ -40,7 +40,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-@Path("/accounttransfers")
+@Path("accounttransfers")
 @Component
 @Scope("singleton")
 @Api(value = "Account Transfers", description = "Ability to be able to transfer monetary funds from one account to another.\n\n" + "\n\n" + "Note: At present only savings account to savings account transfers are supported.")

@@ -55,7 +55,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/roles")
+@Path("roles")
 @Component
 @Scope("singleton")
 @Api(value = "Roles", description = "An API capability to support management of application roles for user administration.")

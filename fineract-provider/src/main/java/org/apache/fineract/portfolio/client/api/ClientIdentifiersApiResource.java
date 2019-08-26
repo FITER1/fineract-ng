@@ -47,7 +47,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Path("/clients/{clientId}/identifiers")
+@Path("clients/{clientId}/identifiers")
 @Component
 @Scope("singleton")
 @Api(value = "Client Identifier", description = "Client Identifiers refer to documents that are used to uniquely identify a customer\n" + "Ex: Drivers License, Passport, Ration card etc ")

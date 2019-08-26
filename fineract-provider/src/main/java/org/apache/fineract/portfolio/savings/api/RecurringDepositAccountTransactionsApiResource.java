@@ -49,7 +49,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Path("/recurringdepositaccounts/{recurringDepositAccountId}/transactions")
+@Path("recurringdepositaccounts/{recurringDepositAccountId}/transactions")
 @Component
 @Scope("singleton")
 @Api(value = "Recurring Deposit Account Transactions", description = "Transactions possible on a recurring deposit account.")

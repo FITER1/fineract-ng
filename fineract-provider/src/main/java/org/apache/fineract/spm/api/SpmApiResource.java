@@ -48,7 +48,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
 
-@Path("/surveys")
+@Path("surveys")
 @Component
 @Scope("singleton")
 @Api(value = "SPM - Serveys", description = "")
@@ -87,7 +87,7 @@ public class SpmApiResource {
     }
 
     @GET
-    @Path("/{id}")
+    @Path("{id}")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     @Transactional
@@ -114,7 +114,7 @@ public class SpmApiResource {
     }
 
     @PUT
-    @Path("/{id}")
+    @Path("{id}")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     @Transactional
@@ -127,7 +127,7 @@ public class SpmApiResource {
     }
 
     @POST
-    @Path("/{id}")
+    @Path("{id}")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     @Transactional

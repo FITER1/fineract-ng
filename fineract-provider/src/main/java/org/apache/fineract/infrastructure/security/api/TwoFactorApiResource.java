@@ -50,7 +50,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/twofactor")
+@Path("twofactor")
 @Component
 @Profile("twofactor")
 @Scope("singleton")

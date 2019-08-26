@@ -66,7 +66,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-@Path("/recurringdepositproducts")
+@Path("recurringdepositproducts")
 @Component
 @Scope("singleton")
 @Api(value = "Recurring Deposit Product", description = "Recurring Deposits are a special kind of Term Deposits offered by MFI's. The Recurring Deposit Products (aka RD) product offerings are modeled using this API.\n" + "\n" + "Recurring Deposits help people with regular incomes to deposit a fixed amount every month (specified recurring frequency) into their Recurring Deposit account.\n" + "\n" + "When creating recurring deposit accounts, the details from the recurring deposit product are used to auto fill details of the recurring deposit account application process.")

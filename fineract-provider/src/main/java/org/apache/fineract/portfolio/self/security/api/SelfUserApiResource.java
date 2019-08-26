@@ -38,7 +38,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-@Path("/self/user")
+@Path("self/user")
 @Component
 @Api(value = "Self User", description = "")
 public class SelfUserApiResource {

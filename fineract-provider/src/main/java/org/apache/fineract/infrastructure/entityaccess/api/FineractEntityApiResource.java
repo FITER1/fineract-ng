@@ -48,7 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/entitytoentitymapping")
+@Path("entitytoentitymapping")
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
 @Component
@@ -90,7 +90,7 @@ public class FineractEntityApiResource {
     }
 
     @GET
-    @Path("/{mapId}")
+    @Path("{mapId}")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public String retrieveOne(@PathParam("mapId") final Long mapId, @Context final UriInfo uriInfo) {
@@ -104,7 +104,7 @@ public class FineractEntityApiResource {
     }
 
     @GET
-    @Path("/{mapId}/{fromId}/{toId}")
+    @Path("{mapId}/{fromId}/{toId}")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public String getEntityToEntityMappings(@PathParam("mapId") final Long mapId, @PathParam("fromId") final Long fromId,
@@ -120,7 +120,7 @@ public class FineractEntityApiResource {
     }
 
     @POST
-    @Path("/{relId}")
+    @Path("{relId}")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public String createMap(@PathParam("relId") final Long relId, final String apiRequestBodyAsJson) {
@@ -137,7 +137,7 @@ public class FineractEntityApiResource {
     }
 
     @PUT
-    @Path("/{mapId}")
+    @Path("{mapId}")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public String updateMap(@PathParam("mapId") final Long mapId, final String apiRequestBodyAsJson) {

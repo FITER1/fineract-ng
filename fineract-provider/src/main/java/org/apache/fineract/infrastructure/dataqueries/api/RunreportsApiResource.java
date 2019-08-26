@@ -55,7 +55,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/runreports")
+@Path("runreports")
 @Component
 @Scope("singleton")
 @Api(value = "Run Reports", description = "")

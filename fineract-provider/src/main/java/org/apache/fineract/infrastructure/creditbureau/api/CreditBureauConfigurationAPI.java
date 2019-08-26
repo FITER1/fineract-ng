@@ -56,7 +56,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/CreditBureauConfiguration")
+@Path("CreditBureauConfiguration")
 @Component
 @Scope("singleton")
 @Api(value = "CreditBureau Configuration")
@@ -117,7 +117,7 @@ public class CreditBureauConfigurationAPI {
 	}
 
 	@GET
-	@Path("/mappings")
+	@Path("mappings")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String getCreditBureauLoanProductMapping(@Context final UriInfo uriInfo) {
@@ -133,7 +133,7 @@ public class CreditBureauConfigurationAPI {
 	}
 
 	@GET
-	@Path("/organisationCreditBureau")
+	@Path("organisationCreditBureau")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String getOrganisationCreditBureau(@Context final UriInfo uriInfo) {
@@ -150,7 +150,7 @@ public class CreditBureauConfigurationAPI {
 	}
 
 	@GET
-	@Path("/config/{organisationCreditBureauId}")
+	@Path("config/{organisationCreditBureauId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String getConfiguration(@PathParam("organisationCreditBureauId") final Long organisationCreditBureauId, @Context final UriInfo uriInfo) {
@@ -165,7 +165,7 @@ public class CreditBureauConfigurationAPI {
 	
 	
 	@GET
-	@Path("/loanProduct")
+	@Path("loanProduct")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String fetchLoanProducts(@Context final UriInfo uriInfo) {
@@ -180,7 +180,7 @@ public class CreditBureauConfigurationAPI {
 	}
 
 	@PUT
-	@Path("/organisationCreditBureau")
+	@Path("organisationCreditBureau")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String updateCreditBureau(final String apiRequestBodyAsJson) {
@@ -194,7 +194,7 @@ public class CreditBureauConfigurationAPI {
 	}
 
 	@PUT
-	@Path("/mappings")
+	@Path("mappings")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String updateCreditBureauLoanProductMapping(final String apiRequestBodyAsJson) {
@@ -208,7 +208,7 @@ public class CreditBureauConfigurationAPI {
 	}
 
 	@POST
-	@Path("/organisationCreditBureau/{organisationCreditBureauId}")
+	@Path("organisationCreditBureau/{organisationCreditBureauId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String addOrganisationCreditBureau(@PathParam("organisationCreditBureauId") final Long organisationCreditBureauId, final String apiRequestBodyAsJson) {
@@ -222,12 +222,12 @@ public class CreditBureauConfigurationAPI {
 	}
 
 	@POST
-	@Path("/mappings/{CreditBureauId}")
+	@Path("mappings/{creditBureauId}")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public String createCreditBureauLoanProductMapping(@PathParam("CreditBureauId") final Long CreditBureauId, final String apiRequestBodyAsJson) {
+	public String createCreditBureauLoanProductMapping(@PathParam("creditBureauId") final Long creditBureauId, final String apiRequestBodyAsJson) {
 
-		final CommandWrapper commandRequest = new CommandWrapperBuilder().createCreditBureauLoanProductMapping(CreditBureauId)
+		final CommandWrapper commandRequest = new CommandWrapperBuilder().createCreditBureauLoanProductMapping(creditBureauId)
 				.withJson(apiRequestBodyAsJson).build();
 
 		final CommandProcessingResult result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);

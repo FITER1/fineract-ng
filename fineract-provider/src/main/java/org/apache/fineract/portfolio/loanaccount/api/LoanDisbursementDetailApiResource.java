@@ -46,7 +46,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/loans/{loanId}/disbursements")
+@Path("loans/{loanId}/disbursements")
 @Component
 @Scope("singleton")
 public class LoanDisbursementDetailApiResource {

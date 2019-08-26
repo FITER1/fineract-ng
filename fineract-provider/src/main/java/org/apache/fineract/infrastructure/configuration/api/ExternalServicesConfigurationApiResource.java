@@ -45,7 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/externalservice")
+@Path("externalservice")
 @Component
 @Scope("singleton")
 @Api(value = "External Services", description = "External Services Configuration related to set of supported configurations for third party services like Amazon S3 and SMTP:\n" + "\n" + "S3 (Amazon S3):\n" + "s3_access_key -\n" + "s3_bucket_name -\n" + "s3_secret_key -\n" + "\n" + "\n" + "SMTP (Email Service):\n" + "username -\n" + "password -\n" + "host -\n" + "port -\n" + "useTLS -")

@@ -41,7 +41,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 
 
-@Path("/email/configuration")
+@Path("email/configuration")
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
 @Component

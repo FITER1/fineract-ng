@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Path("/surveys/{surveyId}/lookuptables")
+@Path("surveys/{surveyId}/lookuptables")
 @Component
 @Scope("singleton")
 @Api(value = "SPM API - LookUp Table", description = "The Apache Fineract SPM API provides the ability to create custom surveys to collect social performance measurentment data or any additional questionnaire a financial institute want to collect.")
@@ -80,7 +80,7 @@ public class LookupTableApiResource {
     }
 
     @GET
-    @Path("/{key}")
+    @Path("{key}")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     @Transactional

@@ -40,7 +40,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Path("/fieldconfiguration/{entity}")
+@Path("fieldconfiguration/{entity}")
 @Component
 @Scope("singleton")
 @Api(value = "Entity Field Configuration", description = "Entity Field configuration API is a generic and extensible \n" + "wherein various entities and subentities can be related.\n" + "Also it gives the user an ability to enable/disable fields,\n" + "add regular expression for validation")

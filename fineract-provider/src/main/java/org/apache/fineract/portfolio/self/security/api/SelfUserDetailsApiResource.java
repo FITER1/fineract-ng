@@ -31,7 +31,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-@Path("/self/userdetails")
+@Path("self/userdetails")
 @Component
 @Profile("oauth")
 @Scope("singleton")

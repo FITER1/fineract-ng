@@ -50,16 +50,17 @@ import org.apache.fineract.infrastructure.documentmanagement.data.FileData;
 import org.apache.fineract.infrastructure.documentmanagement.service.DocumentReadPlatformService;
 import org.apache.fineract.infrastructure.documentmanagement.service.DocumentWritePlatformService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataBodyPart;
-import com.sun.jersey.multipart.FormDataParam;
-
+// TODO: @aleks doesn't pass model validation
+//       should be: @Path("documents/{entityType}/{entityId}")
 @Path("{entityType}/{entityId}/documents")
-@Component
+// @Component
 @Scope("singleton")
 @Api(value = "Documents", description = "Multiple Documents (a combination of a name, description and a file) may be attached to different Entities like Clients, Groups, Staff, Loans, Savings and Client Identifiers in the system\n" + "\n" + "Note: The currently allowed Entities are\n" + "\n" + "Clients: URL Pattern as clients\n" + "Staff: URL Pattern as staff\n" + "Loans: URL Pattern as loans\n" + "Savings: URL Pattern as savings\n" + "Client Identifiers: URL Pattern as client_identifiers\n" + "Groups: URL Pattern as groups")
 public class DocumentManagementApiResource {
@@ -136,10 +137,10 @@ public class DocumentManagementApiResource {
     @ApiOperation(value = "Update a Document", notes = "Note: A document is updated using a Multi-part form upload \n" + "Body Parts\n" + "name\n" + "Name or summary of the document\n" + "description\n" + "Description of the document\n" + "file\n" + "The file to be uploaded")
     @ApiResponses({@ApiResponse(code = 200, message = "Not Shown (multi-part form data)", response = DocumentManagementApiResourceSwagger.PutEntityTypeEntityIdDocumentsResponse.class)})
     public String updateDocument(@PathParam("entityType") @ApiParam(value = "entityType") final String entityType, @PathParam("entityId") @ApiParam(value = "entityId") final Long entityId,
-            @PathParam("documentId") @ApiParam(value = "documentId") final Long documentId, @HeaderParam("Content-Length") @ApiParam(value = "Content-Length") final Long fileSize,
-            @FormDataParam("file") @ApiParam(value = "file") final InputStream inputStream, @FormDataParam("file") @ApiParam(value = "file") final FormDataContentDisposition fileDetails,
-            @FormDataParam("file") @ApiParam(value = "file") final FormDataBodyPart bodyPart, @FormDataParam("name") @ApiParam(value = "name") final String name,
-            @FormDataParam("description") @ApiParam(value = "description") final String description) {
+                                 @PathParam("documentId") @ApiParam(value = "documentId") final Long documentId, @HeaderParam("Content-Length") @ApiParam(value = "Content-Length") final Long fileSize,
+                                 @FormDataParam("file") @ApiParam(value = "file") final InputStream inputStream, @FormDataParam("file") @ApiParam(value = "file") final FormDataContentDisposition fileDetails,
+                                 @FormDataParam("file") @ApiParam(value = "file") final FormDataBodyPart bodyPart, @FormDataParam("name") @ApiParam(value = "name") final String name,
+                                 @FormDataParam("description") @ApiParam(value = "description") final String description) {
 
         final Set<String> modifiedParams = new HashSet<>();
         modifiedParams.add("name");

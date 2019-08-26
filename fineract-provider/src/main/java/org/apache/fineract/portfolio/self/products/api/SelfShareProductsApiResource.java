@@ -36,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/self/products/share")
+@Path("self/products/share")
 @Component
 @Scope("singleton")
 public class SelfShareProductsApiResource {

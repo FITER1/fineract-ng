@@ -46,7 +46,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/search")
+@Path("search")
 @Component
 @Scope("singleton")
 public class SearchApiResource {
@@ -71,7 +71,7 @@ public class SearchApiResource {
     }
 
     @GET
-    @Path("/template")
+    @Path("template")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public String retrieveAdHocSearchQueryTemplate(@Context final UriInfo uriInfo) {
@@ -97,7 +97,7 @@ public class SearchApiResource {
     }
 
     @POST
-    @Path("/advance")
+    @Path("advance")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public String advancedSearch(@Context final UriInfo uriInfo, final String json) {

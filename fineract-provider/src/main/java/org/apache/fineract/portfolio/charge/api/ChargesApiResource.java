@@ -42,7 +42,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Path("/charges")
+@Path("charges")
 @Component
 @Scope("singleton")
 @Api(value = "Charges", description = "Its typical for MFIs to add extra costs for their financial products. These are typically Fees or Penalties.\n" + "\n" + "A Charge on fineract platform is what we use to model both Fees and Penalties.\n" + "\n" + "At present we support defining charges for use with Client accounts and both loan and saving products.")

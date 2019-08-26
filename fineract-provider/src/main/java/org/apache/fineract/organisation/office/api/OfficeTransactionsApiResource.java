@@ -49,7 +49,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/officetransactions")
+@Path("officetransactions")
 @Component
 @Scope("singleton")
 @Api(value = "officetransactions", description = "")

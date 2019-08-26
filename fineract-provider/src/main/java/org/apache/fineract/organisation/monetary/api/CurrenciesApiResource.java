@@ -46,7 +46,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/currencies")
+@Path("currencies")
 @Component
 @Scope("singleton")
 @Api(value = "Currency", description = "Application related configuration around viewing/updating the currencies permitted for use within the MFI.")

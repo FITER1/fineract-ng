@@ -39,7 +39,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.util.Date;
 
-@Path("/standinginstructionrunhistory")
+@Path("standinginstructionrunhistory")
 @Component
 @Scope("singleton")
 @Api(value = "Standing Instructions History", description = "The list capability of history can support pagination and sorting.")

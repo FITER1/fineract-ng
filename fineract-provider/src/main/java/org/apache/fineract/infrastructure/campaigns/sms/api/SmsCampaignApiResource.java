@@ -59,7 +59,7 @@ import org.springframework.stereotype.Component;
 
 import com.google.gson.JsonElement;
 
-@Path("/smscampaigns")
+@Path("smscampaigns")
 @Component
 @Scope("singleton")
 @Api(value = "SMS Campaigns")

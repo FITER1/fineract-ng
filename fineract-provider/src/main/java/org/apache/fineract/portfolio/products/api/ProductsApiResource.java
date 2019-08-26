@@ -43,7 +43,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-@Path("/products/{type}")
+@Path("products/{type}")
 @Component
 @Scope("singleton")
 @Api(value = "Products", description = "")

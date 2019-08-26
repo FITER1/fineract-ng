@@ -50,7 +50,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by Cieyou on 2/27/14.
  */
-@Path("/survey")
+@Path("survey")
 @Component
 @Scope("singleton")
 @Api(value = "Survey", description = "")

@@ -19,23 +19,6 @@
 package org.apache.fineract.portfolio.self.client.api;
 
 import io.swagger.annotations.*;
-import java.io.InputStream;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
 import org.apache.fineract.infrastructure.documentmanagement.api.ImagesApiResource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.api.ClientApiConstants;
@@ -46,15 +29,20 @@ import org.apache.fineract.portfolio.client.exception.ClientNotFoundException;
 import org.apache.fineract.portfolio.self.client.data.SelfClientDataValidator;
 import org.apache.fineract.portfolio.self.client.service.AppuserClientMapperReadService;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataBodyPart;
-import com.sun.jersey.multipart.FormDataParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.io.InputStream;
 
-@Path("/self/clients")
+@Path("self/clients")
 @Component
 @Scope("singleton")
 @Api(value = "Self Client", description = "")
@@ -250,13 +238,12 @@ public class SelfClientsApiResource {
 	@Consumes({ MediaType.MULTIPART_FORM_DATA })
 	@Produces({ MediaType.APPLICATION_JSON })
 	public String addNewClientImage(@PathParam("clientId") final Long clientId,
-			@HeaderParam("Content-Length") final Long fileSize, @FormDataParam("file") final InputStream inputStream,
-			@FormDataParam("file") final FormDataContentDisposition fileDetails,
-			@FormDataParam("file") final FormDataBodyPart bodyPart) {
+			@HeaderParam("Content-Length") final Long fileSize,
+			@FormDataParam("file") final InputStream inputStream,
+			@FormDataParam("file") final FormDataContentDisposition fileDetails) {
 
 		validateAppuserClientsMapping(clientId);
-		return this.imagesApiResource.addNewClientImage(ClientApiConstants.clientEntityName, clientId, fileSize,
-				inputStream, fileDetails, bodyPart);
+		return this.imagesApiResource.addNewClientImage(ClientApiConstants.clientEntityName, clientId, inputStream, fileDetails);
 
 	}
 	

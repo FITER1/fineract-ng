@@ -44,7 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/" + PasswordPreferencesApiConstants.RESOURCE_NAME)
+@Path("" + PasswordPreferencesApiConstants.RESOURCE_NAME)
 @Component
 @Scope("singleton")
 @Api(value = "Password preferences", description = "This API enables management of password policy for user administration.\n" + "\n" + "There is no Apache Fineract functionality for creating a validation policy. The validation policies come pre-installed.\n" + "\n" + "Validation policies may be updated")
@@ -104,7 +104,7 @@ public class PasswordPreferencesApiResource {
     }
 
     @GET
-    @Path("/template")
+    @Path("template")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     @ApiOperation(value = "List Application Password validation policies", notes = "ARGUMENTS\n" + "Example Requests:\n" + "\n" + "passwordpreferences")

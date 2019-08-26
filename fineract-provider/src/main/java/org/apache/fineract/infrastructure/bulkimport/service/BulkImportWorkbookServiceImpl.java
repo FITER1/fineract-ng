@@ -19,7 +19,6 @@
 package org.apache.fineract.infrastructure.bulkimport.service;
 
 import com.google.common.io.Files;
-import com.sun.jersey.core.header.FormDataContentDisposition;
 import org.apache.fineract.infrastructure.bulkimport.data.BulkImportEvent;
 import org.apache.fineract.infrastructure.bulkimport.data.GlobalEntityType;
 import org.apache.fineract.infrastructure.bulkimport.data.ImportData;
@@ -44,6 +43,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.tika.Tika;
 import org.apache.tika.io.IOUtils;
 import org.apache.tika.io.TikaInputStream;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -181,9 +181,9 @@ public class BulkImportWorkbookServiceImpl implements BulkImportWorkbookService 
 
 
     private Long publishEvent(final Integer primaryColumn,
-            final FormDataContentDisposition fileDetail, final InputStream clonedInputStreamWorkbook,
-            final GlobalEntityType entityType, final Workbook workbook,
-            final String locale, final String dateFormat) {
+                              final FormDataContentDisposition fileDetail, final InputStream clonedInputStreamWorkbook,
+                              final GlobalEntityType entityType, final Workbook workbook,
+                              final String locale, final String dateFormat) {
 
         final String fileName = fileDetail.getFileName();
 

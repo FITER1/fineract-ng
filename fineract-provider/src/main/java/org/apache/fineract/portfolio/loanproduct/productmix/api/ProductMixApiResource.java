@@ -51,7 +51,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/loanproducts/{productId}/productmix")
+@Path("loanproducts/{productId}/productmix")
 @Component
 @Scope("singleton")
 public class ProductMixApiResource {

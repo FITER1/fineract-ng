@@ -42,7 +42,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Path("/client")
+@Path("client")
 @Component
 @Scope("singleton")
 @Api(value = "Clients Address", description = "Address module is an optional module and can be configured into the system by using GlobalConfiguration setting: enable-address. In order to activate Address module, we need to enable the configuration, enable-address by setting its value to true.")
@@ -88,7 +88,7 @@ public class ClientAddressApiResources {
 	}
 
 	@POST
-	@Path("/{clientid}/addresses")
+	@Path("{clientid}/addresses")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	@ApiOperation(value = "Create an address for a Client", notes = "Mandatory Fields : \n" + "type and clientId")
@@ -106,7 +106,7 @@ public class ClientAddressApiResources {
 	}
 
 	@GET
-	@Path("/{clientid}/addresses")
+	@Path("{clientid}/addresses")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	@ApiOperation(value = "List all addresses for a Client", notes = "Example Requests:\n" + "\n" +"client/1/addresses\n" + "\n" +	"\n" +"clients/1/addresses?status=false,true&&type=1,2,3" )
@@ -134,7 +134,7 @@ public class ClientAddressApiResources {
 	}
 
 	@PUT
-	@Path("/{clientid}/addresses")
+	@Path("{clientid}/addresses")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
 	@ApiOperation(value = "Update an address for a Client", notes = "All the address fields can be updated by using update client address API\n" + "\n" + "Mandatory Fields\n" + "type and addressId")

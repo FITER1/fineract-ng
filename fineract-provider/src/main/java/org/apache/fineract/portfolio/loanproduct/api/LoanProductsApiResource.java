@@ -62,7 +62,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.util.*;
 
-@Path("/loanproducts")
+@Path("loanproducts")
 @Component
 @Scope("singleton")
 @Api(value = "Loan Products", description = "A Loan product is a template that is used when creating a loan. Much of the template definition can be overridden during loan creation.")

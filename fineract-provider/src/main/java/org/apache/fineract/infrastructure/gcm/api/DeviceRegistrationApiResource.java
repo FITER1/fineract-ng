@@ -46,7 +46,7 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-@Path("/self/device/registration")
+@Path("self/device/registration")
 @Component
 @Scope("singleton")
 public class DeviceRegistrationApiResource {

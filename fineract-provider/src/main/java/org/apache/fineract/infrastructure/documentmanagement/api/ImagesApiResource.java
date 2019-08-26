@@ -18,22 +18,7 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.api;
 
-import java.io.InputStream;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-
+import com.lowagie.text.pdf.codec.Base64;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -47,14 +32,17 @@ import org.apache.fineract.infrastructure.documentmanagement.service.ImageReadPl
 import org.apache.fineract.infrastructure.documentmanagement.service.ImageWritePlatformService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.data.ClientData;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.lowagie.text.pdf.codec.Base64;
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataBodyPart;
-import com.sun.jersey.multipart.FormDataParam;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import java.io.InputStream;
 
 @Path("{entity}/{entityId}/images")
 @Component
@@ -83,17 +71,17 @@ public class ImagesApiResource {
     @Consumes({ MediaType.MULTIPART_FORM_DATA })
     @Produces({ MediaType.APPLICATION_JSON })
     public String addNewClientImage(@PathParam("entity") final String entityName, @PathParam("entityId") final Long entityId,
-            @HeaderParam("Content-Length") final Long fileSize, @FormDataParam("file") final InputStream inputStream,
-            @FormDataParam("file") final FormDataContentDisposition fileDetails, @FormDataParam("file") final FormDataBodyPart bodyPart) {
+                                    @FormDataParam("file") final InputStream inputStream,
+                                    @FormDataParam("file") final FormDataContentDisposition fileDetails) {
         validateEntityTypeforImage(entityName);
         // TODO: vishwas might need more advances validation (like reading magic
         // number) for handling malicious clients
         // and clients not setting mime type
         ContentRepositoryUtils.validateClientImageNotEmpty(fileDetails.getFileName());
-        ContentRepositoryUtils.validateImageMimeType(bodyPart.getMediaType().toString());
+        ContentRepositoryUtils.validateImageMimeType(fileDetails.getType()); // TODO: @aleks check this
 
         final CommandProcessingResult result = this.imageWritePlatformService.saveOrUpdateImage(entityName, entityId,
-                fileDetails.getFileName(), inputStream, fileSize);
+                fileDetails.getFileName(), inputStream, fileDetails.getSize());
 
         return this.toApiJsonSerializer.serialize(result);
     }
@@ -181,9 +169,9 @@ public class ImagesApiResource {
     @Consumes({ MediaType.MULTIPART_FORM_DATA })
     @Produces({ MediaType.APPLICATION_JSON })
     public String updateClientImage(@PathParam("entity") final String entityName, @PathParam("entityId") final Long entityId,
-            @HeaderParam("Content-Length") final Long fileSize, @FormDataParam("file") final InputStream inputStream,
-            @FormDataParam("file") final FormDataContentDisposition fileDetails, @FormDataParam("file") final FormDataBodyPart bodyPart) {
-        return addNewClientImage(entityName, entityId, fileSize, inputStream, fileDetails, bodyPart);
+            @FormDataParam("file") final InputStream inputStream,
+            @FormDataParam("file") final FormDataContentDisposition fileDetails) {
+        return addNewClientImage(entityName, entityId, inputStream, fileDetails);
     }
 
     /**

@@ -50,14 +50,12 @@ public class SecurityBasicConfiguration extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-                .antMatchers("/api/*/authentication").permitAll()
-                .antMatchers("/api/*/self/authentication").permitAll()
-                .antMatchers("/api/*/self/registration").permitAll()
-                .antMatchers("/api/*/self/user").permitAll()
-                .antMatchers("/api/*/twofactor").fullyAuthenticated()
-                .antMatchers("/api/*/twofactor/validate").fullyAuthenticated()
+                // .antMatchers("/api/**/authentication").permitAll()
+                // .antMatchers("/api/**/self/authentication").permitAll()
+                // .antMatchers("/api/**/self/registration").permitAll()
+                // .antMatchers("/api/**/self/user").permitAll()
                 .antMatchers("/api/**").fullyAuthenticated()
-                .antMatchers("/api/**").hasAuthority("TWOFACTOR_AUTHENTICATED")
+                // .antMatchers("/api/**").hasAuthority("TWOFACTOR_AUTHENTICATED")
         ;
     }
 

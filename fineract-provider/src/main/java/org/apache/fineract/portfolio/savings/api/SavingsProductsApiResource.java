@@ -62,7 +62,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-@Path("/savingsproducts")
+@Path("savingsproducts")
 @Component
 @Scope("singleton")
 @Api(value = "Savings Product", description = "An MFIs savings product offerings are modeled using this API.\n" + "\n" + "When creating savings accounts, the details from the savings product are used to auto fill details of the savings account application process.")

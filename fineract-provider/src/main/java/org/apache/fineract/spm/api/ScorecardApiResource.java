@@ -45,7 +45,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Path("/surveys/scorecards")
+@Path("surveys/scorecards")
 @Component
 @Scope("singleton")
 @Api(value = "SPM - Scorecards", description = " ")

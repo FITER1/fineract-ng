@@ -32,8 +32,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -51,6 +49,8 @@ import org.apache.fineract.portfolio.accounts.constants.ShareAccountApiConstants
 import org.apache.fineract.portfolio.accounts.data.AccountData;
 import org.apache.fineract.portfolio.accounts.service.AccountReadPlatformService;
 import org.apache.fineract.portfolio.products.exception.ResourceNotFoundException;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -60,7 +60,7 @@ import org.springframework.stereotype.Component;
 import java.io.InputStream;
 
 
-@Path("/accounts/{type}")
+@Path("accounts/{type}")
 @Component
 @Scope("singleton")
 @Api(value = "Share Account", description = "Share accounts are instances of a praticular share product created for an individual. An application process around the creation of accounts is also supported.")

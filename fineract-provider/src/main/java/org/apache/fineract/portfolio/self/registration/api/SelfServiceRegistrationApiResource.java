@@ -34,7 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/self/registration")
+@Path("self/registration")
 @Component
 @Scope("singleton")
 public class SelfServiceRegistrationApiResource {

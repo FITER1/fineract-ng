@@ -41,7 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/self/pockets")
+@Path("self/pockets")
 @Component
 @Scope("singleton")
 public class PocketApiResource {

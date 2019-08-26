@@ -41,7 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/savingsaccounts/{savingsId}/onholdtransactions")
+@Path("savingsaccounts/{savingsId}/onholdtransactions")
 @Component
 @Scope("singleton")
 public class DepositAccountOnHoldFundTransactionsApiResource {

@@ -44,7 +44,7 @@ import java.util.Collection;
 
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
 
-@Path("/savingsaccounts/{savingsAccountId}/charges")
+@Path("savingsaccounts/{savingsAccountId}/charges")
 @Component
 @Scope("singleton")
 @Api(value = "Savings Charges", description = "Its typical for MFIs to add maintenance and operating charges. They can be either Fees or Penalties.\n" + "\n" + "Savings Charges are instances of Charges and represent either fees and penalties for savings products. Refer Charges for documentation of the various properties of a charge, Only additional properties ( specific to the context of a Charge being associated with a Savings account) are described here")

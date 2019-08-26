@@ -51,7 +51,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/makercheckers")
+@Path("makercheckers")
 @Component
 @Scope("singleton")
 @Api(value = "Maker Checker (or 4-eye) functionality")
@@ -103,7 +103,7 @@ public class MakercheckersApiResource {
     }
 
     @GET
-    @Path("/searchtemplate")
+    @Path("searchtemplate")
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     @ApiOperation(value = "Maker Checker Search Template", notes = "This is a convenience resource. It can be useful when building a Checker Inbox UI. \"appUsers\" are data scoped to the office/branch the requestor is associated with. \"actionNames\" and \"entityNames\" returned are those that the requestor has Checker approval permissions for.\n" + "\n" + "Example Requests:\n" + "\n" + "makercheckers/searchtemplate\n" + "makercheckers/searchtemplate?fields=entityNames")

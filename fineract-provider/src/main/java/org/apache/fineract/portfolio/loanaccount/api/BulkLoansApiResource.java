@@ -53,7 +53,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/loans/loanreassignment")
+@Path("loans/loanreassignment")
 @Component
 @Scope("singleton")
 public class BulkLoansApiResource {

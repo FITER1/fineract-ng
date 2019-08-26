@@ -44,7 +44,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Path("/{resourceType}/{resourceId}/notes")
+@Path("{resourceType}/{resourceId}/notes")
 @Component
 @Scope("singleton")
 @Api(value = "Notes", description = "Notes API allows to enter notes for supported resources.")

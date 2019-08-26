@@ -47,8 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/shareproduct/{productId}/dividend")
-@Component
+@Path("shareproduct/{productId}/dividend")
 @Scope("singleton")
 public class ShareDividendApiResource {
 

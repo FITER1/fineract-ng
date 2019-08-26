@@ -53,7 +53,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-@Path("/provisioningentries")
+@Path("provisioningentries")
 @Component
 @Scope("singleton")
 @Api(value = "Provisioning Entries", description = "This defines the Provisioning Entries for all active loan products\n" + "\n" + "Field Descriptions\n" + "date\n" + "Date on which day provisioning entries should be created\n" + "createjournalentries\n" + "Boolean variable whether to add journal entries for generated provisioning entries\n")

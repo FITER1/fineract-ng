@@ -44,7 +44,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.util.HashMap;
 
-@Path("/self/loans")
+@Path("self/loans")
 @Component
 @Scope("singleton")
 @Api(value = "Self Loans", description = "")

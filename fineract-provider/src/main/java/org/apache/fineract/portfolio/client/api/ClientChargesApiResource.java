@@ -50,7 +50,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
-@Path("/clients/{clientId}/charges")
+@Path("clients/{clientId}/charges")
 @Component
 @Api(value = "Client Charges", description = "It is typical for MFI's to directly associate charges with an implicit Client account. These can be either fees or penalties\n" + "\n" + "Client Charges are client specific instances of Charges. Refer Charges for documentation of the various properties of a charge, Only additional properties ( specific to the context of a Charge being associated with a Client account) are described here")
 public class ClientChargesApiResource {

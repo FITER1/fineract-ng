@@ -50,7 +50,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/reports")
+@Path("reports")
 @Component
 @Scope("singleton")
 @Api(value = "Reports", description = "Non-core reports can be added, updated and deleted.")

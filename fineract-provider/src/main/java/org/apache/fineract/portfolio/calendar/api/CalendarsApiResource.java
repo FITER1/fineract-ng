@@ -61,7 +61,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/{entityType}/{entityId}/calendars")
+@Path("{entityType}/{entityId}/calendars")
 @Component
 @Scope("singleton")
 public class CalendarsApiResource {

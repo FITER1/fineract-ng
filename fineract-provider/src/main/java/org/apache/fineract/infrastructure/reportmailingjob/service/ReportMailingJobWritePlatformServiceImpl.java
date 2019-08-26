@@ -18,18 +18,6 @@
  */
 package org.apache.fineract.infrastructure.reportmailingjob.service;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -50,11 +38,7 @@ import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJob
 import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobEmailData;
 import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobPreviousRunStatus;
 import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobStretchyReportParamDateOption;
-import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJob;
-import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJobRepository;
-import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJobRepositoryWrapper;
-import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJobRunHistory;
-import org.apache.fineract.infrastructure.reportmailingjob.domain.ReportMailingJobRunHistoryRepository;
+import org.apache.fineract.infrastructure.reportmailingjob.domain.*;
 import org.apache.fineract.infrastructure.reportmailingjob.util.ReportMailingJobDateUtil;
 import org.apache.fineract.infrastructure.reportmailingjob.validation.ReportMailingJobValidator;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -71,7 +55,17 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.sun.jersey.core.util.MultivaluedMapImpl;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 @Service
 public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJobWritePlatformService {
@@ -262,7 +256,7 @@ public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJo
                     final StringBuilder errorLog = new StringBuilder();
                     final Map<String, String> validateStretchyReportParamMap = this.reportMailingJobValidator.
                             validateStretchyReportParamMap(reportMailingJob.getStretchyReportParamMap());
-                    MultivaluedMap<String, String> reportParams = new MultivaluedMapImpl();
+                    MultivaluedMap<String, String> reportParams = new MultivaluedHashMap<>();
                     
                     if (validateStretchyReportParamMap != null) {
                         Iterator<Map.Entry<String, String>> validateStretchyReportParamMapEntries = validateStretchyReportParamMap.entrySet().iterator();

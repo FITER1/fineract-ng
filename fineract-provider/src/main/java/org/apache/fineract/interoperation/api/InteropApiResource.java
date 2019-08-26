@@ -63,7 +63,7 @@ import static org.apache.fineract.interoperation.util.InteropUtil.ENTITY_NAME_QU
 import static org.apache.fineract.interoperation.util.InteropUtil.ENTITY_NAME_REQUEST;
 import static org.apache.fineract.interoperation.util.InteropUtil.ROOT_PATH;
 
-@Path("/interoperation") //api/v1/
+@Path("interoperation") //api/v1/
 @Component
 @Scope
 @Api(value = ROOT_PATH, description = "")

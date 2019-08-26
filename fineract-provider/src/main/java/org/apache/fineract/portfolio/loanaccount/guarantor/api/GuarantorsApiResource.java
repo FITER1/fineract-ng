@@ -39,8 +39,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -67,11 +65,13 @@ import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorType;
 import org.apache.fineract.portfolio.loanaccount.guarantor.service.GuarantorEnumerations;
 import org.apache.fineract.portfolio.loanaccount.guarantor.service.GuarantorReadPlatformService;
 import org.apache.fineract.portfolio.loanaccount.service.LoanReadPlatformService;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/loans/{loanId}/guarantors")
+@Path("loans/{loanId}/guarantors")
 @Component
 @Scope("singleton")
 public class GuarantorsApiResource {
@@ -244,7 +244,7 @@ public class GuarantorsApiResource {
     @Path("uploadtemplate")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public String postGuarantorTemplate(@FormDataParam("file") InputStream uploadedInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail,@FormDataParam("locale") final String locale,
+            @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("locale") final String locale,
             @FormDataParam("dateFormat") final String dateFormat){
         final Long importDocumentId =this.bulkImportWorkbookService.importWorkbook(GlobalEntityType.GUARANTORS.toString(),
                 uploadedInputStream,fileDetail,locale,dateFormat);

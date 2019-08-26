@@ -41,8 +41,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -71,13 +69,15 @@ import org.apache.fineract.portfolio.savings.data.SavingsAccountTransactionData;
 import org.apache.fineract.portfolio.savings.service.DepositAccountPreMatureCalculationPlatformService;
 import org.apache.fineract.portfolio.savings.service.DepositAccountReadPlatformService;
 import org.apache.fineract.portfolio.savings.service.SavingsAccountChargeReadPlatformService;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 
-@Path("/recurringdepositaccounts")
+@Path("recurringdepositaccounts")
 @Component
 @Scope("singleton")
 @Api(value = "Recurring Deposit Account", description = "Recurring Deposit accounts are instances of a praticular recurring deposit product created. An application process around the creation of accounts is also supported.")
@@ -406,8 +406,8 @@ public class RecurringDepositAccountsApiResource {
     @Path("transactions/uploadtemplate")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public String postRecurringDepositTransactionsTemplate(@FormDataParam("file") InputStream uploadedInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("locale") final String locale,
-            @FormDataParam("dateFormat") final String dateFormat){
+       @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("locale") final String locale,
+       @FormDataParam("dateFormat") final String dateFormat){
         final Long importDocumentId = this. bulkImportWorkbookService.importWorkbook(GlobalEntityType.RECURRING_DEPOSIT_ACCOUNTS_TRANSACTIONS.toString(),
                 uploadedInputStream,fileDetail,locale,dateFormat);
         return this.toApiJsonSerializer.serialize(importDocumentId);

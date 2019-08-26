@@ -43,7 +43,7 @@ import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 import java.util.Date;
 
-@Path("/email")
+@Path("email")
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
 @Component

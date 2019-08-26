@@ -35,7 +35,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-@Path("/self/surveys")
+@Path("self/surveys")
 @Component
 @Scope("singleton")
 public class SelfSpmApiResource {

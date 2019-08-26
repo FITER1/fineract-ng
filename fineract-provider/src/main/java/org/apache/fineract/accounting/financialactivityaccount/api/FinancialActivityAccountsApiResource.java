@@ -48,7 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/financialactivityaccounts")
+@Path("financialactivityaccounts")
 @Component
 @Scope("singleton")
 @Api(value = "Mapping Financial Activities to Accounts", description = "Organization Level Financial Activities like Asset and Liability Transfer can be mapped to GL Account. Integrated accounting takes these accounts into consideration when an Account transfer is made between a savings to loan/savings account and vice-versa\n" + "\n" +"\nField Descriptions\n" +"financialActivityId\n" +"The identifier of the Financial Activity\n" +"glAccountId\n" +"The identifier of a GL Account ( Ledger Account) which shall be used as the default account for the selected Financial Activity")

@@ -50,7 +50,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/adhocquery")
+@Path("adhocquery")
 @Component
 @Scope("singleton")
 public class AdHocApiResource {

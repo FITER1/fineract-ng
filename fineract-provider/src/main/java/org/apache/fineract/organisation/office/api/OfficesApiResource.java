@@ -39,8 +39,6 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import io.swagger.annotations.*;
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -55,11 +53,13 @@ import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.office.data.OfficeData;
 import org.apache.fineract.organisation.office.service.OfficeReadPlatformService;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/offices")
+@Path("offices")
 @Component
 @Scope("singleton")
 @Api(value = "Offices", description = "Offices are used to model an MFIs structure. A hierarchical representation of offices is supported. There will always be at least one office (which represents the MFI or an MFIs head office). All subsequent offices added must have a parent office.")
@@ -204,11 +204,13 @@ public class OfficesApiResource {
     @POST
     @Path("uploadtemplate")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public String postOfficeTemplate(@FormDataParam("file") InputStream uploadedInputStream,
+    public String postOfficeTemplate(
+            @FormDataParam("file") InputStream uploadedInputStream,
             @FormDataParam("file") FormDataContentDisposition fileDetail,
-            @FormDataParam("locale") final String locale, @FormDataParam("dateFormat") final String dateFormat){
+            @FormDataParam("locale") final String locale,
+            @FormDataParam("dateFormat") final String dateFormat) {
         final Long importDocumentId = this.bulkImportWorkbookService.importWorkbook(GlobalEntityType.OFFICES.toString(),
-                uploadedInputStream,fileDetail, locale,dateFormat);
+                uploadedInputStream, fileDetail, locale, dateFormat);
         return this.toApiJsonSerializer.serialize(importDocumentId);
     }
 }

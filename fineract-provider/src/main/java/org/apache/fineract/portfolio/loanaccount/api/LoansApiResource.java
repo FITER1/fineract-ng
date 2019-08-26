@@ -41,8 +41,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-import com.sun.jersey.core.header.FormDataContentDisposition;
-import com.sun.jersey.multipart.FormDataParam;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -114,13 +112,15 @@ import org.apache.fineract.portfolio.note.domain.NoteType;
 import org.apache.fineract.portfolio.note.service.NoteReadPlatformServiceImpl;
 import org.apache.fineract.portfolio.savings.DepositAccountType;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType;
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 
-@Path("/loans")
+@Path("loans")
 @Component
 @Scope("singleton")
 @Api(value = "Loans", description = "The API concept of loans models the loan application process and the loan contract/monitoring process.")
@@ -808,7 +808,7 @@ public class LoansApiResource {
     @Path("repayments/uploadtemplate")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public String postLoanRepaymentTemplate(@FormDataParam("file") InputStream uploadedInputStream,
-            @FormDataParam("file") FormDataContentDisposition fileDetail,@FormDataParam("locale") final String locale,
+            @FormDataParam("file") FormDataContentDisposition fileDetail, @FormDataParam("locale") final String locale,
             @FormDataParam("dateFormat") final String dateFormat){
         final Long importDocumentId = this.bulkImportWorkbookService.importWorkbook(GlobalEntityType.LOAN_TRANSACTIONS.toString(), uploadedInputStream,fileDetail,
                 locale,dateFormat);

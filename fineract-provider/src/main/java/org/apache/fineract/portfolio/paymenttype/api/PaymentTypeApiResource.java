@@ -39,7 +39,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 import java.util.Collection;
 
-@Path("/paymenttypes")
+@Path("paymenttypes")
 @Component
 @Api(value = "Payment Type", description = "This defines the payment type")
 public class PaymentTypeApiResource {

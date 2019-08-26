@@ -35,8 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/runaccruals")
-@Component
+@Path("runaccruals")
 @Scope("singleton")
 @Api(value = "Periodic Accrual Accounting", description = "Periodic Accrual is to accrue the loan income till the specific date or till batch job scheduled time.\n\n ")
 public class AccrualAccountingApiResource {

@@ -47,7 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Path("/provisioningcategory")
+@Path("provisioningcategory")
 @Component
 @Scope("singleton")
 @Api(value = "Provisioning Category", description = "")

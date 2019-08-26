@@ -45,7 +45,7 @@ import java.util.Set;
 
 import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.*;
 
-@Path("/interestratecharts/{chartId}/chartslabs")
+@Path("interestratecharts/{chartId}/chartslabs")
 @Component
 @Scope("singleton")
 @Api(value = "Interest Rate Slab (A.K.A interest bands)", description = "The slabs a.k.a interest bands are associated with Interest Rate Chart. These bands allow to define different interest rates for different deposit term periods.")
