@@ -25,8 +25,6 @@ import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-
 @Builder
 @Data
 @NoArgsConstructor // NOTE: see here https://github.com/rzwitserloot/lombok/issues/816
@@ -41,8 +39,6 @@ public class FineractProperties {
     private String timezoneId;
 
     private FineractPropertiesConnection connection;
-
-    private Map<String, String> flywayPlaceholders;
 
     @Builder
     @Data

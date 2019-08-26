@@ -18,11 +18,13 @@
  */
 package org.apache.fineract;
 
-import org.apache.fineract.infrastructure.core.service.DatabaseUpgradeService;
 import org.apache.fineract.infrastructure.jobs.service.JobRegisterService;
 import org.mockito.Mockito;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 
 import javax.sql.DataSource;
 
@@ -33,16 +35,6 @@ import static org.mockito.Mockito.mock;
 @EnableAutoConfiguration
 @ComponentScan("org.apache.fineract")
 public class TestWithoutDatabaseConfiguration {
-
-    /**
-     * Override DatabaseUpgradeService binding, because the real one has a @PostConstruct
-     * upgradeAllTenants() which accesses the database on start-up.
-     */
-    @Bean
-    public DatabaseUpgradeService tenantDatabaseUpgradeService() {
-        DatabaseUpgradeService mockDatabaseUpgradeService = mock(DatabaseUpgradeService.class);
-        return mockDatabaseUpgradeService;
-    }
 
     /**
      * Override JobRegisterService binding, because the real
