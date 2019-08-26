@@ -46,15 +46,11 @@ public class JpaPlatformUserDetailsService implements PlatformUserDetailsService
     @Cacheable(value = "usersByUsername")
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException, DataAccessException {
 
-        log.warn(">>>>>>>>>>>>>>>>>> USER...");
-
         // Retrieve active users only
         final boolean deleted = false;
         final boolean enabled = true;
 
         final PlatformUser appUser = this.platformUserRepository.findByUsernameAndDeletedAndEnabled(username, deleted, enabled);
-
-        log.warn(">>>>>>>>>>>>>>>>>> USER: {}", appUser);
 
         if (appUser == null) { throw new UsernameNotFoundException(username + ": not found"); }
 
