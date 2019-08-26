@@ -18,16 +18,10 @@
  */
 package org.apache.fineract.notification.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.notification.cache.CacheNotificationResponseHeader;
@@ -38,6 +32,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
+
 @Service
 public class NotificationReadPlatformServiceImpl implements NotificationReadPlatformService {
 
@@ -47,56 +47,49 @@ public class NotificationReadPlatformServiceImpl implements NotificationReadPlat
     private final PaginationHelper<NotificationData> paginationHelper = new PaginationHelper<>();
     private final NotificationDataRow notificationDataRow = new NotificationDataRow();
     private final NotificationMapperRow notificationMapperRow = new NotificationMapperRow();
-    private HashMap<Long, HashMap<Long, CacheNotificationResponseHeader>>
-            tenantNotificationResponseHeaderCache = new HashMap<>();
+    private final FineractProperties fineractProperties;
+    @Deprecated
+    private HashMap<String, HashMap<Long, CacheNotificationResponseHeader>> tenantNotificationResponseHeaderCache = new HashMap<>();
+    private HashMap<Long, CacheNotificationResponseHeader> appUserNotificationResponseHeaderCache = new HashMap<>();
 
     @Autowired
     public NotificationReadPlatformServiceImpl(final DataSource dataSource,
     		final PlatformSecurityContext context,
-    		final ColumnValidator columnValidator) {
+    		final ColumnValidator columnValidator,
+            final FineractProperties fineractProperties) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.context = context;
         this.columnValidator = columnValidator;
+        this.fineractProperties = fineractProperties;
     }
 
     @Override
     public boolean hasUnreadNotifications(Long appUserId) {
-        Long tenantId = ThreadLocalContextUtil.getTenant().getId();
+        // TODO:  @aleks nested tenant map not necessary anymore
+
         Long now = System.currentTimeMillis()/1000L;
-        if (this.tenantNotificationResponseHeaderCache.containsKey(tenantId)) {
-            HashMap<Long, CacheNotificationResponseHeader> notificationResponseHeaderCache =
-                    this.tenantNotificationResponseHeaderCache.get(tenantId);
-            if (notificationResponseHeaderCache.containsKey(appUserId)) {
-                Long lastFetch = notificationResponseHeaderCache.get(appUserId).getLastFetch();
-                if ((now - lastFetch) > 1) {
-                    return this.createUpdateCacheValue(appUserId, now, notificationResponseHeaderCache);
-                } else {
-                    return notificationResponseHeaderCache.get(appUserId).hasNotifications();
-                }
+
+        if (appUserNotificationResponseHeaderCache.containsKey(appUserId)) {
+            Long lastFetch = appUserNotificationResponseHeaderCache.get(appUserId).getLastFetch();
+
+            if ((now - lastFetch) > 1) {
+                return this.createUpdateCacheValue(appUserId, now, appUserNotificationResponseHeaderCache);
             } else {
-                return this.createUpdateCacheValue(appUserId, now, notificationResponseHeaderCache);
+                return appUserNotificationResponseHeaderCache.get(appUserId).hasNotifications();
             }
         } else {
-            return this.initializeTenantNotificationResponseHeaderCache(tenantId, now, appUserId);
-
+            return this.createUpdateCacheValue(appUserId, now, appUserNotificationResponseHeaderCache);
         }
-    }
-
-    private boolean initializeTenantNotificationResponseHeaderCache(Long tenantId, Long now, Long appUserId) {
-        HashMap<Long, CacheNotificationResponseHeader> notificationResponseHeaderCache = new HashMap<>();
-        this.tenantNotificationResponseHeaderCache.put(tenantId, notificationResponseHeaderCache);
-        return this.createUpdateCacheValue(appUserId, now, notificationResponseHeaderCache);
     }
 
     private boolean createUpdateCacheValue(Long appUserId, Long now, HashMap<Long,
             CacheNotificationResponseHeader> notificationResponseHeaderCache) {
         boolean hasNotifications;
-        Long tenantId = ThreadLocalContextUtil.getTenant().getId();
         CacheNotificationResponseHeader cacheNotificationResponseHeader;
         hasNotifications = checkForUnreadNotifications(appUserId);
         cacheNotificationResponseHeader = new CacheNotificationResponseHeader(hasNotifications, now);
         notificationResponseHeaderCache.put(appUserId, cacheNotificationResponseHeader);
-        this.tenantNotificationResponseHeaderCache.put(tenantId, notificationResponseHeaderCache);
+        this.tenantNotificationResponseHeaderCache.put(fineractProperties.getTenantId(), notificationResponseHeaderCache);
         return hasNotifications;
     }
 

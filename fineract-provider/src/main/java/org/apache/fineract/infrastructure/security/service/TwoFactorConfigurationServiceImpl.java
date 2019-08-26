@@ -64,7 +64,7 @@ public class TwoFactorConfigurationServiceImpl implements TwoFactorConfiguration
     }
 
     @Override
-    @Cacheable(value = "tfConfig", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier()")
+    @Cacheable(value = "tfConfig", key = "#fineractProperties.getTenantId()")
     public Map<String, Object> retrieveAll() {
         List<TwoFactorConfiguration> configurationList = configurationRepository.findAll();
         Map<String, Object> configurationMap = new HashMap<>();
@@ -130,13 +130,13 @@ public class TwoFactorConfigurationServiceImpl implements TwoFactorConfiguration
     }
 
     @Override
-    @Cacheable(value = "tfConfig", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier()+'|smsEnabled'")
+    @Cacheable(value = "tfConfig", key = "#fineractProperties.getTenantId() + '|smsEnabled'")
     public boolean isSMSEnabled() {
         return getBooleanConfig(TwoFactorConfigurationConstants.ENABLE_SMS_DELIVERY, false);
     }
 
     @Override
-    @Cacheable(value = "tfConfig", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier()+'|smsProvider'")
+    @Cacheable(value = "tfConfig", key = "#fineractProperties.getTenantId() + '|smsProvider'")
     public Integer getSMSProviderId() {
         Integer value = getIntegerConfig(TwoFactorConfigurationConstants.SMS_PROVIDER_ID,
                 null);
@@ -147,25 +147,25 @@ public class TwoFactorConfigurationServiceImpl implements TwoFactorConfiguration
     }
 
     @Override
-    @Cacheable(value = "tfConfig", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier()+'|smsText'")
+    @Cacheable(value = "tfConfig", key = "#fineractProperties.getTenantId() + '|smsText'")
     public String getSmsText() {
         return getStringConfig(TwoFactorConfigurationConstants.SMS_MESSAGE_TEXT, DEFAULT_SMS_TEXT);
     }
 
     @Override
-    @Cacheable(value = "tfConfig", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier()+'|emailEnabled'")
+    @Cacheable(value = "tfConfig", key = "#fineractProperties.getTenantId() + '|emailEnabled'")
     public boolean isEmailEnabled() {
         return getBooleanConfig(TwoFactorConfigurationConstants.ENABLE_EMAIL_DELIVERY, false);
     }
 
     @Override
-    @Cacheable(value = "tfConfig", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier()+'|emailSubject'")
+    @Cacheable(value = "tfConfig", key = "#fineractProperties.getTenantId() + '|emailSubject'")
     public String getEmailSubject() {
         return getStringConfig(TwoFactorConfigurationConstants.EMAIL_SUBJECT, DEFAULT_EMAIL_SUBJECT);
     }
 
     @Override
-    @Cacheable(value = "tfConfig", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier()+'|emailBody'")
+    @Cacheable(value = "tfConfig", key = "#fineractProperties.getTenantId() + '|emailBody'")
     public String getEmailBody() {
         return getStringConfig(TwoFactorConfigurationConstants.EMAIL_BODY, DEFAULT_EMAIL_BODY);
     }
@@ -189,7 +189,7 @@ public class TwoFactorConfigurationServiceImpl implements TwoFactorConfiguration
     }
 
     @Override
-    @Cacheable(value = "tfConfig", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier()+'|otpLength'")
+    @Cacheable(value = "tfConfig", key = "#fineractProperties.getTenantId() + '|otpLength'")
     public Integer getOTPTokenLength() {
         Integer defaultValue = 1;
         return getIntegerConfig(TwoFactorConfigurationConstants.OTP_TOKEN_LENGTH,
@@ -197,7 +197,7 @@ public class TwoFactorConfigurationServiceImpl implements TwoFactorConfiguration
     }
 
     @Override
-    @Cacheable(value = "tfConfig", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier()+'|otpTime'")
+    @Cacheable(value = "tfConfig", key = "#fineractProperties.getTenantId() + '|otpTime'")
     public Integer getOTPTokenLiveTime() {
         Integer defaultValue = 300;
         Integer value = getIntegerConfig(TwoFactorConfigurationConstants.OTP_TOKEN_LIVE_TIME,
@@ -209,7 +209,7 @@ public class TwoFactorConfigurationServiceImpl implements TwoFactorConfiguration
     }
 
     @Override
-    @Cacheable(value = "tfConfig", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier()+'|tokenTime'")
+    @Cacheable(value = "tfConfig", key = "#fineractProperties.getTenantId() + '|tokenTime'")
     public Integer getAccessTokenLiveTime() {
         Integer defaultValue = 86400;
         Integer value = getIntegerConfig(TwoFactorConfigurationConstants.ACCESS_TOKEN_LIVE_TIME,
@@ -221,7 +221,7 @@ public class TwoFactorConfigurationServiceImpl implements TwoFactorConfiguration
     }
 
     @Override
-    @Cacheable(value = "tfConfig", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier()+'|tokenExtendedTime'")
+    @Cacheable(value = "tfConfig", key = "#fineract.getTenantId() + '|tokenExtendedTime'")
     public Integer getAccessTokenExtendedLiveTime() {
         Integer defaultValue = 604800;
         Integer value = getIntegerConfig(TwoFactorConfigurationConstants.ACCESS_TOKEN_LIVE_TIME_EXTENDED,

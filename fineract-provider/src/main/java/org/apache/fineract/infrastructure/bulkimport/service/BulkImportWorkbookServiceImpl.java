@@ -27,11 +27,10 @@ import org.apache.fineract.infrastructure.bulkimport.domain.ImportDocument;
 import org.apache.fineract.infrastructure.bulkimport.domain.ImportDocumentRepository;
 import org.apache.fineract.infrastructure.bulkimport.importhandler.ImportHandler;
 import org.apache.fineract.infrastructure.bulkimport.importhandler.ImportHandlerUtils;
-import javax.sql.DataSource;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.documentmanagement.data.DocumentData;
 import org.apache.fineract.infrastructure.documentmanagement.domain.Document;
 import org.apache.fineract.infrastructure.documentmanagement.domain.DocumentRepository;
@@ -52,6 +51,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.net.URLConnection;
@@ -67,19 +67,21 @@ public class BulkImportWorkbookServiceImpl implements BulkImportWorkbookService 
     private final DocumentRepository documentRepository;
     private final ImportDocumentRepository importDocumentRepository;
     private final JdbcTemplate jdbcTemplate;
+    private final FineractProperties fineractProperties;
 
     @Autowired
     public BulkImportWorkbookServiceImpl(final ApplicationContext applicationContext,
             final PlatformSecurityContext securityContext,
             final DocumentWritePlatformService documentWritePlatformService,
             final DocumentRepository documentRepository,
-            final ImportDocumentRepository importDocumentRepository, final DataSource dataSource) {
+            final ImportDocumentRepository importDocumentRepository, final DataSource dataSource, final FineractProperties fineractProperties) {
         this.applicationContext = applicationContext;
         this.securityContext = securityContext;
         this.documentWritePlatformService = documentWritePlatformService;
         this.documentRepository = documentRepository;
         this.importDocumentRepository = importDocumentRepository;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.fineractProperties = fineractProperties;
     }
 
     @Override
@@ -201,8 +203,7 @@ public class BulkImportWorkbookServiceImpl implements BulkImportWorkbookService 
                 ImportHandlerUtils.getNumberOfRows(workbook.getSheetAt(0),
                         primaryColumn));
         this.importDocumentRepository.saveAndFlush(importDocument);
-        BulkImportEvent event = BulkImportEvent.instance(ThreadLocalContextUtil.getTenant()
-                .getTenantIdentifier(), workbook, importDocument.getId(), locale, dateFormat);
+        BulkImportEvent event = BulkImportEvent.instance(fineractProperties.getTenantId(), workbook, importDocument.getId(), locale, dateFormat);
         applicationContext.publishEvent(event);
         return importDocument.getId();
     }

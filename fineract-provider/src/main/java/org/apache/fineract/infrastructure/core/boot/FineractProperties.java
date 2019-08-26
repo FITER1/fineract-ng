@@ -35,9 +35,18 @@ import java.util.Map;
 @ConfigurationProperties(prefix = "fineract")
 public class FineractProperties {
 
-    private FineractSettingsTenantdb tenantdb;
+    // NOTE: a unique ID for this instance; kind of a replacement for tenant awareness
+    private String tenantId;
 
-    private FineractSettingsJdbc jdbc;
+    private String timezoneId;
+
+    @Deprecated
+    private FineractPropertiesTenantdb tenantdb;
+
+    @Deprecated
+    private FineractPropertiesJdbc jdbc;
+
+    private FineractPropertiesConnection connection;
 
     private Map<String, String> flywayPlaceholders;
 
@@ -45,7 +54,8 @@ public class FineractProperties {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class FineractSettingsTenantdb {
+    @Deprecated
+    public static class FineractPropertiesTenantdb {
         private Boolean enabled;
     }
 
@@ -53,11 +63,31 @@ public class FineractProperties {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class FineractSettingsJdbc {
+    @Deprecated
+    public static class FineractPropertiesJdbc {
         private String driverClassName;
         private String protocol;
         private String subProtocol;
         private String host;
         private Integer port;
+    }
+
+    @Builder
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FineractPropertiesConnection {
+        private Boolean removeAbandoned;
+        private Integer removeAbandonedTimeout;
+        private Boolean logAbandoned;
+        private Integer abandonWhenPercentageFull;
+        private Integer maxActive;
+        private Integer minIdle;
+        private Integer maxIdle;
+        private Integer suspectTimeout;
+        private Integer timeBetweenEvictionRunsMillis;
+        private Integer minEvictableIdleTimeMillis;
+        private Integer maxRetriesOnDeadlock;
+        private Integer maxIntervalBetweenRetries;
     }
 }

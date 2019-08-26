@@ -18,8 +18,7 @@
  */
 package org.apache.fineract.commands.service;
 
-import java.util.Random;
-
+import com.google.gson.JsonElement;
 import org.apache.fineract.commands.domain.CommandSource;
 import org.apache.fineract.commands.domain.CommandSourceRepository;
 import org.apache.fineract.commands.domain.CommandWrapper;
@@ -27,9 +26,9 @@ import org.apache.fineract.commands.exception.CommandNotAwaitingApprovalExceptio
 import org.apache.fineract.commands.exception.CommandNotFoundException;
 import org.apache.fineract.commands.exception.RollbackTransactionAsCommandIsNotApprovedByCheckerException;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.jobs.service.SchedulerJobRunnerReadService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.useradministration.domain.AppUser;
@@ -42,7 +41,7 @@ import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.JsonElement;
+import java.util.Random;
 
 @Service
 public class PortfolioCommandSourceWritePlatformServiceImpl implements PortfolioCommandSourceWritePlatformService {
@@ -52,17 +51,20 @@ public class PortfolioCommandSourceWritePlatformServiceImpl implements Portfolio
     private final FromJsonHelper fromApiJsonHelper;
     private final CommandProcessingService processAndLogCommandService;
     private final SchedulerJobRunnerReadService schedulerJobRunnerReadService;
+    private final FineractProperties fineractProperties;
     private final static Logger logger = LoggerFactory.getLogger(PortfolioCommandSourceWritePlatformServiceImpl.class);
 
     @Autowired
     public PortfolioCommandSourceWritePlatformServiceImpl(final PlatformSecurityContext context,
             final CommandSourceRepository commandSourceRepository, final FromJsonHelper fromApiJsonHelper,
-            final CommandProcessingService processAndLogCommandService, final SchedulerJobRunnerReadService schedulerJobRunnerReadService) {
+            final CommandProcessingService processAndLogCommandService, final SchedulerJobRunnerReadService schedulerJobRunnerReadService,
+            final FineractProperties fineractProperties) {
         this.context = context;
         this.commandSourceRepository = commandSourceRepository;
         this.fromApiJsonHelper = fromApiJsonHelper;
         this.processAndLogCommandService = processAndLogCommandService;
         this.schedulerJobRunnerReadService = schedulerJobRunnerReadService;
+        this.fineractProperties = fineractProperties;
     }
 
     @Override
@@ -87,8 +89,8 @@ public class PortfolioCommandSourceWritePlatformServiceImpl implements Portfolio
         CommandProcessingResult result = null;
         JsonCommand command = null;
         Integer numberOfRetries = 0;
-        Integer maxNumberOfRetries = ThreadLocalContextUtil.getTenant().getConnection().getMaxRetriesOnDeadlock();
-        Integer maxIntervalBetweenRetries = ThreadLocalContextUtil.getTenant().getConnection().getMaxIntervalBetweenRetries();
+        Integer maxNumberOfRetries = fineractProperties.getConnection().getMaxRetriesOnDeadlock();
+        Integer maxIntervalBetweenRetries = fineractProperties.getConnection().getMaxIntervalBetweenRetries();
         final JsonElement parsedCommand = this.fromApiJsonHelper.parse(json);
         command = JsonCommand.from(json, parsedCommand, this.fromApiJsonHelper, wrapper.getEntityName(), wrapper.getEntityId(),
                 wrapper.getSubentityId(), wrapper.getGroupId(), wrapper.getClientId(), wrapper.getLoanId(), wrapper.getSavingsId(),

@@ -18,11 +18,7 @@
  */
 package org.apache.fineract.infrastructure.jobs.service;
 
-import java.util.Random;
-
-import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
-import org.apache.fineract.infrastructure.security.service.TenantDetailsService;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.Trigger;
@@ -33,6 +29,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Random;
+
 @Component
 public class SchedulerTriggerListener implements TriggerListener {
 
@@ -42,12 +40,12 @@ public class SchedulerTriggerListener implements TriggerListener {
 
     private final SchedularWritePlatformService schedularService;
 
-    private final TenantDetailsService tenantDetailsService;
+    private final FineractProperties fineractProperties;
 
     @Autowired
-    public SchedulerTriggerListener(final SchedularWritePlatformService schedularService, final TenantDetailsService tenantDetailsService) {
+    public SchedulerTriggerListener(final SchedularWritePlatformService schedularService, final FineractProperties fineractProperties) {
         this.schedularService = schedularService;
-        this.tenantDetailsService = tenantDetailsService;
+        this.fineractProperties = fineractProperties;
 
     }
 
@@ -65,17 +63,14 @@ public class SchedulerTriggerListener implements TriggerListener {
     @Override
     public boolean vetoJobExecution(final Trigger trigger, final JobExecutionContext context) {
 
-        final String tenantIdentifier = trigger.getJobDataMap().getString(SchedulerServiceConstants.TENANT_IDENTIFIER);
-        final FineractPlatformTenant tenant = this.tenantDetailsService.loadTenantById(tenantIdentifier);
-        ThreadLocalContextUtil.setTenant(tenant);
         final JobKey key = trigger.getJobKey();
         final String jobKey = key.getName() + SchedulerServiceConstants.JOB_KEY_SEPERATOR + key.getGroup();
         String triggerType = SchedulerServiceConstants.TRIGGER_TYPE_CRON;
         if (context.getMergedJobDataMap().containsKey(SchedulerServiceConstants.TRIGGER_TYPE_REFERENCE)) {
             triggerType = context.getMergedJobDataMap().getString(SchedulerServiceConstants.TRIGGER_TYPE_REFERENCE);
         }
-        Integer maxNumberOfRetries = ThreadLocalContextUtil.getTenant().getConnection().getMaxRetriesOnDeadlock();
-        Integer maxIntervalBetweenRetries = ThreadLocalContextUtil.getTenant().getConnection().getMaxIntervalBetweenRetries();
+        Integer maxNumberOfRetries = fineractProperties.getConnection().getMaxRetriesOnDeadlock();
+        Integer maxIntervalBetweenRetries = fineractProperties.getConnection().getMaxIntervalBetweenRetries();
         Integer numberOfRetries = 0;
         boolean proceedJob = false;
         while (numberOfRetries <= maxNumberOfRetries) {

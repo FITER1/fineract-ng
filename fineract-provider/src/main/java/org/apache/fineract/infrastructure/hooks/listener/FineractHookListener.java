@@ -18,15 +18,13 @@
  */
 package org.apache.fineract.infrastructure.hooks.listener;
 
-import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.hooks.domain.Hook;
 import org.apache.fineract.infrastructure.hooks.event.HookEvent;
 import org.apache.fineract.infrastructure.hooks.event.HookEventSource;
 import org.apache.fineract.infrastructure.hooks.processor.HookProcessor;
 import org.apache.fineract.infrastructure.hooks.processor.HookProcessorProvider;
 import org.apache.fineract.infrastructure.hooks.service.HookReadPlatformService;
-import org.apache.fineract.infrastructure.security.service.TenantDetailsService;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,24 +36,21 @@ public class FineractHookListener implements HookListener {
 
     private final HookProcessorProvider hookProcessorProvider;
     private final HookReadPlatformService hookReadPlatformService;
-    private final TenantDetailsService tenantDetailsService;
+    private final FineractProperties fineractProperties;
 
     @Autowired
     public FineractHookListener(final HookProcessorProvider hookProcessorProvider,
             final HookReadPlatformService hookReadPlatformService,
-            final TenantDetailsService tenantDetailsService) {
+            final FineractProperties fineractProperties) {
         this.hookReadPlatformService = hookReadPlatformService;
         this.hookProcessorProvider = hookProcessorProvider;
-        this.tenantDetailsService = tenantDetailsService;
+        this.fineractProperties = fineractProperties;
     }
 
     @Override
     public void onApplicationEvent(final HookEvent event) {
 
         final String tenantIdentifier = event.getTenantIdentifier();
-        final FineractPlatformTenant tenant = this.tenantDetailsService
-                .loadTenantById(tenantIdentifier);
-        ThreadLocalContextUtil.setTenant(tenant);
 
         final AppUser appUser = event.getAppUser();
         final String authToken = event.getAuthToken();

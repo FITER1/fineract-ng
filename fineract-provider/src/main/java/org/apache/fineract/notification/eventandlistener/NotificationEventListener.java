@@ -18,9 +18,6 @@
  */
 package org.apache.fineract.notification.eventandlistener;
 
-import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
-import org.apache.fineract.infrastructure.security.service.BasicAuthTenantDetailsService;
 import org.apache.fineract.notification.data.NotificationData;
 import org.apache.fineract.notification.service.NotificationWritePlatformService;
 import org.apache.fineract.useradministration.domain.AppUser;
@@ -40,17 +37,13 @@ import java.util.Objects;
 @Service
 public class NotificationEventListener implements SessionAwareMessageListener {
 
-    private final BasicAuthTenantDetailsService basicAuthTenantDetailsService;
-
     private final NotificationWritePlatformService notificationWritePlatformService;
 
     private final AppUserRepository appUserRepository;
 
     @Autowired
-    public NotificationEventListener(BasicAuthTenantDetailsService basicAuthTenantDetailsService,
-                                     NotificationWritePlatformService notificationWritePlatformService,
+    public NotificationEventListener(NotificationWritePlatformService notificationWritePlatformService,
                                      AppUserRepository appUserRepository) {
-        this.basicAuthTenantDetailsService = basicAuthTenantDetailsService;
         this.notificationWritePlatformService = notificationWritePlatformService;
         this.appUserRepository = appUserRepository;
     }
@@ -59,10 +52,6 @@ public class NotificationEventListener implements SessionAwareMessageListener {
     public void onMessage(Message message, Session session) throws JMSException {
         if (message instanceof ObjectMessage) {
             NotificationData notificationData = (NotificationData) ((ObjectMessage) message).getObject();
-
-            final FineractPlatformTenant tenant = this.basicAuthTenantDetailsService
-                    .loadTenantById(notificationData.getTenantIdentifier(), false);
-            ThreadLocalContextUtil.setTenant(tenant);
 
             Long appUserId = notificationData.getActor();
 

@@ -18,18 +18,11 @@
  */
 package org.apache.fineract.portfolio.loanaccount.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.exception.AbstractPlatformDomainRuleException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
@@ -41,6 +34,8 @@ import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
+import java.util.*;
+
 @Service
 public class LoanSchedularServiceImpl implements LoanSchedularService {
 
@@ -48,13 +43,16 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
     private final ConfigurationDomainService configurationDomainService;
     private final LoanReadPlatformService loanReadPlatformService;
     private final LoanWritePlatformService loanWritePlatformService;
+    private final FineractProperties fineractProperties;
 
     @Autowired
     public LoanSchedularServiceImpl(final ConfigurationDomainService configurationDomainService,
-            final LoanReadPlatformService loanReadPlatformService, final LoanWritePlatformService loanWritePlatformService) {
+            final LoanReadPlatformService loanReadPlatformService, final LoanWritePlatformService loanWritePlatformService,
+			final FineractProperties fineractProperties) {
         this.configurationDomainService = configurationDomainService;
         this.loanReadPlatformService = loanReadPlatformService;
         this.loanWritePlatformService = loanWritePlatformService;
+        this.fineractProperties = fineractProperties;
     }
 
     @Override
@@ -114,9 +112,9 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 	@Override
 	@CronTarget(jobName = JobName.RECALCULATE_INTEREST_FOR_LOAN)
 	public void recalculateInterest() throws JobExecutionException {
-		Integer maxNumberOfRetries = ThreadLocalContextUtil.getTenant()
+		Integer maxNumberOfRetries = fineractProperties
 				.getConnection().getMaxRetriesOnDeadlock();
-		Integer maxIntervalBetweenRetries = ThreadLocalContextUtil.getTenant()
+		Integer maxIntervalBetweenRetries = fineractProperties
 				.getConnection().getMaxIntervalBetweenRetries();
 		Collection<Long> loanIds = this.loanReadPlatformService
 				.fetchLoansForInterestRecalculation();

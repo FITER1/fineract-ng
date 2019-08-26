@@ -63,7 +63,7 @@ public class FundReadPlatformServiceImpl implements FundReadPlatformService {
     }
 
     @Override
-    @Cacheable(value = "funds", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier().concat('fn')")
+    @Cacheable(value = "funds", key = "#fineractProperties.getTenantId().concat('fn')")
     public Collection<FundData> retrieveAllFunds() {
 
         this.context.authenticatedUser();

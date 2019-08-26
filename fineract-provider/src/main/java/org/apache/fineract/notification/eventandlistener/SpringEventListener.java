@@ -18,13 +18,6 @@
  */
 package org.apache.fineract.notification.eventandlistener;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
-import org.apache.fineract.infrastructure.security.service.BasicAuthTenantDetailsService;
 import org.apache.fineract.notification.data.NotificationData;
 import org.apache.fineract.notification.service.NotificationWritePlatformService;
 import org.apache.fineract.useradministration.domain.AppUser;
@@ -33,20 +26,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 @Component
 public class SpringEventListener implements ApplicationListener<SpringEvent> {
 	
-	private final BasicAuthTenantDetailsService basicAuthTenantDetailsService;
-
     private final NotificationWritePlatformService notificationWritePlatformService;
 
     private final AppUserRepository appUserRepository;
     
     @Autowired
-    public SpringEventListener(BasicAuthTenantDetailsService basicAuthTenantDetailsService,
-                                     NotificationWritePlatformService notificationWritePlatformService,
+    public SpringEventListener(NotificationWritePlatformService notificationWritePlatformService,
                                      AppUserRepository appUserRepository) {
-        this.basicAuthTenantDetailsService = basicAuthTenantDetailsService;
         this.notificationWritePlatformService = notificationWritePlatformService;
         this.appUserRepository = appUserRepository;
     }
@@ -55,10 +48,6 @@ public class SpringEventListener implements ApplicationListener<SpringEvent> {
 	public void onApplicationEvent(SpringEvent event) {
 		NotificationData notificationData = event.getNotificationData();
 		
-		final FineractPlatformTenant tenant = this.basicAuthTenantDetailsService
-                .loadTenantById(notificationData.getTenantIdentifier(), false);
-        ThreadLocalContextUtil.setTenant(tenant);
-
         Long appUserId = notificationData.getActor();
 
         List<Long> userIds = notificationData.getUserIds();
@@ -86,7 +75,5 @@ public class SpringEventListener implements ApplicationListener<SpringEvent> {
                 notificationData.getContent(),
                 notificationData.isSystemGenerated()
         );
-		
 	}
-
 }

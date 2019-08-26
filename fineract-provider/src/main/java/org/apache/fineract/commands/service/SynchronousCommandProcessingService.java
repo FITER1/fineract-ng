@@ -18,8 +18,6 @@
  */
 package org.apache.fineract.commands.service;
 
-import java.util.Map;
-
 import org.apache.fineract.commands.domain.CommandSource;
 import org.apache.fineract.commands.domain.CommandSourceRepository;
 import org.apache.fineract.commands.domain.CommandWrapper;
@@ -29,10 +27,10 @@ import org.apache.fineract.commands.handler.NewCommandSourceHandler;
 import org.apache.fineract.commands.provider.CommandHandlerProvider;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.serialization.ToApiJsonSerializer;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.hooks.event.HookEvent;
 import org.apache.fineract.infrastructure.hooks.event.HookEventSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -42,6 +40,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 @Service
 public class SynchronousCommandProcessingService implements CommandProcessingService {
@@ -53,13 +53,14 @@ public class SynchronousCommandProcessingService implements CommandProcessingSer
     private CommandSourceRepository commandSourceRepository;
     private final ConfigurationDomainService configurationDomainService;
     private final CommandHandlerProvider commandHandlerProvider;
+    private final FineractProperties fineractProperties;
 
     @Autowired
     public SynchronousCommandProcessingService(final PlatformSecurityContext context, final ApplicationContext applicationContext,
             final ToApiJsonSerializer<Map<String, Object>> toApiJsonSerializer,
             final ToApiJsonSerializer<CommandProcessingResult> toApiResultJsonSerializer,
             final CommandSourceRepository commandSourceRepository, final ConfigurationDomainService configurationDomainService,
-            final CommandHandlerProvider commandHandlerProvider) {
+            final CommandHandlerProvider commandHandlerProvider, final FineractProperties fineractProperties) {
         this.context = context;
         this.context = context;
         this.applicationContext = applicationContext;
@@ -69,6 +70,7 @@ public class SynchronousCommandProcessingService implements CommandProcessingSer
         this.commandSourceRepository = commandSourceRepository;
         this.configurationDomainService = configurationDomainService;
         this.commandHandlerProvider = commandHandlerProvider;
+        this.fineractProperties = fineractProperties;
     }
 
     @Transactional
@@ -210,16 +212,14 @@ public class SynchronousCommandProcessingService implements CommandProcessingSer
 
     private void publishEvent(final String entityName, final String actionName, final CommandProcessingResult result) {
 
-        final String authToken = ThreadLocalContextUtil.getAuthToken();
-        final String tenantIdentifier = ThreadLocalContextUtil.getTenant().getTenantIdentifier();
-        final AppUser appUser = this.context.authenticatedUser(CommandWrapper.wrap(actionName, 
-                entityName, null, null));
+        final AppUser appUser = this.context.authenticatedUser(CommandWrapper.wrap(actionName, entityName, null, null));
 
         final HookEventSource hookEventSource = new HookEventSource(entityName, actionName);
 
         final String serializedResult = this.toApiResultJsonSerializer.serialize(result);
 
-        final HookEvent applicationEvent = new HookEvent(hookEventSource, serializedResult, tenantIdentifier, appUser, authToken);
+        // TODO: @aleks check if we can leave out authToken
+        final HookEvent applicationEvent = new HookEvent(hookEventSource, serializedResult, fineractProperties.getTenantId(), appUser, null);
 
         applicationContext.publishEvent(applicationEvent);
     }

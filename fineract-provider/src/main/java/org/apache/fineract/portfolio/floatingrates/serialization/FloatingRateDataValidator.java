@@ -55,12 +55,14 @@ public class FloatingRateDataValidator {
 
 	private final FromJsonHelper fromApiJsonHelper;
 	private final FloatingRateRepository floatingRateRepository;
+	private final DateUtils dateUtils;
 
 	@Autowired
 	public FloatingRateDataValidator(final FromJsonHelper fromApiJsonHelper,
-			final FloatingRateRepository floatingRateRepository) {
+			final FloatingRateRepository floatingRateRepository, final DateUtils dateUtils) {
 		this.fromApiJsonHelper = fromApiJsonHelper;
 		this.floatingRateRepository = floatingRateRepository;
+		this.dateUtils = dateUtils;
 	}
 
 	public void validateForCreate(String json) {
@@ -148,7 +150,7 @@ public class FloatingRateDataValidator {
 							.value(fromDate)
 							.notBlank()
 							.validateDateAfter(
-									DateUtils.getLocalDateOfTenant()
+									dateUtils.getLocalDateOfTenant()
 											.plusDays(1));
 					if (fromDate != null) {
 						fromDates.add(fromDate);

@@ -18,30 +18,14 @@
  */
 package org.apache.fineract.portfolio.loanaccount.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
 import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_ENTITY;
 import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_EVENTS;
 import org.apache.fineract.portfolio.common.service.BusinessEventListner;
 import org.apache.fineract.portfolio.common.service.BusinessEventNotifierService;
-import org.apache.fineract.portfolio.loanaccount.domain.Loan;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanCharge;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleInstallment;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanSummary;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
+import org.apache.fineract.portfolio.loanaccount.domain.*;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.LoanSchedulePeriodData;
 import org.apache.fineract.scheduledjobs.service.ScheduledJobRunnerServiceImpl;
 import org.joda.time.LocalDate;
@@ -55,6 +39,16 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class LoanArrearsAgingServiceImpl implements LoanArrearsAgingService, BusinessEventListner {
@@ -128,7 +122,7 @@ public class LoanArrearsAgingServiceImpl implements LoanArrearsAgingService, Bus
             result += i;
         }
 
-        logger.info(ThreadLocalContextUtil.getTenant().getName() + ": Results affected by update: " + result);
+        logger.info("Results affected by update: {}", result);
     }
 
     @Override

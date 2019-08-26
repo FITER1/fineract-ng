@@ -18,15 +18,9 @@
  */
 package org.apache.fineract.infrastructure.core.service;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-
+import org.apache.commons.lang3.StringUtils;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
-import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
@@ -34,24 +28,34 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.TimeZone;
+
+@Component
 public class DateUtils {
+    @Autowired
+    private static FineractProperties fineractProperties;
 
     public static DateTimeZone getDateTimeZoneOfTenant() {
-        final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
         DateTimeZone zone = null;
-        if (tenant != null) {
-            zone = DateTimeZone.forID(tenant.getTimezoneId());
-            TimeZone.getTimeZone(tenant.getTimezoneId());
+        if (!StringUtils.isEmpty(fineractProperties.getTimezoneId())) {
+            zone = DateTimeZone.forID(fineractProperties.getTimezoneId());
+            TimeZone.getTimeZone(fineractProperties.getTimezoneId());
         }
         return zone;
     }
 
     public static TimeZone getTimeZoneOfTenant() {
-        final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
         TimeZone zone = null;
-        if (tenant != null) {
-            zone = TimeZone.getTimeZone(tenant.getTimezoneId());
+        if (!StringUtils.isEmpty(fineractProperties.getTimezoneId())) {
+            zone = TimeZone.getTimeZone(fineractProperties.getTimezoneId());
         }
         return zone;
     }

@@ -23,41 +23,35 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.gson.Gson;
 import org.apache.commons.lang3.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.api.JsonQuery;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
-import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
-import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.apache.fineract.infrastructure.core.service.DateUtils;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
-import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
-import org.apache.fineract.infrastructure.dataqueries.domain.*;
-import org.apache.fineract.infrastructure.dataqueries.exception.ReportNotFoundException;
-import org.apache.fineract.infrastructure.dataqueries.service.GenericDataService;
-import org.apache.fineract.infrastructure.dataqueries.service.ReadReportingService;
-import org.apache.fineract.infrastructure.documentmanagement.contentrepository.FileSystemContentRepository;
-import org.apache.fineract.infrastructure.reportmailingjob.helper.IPv4Helper;
+import org.apache.fineract.infrastructure.campaigns.email.data.EmailCampaignData;
+import org.apache.fineract.infrastructure.campaigns.email.data.EmailCampaignValidator;
 import org.apache.fineract.infrastructure.campaigns.email.data.EmailMessageWithAttachmentData;
+import org.apache.fineract.infrastructure.campaigns.email.data.PreviewCampaignMessage;
 import org.apache.fineract.infrastructure.campaigns.email.domain.*;
 import org.apache.fineract.infrastructure.campaigns.email.exception.EmailCampaignMustBeClosedToBeDeletedException;
 import org.apache.fineract.infrastructure.campaigns.email.exception.EmailCampaignMustBeClosedToEditException;
 import org.apache.fineract.infrastructure.campaigns.email.exception.EmailCampaignNotFound;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.api.JsonQuery;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
+import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
+import org.apache.fineract.infrastructure.core.service.DateUtils;
+import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
+import org.apache.fineract.infrastructure.dataqueries.domain.Report;
+import org.apache.fineract.infrastructure.dataqueries.domain.ReportParameterUsage;
+import org.apache.fineract.infrastructure.dataqueries.domain.ReportRepository;
+import org.apache.fineract.infrastructure.dataqueries.exception.ReportNotFoundException;
+import org.apache.fineract.infrastructure.dataqueries.service.GenericDataService;
+import org.apache.fineract.infrastructure.dataqueries.service.ReadReportingService;
+import org.apache.fineract.infrastructure.documentmanagement.contentrepository.FileSystemContentRepository;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
+import org.apache.fineract.infrastructure.reportmailingjob.helper.IPv4Helper;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.apache.fineract.infrastructure.campaigns.email.data.PreviewCampaignMessage;
-import org.apache.fineract.infrastructure.campaigns.email.data.EmailCampaignData;
-import org.apache.fineract.infrastructure.campaigns.email.data.EmailCampaignValidator;
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
@@ -66,6 +60,13 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanRepository;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepository;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +98,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
     private final LoanRepository loanRepository;
     private final SavingsAccountRepository savingsAccountRepository;
     private final EmailMessageJobEmailService emailMessageJobEmailService;
+    private final FineractProperties fineractProperties;
 
     @Autowired
     public EmailCampaignWritePlatformCommandHandlerImpl(final PlatformSecurityContext context,
@@ -105,7 +107,8 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
             final EmailMessageRepository emailMessageRepository, final ClientRepositoryWrapper clientRepositoryWrapper,
             final ReadReportingService readReportingService, final GenericDataService genericDataService,
             final FromJsonHelper fromJsonHelper, final LoanRepository loanRepository,
-            final SavingsAccountRepository savingsAccountRepository, final EmailMessageJobEmailService emailMessageJobEmailService) {
+            final SavingsAccountRepository savingsAccountRepository, final EmailMessageJobEmailService emailMessageJobEmailService,
+            final FineractProperties fineractProperties) {
         this.context = context;
         this.emailCampaignRepository = emailCampaignRepository;
         this.emailCampaignValidator = emailCampaignValidator;
@@ -119,6 +122,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
         this.loanRepository = loanRepository;
         this.savingsAccountRepository = savingsAccountRepository;
         this.emailMessageJobEmailService = emailMessageJobEmailService;
+        this.fineractProperties = fineractProperties;
     }
 
     @Transactional
@@ -535,10 +539,9 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
 
     private LocalDateTime tenantDateTime() {
         LocalDateTime today = new LocalDateTime();
-        final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
 
-        if (tenant != null) {
-            final DateTimeZone zone = DateTimeZone.forID(tenant.getTimezoneId());
+        if (!StringUtils.isEmpty(fineractProperties.getTimezoneId())) {
+            final DateTimeZone zone = DateTimeZone.forID(fineractProperties.getTimezoneId());
             if (zone != null) {
                 today = new LocalDateTime(zone);
             }

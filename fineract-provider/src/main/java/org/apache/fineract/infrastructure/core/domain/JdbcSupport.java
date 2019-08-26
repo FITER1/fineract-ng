@@ -18,18 +18,16 @@
  */
 package org.apache.fineract.infrastructure.core.domain;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
-
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.springframework.jdbc.support.JdbcUtils;
 
-import static org.apache.fineract.infrastructure.core.service.DateUtils.getDateTimeZoneOfTenant;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * Support for retrieving possibly null values from jdbc recordset delegating to
@@ -46,14 +44,16 @@ public class JdbcSupport {
         return dateTime;
     }
 
+    /*
     public static DateTime getLocalDateTime(final ResultSet rs, final String columnName) throws SQLException {
         DateTime dateTime = null;
         final Timestamp dateValue = rs.getTimestamp(columnName);
         if (dateValue != null) {
-            dateTime = new DateTime(dateValue.getTime()).withZone(getDateTimeZoneOfTenant());
+            dateTime = new DateTime(dateValue.getTime()).withZone(dateUtils.getDateTimeZoneOfTenant());
         }
         return dateTime;
     }
+    */
 
     public static LocalDate getLocalDate(final ResultSet rs, final String columnName) throws SQLException {
         LocalDate localDate = null;

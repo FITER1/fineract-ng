@@ -85,7 +85,7 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
     }
 
     @Override
-    @Cacheable(value = "charges", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier().concat('ch')")
+    @Cacheable(value = "charges", key = "#fineractProperties.getTenantId().concat('ch')")
     public Collection<ChargeData> retrieveAllCharges() {
         final ChargeMapper rm = new ChargeMapper();
 

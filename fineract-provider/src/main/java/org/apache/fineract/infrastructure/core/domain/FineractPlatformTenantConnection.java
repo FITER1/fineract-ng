@@ -19,10 +19,12 @@
 package org.apache.fineract.infrastructure.core.domain;
 
 
+// TODO: @aleks remove this
 /**
  * Holds DB server connection details.
  *
  */
+@Deprecated
 public class FineractPlatformTenantConnection {
     
     private final Long connectionId;

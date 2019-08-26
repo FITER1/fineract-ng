@@ -18,18 +18,11 @@
  */
 package org.apache.fineract.infrastructure.jobs.service;
 
-import java.util.Date;
-
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.jobs.domain.ScheduledJobDetail;
 import org.apache.fineract.infrastructure.jobs.domain.ScheduledJobRunHistory;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.useradministration.domain.AppUserRepositoryWrapper;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.quartz.JobKey;
-import org.quartz.JobListener;
-import org.quartz.Trigger;
+import org.quartz.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
@@ -37,12 +30,8 @@ import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-/**
- * Global job Listener class to set Tenant details to
- * {@link ThreadLocalContextUtil} for batch Job and stores the batch job status
- * to database after the execution
- * 
- */
+import java.util.Date;
+
 @Component
 public class SchedulerJobListener implements JobListener {
 

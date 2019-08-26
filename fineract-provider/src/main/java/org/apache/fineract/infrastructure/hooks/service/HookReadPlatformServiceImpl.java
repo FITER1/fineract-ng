@@ -19,7 +19,6 @@
 package org.apache.fineract.infrastructure.hooks.service;
 
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.hooks.data.*;
 import org.apache.fineract.infrastructure.hooks.domain.Hook;
 import org.apache.fineract.infrastructure.hooks.domain.HookRepository;
@@ -33,6 +32,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
@@ -79,7 +79,7 @@ public class HookReadPlatformServiceImpl implements HookReadPlatformService {
     }
 
     @Override
-    @Cacheable(value = "hooks", key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil).getTenant().getTenantIdentifier().concat('HK')")
+    @Cacheable(value = "hooks", key = "#fineractProperties.getTenantId().concat('HK')")
     public List<Hook> retrieveHooksByEvent(final String actionName,
             final String entityName) {
 

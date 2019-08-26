@@ -20,11 +20,9 @@ package org.apache.fineract.scheduledjobs.service;
 
 import org.apache.fineract.accounting.glaccount.domain.TrialBalance;
 import org.apache.fineract.accounting.glaccount.domain.TrialBalanceRepositoryWrapper;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
@@ -51,6 +49,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.text.SimpleDateFormat;
@@ -173,7 +172,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
 
         final int result = jdbcTemplate.update(updateSqlBuilder.toString());
 
-        logger.info(ThreadLocalContextUtil.getTenant().getName() + ": Results affected by update: " + result);
+        logger.info("Results affected by update: {}", result);
     }
 
     @Transactional
@@ -208,7 +207,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
 
         final int result = jdbcTemplate.update(updateSqlBuilder.toString());
 
-        logger.info(ThreadLocalContextUtil.getTenant().getName() + ": Results affected by update: " + result);
+        logger.info("Results affected by update: {}", result);
     }
 
     @Override
@@ -233,7 +232,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
             }
         }
 
-        logger.info(ThreadLocalContextUtil.getTenant().getName() + ": Savings accounts affected by update: " + annualFeeData.size());
+        logger.info("Savings accounts affected by update: {}", annualFeeData.size());
     }
 
     @Override
@@ -258,7 +257,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
             }
         }
 
-        logger.info(ThreadLocalContextUtil.getTenant().getName() + ": Savings accounts affected by update: " + chargesDueData.size());
+        logger.info("Savings accounts affected by update: {}", chargesDueData.size());
 
         /*
          * throw exception if any charge payment fails.
@@ -298,7 +297,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
 
         final int result = jdbcTemplate.update(updateSqlBuilder.toString());
 
-        logger.info(ThreadLocalContextUtil.getTenant().getName() + ": Results affected by update: " + result);
+        logger.info("Results affected by update: {}", result);
     }
 
     @Override
@@ -322,7 +321,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
             }
         }
 
-        logger.info(ThreadLocalContextUtil.getTenant().getName() + ": Deposit accounts affected by update: " + depositAccounts.size());
+        logger.info("Deposit accounts affected by update: {}", depositAccounts.size());
     }
 
     @Override
@@ -443,7 +442,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
             final int result = jdbcTemplate.update(sqlBuilder.toString(), new Object[] {
                     formattedDate
             });
-            logger.info(ThreadLocalContextUtil.getTenant().getName() + ": Results affected by update: " + result);
+            logger.info("Results affected by update: {}", result);
         }
 
         // Updating closing balance

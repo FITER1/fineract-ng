@@ -133,8 +133,8 @@ public class TwoFactorServiceImpl implements TwoFactorService {
 
     @Override
     @CachePut(value = "userTFAccessToken",
-            key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil)" +
-                    ".getTenant().getTenantIdentifier().concat(#user.username).concat(#result.token + 'tok')")
+        key = "#fineractProperties.getTenantId().concat(#user.username).concat(#result.token + 'tok')"
+    )
     public TFAccessToken createAccessTokenFromOTP(final AppUser user, final String otpToken) {
 
         OTPRequest otpRequest = otpRequestRepository.getOTPRequestForUser(user);
@@ -167,8 +167,7 @@ public class TwoFactorServiceImpl implements TwoFactorService {
 
     @Override
     @CacheEvict(value = "userTFAccessToken",
-            key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil)" +
-                    ".getTenant().getTenantIdentifier().concat(#user.username).concat(#result.token + 'tok')")
+            key = "#fineractProperties.getTenantId().concat(#user.username).concat(#result.token + 'tok')")
     public TFAccessToken invalidateAccessToken(final AppUser user, final JsonCommand command) {
 
         final String token = command.stringValueOfParameterNamed("token");
@@ -186,8 +185,7 @@ public class TwoFactorServiceImpl implements TwoFactorService {
 
     @Override
     @Cacheable(value = "userTFAccessToken",
-            key = "T(org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil)" +
-                    ".getTenant().getTenantIdentifier().concat(#user.username).concat(#token + 'tok')")
+            key = "#fineractProperties.getTenantId().concat(#user.username).concat(#token + 'tok')")
     public TFAccessToken fetchAccessTokenForUser(final AppUser user, final String token) {
         return tfAccessTokenRepository.findByUserAndToken(user, token);
     }

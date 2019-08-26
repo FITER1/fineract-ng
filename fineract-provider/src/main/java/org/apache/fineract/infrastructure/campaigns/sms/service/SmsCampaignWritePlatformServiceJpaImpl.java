@@ -18,18 +18,11 @@
  */
 package org.apache.fineract.infrastructure.campaigns.sms.service;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+import com.google.gson.JsonElement;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.campaigns.sms.constants.SmsCampaignStatus;
 import org.apache.fineract.infrastructure.campaigns.sms.constants.SmsCampaignTriggerType;
 import org.apache.fineract.infrastructure.campaigns.sms.data.CampaignPreviewData;
@@ -41,21 +34,19 @@ import org.apache.fineract.infrastructure.campaigns.sms.exception.SmsCampaignNot
 import org.apache.fineract.infrastructure.campaigns.sms.serialization.SmsCampaignValidator;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.api.JsonQuery;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
-import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
 import org.apache.fineract.infrastructure.dataqueries.domain.Report;
 import org.apache.fineract.infrastructure.dataqueries.domain.ReportRepository;
 import org.apache.fineract.infrastructure.dataqueries.exception.ReportNotFoundException;
 import org.apache.fineract.infrastructure.dataqueries.service.GenericDataService;
 import org.apache.fineract.infrastructure.dataqueries.service.ReadReportingService;
-import org.apache.fineract.infrastructure.gcm.domain.DeviceRegistration;
 import org.apache.fineract.infrastructure.gcm.domain.DeviceRegistrationRepositoryWrapper;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
@@ -89,10 +80,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
-import com.google.gson.JsonElement;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.*;
 
 @Service
 public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWritePlatformService {
@@ -111,8 +102,8 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
     private final GenericDataService genericDataService;
     private final FromJsonHelper fromJsonHelper;
     private final DeviceRegistrationRepositoryWrapper deviceRegistrationRepository;
-
     private final SmsMessageScheduledJobService smsMessageScheduledJobService;
+    private final FineractProperties fineractProperties;
     
     @Autowired
     public SmsCampaignWritePlatformServiceJpaImpl(final PlatformSecurityContext context, final SmsCampaignRepository smsCampaignRepository,
@@ -120,7 +111,8 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
             final SmsMessageRepository smsMessageRepository, final ClientRepositoryWrapper clientRepositoryWrapper,
             final ReadReportingService readReportingService, final GenericDataService genericDataService,
             final FromJsonHelper fromJsonHelper, final GroupRepository groupRepository,
-            final SmsMessageScheduledJobService smsMessageScheduledJobService, final DeviceRegistrationRepositoryWrapper deviceRegistrationRepository) {
+            final SmsMessageScheduledJobService smsMessageScheduledJobService, final DeviceRegistrationRepositoryWrapper deviceRegistrationRepository,
+            final FineractProperties fineractProperties) {
         this.context = context;
         this.smsCampaignRepository = smsCampaignRepository;
         this.smsCampaignValidator = smsCampaignValidator;
@@ -133,6 +125,7 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
         this.groupRepository = groupRepository;
         this.smsMessageScheduledJobService = smsMessageScheduledJobService ;
         this.deviceRegistrationRepository = deviceRegistrationRepository;
+        this.fineractProperties = fineractProperties;
     }
 
     @Transactional
@@ -680,10 +673,9 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
 
     private LocalDateTime tenantDateTime() {
         LocalDateTime today = new LocalDateTime();
-        final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
 
-        if (tenant != null) {
-            final DateTimeZone zone = DateTimeZone.forID(tenant.getTimezoneId());
+        if (!StringUtils.isEmpty(fineractProperties.getTimezoneId())) {
+            final DateTimeZone zone = DateTimeZone.forID(fineractProperties.getTimezoneId());
             if (zone != null) {
                 today = new LocalDateTime(zone);
             }

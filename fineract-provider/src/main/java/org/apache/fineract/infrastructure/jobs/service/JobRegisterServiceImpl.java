@@ -18,33 +18,14 @@
  */
 package org.apache.fineract.infrastructure.jobs.service;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Properties;
-import java.util.TimeZone;
-
-import javax.annotation.PostConstruct;
-
-import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.exception.PlatformInternalServerException;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.jobs.annotation.CronMethodParser;
 import org.apache.fineract.infrastructure.jobs.annotation.CronMethodParser.ClassMethodNamesPair;
 import org.apache.fineract.infrastructure.jobs.domain.ScheduledJobDetail;
 import org.apache.fineract.infrastructure.jobs.domain.SchedulerDetail;
 import org.apache.fineract.infrastructure.jobs.exception.JobNotFoundException;
-import org.apache.fineract.infrastructure.security.service.TenantDetailsService;
-import org.quartz.JobDataMap;
-import org.quartz.JobDetail;
-import org.quartz.JobKey;
-import org.quartz.JobListener;
-import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
-import org.quartz.TriggerListener;
+import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +36,10 @@ import org.springframework.scheduling.quartz.CronTriggerFactoryBean;
 import org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  * Service class to create and load batch jobs to Scheduler using
@@ -74,10 +59,12 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
 
     private ApplicationContext applicationContext;
     private SchedularWritePlatformService schedularWritePlatformService;
-    private TenantDetailsService tenantDetailsService;
     private SchedulerJobListener schedulerJobListener;
     private SchedulerStopListener schedulerStopListener;
     private SchedulerTriggerListener globalSchedulerTriggerListener;
+
+    @Autowired
+    private FineractProperties fineractProperties;
 
     private final HashMap<String, Scheduler> schedulers = new HashMap<>(4);
 
@@ -89,11 +76,6 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
     @Autowired
     public void setSchedularWritePlatformService(SchedularWritePlatformService schedularWritePlatformService) {
         this.schedularWritePlatformService = schedularWritePlatformService;
-    }
-
-    @Autowired
-    public void setTenantDetailsService(TenantDetailsService tenantDetailsService) {
-        this.tenantDetailsService = tenantDetailsService;
     }
 
     @Autowired
@@ -113,20 +95,16 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
 
     @PostConstruct
     public void loadAllJobs() {
-        final List<FineractPlatformTenant> allTenants = this.tenantDetailsService.findAllTenants();
-        for (final FineractPlatformTenant tenant : allTenants) {
-            ThreadLocalContextUtil.setTenant(tenant);
-            final List<ScheduledJobDetail> scheduledJobDetails = this.schedularWritePlatformService.retrieveAllJobs();
-            for (final ScheduledJobDetail jobDetails : scheduledJobDetails) {
-                scheduleJob(jobDetails);
-                jobDetails.updateTriggerMisfired(false);
-                this.schedularWritePlatformService.saveOrUpdate(jobDetails);
-            }
-            final SchedulerDetail schedulerDetail = this.schedularWritePlatformService.retriveSchedulerDetail();
-            if (schedulerDetail.isResetSchedulerOnBootup()) {
-                schedulerDetail.updateSuspendedState(false);
-                this.schedularWritePlatformService.updateSchedulerDetail(schedulerDetail);
-            }
+        final List<ScheduledJobDetail> scheduledJobDetails = this.schedularWritePlatformService.retrieveAllJobs();
+        for (final ScheduledJobDetail jobDetails : scheduledJobDetails) {
+            scheduleJob(jobDetails);
+            jobDetails.updateTriggerMisfired(false);
+            this.schedularWritePlatformService.saveOrUpdate(jobDetails);
+        }
+        final SchedulerDetail schedulerDetail = this.schedularWritePlatformService.retriveSchedulerDetail();
+        if (schedulerDetail.isResetSchedulerOnBootup()) {
+            schedulerDetail.updateSuspendedState(false);
+            this.schedularWritePlatformService.updateSchedulerDetail(schedulerDetail);
         }
     }
 
@@ -137,7 +115,7 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
                 triggerType = SchedulerServiceConstants.TRIGGER_TYPE_APPLICATION;
             }
             jobDataMap.put(SchedulerServiceConstants.TRIGGER_TYPE_REFERENCE, triggerType);
-            jobDataMap.put(SchedulerServiceConstants.TENANT_IDENTIFIER, ThreadLocalContextUtil.getTenant().getTenantIdentifier());
+            jobDataMap.put(SchedulerServiceConstants.TENANT_IDENTIFIER, fineractProperties.getTenantId());
             final String key = scheduledJobDetail.getJobKey();
             final JobKey jobKey = constructJobKey(key);
             final String schedulerName = getSchedulerName(scheduledJobDetail);
@@ -315,8 +293,7 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
 
     private String getSchedulerName(final ScheduledJobDetail scheduledJobDetail) {
         final StringBuilder sb = new StringBuilder(20);
-        final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
-        sb.append(SchedulerServiceConstants.SCHEDULER).append(tenant.getId());
+        sb.append(SchedulerServiceConstants.SCHEDULER).append(fineractProperties.getTenantId());
         if (scheduledJobDetail.getSchedulerGroup() > 0) {
             sb.append(SchedulerServiceConstants.SCHEDULER_GROUP).append(scheduledJobDetail.getSchedulerGroup());
         }
@@ -338,14 +315,13 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
     }
 
     private JobDetail createJobDetail(final ScheduledJobDetail scheduledJobDetail) throws Exception {
-        final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
         final ClassMethodNamesPair jobDetails = CronMethodParser.findTargetMethodDetails(scheduledJobDetail.getJobName());
         if (jobDetails == null) { throw new IllegalArgumentException(
                 "Code has no @CronTarget with this job name (@see JobName); seems like DB/code are not in line: "
                         + scheduledJobDetail.getJobName()); }
         final Object targetObject = getBeanObject(Class.forName(jobDetails.className));
         final MethodInvokingJobDetailFactoryBean jobDetailFactoryBean = new MethodInvokingJobDetailFactoryBean();
-        jobDetailFactoryBean.setName(scheduledJobDetail.getJobName() + "JobDetail" + tenant.getId());
+        jobDetailFactoryBean.setName(scheduledJobDetail.getJobName() + "JobDetail" + fineractProperties.getTenantId());
         jobDetailFactoryBean.setTargetObject(targetObject);
         jobDetailFactoryBean.setTargetMethod(jobDetails.methodName);
         jobDetailFactoryBean.setGroup(scheduledJobDetail.getGroupName());
@@ -384,14 +360,13 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
     }
 
     private Trigger createTrigger(final ScheduledJobDetail scheduledJobDetails, final JobDetail jobDetail) throws ParseException {
-        final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
         final CronTriggerFactoryBean cronTriggerFactoryBean = new CronTriggerFactoryBean();
-        cronTriggerFactoryBean.setName(scheduledJobDetails.getJobName() + "Trigger" + tenant.getId());
+        cronTriggerFactoryBean.setName(scheduledJobDetails.getJobName() + "Trigger" + fineractProperties.getTenantId());
         cronTriggerFactoryBean.setJobDetail(jobDetail);
         final JobDataMap jobDataMap = new JobDataMap();
-        jobDataMap.put(SchedulerServiceConstants.TENANT_IDENTIFIER, tenant.getTenantIdentifier());
+        jobDataMap.put(SchedulerServiceConstants.TENANT_IDENTIFIER, fineractProperties.getTenantId());
         cronTriggerFactoryBean.setJobDataMap(jobDataMap);
-        final TimeZone timeZone = TimeZone.getTimeZone(tenant.getTimezoneId());
+        final TimeZone timeZone = TimeZone.getTimeZone(fineractProperties.getTimezoneId());
         cronTriggerFactoryBean.setTimeZone(timeZone);
         cronTriggerFactoryBean.setGroup(scheduledJobDetails.getGroupName());
         cronTriggerFactoryBean.setCronExpression(scheduledJobDetails.getCronExpression());

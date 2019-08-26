@@ -19,8 +19,8 @@
 package org.apache.fineract.notification.service;
 
 import org.apache.activemq.command.ActiveMQQueue;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.notification.data.NotificationData;
 import org.apache.fineract.notification.data.TopicSubscriberData;
@@ -49,7 +49,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.jms.Queue;
-
 import java.util.*;
 
 @Service
@@ -62,13 +61,14 @@ public class NotificationDomainServiceImpl implements NotificationDomainService 
 	private final TopicSubscriberReadPlatformService topicSubscriberReadPlatformService;
 	private final NotificationEventService notificationEvent;
 	private final SpringEventPublisher springEventPublisher;
+	private final FineractProperties fineractProperties;
 	
 	@Autowired
 	public NotificationDomainServiceImpl(final BusinessEventNotifierService businessEventNotifierService,
 			final PlatformSecurityContext context, final RoleRepository roleRepository,
 			final TopicSubscriberReadPlatformService topicSubscriberReadPlatformService,
 			final OfficeRepository officeRepository, final NotificationEventService notificationEvent,
-			final SpringEventPublisher springEventPublisher) {
+			final SpringEventPublisher springEventPublisher, final FineractProperties fineractProperties) {
 		
 		this.businessEventNotifierService = businessEventNotifierService;
 		this.context = context;
@@ -77,6 +77,7 @@ public class NotificationDomainServiceImpl implements NotificationDomainService 
 		this.officeRepository = officeRepository;
 		this.notificationEvent = notificationEvent;
 		this.springEventPublisher = springEventPublisher;
+		this.fineractProperties = fineractProperties;
 	}
 	
 	@PostConstruct
@@ -557,7 +558,6 @@ public class NotificationDomainServiceImpl implements NotificationDomainService 
 	private void buildNotification(String permission, String objectType, Long objectIdentifier, 
 			String notificationContent, String eventType,  Long appUserId, Long officeId) {
 		
-		String tenantIdentifier = ThreadLocalContextUtil.getTenant().getTenantIdentifier();
 		Queue queue = new ActiveMQQueue("NotificationQueue");
 		List<Long> userIds = retrieveSubscribers(officeId, permission);
 		NotificationData notificationData = new NotificationData(
@@ -568,7 +568,7 @@ public class NotificationDomainServiceImpl implements NotificationDomainService 
 				notificationContent,
 				false,
 				false,
-				tenantIdentifier,
+				fineractProperties.getTenantId(),
 				officeId,
 				userIds
 		);

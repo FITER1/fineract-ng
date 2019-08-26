@@ -18,14 +18,9 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.contentrepository;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-
+import com.lowagie.text.pdf.codec.Base64;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.domain.Base64EncodedImage;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCommand;
 import org.apache.fineract.infrastructure.documentmanagement.data.DocumentData;
 import org.apache.fineract.infrastructure.documentmanagement.data.FileData;
@@ -34,14 +29,18 @@ import org.apache.fineract.infrastructure.documentmanagement.domain.StorageType;
 import org.apache.fineract.infrastructure.documentmanagement.exception.ContentManagementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.lowagie.text.pdf.codec.Base64;
+import java.io.*;
 
 public class FileSystemContentRepository implements ContentRepository {
 
     private final static Logger logger = LoggerFactory.getLogger(FileSystemContentRepository.class);
 
     public static final String FINERACT_BASE_DIR = System.getProperty("user.home") + File.separator + ".fineract";
+
+    @Autowired
+    public FineractProperties fineractProperties;
 
     @Override
     public String saveFile(final InputStream uploadedInputStream, final DocumentCommand documentCommand) {
@@ -137,7 +136,7 @@ public class FileSystemContentRepository implements ContentRepository {
      */
     private String generateFileParentDirectory(final String entityType, final Long entityId) {
         return FileSystemContentRepository.FINERACT_BASE_DIR + File.separator
-                + ThreadLocalContextUtil.getTenant().getName().replaceAll(" ", "").trim() + File.separator + "documents" + File.separator
+                + fineractProperties.getTenantId() + File.separator + "documents" + File.separator
                 + entityType + File.separator + entityId + File.separator + ContentRepositoryUtils.generateRandomString();
     }
 
@@ -146,7 +145,7 @@ public class FileSystemContentRepository implements ContentRepository {
      */
     private String generateClientImageParentDirectory(final Long resourceId) {
         return FileSystemContentRepository.FINERACT_BASE_DIR + File.separator
-                + ThreadLocalContextUtil.getTenant().getName().replaceAll(" ", "").trim() + File.separator + "images" + File.separator
+                + fineractProperties.getTenantId() + File.separator + "images" + File.separator
                 + "clients" + File.separator + resourceId;
     }
 

@@ -20,8 +20,6 @@ package org.apache.fineract.adhocquery.service;
 
 import org.apache.fineract.adhocquery.data.AdHocData;
 import org.apache.fineract.adhocquery.domain.ReportRunFrequency;
-import javax.sql.DataSource;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
 import org.joda.time.*;
@@ -32,6 +30,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
 import java.util.Collection;
 import java.util.Date;
 
@@ -102,20 +101,16 @@ public class AdHocScheduledJobRunnerServiceImpl implements AdHocScheduledJobRunn
                             .append(adhoc.getQuery());
                     if (insertSqlBuilder.length() > 0) {
                         final int result = this.jdbcTemplate.update(insertSqlBuilder.toString());
-                        logger.info(ThreadLocalContextUtil.getTenant().getName() + ": Results affected by inserted: " + result);
+                        logger.info("Results affected by inserted: {}", result);
 
                         this.jdbcTemplate.update("UPDATE m_adhoc SET last_run=? WHERE id=?", new Date(), adhoc.getId());
                     }
                 } else {
-                    logger.info(ThreadLocalContextUtil.getTenant().getName() + ": Skipping execution of " + adhoc.getName() + ", scheduled for execution on " + next);
+                    logger.info("Skipping execution of {}, scheduled for execution on {}", adhoc.getName(), next);
                 }
             });	
         }else{
-        	logger.info(ThreadLocalContextUtil.getTenant().getName() + "Nothing to update ");
+        	logger.info("Nothing to update ");
         }
-        
-        
-   
     }
-
 }
