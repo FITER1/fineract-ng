@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.core.boot;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.security.vote.SelfServiceUserAccessVote;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,7 +29,6 @@ import org.springframework.security.access.prepost.PreInvocationAuthorizationAdv
 import org.springframework.security.access.vote.AffirmativeBased;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
-import org.springframework.security.access.vote.UnanimousBased;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -42,6 +42,7 @@ import org.springframework.security.web.access.expression.WebExpressionVoter;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends GlobalMethodSecurityConfiguration {

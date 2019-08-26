@@ -26,14 +26,9 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-/**
- * Used in securityContext.xml as implementation of spring security's
- * {@link UserDetailsService}.
- */
 @Slf4j
 @Primary
 @Service(value = "userDetailsService")
