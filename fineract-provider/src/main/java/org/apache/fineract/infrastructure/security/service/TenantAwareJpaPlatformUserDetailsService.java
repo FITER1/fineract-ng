@@ -26,13 +26,14 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 
+// TODO: @aleks remove this; we use a single database now
 /**
  * Used in securityContext.xml as implementation of spring security's
  * {@link UserDetailsService}.
  */
-@Service(value = "userDetailsService")
+// @Service(value = "userDetailsService")
+@Deprecated
 public class TenantAwareJpaPlatformUserDetailsService implements PlatformUserDetailsService {
 
     @Autowired

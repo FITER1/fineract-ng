@@ -20,7 +20,7 @@ package org.apache.fineract.adhocquery.service;
 
 import org.apache.fineract.adhocquery.data.AdHocData;
 import org.apache.fineract.adhocquery.domain.ReportRunFrequency;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
@@ -43,7 +43,7 @@ public class AdHocScheduledJobRunnerServiceImpl implements AdHocScheduledJobRunn
     private final JdbcTemplate jdbcTemplate;
     
     @Autowired
-    public AdHocScheduledJobRunnerServiceImpl(final FineractRoutingDatasource dataSource,
+    public AdHocScheduledJobRunnerServiceImpl(final DataSource dataSource,
     		final AdHocReadPlatformService adHocReadPlatformService
             ) {
     	this.jdbcTemplate = new JdbcTemplate(dataSource);

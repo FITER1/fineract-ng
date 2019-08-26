@@ -26,7 +26,7 @@ import org.apache.fineract.accounting.rule.data.AccountingRuleData;
 import org.apache.fineract.accounting.rule.data.AccountingTagRuleData;
 import org.apache.fineract.accounting.rule.exception.AccountingRuleNotFoundException;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class AccountingRuleReadPlatformServiceImpl implements AccountingRuleRead
     private final GLAccountReadPlatformService glAccountReadPlatformService;
 
     @Autowired
-    public AccountingRuleReadPlatformServiceImpl(final FineractRoutingDatasource dataSource,
+    public AccountingRuleReadPlatformServiceImpl(final DataSource dataSource,
             final GLAccountReadPlatformService glAccountReadPlatformService) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.glAccountReadPlatformService = glAccountReadPlatformService;

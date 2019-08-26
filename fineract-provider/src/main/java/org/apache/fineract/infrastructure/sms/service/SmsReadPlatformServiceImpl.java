@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.infrastructure.sms.service;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
@@ -53,7 +53,7 @@ public class SmsReadPlatformServiceImpl implements SmsReadPlatformService {
     private final ColumnValidator columnValidator;
 
     @Autowired
-    public SmsReadPlatformServiceImpl(final FineractRoutingDatasource dataSource,
+    public SmsReadPlatformServiceImpl(final DataSource dataSource,
     		final ColumnValidator columnValidator) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.smsRowMapper = new SmsMapper();

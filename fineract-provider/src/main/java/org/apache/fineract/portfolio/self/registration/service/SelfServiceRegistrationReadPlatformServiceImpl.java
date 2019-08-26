@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.portfolio.self.registration.service;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -29,7 +29,7 @@ public class SelfServiceRegistrationReadPlatformServiceImpl implements SelfServi
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public SelfServiceRegistrationReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+    public SelfServiceRegistrationReadPlatformServiceImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

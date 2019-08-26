@@ -31,7 +31,7 @@ import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
@@ -75,7 +75,7 @@ public class AccountTransfersReadPlatformServiceImpl implements
 
 	@Autowired
 	public AccountTransfersReadPlatformServiceImpl(
-			final FineractRoutingDatasource dataSource,
+			final DataSource dataSource,
 			final ClientReadPlatformService clientReadPlatformService,
 			final OfficeReadPlatformService officeReadPlatformService,
 			final PortfolioAccountReadPlatformService portfolioAccountReadPlatformService,

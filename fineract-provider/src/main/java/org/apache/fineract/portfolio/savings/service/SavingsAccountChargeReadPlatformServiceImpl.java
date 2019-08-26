@@ -19,7 +19,7 @@
 package org.apache.fineract.portfolio.savings.service;
 
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -62,7 +62,7 @@ public class SavingsAccountChargeReadPlatformServiceImpl implements SavingsAccou
 
     @Autowired
     public SavingsAccountChargeReadPlatformServiceImpl(final PlatformSecurityContext context,
-            final ChargeDropdownReadPlatformService chargeDropdownReadPlatformService, final FineractRoutingDatasource dataSource,
+            final ChargeDropdownReadPlatformService chargeDropdownReadPlatformService, final DataSource dataSource,
             final DropdownReadPlatformService dropdownReadPlatformService) {
         this.context = context;
         this.chargeDropdownReadPlatformService = chargeDropdownReadPlatformService;

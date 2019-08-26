@@ -19,10 +19,7 @@
 package org.apache.fineract;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.fineract.infrastructure.core.service.TenantDatabaseUpgradeService;
-import org.apache.fineract.infrastructure.jobs.service.JobRegisterService;
 import org.junit.ClassRule;
-import org.mockito.Mockito;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jms.activemq.ActiveMQConnectionFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
@@ -30,10 +27,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.testcontainers.containers.GenericContainer;
-
-import javax.sql.DataSource;
-
-import static org.mockito.Mockito.mock;
 
 @Configuration
 @PropertySource("classpath:application-test.properties")

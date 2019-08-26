@@ -23,7 +23,7 @@ import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.campaigns.email.exception.EmailNotFoundException;
 import org.apache.fineract.infrastructure.campaigns.email.data.EmailData;
@@ -52,7 +52,7 @@ public class EmailReadPlatformServiceImpl implements EmailReadPlatformService {
 
 
     @Autowired
-    public EmailReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+    public EmailReadPlatformServiceImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

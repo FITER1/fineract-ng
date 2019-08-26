@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.creditbureau.data.CreditBureauConfigurationData;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +41,7 @@ public class CreditBureauReadConfigurationServiceImpl implements CreditBureauRea
 
 	@Autowired
 	public CreditBureauReadConfigurationServiceImpl(final PlatformSecurityContext context,
-			final FineractRoutingDatasource dataSource) {
+			final DataSource dataSource) {
 		this.context = context;
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}

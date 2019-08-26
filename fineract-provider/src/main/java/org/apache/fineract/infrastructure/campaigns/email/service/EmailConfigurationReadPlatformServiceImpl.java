@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.infrastructure.campaigns.email.service;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.campaigns.email.exception.EmailConfigurationNotFoundException;
 import org.apache.fineract.infrastructure.campaigns.email.data.EmailConfigurationData;
@@ -39,7 +39,7 @@ public class EmailConfigurationReadPlatformServiceImpl implements EmailConfigura
     private final EmailConfigurationRowMapper emailConfigurationRowMapper;
     
     @Autowired
-    public EmailConfigurationReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+    public EmailConfigurationReadPlatformServiceImpl(final DataSource dataSource) {
     	this.jdbcTemplate = new JdbcTemplate(dataSource);
     	this.emailConfigurationRowMapper = new EmailConfigurationRowMapper();
     	

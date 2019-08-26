@@ -18,11 +18,6 @@
  */
 package org.apache.fineract.infrastructure.cache.service;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.fineract.infrastructure.cache.CacheApiConstants;
 import org.apache.fineract.infrastructure.cache.CacheEnumerations;
 import org.apache.fineract.infrastructure.cache.data.CacheData;
@@ -35,6 +30,12 @@ import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.cache.support.NoOpCacheManager;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+// TODO: @aleks do we really need this? how many times do you change the cache implementation during runtime (not so often... actually this should be done differently)?
 /**
  * At present this implementation of {@link CacheManager} just delegates to the
  * real {@link CacheManager} to use.
@@ -44,24 +45,24 @@ import org.springframework.stereotype.Component;
  * switch implementation through UI/API
  */
 @Component(value = "runtimeDelegatingCacheManager")
-public class RuntimeDelegatingCacheManager implements CacheManager {
+public class RuntimeDelegatingCacheManager /*implements CacheManager*/ {
 
-    private final CacheManager ehcacheCacheManager;
+    private final CacheManager cacheManager;
     private final CacheManager noOpCacheManager = new NoOpCacheManager();
     private CacheManager currentCacheManager;
 
     @Autowired
-    public RuntimeDelegatingCacheManager(final CacheManager ehCacheCacheManager) {
-        this.ehcacheCacheManager = ehCacheCacheManager;
+    public RuntimeDelegatingCacheManager(final CacheManager cacheManager) {
+        this.cacheManager = cacheManager;
         this.currentCacheManager = this.noOpCacheManager;
     }
 
-    @Override
+    // @Override
     public Cache getCache(final String name) {
         return this.currentCacheManager.getCache(name);
     }
 
-    @Override
+    // @Override
     public Collection<String> getCacheNames() {
         return this.currentCacheManager.getCacheNames();
     }
@@ -108,7 +109,7 @@ public class RuntimeDelegatingCacheManager implements CacheManager {
                     changes.put(CacheApiConstants.cacheTypeParameter, toCacheType.getValue());
                     clearEhCache();
                 }
-                this.currentCacheManager = this.ehcacheCacheManager;
+                this.currentCacheManager = this.cacheManager;
             break;
             case MULTI_NODE:
                 if (!distributedCacheEnabled) {
@@ -121,8 +122,8 @@ public class RuntimeDelegatingCacheManager implements CacheManager {
     }
 
     private void clearEhCache() {
-        this.ehcacheCacheManager.getCacheNames().forEach(name -> {
-            Cache c = this.ehcacheCacheManager.getCache(name);
+        this.cacheManager.getCacheNames().forEach(name -> {
+            Cache c = this.cacheManager.getCache(name);
             if(c!=null) {
                 c.clear();
             }

@@ -29,7 +29,7 @@ import java.util.List;
 
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.holiday.data.HolidayData;
 import org.apache.fineract.organisation.holiday.domain.RescheduleType;
@@ -48,7 +48,7 @@ public class HolidayReadPlatformServiceImpl implements HolidayReadPlatformServic
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public HolidayReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource) {
+    public HolidayReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }

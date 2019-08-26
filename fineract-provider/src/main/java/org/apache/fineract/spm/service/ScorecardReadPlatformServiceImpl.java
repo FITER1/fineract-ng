@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.spm.data.ScorecardData;
 import org.apache.fineract.spm.data.ScorecardValue;
@@ -41,7 +41,7 @@ public class ScorecardReadPlatformServiceImpl implements ScorecardReadPlatformSe
     private final PlatformSecurityContext context;
 
     @Autowired
-    public ScorecardReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource) {
+    public ScorecardReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }

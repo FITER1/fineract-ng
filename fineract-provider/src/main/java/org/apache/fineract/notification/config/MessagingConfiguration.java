@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.notification.config;
 
-import org.apache.fineract.infrastructure.core.boot.FineractSettings;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.notification.eventandlistener.NotificationEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class MessagingConfiguration {
 	private Logger logger = LoggerFactory.getLogger(MessagingConfiguration.class);
 
 	@Autowired
-	private FineractSettings settings;
+	private FineractProperties settings;
 	
 	@Autowired
 	private NotificationEventListener notificationEventListener;

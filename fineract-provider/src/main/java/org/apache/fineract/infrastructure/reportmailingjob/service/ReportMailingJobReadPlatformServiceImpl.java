@@ -28,7 +28,7 @@ import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
 import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobData;
@@ -51,7 +51,7 @@ public class ReportMailingJobReadPlatformServiceImpl implements ReportMailingJob
     private final ColumnValidator columnValidator;
     
     @Autowired
-    public ReportMailingJobReadPlatformServiceImpl(final FineractRoutingDatasource dataSource,
+    public ReportMailingJobReadPlatformServiceImpl(final DataSource dataSource,
     		final ColumnValidator columnValidator) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.columnValidator = columnValidator;

@@ -27,7 +27,7 @@ import java.util.List;
 
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.accounting.glaccount.service.GLAccountReadPlatformService;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.organisation.provisioning.data.ProvisioningCategoryData;
 import org.apache.fineract.organisation.provisioning.data.ProvisioningCriteriaData;
 import org.apache.fineract.organisation.provisioning.data.ProvisioningCriteriaDefinitionData;
@@ -50,7 +50,7 @@ public class ProvisioningCriteriaReadPlatformServiceImpl implements Provisioning
     private final LoanProductReadPlatformService loanProductReaPlatformService;
 
     @Autowired
-    public ProvisioningCriteriaReadPlatformServiceImpl(final FineractRoutingDatasource dataSource,
+    public ProvisioningCriteriaReadPlatformServiceImpl(final DataSource dataSource,
             final ProvisioningCategoryReadPlatformService provisioningCategoryReadPlatformService,
             final LoanProductReadPlatformService loanProductReadPlatformService,
             final GLAccountReadPlatformService glAccountReadPlatformService,

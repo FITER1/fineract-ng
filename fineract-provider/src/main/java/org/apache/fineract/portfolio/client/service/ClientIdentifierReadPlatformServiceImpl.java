@@ -24,7 +24,7 @@ import java.util.Collection;
 
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.data.ClientIdentifierData;
 import org.apache.fineract.portfolio.client.domain.ClientIdentifierStatus;
@@ -43,7 +43,7 @@ public class ClientIdentifierReadPlatformServiceImpl implements ClientIdentifier
     private final PlatformSecurityContext context;
 
     @Autowired
-    public ClientIdentifierReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource) {
+    public ClientIdentifierReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }

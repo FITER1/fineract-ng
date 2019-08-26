@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.jobs.data.JobDetailData;
 import org.apache.fineract.infrastructure.jobs.data.JobDetailHistoryData;
@@ -47,7 +47,7 @@ public class SchedulerJobRunnerReadServiceImpl implements SchedulerJobRunnerRead
     private final PaginationHelper<JobDetailHistoryData> paginationHelper = new PaginationHelper<>();
 
     @Autowired
-    public SchedulerJobRunnerReadServiceImpl(final FineractRoutingDatasource dataSource,
+    public SchedulerJobRunnerReadServiceImpl(final DataSource dataSource,
     		final ColumnValidator columnValidator) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.columnValidator = columnValidator;

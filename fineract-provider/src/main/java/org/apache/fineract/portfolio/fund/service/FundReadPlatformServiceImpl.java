@@ -22,7 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.fund.data.FundData;
 import org.apache.fineract.portfolio.fund.exception.FundNotFoundException;
@@ -40,7 +40,7 @@ public class FundReadPlatformServiceImpl implements FundReadPlatformService {
     private final PlatformSecurityContext context;
 
     @Autowired
-    public FundReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource) {
+    public FundReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }

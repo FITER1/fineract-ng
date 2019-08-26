@@ -20,6 +20,8 @@ package org.apache.fineract.infrastructure.core.boot;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -30,5 +32,14 @@ public class SecurityConfiguration {
     public PasswordEncoder passwordEncoder() {
         // NOTE: org.springframework.security.authentication.encoding.ShaPasswordEncoder doesn't exist anymore and is not considered secure
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean("customAuthenticationProvider")
+    public DaoAuthenticationProvider customAuthenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+
+        return authenticationProvider;
     }
 }

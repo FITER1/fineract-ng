@@ -25,7 +25,7 @@ import java.util.Collection;
 
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.organisation.workingdays.data.WorkingDaysData;
 import org.apache.fineract.organisation.workingdays.domain.RepaymentRescheduleType;
 import org.apache.fineract.organisation.workingdays.domain.WorkingDaysEnumerations;
@@ -42,7 +42,7 @@ public class WorkingDaysReadPlatformServiceImpl implements WorkingDaysReadPlatfo
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public WorkingDaysReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+    public WorkingDaysReadPlatformServiceImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

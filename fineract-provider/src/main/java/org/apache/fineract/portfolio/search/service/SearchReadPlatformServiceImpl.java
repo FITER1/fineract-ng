@@ -19,7 +19,7 @@
 package org.apache.fineract.portfolio.search.service;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -58,7 +58,7 @@ public class SearchReadPlatformServiceImpl implements SearchReadPlatformService 
     private final OfficeReadPlatformService officeReadPlatformService;
 
     @Autowired
-    public SearchReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public SearchReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
             final LoanProductReadPlatformService loanProductReadPlatformService, final OfficeReadPlatformService officeReadPlatformService) {
         this.context = context;
         this.namedParameterjdbcTemplate = new NamedParameterJdbcTemplate(dataSource);

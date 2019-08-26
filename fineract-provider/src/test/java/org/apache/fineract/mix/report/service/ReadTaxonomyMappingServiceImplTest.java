@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.mix.report.service;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.mix.service.XBRLResultServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,9 +37,8 @@ public class ReadTaxonomyMappingServiceImplTest {
 
     @Before
     public void setUp() throws Exception {
-        final FineractRoutingDatasource dataSource = Mockito.mock(FineractRoutingDatasource.class);
+        final DataSource dataSource = Mockito.mock(DataSource.class);
         this.readService = new XBRLResultServiceImpl(dataSource, null, null);
-
     }
 
     @Test

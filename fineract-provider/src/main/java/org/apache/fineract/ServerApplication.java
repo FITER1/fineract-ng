@@ -19,12 +19,16 @@
 package org.apache.fineract;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.flyway.FlywayAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.FilterType;
+
+
 
 /**
  * Fineract main() application which launches Fineract in an embedded Tomcat HTTP
@@ -41,6 +45,7 @@ import org.springframework.context.annotation.FilterType;
  */
 @SpringBootApplication
 @EnableAspectJAutoProxy(proxyTargetClass = true)
+/*
 @ComponentScans({
 	@ComponentScan("org.apache.fineract.accounting"),
 	@ComponentScan("org.apache.fineract.commands.provider"),
@@ -48,6 +53,7 @@ import org.springframework.context.annotation.FilterType;
 	@ComponentScan("org.apache.fineract.commands.service"),
 	@ComponentScan("org.apache.fineract.commands"),
 	@ComponentScan("org.apache.fineract.audit"),
+	@ComponentScan("org.apache.fineract.infrastructure.core.boot"),
 	@ComponentScan("org.apache.fineract.infrastructure.creditbureau"),
 	@ComponentScan("org.apache.fineract.infrastructure"),
 	@ComponentScan("org.apache.fineract.scheduledjobs"),
@@ -66,21 +72,43 @@ import org.springframework.context.annotation.FilterType;
 	@ComponentScan("org.apache.fineract.adhocquery"),
 	@ComponentScan("org.apache.fineract.infrastructure.campaigns"),
 	@ComponentScan("org.apache.fineract.spm")
-	/*
 	@ComponentScan(excludeFilters = {
 		@ComponentScan.Filter(type = FilterType.ANNOTATION, pattern = "org.springframework.stereotype.Controller")
 	})
-    */
 })
-@EnableAutoConfiguration(
-	// TODO: @aleks find out if we really need to exclude these
-	/*
-	exclude = {
-		DataSourceAutoConfiguration.class,
-		HibernateJpaAutoConfiguration.class,
-		DataSourceTransactionManagerAutoConfiguration.class,
-		FlywayAutoConfiguration.class
-	}*/)
+*/
+
+// TODO: @aleks find out if we really need to exclude these
+/*
+exclude = {
+	DataSourceAutoConfiguration.class,
+	HibernateJpaAutoConfiguration.class,
+	DataSourceTransactionManagerAutoConfiguration.class,
+	FlywayAutoConfiguration.class
+}*/
+@EnableAutoConfiguration(exclude = {
+	HibernateJpaAutoConfiguration.class,
+	MetricsAutoConfiguration.class,
+	FlywayAutoConfiguration.class,
+})
+@ComponentScans({
+	@ComponentScan("org.apache.fineract.accounting"),
+	@ComponentScan("org.apache.fineract.commands"),
+	@ComponentScan("org.apache.fineract.audit"),
+	@ComponentScan("org.apache.fineract.infrastructure"),
+	@ComponentScan("org.apache.fineract.scheduledjobs"),
+	@ComponentScan("org.apache.fineract.organisation"),
+	@ComponentScan("org.apache.fineract.interoperation"),
+	@ComponentScan("org.apache.fineract.portfolio"),
+	@ComponentScan("org.apache.fineract.useradministration"),
+	@ComponentScan("org.apache.fineract.mix"),
+	@ComponentScan("org.apache.fineract.notification"),
+	@ComponentScan("org.apache.fineract.template"),
+	@ComponentScan("org.apache.fineract.useradministration"),
+	@ComponentScan("org.apache.fineract.batch,"),
+	@ComponentScan("org.apache.fineract.adhocquery"),
+	@ComponentScan("org.apache.fineract.spm")
+})
 public class ServerApplication {
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(ServerApplication.class, args);

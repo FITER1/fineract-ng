@@ -32,7 +32,7 @@ import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.accountdetails.data.ShareAccountSummaryData;
 import org.apache.fineract.portfolio.accounts.constants.AccountsApiConstants;
@@ -85,7 +85,7 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
     private final PaginationHelper<AccountData> shareAccountDataPaginationHelper = new PaginationHelper<>();
     
     @Autowired
-    public ShareAccountReadPlatformServiceImpl(final FineractRoutingDatasource dataSource, final ApplicationContext applicationContext,
+    public ShareAccountReadPlatformServiceImpl(final DataSource dataSource, final ApplicationContext applicationContext,
             final ChargeReadPlatformService chargeReadPlatformService,
             final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService,
             final SavingsAccountReadPlatformService savingsAccountReadPlatformService,

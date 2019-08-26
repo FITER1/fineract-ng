@@ -24,7 +24,7 @@ import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.accounting.producttoaccountmapping.data.ChargeToGLAccountMapper;
 import org.apache.fineract.accounting.producttoaccountmapping.data.PaymentTypeToGLAccountMapper;
 import org.apache.fineract.accounting.producttoaccountmapping.domain.PortfolioProductType;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.portfolio.charge.data.ChargeData;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
@@ -46,7 +46,7 @@ public class ProductToGLAccountMappingReadPlatformServiceImpl implements Product
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public ProductToGLAccountMappingReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+    public ProductToGLAccountMappingReadPlatformServiceImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

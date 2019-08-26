@@ -25,17 +25,21 @@ import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Builder
 @Data
 @NoArgsConstructor // NOTE: see here https://github.com/rzwitserloot/lombok/issues/816
 @AllArgsConstructor // NOTE: see here https://github.com/rzwitserloot/lombok/issues/816
 @Component
 @ConfigurationProperties(prefix = "fineract")
-public class FineractSettings {
+public class FineractProperties {
 
     private FineractSettingsTenantdb tenantdb;
 
     private FineractSettingsJdbc jdbc;
+
+    private Map<String, String> flywayPlaceholders;
 
     @Builder
     @Data

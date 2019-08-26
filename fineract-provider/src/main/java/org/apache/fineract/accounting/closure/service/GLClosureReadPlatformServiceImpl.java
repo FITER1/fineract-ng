@@ -20,7 +20,7 @@ package org.apache.fineract.accounting.closure.service;
 
 import org.apache.fineract.accounting.closure.data.GLClosureData;
 import org.apache.fineract.accounting.closure.exception.GLClosureNotFoundException;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class GLClosureReadPlatformServiceImpl implements GLClosureReadPlatformSe
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public GLClosureReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+    public GLClosureReadPlatformServiceImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

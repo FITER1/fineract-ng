@@ -19,7 +19,7 @@
 package org.apache.fineract.infrastructure.hooks.service;
 
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.hooks.data.*;
 import org.apache.fineract.infrastructure.hooks.domain.Hook;
 import org.apache.fineract.infrastructure.hooks.domain.HookRepository;
@@ -48,7 +48,7 @@ public class HookReadPlatformServiceImpl implements HookReadPlatformService {
     @Autowired
     public HookReadPlatformServiceImpl(final PlatformSecurityContext context,
             final HookRepository hookRepository,
-            final FineractRoutingDatasource dataSource) {
+            final DataSource dataSource) {
         this.context = context;
         this.hookRepository = hookRepository;
         this.jdbcTemplate = new JdbcTemplate(dataSource);

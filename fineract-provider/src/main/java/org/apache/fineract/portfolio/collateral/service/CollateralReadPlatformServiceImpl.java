@@ -19,7 +19,7 @@
 package org.apache.fineract.portfolio.collateral.service;
 
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
@@ -45,7 +45,7 @@ public class CollateralReadPlatformServiceImpl implements CollateralReadPlatform
     private final LoanRepositoryWrapper loanRepositoryWrapper;
 
     @Autowired
-    public CollateralReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public CollateralReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
             final LoanRepositoryWrapper loanRepositoryWrapper) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);

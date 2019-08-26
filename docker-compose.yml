@@ -16,22 +16,42 @@
 # under the License.
 #
 
-version: '3.7'
+version: "3.7"
+
+volumes:
+  data: {}
+
 services:
-  fineractmysql:
-    image: mysql:5.7
+  mysql:
+    #image: mysql:5.7
+    image: mysql:8
     volumes:
       - ./fineract-db/docker:/docker-entrypoint-initdb.d
-    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: mysql
+      - MYSQL_ROOT_PASSWORD=mysql
     ports:
       - "3306:3306"
-  fineract-server:
-    build:
-      context: .
-      target: fineract
-    ports: 
-      - 8443:8443
+
+  activemq:
+    image: rmohr/activemq:5.15.9-alpine
+    logging:
+      driver: none
+    volumes:
+      - ./fineract-activemq/conf:/opt/activemq/conf
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+      - "5672:5672"
+      - "61613:61613"
+      - "1883:1883"
+      - "61614:61614"
+
+  fineract:
+    image: hub.docker.org/apache/fineract:latest
     depends_on:
-      - fineractmysql
+      - mysql
+      - activemq
+    ports:
+      - "8443:8443"
+      - "8008:8008"
+    command: sh -c "java -agentlib:jdwp=transport=dt_socket,server=y,address=*:8008,suspend=n -Xmx512m -Duser.timezone=UTC --illegal-access=permit --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED --add-exports=java.base/sun.nio.ch=ALL-UNNAMED -jar -Djava.net.preferIPv4Stack=true fineract-provider-*.jar --spring.profiles.active=default,basicauth"

@@ -18,6 +18,8 @@
  */
 package org.apache.fineract.infrastructure.core.domain;
 
+// TODO: @aleks refactor until this is not needed anymore
+@Deprecated
 public class FineractPlatformTenant {
 
     private final Long id;

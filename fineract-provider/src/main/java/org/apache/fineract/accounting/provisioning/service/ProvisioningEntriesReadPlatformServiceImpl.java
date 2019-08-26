@@ -20,7 +20,7 @@ package org.apache.fineract.accounting.provisioning.service;
 
 import org.apache.fineract.accounting.provisioning.data.LoanProductProvisioningEntryData;
 import org.apache.fineract.accounting.provisioning.data.ProvisioningEntryData;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
@@ -45,7 +45,7 @@ public class ProvisioningEntriesReadPlatformServiceImpl implements ProvisioningE
     private final PaginationHelper<ProvisioningEntryData> provisioningEntryDataPaginationHelper = new PaginationHelper<>();
 
     @Autowired
-    public ProvisioningEntriesReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+    public ProvisioningEntriesReadPlatformServiceImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

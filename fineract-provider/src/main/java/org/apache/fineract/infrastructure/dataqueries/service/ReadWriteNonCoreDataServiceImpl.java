@@ -48,7 +48,7 @@ import org.apache.fineract.infrastructure.core.exception.PlatformServiceUnavaila
 import org.apache.fineract.infrastructure.core.serialization.DatatableCommandFromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.core.serialization.JsonParserHelper;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.dataqueries.api.DataTableApiConstant;
 import org.apache.fineract.infrastructure.dataqueries.data.DataTableValidator;
 import org.apache.fineract.infrastructure.dataqueries.data.DatatableData;
@@ -125,7 +125,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
     // configurationWriteService;
 
     @Autowired(required = true)
-    public ReadWriteNonCoreDataServiceImpl(final FineractRoutingDatasource dataSource, final PlatformSecurityContext context,
+    public ReadWriteNonCoreDataServiceImpl(final DataSource dataSource, final PlatformSecurityContext context,
             final FromJsonHelper fromJsonHelper, final GenericDataService genericDataService,
             final DatatableCommandFromApiJsonDeserializer fromApiJsonDeserializer, final CodeReadPlatformService codeReadPlatformService,
             final ConfigurationDomainService configurationDomainService, final DataTableValidator dataTableValidator,

@@ -23,7 +23,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.dataqueries.api.DataTableApiConstant;
 import org.apache.fineract.infrastructure.dataqueries.data.DatatableData;
 import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
@@ -51,7 +51,7 @@ public class ReadSurveyServiceImpl implements ReadSurveyService {
     private final ReadWriteNonCoreDataService readWriteNonCoreDataService;
 
     @Autowired
-    public ReadSurveyServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public ReadSurveyServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
             final GenericDataService genericDataService, final ReadWriteNonCoreDataService readWriteNonCoreDataService) {
 
         this.context = context;

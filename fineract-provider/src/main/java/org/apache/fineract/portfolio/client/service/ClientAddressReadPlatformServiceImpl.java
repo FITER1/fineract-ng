@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.address.data.ClientAddressData;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class ClientAddressReadPlatformServiceImpl implements ClientAddressReadPl
 
 	@Autowired
 	public ClientAddressReadPlatformServiceImpl(final PlatformSecurityContext context,
-			final FineractRoutingDatasource dataSource) {
+			final DataSource dataSource) {
 		this.context = context;
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}

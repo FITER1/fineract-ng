@@ -20,7 +20,7 @@ package org.apache.fineract.infrastructure.configuration.service;
 
 import org.apache.fineract.infrastructure.configuration.data.GlobalConfigurationData;
 import org.apache.fineract.infrastructure.configuration.data.GlobalConfigurationPropertyData;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.dataqueries.api.DataTableApiConstant;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -41,7 +42,7 @@ public class ConfigurationReadPlatformServiceImpl implements ConfigurationReadPl
     private final RowMapper<GlobalConfigurationPropertyData> rm;
 
     @Autowired
-    public ConfigurationReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource) {
+    public ConfigurationReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
 

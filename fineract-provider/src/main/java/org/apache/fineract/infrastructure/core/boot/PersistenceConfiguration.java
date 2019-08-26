@@ -18,9 +18,13 @@
  */
 package org.apache.fineract.infrastructure.core.boot;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -30,6 +34,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
@@ -53,7 +58,20 @@ import java.util.Properties;
 @EnableTransactionManagement
 public class PersistenceConfiguration {
     @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(FineractRoutingDatasource dataSource) {
+    @Primary
+    @ConfigurationProperties(prefix = "spring.datasource")
+    public DataSource dataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean(name = "tenantDataSourceJndi") // TODO: @aleks make it compatible with current annoations for now
+    @ConfigurationProperties(prefix = "fineract.tenant.datasource")
+    public DataSource tenantDataSource() {
+        return DataSourceBuilder.create().build();
+    }
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setPackagesToScan("org.apache.fineract");
@@ -82,6 +100,7 @@ public class PersistenceConfiguration {
 
     private Properties additionalProperties() {
         Properties properties = new Properties();
+        properties.put("QuotedNumbersInQueries", "true");
         // NOTE: add more properties if needed
 
         return properties;

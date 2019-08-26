@@ -20,7 +20,7 @@ package org.apache.fineract.portfolio.client.service;
 
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.data.ClientFamilyMembersData;
@@ -46,7 +46,7 @@ public class ClientFamilyMembersReadPlatformServiceImpl implements ClientFamilyM
 
 	@Autowired
 	public ClientFamilyMembersReadPlatformServiceImpl(final PlatformSecurityContext context,
-			final FineractRoutingDatasource dataSource,final CodeValueReadPlatformService codeValueReadPlatformService) {
+			final DataSource dataSource,final CodeValueReadPlatformService codeValueReadPlatformService) {
 		this.context = context;
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 		this.codeValueReadPlatformService=codeValueReadPlatformService;

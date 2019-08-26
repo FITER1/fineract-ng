@@ -27,6 +27,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.apache.fineract.infrastructure.cache.domain.CacheType;
 import org.apache.fineract.infrastructure.cache.service.CacheWritePlatformService;
@@ -52,6 +53,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.stereotype.Service;
 
+// TODO: @aleks remove this
 /**
  * A customised version of spring security's {@link BasicAuthenticationFilter}.
  * 
@@ -67,8 +69,9 @@ import org.springframework.stereotype.Service;
  * If multi-tenant and basic auth credentials are invalid, a http error response
  * is returned.
  */
-@Service(value = "basicAuthenticationProcessingFilter")
-@Profile("basicauth")
+// @Service(value = "basicAuthenticationProcessingFilter")
+// @Profile("basicauth")
+@Deprecated
 public class TenantAwareBasicAuthenticationFilter extends BasicAuthenticationFilter {
 
     private static boolean firstRequestProcessed = false;
@@ -113,7 +116,7 @@ public class TenantAwareBasicAuthenticationFilter extends BasicAuthenticationFil
 
                 String tenantIdentifier = request.getHeader(this.tenantRequestHeader);
 
-                if (org.apache.commons.lang3.StringUtils.isBlank(tenantIdentifier)) {
+                if (StringUtils.isBlank(tenantIdentifier)) {
                     tenantIdentifier = request.getParameter("tenantIdentifier");
                 }
 

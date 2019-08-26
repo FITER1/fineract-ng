@@ -20,7 +20,7 @@ package org.apache.fineract.adhocquery.service;
 
 import org.apache.fineract.adhocquery.data.AdHocData;
 import org.apache.fineract.adhocquery.exception.AdHocNotFoundException;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class AdHocReadPlatformServiceImpl implements AdHocReadPlatformService {
     private final AdHocMapper adHocRowMapper;
 
     @Autowired
-    public AdHocReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+    public AdHocReadPlatformServiceImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.adHocRowMapper = new AdHocMapper();
     }

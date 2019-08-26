@@ -39,7 +39,7 @@ import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDoma
 import org.apache.fineract.infrastructure.core.api.JsonQuery;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.calendar.domain.Calendar;
@@ -97,7 +97,7 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
     private final CalendarInstanceRepository calendarInstanceRepository;
 
     @Autowired
-    public CollectionSheetReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public CollectionSheetReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
             final CenterReadPlatformService centerReadPlatformService, final GroupReadPlatformService groupReadPlatformService,
             final CollectionSheetGenerateCommandFromApiJsonDeserializer collectionSheetGenerateCommandFromApiJsonDeserializer,
             final CalendarRepositoryWrapper calendarRepositoryWrapper,

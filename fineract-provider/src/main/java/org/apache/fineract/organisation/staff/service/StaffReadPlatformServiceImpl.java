@@ -28,7 +28,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.exception.UnrecognizedQueryParamException;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.organisation.staff.data.StaffData;
@@ -53,7 +53,7 @@ public class StaffReadPlatformServiceImpl implements StaffReadPlatformService {
     private final ColumnValidator columnValidator;
 
     @Autowired
-    public StaffReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public StaffReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
     		final ColumnValidator columnValidator) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);

@@ -18,10 +18,12 @@
  */
 package org.apache.fineract.infrastructure.core.boot;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Configuration;
 
+@Slf4j
 @Configuration
-@EnableCaching // (proxyTargetClass = true)
+@EnableCaching(proxyTargetClass = true)
 public class CacheConfiguration {
 }

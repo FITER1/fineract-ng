@@ -24,7 +24,7 @@ import org.apache.fineract.accounting.financialactivityaccount.data.FinancialAct
 import org.apache.fineract.accounting.financialactivityaccount.data.FinancialActivityData;
 import org.apache.fineract.accounting.financialactivityaccount.exception.FinancialActivityAccountNotFoundException;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -45,7 +45,7 @@ public class FinancialActivityAccountReadPlatformServiceImpl implements Financia
     private final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService;
 
     @Autowired
-    public FinancialActivityAccountReadPlatformServiceImpl(final FineractRoutingDatasource dataSource,
+    public FinancialActivityAccountReadPlatformServiceImpl(final DataSource dataSource,
             final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService) {
         financialActivityAccountMapper = new FinancialActivityAccountMapper();
         this.jdbcTemplate = new JdbcTemplate(dataSource);

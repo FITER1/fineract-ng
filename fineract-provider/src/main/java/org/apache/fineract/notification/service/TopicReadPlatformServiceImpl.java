@@ -22,7 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.notification.data.TopicData;
 import org.apache.fineract.notification.exception.TopicNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class TopicReadPlatformServiceImpl implements TopicReadPlatformService {
 	private final JdbcTemplate jdbcTemplate;
 	
 	@Autowired
-	public TopicReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+	public TopicReadPlatformServiceImpl(final DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
     

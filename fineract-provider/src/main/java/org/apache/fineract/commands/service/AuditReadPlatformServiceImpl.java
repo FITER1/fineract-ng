@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.data.AuditData;
 import org.apache.fineract.commands.data.AuditSearchData;
 import org.apache.fineract.commands.data.ProcessingResultLookup;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.PaginationParameters;
 import org.apache.fineract.infrastructure.core.data.PaginationParametersDataValidator;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
@@ -89,7 +89,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
     private final ColumnValidator columnValidator;
 
     @Autowired
-    public AuditReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public AuditReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
             final FromJsonHelper fromApiJsonHelper, final AppUserReadPlatformService appUserReadPlatformService,
             final OfficeReadPlatformService officeReadPlatformService, final ClientReadPlatformService clientReadPlatformService,
             final LoanProductReadPlatformService loanProductReadPlatformService, final StaffReadPlatformService staffReadPlatformService,

@@ -29,7 +29,7 @@ import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountDividendData;
@@ -50,7 +50,7 @@ public class ShareProductDividendReadPlatformServiceImpl implements ShareProduct
     private final PaginationHelper<ShareProductDividendPayOutData> paginationHelper = new PaginationHelper<>();
 
     @Autowired
-    public ShareProductDividendReadPlatformServiceImpl(final FineractRoutingDatasource dataSource,
+    public ShareProductDividendReadPlatformServiceImpl(final DataSource dataSource,
     		final ColumnValidator columnValidator) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.columnValidator = columnValidator;

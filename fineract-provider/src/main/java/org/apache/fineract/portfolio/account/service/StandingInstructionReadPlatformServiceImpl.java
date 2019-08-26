@@ -38,7 +38,7 @@ import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.organisation.office.data.OfficeData;
@@ -85,7 +85,7 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
     private final PaginationHelper<StandingInstructionData> paginationHelper = new PaginationHelper<>();
 
     @Autowired
-    public StandingInstructionReadPlatformServiceImpl(final FineractRoutingDatasource dataSource,
+    public StandingInstructionReadPlatformServiceImpl(final DataSource dataSource,
             final ClientReadPlatformService clientReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
             final PortfolioAccountReadPlatformService portfolioAccountReadPlatformService,
             final DropdownReadPlatformService dropdownReadPlatformService,

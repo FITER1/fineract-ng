@@ -19,7 +19,7 @@
 package org.apache.fineract.portfolio.savings.service;
 
 import org.apache.fineract.accounting.common.AccountingEnumerations;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityType;
@@ -51,7 +51,7 @@ public class SavingsProductReadPlatformServiceImpl implements SavingsProductRead
     private final FineractEntityAccessUtil fineractEntityAccessUtil;
 
     @Autowired
-    public SavingsProductReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public SavingsProductReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
             final FineractEntityAccessUtil fineractEntityAccessUtil) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);

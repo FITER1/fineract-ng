@@ -26,7 +26,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.office.data.OfficeData;
 import org.apache.fineract.organisation.office.service.OfficeReadPlatformService;
@@ -58,7 +58,7 @@ public class AppUserReadPlatformServiceImpl implements AppUserReadPlatformServic
     private final StaffReadPlatformService staffReadPlatformService;
 
     @Autowired
-    public AppUserReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public AppUserReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
             final OfficeReadPlatformService officeReadPlatformService, final RoleReadPlatformService roleReadPlatformService,
             final AppUserRepository appUserRepository, final StaffReadPlatformService staffReadPlatformService) {
         this.context = context;

@@ -22,7 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.creditbureau.data.OrganisationCreditBureauData;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class OrganisationCreditBureauReadPlatformServiceImpl implements Organisa
 
 	@Autowired
 	public OrganisationCreditBureauReadPlatformServiceImpl(final PlatformSecurityContext context,
-			final FineractRoutingDatasource dataSource) {
+			final DataSource dataSource) {
 		this.context = context;
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}

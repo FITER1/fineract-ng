@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.infrastructure.gcm.service;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.gcm.domain.DeviceRegistrationData;
 import org.apache.fineract.infrastructure.gcm.exception.DeviceRegistrationNotFoundException;
@@ -45,7 +45,7 @@ public class DeviceRegistrationReadPlatformServiceImpl implements
 	@Autowired
 	public DeviceRegistrationReadPlatformServiceImpl(
 			final PlatformSecurityContext context,
-			final FineractRoutingDatasource dataSource) {
+			final DataSource dataSource) {
 		this.context = context;
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}

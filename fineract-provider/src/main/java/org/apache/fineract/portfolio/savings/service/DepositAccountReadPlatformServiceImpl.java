@@ -35,7 +35,7 @@ import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.staff.data.StaffData;
@@ -129,7 +129,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
             "officeId", "officeName"));
 
     @Autowired
-    public DepositAccountReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public DepositAccountReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
             final DepositAccountInterestRateChartReadPlatformService chartReadPlatformService,
             final PaginationParametersDataValidator paginationParametersDataValidator,
             final ClientReadPlatformService clientReadPlatformService, final GroupReadPlatformService groupReadPlatformService,

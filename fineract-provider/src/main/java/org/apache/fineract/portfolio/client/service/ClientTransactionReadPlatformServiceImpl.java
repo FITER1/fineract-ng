@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
@@ -51,7 +51,7 @@ public class ClientTransactionReadPlatformServiceImpl implements ClientTransacti
     private final PaginationHelper<ClientTransactionData> paginationHelper;
 
     @Autowired
-    public ClientTransactionReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+    public ClientTransactionReadPlatformServiceImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientTransactionMapper = new ClientTransactionMapper();
         this.paginationHelper = new PaginationHelper<>();

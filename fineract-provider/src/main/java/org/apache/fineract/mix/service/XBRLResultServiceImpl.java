@@ -19,7 +19,7 @@
 package org.apache.fineract.mix.service;
 
 import com.google.gson.Gson;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.mix.data.MixTaxonomyData;
 import org.apache.fineract.mix.data.MixTaxonomyMappingData;
 import org.apache.fineract.mix.data.XBRLData;
@@ -51,7 +51,7 @@ public class XBRLResultServiceImpl implements XBRLResultService {
     private HashMap<String, BigDecimal> accountBalanceMap;
 
     @Autowired
-    public XBRLResultServiceImpl(final FineractRoutingDatasource dataSource,
+    public XBRLResultServiceImpl(final DataSource dataSource,
             final MixTaxonomyMappingReadPlatformService readTaxonomyMappingService, final MixTaxonomyReadPlatformService readTaxonomyService) {
         this.readTaxonomyMappingService = readTaxonomyMappingService;
         this.readTaxonomyService = readTaxonomyService;

@@ -21,42 +21,37 @@ package org.apache.fineract.infrastructure.core.service;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.fineract.infrastructure.core.boot.FineractSettings;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
 import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenantConnection;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
-import org.springframework.stereotype.Component;
+import org.springframework.jdbc.datasource.AbstractDataSource;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+// TODO: @aleks fix this
 @Slf4j
-@Component
-public class FineractRoutingDatasource extends AbstractRoutingDataSource {
+// @Component
+@Deprecated
+public class FineractRoutingDatasource extends AbstractDataSource {
 
-    private Map<Long, DataSource> dataSources = new ConcurrentHashMap<>();
+    private Map<String, DataSource> targetDataSources = new ConcurrentHashMap<>();
 
     @Autowired
-    private FineractSettings settings;
+    private FineractProperties settings;
 
     @Override
-    protected Object determineCurrentLookupKey() {
-        final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
-
-        if(tenant!=null) {
-            return tenant.getTenantIdentifier();
-        }
-
-        return null;
+    public Connection getConnection() throws SQLException {
+        return getConnection(null, null);
     }
 
-    @NotNull
     @Override
-    protected DataSource determineTargetDataSource() {
+    public Connection getConnection(String username, String password) throws SQLException {
         final FineractPlatformTenant tenant = ThreadLocalContextUtil.getTenant();
 
         DataSource dataSource = null;
@@ -64,15 +59,21 @@ public class FineractRoutingDatasource extends AbstractRoutingDataSource {
         if (tenant != null) {
             final FineractPlatformTenantConnection connection = tenant.getConnection();
 
-            if (this.dataSources.containsKey(connection.getConnectionId())) {
-                dataSource = this.dataSources.get(connection.getConnectionId());
+            if (this.targetDataSources.containsKey(tenant.getTenantIdentifier())) {
+                // dataSource = this.targetDataSources.get(connection.getConnectionId());
+                dataSource = this.targetDataSources.get(tenant.getTenantIdentifier());
             } else {
                 dataSource = createDataSource(connection);
-                this.dataSources.put(connection.getConnectionId(), dataSource);
+                // this.targetDataSources.put(connection.getConnectionId(), dataSource);
+                this.targetDataSources.put(tenant.getTenantIdentifier(), dataSource);
             }
         }
 
-        return dataSource;
+        if(StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+            return dataSource.getConnection();
+        } else {
+            return dataSource.getConnection(username, password);
+        }
     }
 
     private DataSource createDataSource(FineractPlatformTenantConnection connection) {
@@ -84,6 +85,7 @@ public class FineractRoutingDatasource extends AbstractRoutingDataSource {
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
+        config.addDataSourceProperty("minimumIdle", "0");
         // TODO: set more properties; see https://github.com/brettwooldridge/HikariCP#configuration-knobs-baby
 
         return new HikariDataSource(config);

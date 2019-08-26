@@ -28,7 +28,7 @@ import org.apache.fineract.accounting.glaccount.exception.GLAccountInvalidClassi
 import org.apache.fineract.accounting.glaccount.exception.GLAccountNotFoundException;
 import org.apache.fineract.accounting.journalentry.data.JournalEntryAssociationParametersData;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class GLAccountReadPlatformServiceImpl implements GLAccountReadPlatformSe
     private final static String nameDecoratedBaseOnHierarchy = "concat(substring('........................................', 1, ((LENGTH(hierarchy) - LENGTH(REPLACE(hierarchy, '.', '')) - 1) * 4)), name)";
 
     @Autowired
-    public GLAccountReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+    public GLAccountReadPlatformServiceImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

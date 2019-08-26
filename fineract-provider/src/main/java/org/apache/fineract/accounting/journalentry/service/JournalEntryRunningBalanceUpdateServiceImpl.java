@@ -25,7 +25,7 @@ import org.apache.fineract.accounting.journalentry.data.JournalEntryData;
 import org.apache.fineract.accounting.journalentry.data.JournalEntryDataValidator;
 import org.apache.fineract.accounting.journalentry.domain.JournalEntryType;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
@@ -83,7 +83,7 @@ public class JournalEntryRunningBalanceUpdateServiceImpl implements JournalEntry
             + "where je2.id = je.id and je.entry_date = je3.date group by je.id order by je.entry_date DESC " + selectRunningBalanceSqlLimit;
 
     @Autowired
-    public JournalEntryRunningBalanceUpdateServiceImpl(final FineractRoutingDatasource dataSource, final OfficeRepositoryWrapper officeRepositoryWrapper,
+    public JournalEntryRunningBalanceUpdateServiceImpl(final DataSource dataSource, final OfficeRepositoryWrapper officeRepositoryWrapper,
                                                        final JournalEntryDataValidator dataValidator, final FromJsonHelper fromApiJsonHelper) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.officeRepositoryWrapper = officeRepositoryWrapper;

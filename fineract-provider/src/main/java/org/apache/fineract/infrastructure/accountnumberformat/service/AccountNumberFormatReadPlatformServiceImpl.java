@@ -32,7 +32,7 @@ import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumb
 import org.apache.fineract.infrastructure.accountnumberformat.domain.EntityAccountType;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormatEnumerations.AccountNumberPrefixType;
 import org.apache.fineract.infrastructure.accountnumberformat.exception.AccountNumberFormatNotFoundException;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +50,7 @@ public class AccountNumberFormatReadPlatformServiceImpl implements AccountNumber
     private final AccountNumberFormatMapper accountNumberFormatMapper = new AccountNumberFormatMapper();
 
     @Autowired
-    public AccountNumberFormatReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+    public AccountNumberFormatReadPlatformServiceImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

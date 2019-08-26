@@ -19,7 +19,7 @@
 package org.apache.fineract.portfolio.calendar.service;
 
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -50,7 +50,7 @@ public class CalendarReadPlatformServiceImpl implements CalendarReadPlatformServ
     private final ConfigurationDomainService configurationDomainService;
 
     @Autowired
-    public CalendarReadPlatformServiceImpl(final FineractRoutingDatasource dataSource, final ConfigurationDomainService configurationDomainService) {
+    public CalendarReadPlatformServiceImpl(final DataSource dataSource, final ConfigurationDomainService configurationDomainService) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.configurationDomainService = configurationDomainService;
     }

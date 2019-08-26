@@ -22,7 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.notification.data.TopicSubscriberData;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class TopicSubscriberReadPlatformServiceImpl implements TopicSubscriberRe
 	private final JdbcTemplate jdbcTemplate;
 	
 	@Autowired
-	public TopicSubscriberReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+	public TopicSubscriberReadPlatformServiceImpl(final DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 	

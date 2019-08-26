@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
@@ -42,7 +42,7 @@ public class ColumnValidator {
 	private final JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	public ColumnValidator(final FineractRoutingDatasource dataSource) {
+	public ColumnValidator(final DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 

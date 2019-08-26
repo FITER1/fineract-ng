@@ -20,7 +20,7 @@ package org.apache.fineract.scheduledjobs.service;
 
 import org.apache.fineract.accounting.glaccount.domain.TrialBalance;
 import org.apache.fineract.accounting.glaccount.domain.TrialBalanceRepositoryWrapper;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -66,7 +66,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
     private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     private final DateTimeFormatter formatterWithTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
-    private final FineractRoutingDatasource routingDataSource;
+    private final DataSource routingDataSource;
     private final SavingsAccountWritePlatformService savingsAccountWritePlatformService;
     private final SavingsAccountChargeReadPlatformService savingsAccountChargeReadPlatformService;
     private final DepositAccountReadPlatformService depositAccountReadPlatformService;
@@ -76,7 +76,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
     private final TrialBalanceRepositoryWrapper trialBalanceRepositoryWrapper;
 
     @Autowired
-    public ScheduledJobRunnerServiceImpl(final FineractRoutingDatasource routingDataSource,
+    public ScheduledJobRunnerServiceImpl(final DataSource routingDataSource,
             final SavingsAccountWritePlatformService savingsAccountWritePlatformService,
             final SavingsAccountChargeReadPlatformService savingsAccountChargeReadPlatformService,
             final DepositAccountReadPlatformService depositAccountReadPlatformService,

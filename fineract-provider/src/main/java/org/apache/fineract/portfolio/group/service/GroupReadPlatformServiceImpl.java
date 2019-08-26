@@ -36,7 +36,7 @@ import org.apache.fineract.infrastructure.core.data.PaginationParametersDataVali
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
@@ -77,7 +77,7 @@ public class GroupReadPlatformServiceImpl implements GroupReadPlatformService {
     private final static Set<String> supportedOrderByValues = new HashSet<>(Arrays.asList("id", "name", "officeId", "officeName"));
 
     @Autowired
-    public GroupReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public GroupReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
             final CenterReadPlatformService centerReadPlatformService,
             final OfficeReadPlatformService officeReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
             final CodeValueReadPlatformService codeValueReadPlatformService,

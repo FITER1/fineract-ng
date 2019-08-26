@@ -28,7 +28,7 @@ import org.apache.fineract.infrastructure.bulkimport.domain.ImportDocument;
 import org.apache.fineract.infrastructure.bulkimport.domain.ImportDocumentRepository;
 import org.apache.fineract.infrastructure.bulkimport.importhandler.ImportHandler;
 import org.apache.fineract.infrastructure.bulkimport.importhandler.ImportHandlerUtils;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -73,7 +73,7 @@ public class BulkImportWorkbookServiceImpl implements BulkImportWorkbookService 
             final PlatformSecurityContext securityContext,
             final DocumentWritePlatformService documentWritePlatformService,
             final DocumentRepository documentRepository,
-            final ImportDocumentRepository importDocumentRepository, final FineractRoutingDatasource dataSource) {
+            final ImportDocumentRepository importDocumentRepository, final DataSource dataSource) {
         this.applicationContext = applicationContext;
         this.securityContext = securityContext;
         this.documentWritePlatformService = documentWritePlatformService;

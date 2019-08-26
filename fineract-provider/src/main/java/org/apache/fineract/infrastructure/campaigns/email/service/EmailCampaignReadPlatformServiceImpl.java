@@ -27,7 +27,7 @@ import org.apache.fineract.infrastructure.campaigns.email.domain.EmailCampaignSt
 import org.apache.fineract.infrastructure.campaigns.email.domain.EmailCampaignType;
 import org.apache.fineract.infrastructure.campaigns.email.exception.EmailBusinessRuleNotFound;
 import org.apache.fineract.infrastructure.campaigns.email.exception.EmailCampaignNotFound;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
@@ -56,7 +56,7 @@ public class EmailCampaignReadPlatformServiceImpl implements EmailCampaignReadPl
     private final EmailCampaignMapper emailCampaignMapper;
 
     @Autowired
-    public EmailCampaignReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+    public EmailCampaignReadPlatformServiceImpl(final DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.businessRuleMapper = new BusinessRuleMapper();
         this.emailCampaignMapper = new EmailCampaignMapper();

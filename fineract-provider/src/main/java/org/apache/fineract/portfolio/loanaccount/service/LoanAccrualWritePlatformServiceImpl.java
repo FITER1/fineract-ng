@@ -31,7 +31,7 @@ import javax.sql.DataSource;
 
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepositoryWrapper;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
@@ -69,7 +69,7 @@ public class LoanAccrualWritePlatformServiceImpl implements LoanAccrualWritePlat
     private final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository;
 
     @Autowired
-    public LoanAccrualWritePlatformServiceImpl(final FineractRoutingDatasource dataSource, final LoanReadPlatformService loanReadPlatformService,
+    public LoanAccrualWritePlatformServiceImpl(final DataSource dataSource, final LoanReadPlatformService loanReadPlatformService,
             final JournalEntryWritePlatformService journalEntryWritePlatformService,
             final LoanChargeReadPlatformService loanChargeReadPlatformService, final AppUserRepositoryWrapper userRepository,
             final LoanRepositoryWrapper loanRepositoryWrapper, final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository) {

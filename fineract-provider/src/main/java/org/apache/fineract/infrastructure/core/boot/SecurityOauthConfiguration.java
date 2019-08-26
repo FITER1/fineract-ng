@@ -18,7 +18,6 @@
  */
 package org.apache.fineract.infrastructure.core.boot;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -26,13 +25,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
+import javax.sql.DataSource;
+
 @Profile("oauth")
 @Configuration
 public class SecurityOauthConfiguration extends WebSecurityConfigurerAdapter {
     // TODO: @aleks implement this
 
     @Bean
-    public TokenStore tokenStore(FineractRoutingDatasource dataSource) {
+    public TokenStore tokenStore(DataSource dataSource) {
         return new JdbcTokenStore(dataSource);
     }
 }

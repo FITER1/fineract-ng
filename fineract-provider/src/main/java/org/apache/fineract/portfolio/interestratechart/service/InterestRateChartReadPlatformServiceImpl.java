@@ -29,7 +29,7 @@ import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.client.api.ClientApiConstants;
@@ -61,7 +61,7 @@ public class InterestRateChartReadPlatformServiceImpl implements InterestRateCha
     private final CodeValueReadPlatformService codeValueReadPlatformService;
 
     @Autowired
-    public InterestRateChartReadPlatformServiceImpl(PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public InterestRateChartReadPlatformServiceImpl(PlatformSecurityContext context, final DataSource dataSource,
             InterestRateChartDropdownReadPlatformService chartDropdownReadPlatformService,
             final InterestIncentiveDropdownReadPlatformService interestIncentiveDropdownReadPlatformService,
             final CodeValueReadPlatformService codeValueReadPlatformService) {

@@ -19,7 +19,7 @@
 package org.apache.fineract.portfolio.savings.service;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -97,7 +97,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
     private final ColumnValidator columnValidator;
 
     @Autowired
-    public SavingsAccountReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public SavingsAccountReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
             final ClientReadPlatformService clientReadPlatformService, final GroupReadPlatformService groupReadPlatformService,
             final SavingsProductReadPlatformService savingProductReadPlatformService,
             final StaffReadPlatformService staffReadPlatformService, final SavingsDropdownReadPlatformService dropdownReadPlatformService,

@@ -64,7 +64,7 @@ public class AuthenticationApiResource {
 
     @Autowired
     public AuthenticationApiResource(
-            @Qualifier("customAuthenticationProvider") final DaoAuthenticationProvider customAuthenticationProvider,
+            final DaoAuthenticationProvider customAuthenticationProvider,
             final ToApiJsonSerializer<AuthenticatedUserData> apiJsonSerializerService,
             final SpringSecurityPlatformSecurityContext springSecurityPlatformSecurityContext, TwoFactorUtils twoFactorUtils) {
         this.customAuthenticationProvider = customAuthenticationProvider;

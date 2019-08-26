@@ -25,7 +25,7 @@ import java.util.Collection;
 
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountTransactionData;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +40,7 @@ public class PurchasedSharesReadPlatformServiceImpl implements
 	private final JdbcTemplate jdbcTemplate;
 	
 	@Autowired
-	public PurchasedSharesReadPlatformServiceImpl(final FineractRoutingDatasource dataSource) {
+	public PurchasedSharesReadPlatformServiceImpl(final DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource) ;
 	}
 	@Override

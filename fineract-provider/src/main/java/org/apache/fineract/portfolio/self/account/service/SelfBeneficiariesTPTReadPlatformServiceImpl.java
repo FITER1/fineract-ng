@@ -23,7 +23,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.account.PortfolioAccountType;
 import org.apache.fineract.portfolio.account.service.AccountTransferEnumerations;
@@ -47,7 +47,7 @@ public class SelfBeneficiariesTPTReadPlatformServiceImpl implements
 	@Autowired
 	public SelfBeneficiariesTPTReadPlatformServiceImpl(
 			final PlatformSecurityContext context,
-			final FineractRoutingDatasource dataSource) {
+			final DataSource dataSource) {
 		this.context = context;
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 		this.mapper = new BeneficiaryMapper();

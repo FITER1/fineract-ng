@@ -30,7 +30,7 @@ import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.exception.UnrecognizedQueryParamException;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
@@ -74,7 +74,7 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
     private final ColumnValidator columnValidator;
 
     @Autowired
-    public TellerManagementReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public TellerManagementReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
             final OfficeReadPlatformService officeReadPlatformService, StaffReadPlatformService staffReadPlatformService,
             final CurrencyReadPlatformService currencyReadPlatformService, final ColumnValidator columnValidator) {
         this.context = context;

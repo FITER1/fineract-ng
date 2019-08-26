@@ -33,7 +33,7 @@ import org.apache.fineract.accounting.journalentry.domain.JournalEntryRepository
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
@@ -63,7 +63,7 @@ public class GLAccountWritePlatformServiceJpaRepositoryImpl implements GLAccount
     @Autowired
     public GLAccountWritePlatformServiceJpaRepositoryImpl(final GLAccountRepository glAccountRepository,
             final JournalEntryRepository glJournalEntryRepository, final GLAccountCommandFromApiJsonDeserializer fromApiJsonDeserializer,
-            final CodeValueRepositoryWrapper codeValueRepositoryWrapper, final FineractRoutingDatasource dataSource) {
+            final CodeValueRepositoryWrapper codeValueRepositoryWrapper, final DataSource dataSource) {
         this.glAccountRepository = glAccountRepository;
         this.glJournalEntryRepository = glJournalEntryRepository;
         this.fromApiJsonDeserializer = fromApiJsonDeserializer;

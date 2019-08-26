@@ -37,6 +37,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+// TODO: @aleks remove this
 /**
  * A dummy {@link TwoFactorAuthenticationFilter} filter used when 'twofactor'
  * environment profile is not active.
@@ -44,8 +45,9 @@ import org.springframework.stereotype.Service;
  * This filter adds 'TWOFACTOR_AUTHENTICATED' authority to every authenticated
  * platform user.
  */
-@Service(value = "twoFactorAuthFilter")
-@Profile("!twofactor")
+// @Service(value = "twoFactorAuthFilter")
+// @Profile("!twofactor")
+@Deprecated
 public class InsecureTwoFactorAuthenticationFilter extends TwoFactorAuthenticationFilter {
 
     public InsecureTwoFactorAuthenticationFilter() {

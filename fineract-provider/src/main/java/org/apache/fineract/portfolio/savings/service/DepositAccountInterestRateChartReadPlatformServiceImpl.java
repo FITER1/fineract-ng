@@ -20,7 +20,7 @@ package org.apache.fineract.portfolio.savings.service;
 
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -65,7 +65,7 @@ public class DepositAccountInterestRateChartReadPlatformServiceImpl implements D
     private final CodeValueReadPlatformService codeValueReadPlatformService;
 
     @Autowired
-    public DepositAccountInterestRateChartReadPlatformServiceImpl(PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public DepositAccountInterestRateChartReadPlatformServiceImpl(PlatformSecurityContext context, final DataSource dataSource,
             InterestRateChartDropdownReadPlatformService chartDropdownReadPlatformService,
             final InterestIncentiveDropdownReadPlatformService interestIncentiveDropdownReadPlatformService,
             final CodeValueReadPlatformService codeValueReadPlatformService) {

@@ -23,7 +23,7 @@ import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
 import org.apache.fineract.infrastructure.configuration.data.GlobalConfigurationPropertyData;
 import org.apache.fineract.infrastructure.configuration.service.ConfigurationReadPlatformService;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
@@ -89,7 +89,7 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
     private final ColumnValidator columnValidator;
 
     @Autowired
-    public ClientReadPlatformServiceImpl(final PlatformSecurityContext context, final FineractRoutingDatasource dataSource,
+    public ClientReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
             final OfficeReadPlatformService officeReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
             final CodeValueReadPlatformService codeValueReadPlatformService,
             final SavingsProductReadPlatformService savingsProductReadPlatformService,

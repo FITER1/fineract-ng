@@ -46,6 +46,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.filter.GenericFilterBean;
 
 
+// TODO: @aleks remove this
 /**
  * This filter is responsible for handling two-factor authentication.
  * The filter is enabled when 'twofactor' environment profile is active, otherwise
@@ -60,8 +61,9 @@ import org.springframework.web.filter.GenericFilterBean;
  * 'TWOFACTOR_AUTHENTICATED' authority regardless of the value of the 'Fineract-Platform-TFA-Token'
  * header.
  */
-@Service(value = "twoFactorAuthFilter")
-@Profile("twofactor")
+// @Service(value = "twoFactorAuthFilter")
+// @Profile("twofactor")
+@Deprecated
 public class TwoFactorAuthenticationFilter extends GenericFilterBean {
 
     private final TwoFactorService twoFactorService;

@@ -26,7 +26,7 @@ import java.util.List;
 
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.accountdetails.data.AccountSummaryCollectionData;
@@ -62,7 +62,7 @@ public class AccountDetailsReadPlatformServiceJpaRepositoryImpl implements Accou
 
     @Autowired
     public AccountDetailsReadPlatformServiceJpaRepositoryImpl(final ClientReadPlatformService clientReadPlatformService,
-            final FineractRoutingDatasource dataSource, final GroupReadPlatformService groupReadPlatformService,
+            final DataSource dataSource, final GroupReadPlatformService groupReadPlatformService,
             final ColumnValidator columnValidator) {
         this.clientReadPlatformService = clientReadPlatformService;
         this.jdbcTemplate = new JdbcTemplate(dataSource);

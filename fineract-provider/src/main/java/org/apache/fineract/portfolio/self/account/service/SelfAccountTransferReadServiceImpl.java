@@ -22,7 +22,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.portfolio.self.account.data.SelfAccountTemplateData;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +37,7 @@ public class SelfAccountTransferReadServiceImpl implements
 	private final JdbcTemplate jdbcTemplate;
 
 	@Autowired
-	public SelfAccountTransferReadServiceImpl(final FineractRoutingDatasource dataSource) {
+	public SelfAccountTransferReadServiceImpl(final DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
 

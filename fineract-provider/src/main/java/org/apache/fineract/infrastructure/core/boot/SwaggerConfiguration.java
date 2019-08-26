@@ -19,12 +19,16 @@
 package org.apache.fineract.infrastructure.core.boot;
 
 import io.swagger.jaxrs.config.BeanConfig;
+import io.swagger.jaxrs.listing.ApiListingResource;
+import io.swagger.jaxrs.listing.SwaggerSerializers;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 @Configuration
 public class SwaggerConfiguration {
 
+    @Bean
     public BeanConfig beanConfig(Environment environment) {
         BeanConfig config = new BeanConfig();
         config.setTitle("Apache Fineract API Documentation");
@@ -50,5 +54,15 @@ public class SwaggerConfiguration {
         config.setScan(true);
 
         return config;
+    }
+
+    @Bean
+    public ApiListingResource apiListingResource() {
+        return new ApiListingResource();
+    }
+
+    @Bean
+    public SwaggerSerializers swaggerSerializers() {
+        return new SwaggerSerializers();
     }
 }

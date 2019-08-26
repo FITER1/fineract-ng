@@ -27,7 +27,7 @@ import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
 import org.apache.fineract.accounting.glaccount.service.GLAccountReadPlatformService;
 import org.apache.fineract.accounting.journalentry.data.*;
 import org.apache.fineract.accounting.journalentry.exception.JournalEntriesNotFoundException;
-import org.apache.fineract.infrastructure.core.service.FineractRoutingDatasource;
+import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
@@ -77,7 +77,7 @@ public class JournalEntryReadPlatformServiceImpl implements JournalEntryReadPlat
     private final PaginationHelper<JournalEntryData> paginationHelper = new PaginationHelper<>();
 
     @Autowired
-    public JournalEntryReadPlatformServiceImpl(final FineractRoutingDatasource dataSource,
+    public JournalEntryReadPlatformServiceImpl(final DataSource dataSource,
             final GLAccountReadPlatformService glAccountReadPlatformService,
             final ColumnValidator columnValidator,
             final OfficeReadPlatformService officeReadPlatformService,
