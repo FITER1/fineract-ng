@@ -40,37 +40,9 @@ public class FineractProperties {
 
     private String timezoneId;
 
-    @Deprecated
-    private FineractPropertiesTenantdb tenantdb;
-
-    @Deprecated
-    private FineractPropertiesJdbc jdbc;
-
     private FineractPropertiesConnection connection;
 
     private Map<String, String> flywayPlaceholders;
-
-    @Builder
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Deprecated
-    public static class FineractPropertiesTenantdb {
-        private Boolean enabled;
-    }
-
-    @Builder
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Deprecated
-    public static class FineractPropertiesJdbc {
-        private String driverClassName;
-        private String protocol;
-        private String subProtocol;
-        private String host;
-        private Integer port;
-    }
 
     @Builder
     @Data

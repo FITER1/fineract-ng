@@ -18,8 +18,6 @@
  */
 package org.apache.fineract.infrastructure.core.boot;
 
-import javax.sql.DataSource;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -61,12 +59,6 @@ public class PersistenceConfiguration {
     @Primary
     @ConfigurationProperties(prefix = "spring.datasource")
     public DataSource dataSource() {
-        return DataSourceBuilder.create().build();
-    }
-
-    @Bean(name = "tenantDataSourceJndi") // TODO: @aleks make it compatible with current annoations for now
-    @ConfigurationProperties(prefix = "fineract.tenant.datasource")
-    public DataSource tenantDataSource() {
         return DataSourceBuilder.create().build();
     }
 
