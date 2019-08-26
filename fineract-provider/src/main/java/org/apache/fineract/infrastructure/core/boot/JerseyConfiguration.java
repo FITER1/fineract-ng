@@ -54,7 +54,6 @@ public class JerseyConfiguration extends ResourceConfig {
 
         // register(RequestContextFilter.class);
         // register(JacksonFeature.class);
-        // register(FormDataParamInjectionFeature.class);
         register(MultiPartFeature.class);
         register(SseFeature.class);
 
@@ -64,7 +63,7 @@ public class JerseyConfiguration extends ResourceConfig {
             // log.warn("Register provider: {} - {}", resourceBean, resource.getClass().getName());
 
             if(provider.getClass().getPackage().toString().startsWith("org.apache.fineract")) {
-                register(provider);
+                register(provider.getClass());
             }
         });
 
@@ -73,7 +72,7 @@ public class JerseyConfiguration extends ResourceConfig {
 
             // log.warn("Register resource: {} - {}", resourceBean, resource.getClass().getName());
 
-            register(resource);
+            register(resource.getClass());
         });
     }
     @Bean

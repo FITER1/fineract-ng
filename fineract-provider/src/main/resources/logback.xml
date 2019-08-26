@@ -40,6 +40,10 @@
 		</encoder>
 	</appender>
 
+	<!-- NOTE: suppress warnings
+	<logger name="org.glassfish.jersey.internal.inject.Providers" level="ERROR" />
+	-->
+
 	<logger name="org.springframework.web" level="DEBUG" />
 	<!--
 	<logger name="org.apache.fineract" level="DEBUG" />
