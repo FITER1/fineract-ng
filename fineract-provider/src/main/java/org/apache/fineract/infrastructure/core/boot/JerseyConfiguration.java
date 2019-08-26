@@ -30,7 +30,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.PostConstruct;
 import javax.ws.rs.ApplicationPath;
@@ -44,13 +43,8 @@ public class JerseyConfiguration extends ResourceConfig {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     @PostConstruct
     public void init() {
-        log.warn(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> PASSWORD: {}", passwordEncoder.encode("password")); // TODO: @aleks remove
-
         final String[] resourceBeans = this.applicationContext.getBeanNamesForAnnotation(Path.class);
 
         for(String resourceBean : resourceBeans) {
