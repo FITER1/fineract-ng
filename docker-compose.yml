@@ -21,6 +21,7 @@ version: "3.7"
 services:
   mysql:
     image: mysql:5.7
+    # TODO: the migration scripts have to be fixed (syntax) for MySQL 8
     #image: mysql:8
     volumes:
       - ./fineract-db/docker:/docker-entrypoint-initdb.d
