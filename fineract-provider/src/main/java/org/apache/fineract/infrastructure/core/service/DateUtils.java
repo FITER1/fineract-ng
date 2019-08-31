@@ -40,8 +40,13 @@ import java.util.TimeZone;
 
 @Component
 public class DateUtils {
+    public static FineractProperties fineractProperties;
+
     @Autowired
-    private static FineractProperties fineractProperties;
+    public void setFineractProperties(FineractProperties fineractProperties) {
+        // NOTE: trick for static field injection
+        DateUtils.fineractProperties = fineractProperties;
+    }
 
     public static DateTimeZone getDateTimeZoneOfTenant() {
         DateTimeZone zone = null;
