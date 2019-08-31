@@ -71,10 +71,8 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "unused", "unchecked", "rawtypes", "static-access" })
 @Slf4j
-public class FixedDepositTest {
+public class FixedDepositTest extends BaseIntegrationTest {
 
-    private ResponseSpecification responseSpec;
-    private RequestSpecification requestSpec;
     private FixedDepositProductHelper fixedDepositProductHelper;
     private FixedDepositAccountHelper fixedDepositAccountHelper;
     private AccountHelper accountHelper;
@@ -110,11 +108,8 @@ public class FixedDepositTest {
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.requestSpec.header("Fineract-Platform-TenantId", "default");
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.journalEntryHelper = new JournalEntryHelper(this.requestSpec, this.responseSpec);
         this.financialActivityAccountHelper = new FinancialActivityAccountHelper(this.requestSpec);
     }

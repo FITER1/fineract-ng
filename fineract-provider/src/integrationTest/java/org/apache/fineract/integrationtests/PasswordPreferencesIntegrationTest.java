@@ -18,38 +18,29 @@
  */
 package org.apache.fineract.integrationtests;
 
-import static org.junit.Assert.assertEquals;
+import com.jayway.restassured.builder.ResponseSpecBuilder;
+import com.jayway.restassured.specification.ResponseSpecification;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.fineract.integrationtests.common.CommonConstants;
+import org.apache.fineract.integrationtests.common.PasswordPreferencesHelper;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.fineract.integrationtests.common.CommonConstants;
-import org.apache.fineract.integrationtests.common.PasswordPreferencesHelper;
-import org.apache.fineract.integrationtests.common.Utils;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Slf4j
-public class PasswordPreferencesIntegrationTest {
+public class PasswordPreferencesIntegrationTest extends BaseIntegrationTest {
 
-    private ResponseSpecification responseSpec;
-    private RequestSpecification requestSpec;
     private ResponseSpecification generalResponseSpec;
 
     @Before
     public void setUp() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.generalResponseSpec = new ResponseSpecBuilder().build();
 
     }

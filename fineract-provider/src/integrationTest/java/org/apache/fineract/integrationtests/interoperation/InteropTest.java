@@ -18,15 +18,12 @@
  */
 package org.apache.fineract.integrationtests.interoperation;
 
-import com.jayway.restassured.builder.RequestSpecBuilder;
 import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.internal.path.ObjectConverter;
 import com.jayway.restassured.path.json.JsonPath;
-import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
+import org.apache.fineract.integrationtests.BaseIntegrationTest;
 import org.apache.fineract.integrationtests.common.ClientHelper;
-import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.accounting.Account;
 import org.apache.fineract.integrationtests.common.accounting.AccountHelper;
 import org.apache.fineract.integrationtests.common.charges.ChargesHelper;
@@ -56,7 +53,7 @@ import java.util.UUID;
 import static org.apache.fineract.integrationtests.common.savings.SavingsAccountHelper.ACCOUNT_TYPE_INDIVIDUAL;
 import static org.apache.fineract.integrationtests.interoperation.InteropHelper.PARAM_ACCOUNT_BALANCE;
 
-public class InteropTest {
+public class InteropTest extends BaseIntegrationTest {
 
     private final static Logger log = LoggerFactory.getLogger(InteropTest.class);
 
@@ -66,8 +63,6 @@ public class InteropTest {
     private final static boolean ENFORCE_MIN_REQUIRED_BALANCE = false;
     private final static MathContext MATHCONTEXT  = new MathContext(12, RoundingMode.HALF_EVEN);
 
-    private RequestSpecification requestSpec;
-    private ResponseSpecification responseSpec;
     private ResponseSpecification responseClientErrorSpec;
     private ResponseSpecification responseErrorSpec;
 
@@ -85,11 +80,8 @@ public class InteropTest {
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
+        super.setup();
 
-        responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
         responseClientErrorSpec = new ResponseSpecBuilder().expectStatusCode(400).build();
         responseErrorSpec = new ResponseSpecBuilder().expectStatusCode(500).build();
 

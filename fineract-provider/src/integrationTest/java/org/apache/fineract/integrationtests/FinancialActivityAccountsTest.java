@@ -18,39 +18,31 @@
  */
 package org.apache.fineract.integrationtests;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.HashMap;
-import java.util.List;
-
+import com.jayway.restassured.builder.ResponseSpecBuilder;
+import com.jayway.restassured.specification.ResponseSpecification;
 import org.apache.fineract.accounting.common.AccountingConstants.FINANCIAL_ACTIVITY;
 import org.apache.fineract.accounting.financialactivityaccount.exception.DuplicateFinancialActivityAccountFoundException;
 import org.apache.fineract.accounting.financialactivityaccount.exception.FinancialActivityAccountInvalidException;
 import org.apache.fineract.integrationtests.common.CommonConstants;
-import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.accounting.Account;
 import org.apache.fineract.integrationtests.common.accounting.AccountHelper;
 import org.apache.fineract.integrationtests.common.accounting.FinancialActivityAccountHelper;
-import org.junit.Assert;
-
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import java.util.HashMap;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("rawtypes")
-public class FinancialActivityAccountsTest {
+public class FinancialActivityAccountsTest extends BaseIntegrationTest {
 
-    private ResponseSpecification responseSpec;
     private ResponseSpecification responseSpecForValidationError;
     private ResponseSpecification responseSpecForDomainRuleViolation;
     private ResponseSpecification responseSpecForResourceNotFoundError;
-    private RequestSpecification requestSpec;
     private AccountHelper accountHelper;
     private FinancialActivityAccountHelper financialActivityAccountHelper;
     private final Integer assetTransferFinancialActivityId = FINANCIAL_ACTIVITY.ASSET_TRANSFER.getValue();
@@ -58,10 +50,8 @@ public class FinancialActivityAccountsTest {
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.responseSpecForValidationError = new ResponseSpecBuilder().expectStatusCode(400).build();
         this.responseSpecForDomainRuleViolation = new ResponseSpecBuilder().expectStatusCode(403).build();
         this.responseSpecForResourceNotFoundError = new ResponseSpecBuilder().expectStatusCode(404).build();

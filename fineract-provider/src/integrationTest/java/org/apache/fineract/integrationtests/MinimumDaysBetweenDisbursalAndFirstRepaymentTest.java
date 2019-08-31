@@ -18,39 +18,31 @@
  */
 package org.apache.fineract.integrationtests;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.HashMap;
-import java.util.List;
-
+import com.jayway.restassured.builder.ResponseSpecBuilder;
+import com.jayway.restassured.specification.ResponseSpecification;
 import org.apache.fineract.integrationtests.common.CalendarHelper;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.CommonConstants;
 import org.apache.fineract.integrationtests.common.GroupHelper;
-import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.loans.LoanApplicationTestBuilder;
 import org.apache.fineract.integrationtests.common.loans.LoanProductTestBuilder;
 import org.apache.fineract.integrationtests.common.loans.LoanStatusChecker;
 import org.apache.fineract.integrationtests.common.loans.LoanTransactionHelper;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import java.util.HashMap;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test the creation, approval and rejection of a loan reschedule request
  **/
 @SuppressWarnings({ "rawtypes" })
-public class MinimumDaysBetweenDisbursalAndFirstRepaymentTest {
+public class MinimumDaysBetweenDisbursalAndFirstRepaymentTest extends BaseIntegrationTest {
 
-    private ResponseSpecification responseSpec;
     private ResponseSpecification responseSpecForStatusCode403;
-    private RequestSpecification requestSpec;
     private LoanTransactionHelper loanTransactionHelper;
     private Integer clientId;
     private Integer groupId;
@@ -62,11 +54,6 @@ public class MinimumDaysBetweenDisbursalAndFirstRepaymentTest {
     private final String interestRatePerPeriod = "18";
     private final String groupActivationDate = "1 August 2014";
 
-    @Before
-    public void setup() {
-        Utils.initializeRESTAssured();
-    }
-
     /*
      * MinimumDaysBetweenDisbursalAndFirstRepayment is set to 7 days and days
      * between disbursal date and first repayment is set as 7. system should
@@ -75,9 +62,6 @@ public class MinimumDaysBetweenDisbursalAndFirstRepaymentTest {
     @Test
     public void createLoanEntity_WITH_DAY_BETWEEN_DISB_DATE_AND_REPAY_START_DATE_GREATER_THAN_MIN_DAY_CRITERIA() {
 
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
         this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
 
         // create all required entities
@@ -122,9 +106,6 @@ public class MinimumDaysBetweenDisbursalAndFirstRepaymentTest {
     @Test
     public void createLoanEntity_WITH_DAY_BETWEEN_DISB_DATE_AND_REPAY_START_DATE_LESS_THAN_MIN_DAY_CRITERIA() {
 
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
         this.responseSpecForStatusCode403 = new ResponseSpecBuilder().expectStatusCode(403).build();
         this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
         // create all required entities

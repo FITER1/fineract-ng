@@ -18,28 +18,24 @@
  */
 package org.apache.fineract.integrationtests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import com.jayway.restassured.builder.RequestSpecBuilder;
+import com.jayway.restassured.builder.ResponseSpecBuilder;
+import com.jayway.restassured.http.ContentType;
+import com.jayway.restassured.specification.ResponseSpecification;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.fineract.integrationtests.common.*;
+import org.apache.fineract.integrationtests.common.loans.*;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.fineract.integrationtests.common.*;
-import org.apache.fineract.integrationtests.common.loans.*;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests loan schedule change based on group meeting changes and loan
@@ -48,12 +44,10 @@ import com.jayway.restassured.specification.ResponseSpecification;
 @SuppressWarnings({ "rawtypes" })
 @Ignore
 @Slf4j
-public class DisbursalAndRepaymentScheduleTest {
+public class DisbursalAndRepaymentScheduleTest extends BaseIntegrationTest {
 
-    private ResponseSpecification responseSpec;
     private ResponseSpecification responseSpecForStatusCode403;
     private ResponseSpecification generalResponseSpec;
-    private RequestSpecification requestSpec;
     private LoanTransactionHelper loanTransactionHelper;
     private LoanRescheduleRequestHelper loanRescheduleRequestHelper;
     private Integer loanRescheduleRequestId;
@@ -67,11 +61,6 @@ public class DisbursalAndRepaymentScheduleTest {
     private final String interestRatePerPeriod = "18";
 
     private final SimpleDateFormat dateFormatterStandard = new SimpleDateFormat("dd MMMM yyyy");
-
-    @Before
-    public void setup() {
-        Utils.initializeRESTAssured();
-    }
 
     @Test
     public void testRescheduleJLGLoanSynk() {

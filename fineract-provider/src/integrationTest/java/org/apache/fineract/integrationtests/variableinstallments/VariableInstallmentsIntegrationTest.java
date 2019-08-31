@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.fineract.integrationtests.BaseIntegrationTest;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.loans.LoanStatusChecker;
@@ -39,20 +40,16 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
 @Slf4j
-public class VariableInstallmentsIntegrationTest {
+public class VariableInstallmentsIntegrationTest extends BaseIntegrationTest {
 
     
     private static final String NONE = "1";
-    private RequestSpecification requestSpec;
-    private ResponseSpecification responseSpec;
     private LoanTransactionHelper loanTransactionHelper;
     
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
     }
     

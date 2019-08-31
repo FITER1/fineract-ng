@@ -18,39 +18,20 @@
  */
 package org.apache.fineract.integrationtests;
 
-import static org.junit.Assert.assertEquals;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.fineract.integrationtests.common.xbrl.XBRLIntegrationTestHelper;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import lombok.extern.slf4j.Slf4j;
-import org.apache.fineract.integrationtests.common.Utils;
-import org.apache.fineract.integrationtests.common.xbrl.XBRLIntegrationTestHelper;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Slf4j
-public class XBRLIntegrationTest {
-
-    private RequestSpecification requestSpec;
-    private ResponseSpecification responseSpec;
+public class XBRLIntegrationTest extends BaseIntegrationTest {
 
     private XBRLIntegrationTestHelper xbrlHelper;
-
-    @Before
-    public void setUp() throws Exception {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
-    }
 
     @Test
     public void shouldRetrieveTaxonomyList() {

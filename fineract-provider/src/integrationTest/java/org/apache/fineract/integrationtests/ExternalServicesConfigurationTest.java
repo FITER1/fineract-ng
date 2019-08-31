@@ -18,39 +18,29 @@
  */
 package org.apache.fineract.integrationtests;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import com.jayway.restassured.builder.ResponseSpecBuilder;
+import com.jayway.restassured.specification.ResponseSpecification;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ExternalServicesConfigurationHelper;
-import org.apache.fineract.integrationtests.common.Utils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @SuppressWarnings({ "rawtypes", "unchecked", "static-access" })
 @Slf4j
-public class ExternalServicesConfigurationTest {
+public class ExternalServicesConfigurationTest extends BaseIntegrationTest {
 
-    private ResponseSpecification responseSpec;
-    private RequestSpecification requestSpec;
     private ExternalServicesConfigurationHelper externalServicesConfigurationHelper;
     private ResponseSpecification httpStatusForidden;
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
-        this.httpStatusForidden = new ResponseSpecBuilder().expectStatusCode(403).build();
+        super.setup();
 
+        this.httpStatusForidden = new ResponseSpecBuilder().expectStatusCode(403).build();
     }
 
     @Test

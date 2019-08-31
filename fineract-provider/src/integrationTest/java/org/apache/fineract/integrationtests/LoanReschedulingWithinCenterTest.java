@@ -56,20 +56,16 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @Slf4j
-public class LoanReschedulingWithinCenterTest {
+public class LoanReschedulingWithinCenterTest extends BaseIntegrationTest {
 
-    private RequestSpecification requestSpec;
-    private ResponseSpecification responseSpec;
     private LoanTransactionHelper loanTransactionHelper;
     private ResponseSpecification generalResponseSpec;
     private LoanApplicationApprovalTest loanApplicationApprovalTest;
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
         this.loanApplicationApprovalTest = new LoanApplicationApprovalTest();
         this.generalResponseSpec = new ResponseSpecBuilder().build();

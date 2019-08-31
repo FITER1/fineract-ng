@@ -36,20 +36,15 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "rawtypes", "unchecked", "static-access" })
 @Slf4j
-public class SchedulerJobsTest {
+public class SchedulerJobsTest extends BaseIntegrationTest {
 
-    private ResponseSpecification responseSpec;
-    private RequestSpecification requestSpec;
     private ResponseSpecification responseSpecForSchedulerJob;
     private SchedulerJobHelper schedulerJobHelper;
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.requestSpec.header("Fineract-Platform-TenantId", "default");
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.responseSpecForSchedulerJob = new ResponseSpecBuilder().expectStatusCode(202).build();
     }
 

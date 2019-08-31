@@ -43,20 +43,16 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings("rawtypes")
 @Slf4j
-public class LoanApplicationApprovalTest {
+public class LoanApplicationApprovalTest extends BaseIntegrationTest {
 
-    private ResponseSpecification responseSpec;
     private ResponseSpecification responseSpecForStatusCode403;
     private ResponseSpecification responseSpecForStatusCode400;
-    private RequestSpecification requestSpec;
     private LoanTransactionHelper loanTransactionHelper;
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.responseSpecForStatusCode403 = new ResponseSpecBuilder().expectStatusCode(403).build();
         this.responseSpecForStatusCode400 = new ResponseSpecBuilder().expectStatusCode(400).build();
         this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);

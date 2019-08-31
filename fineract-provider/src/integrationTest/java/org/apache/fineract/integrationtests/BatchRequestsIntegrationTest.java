@@ -48,27 +48,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
  * @author Rishabh Shukla
  */
 @Slf4j
-public class BatchRequestsIntegrationTest {
-
-    private ResponseSpecification responseSpec;
-    private RequestSpecification requestSpec;
-
-    public BatchRequestsIntegrationTest() {
-        super();
-    }
-
-    /**
-     * Sets up the essential settings for the TEST like contentType,
-     * expectedStatusCode. It uses the '@Before' annotation provided by jUnit.
-     */
-    @Before
-    public void setup() {
-
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
-    }
+public class BatchRequestsIntegrationTest extends BaseIntegrationTest {
 
     @Test
     /**

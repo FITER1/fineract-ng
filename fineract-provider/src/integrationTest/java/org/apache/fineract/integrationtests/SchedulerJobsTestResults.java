@@ -32,6 +32,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.GlobalConfigurationHelper;
 import org.apache.fineract.integrationtests.common.HolidayHelper;
@@ -67,7 +68,8 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "unused", "unchecked", "rawtypes", "static-access", "cast" })
-public class SchedulerJobsTestResults {
+@Slf4j
+public class SchedulerJobsTestResults extends BaseIntegrationTest {
 
     private static final String FROM_ACCOUNT_TYPE_LOAN = "1";
     private static final String FROM_ACCOUNT_TYPE_SAVINGS = "2";
@@ -81,8 +83,6 @@ public class SchedulerJobsTestResults {
 
     Float SP_BALANCE = new Float(MINIMUM_OPENING_BALANCE);
 
-    private static ResponseSpecification responseSpec;
-    private static RequestSpecification requestSpec;
     private ResponseSpecification responseSpecForSchedulerJob;
     private SchedulerJobHelper schedulerJobHelper;
     private SavingsAccountHelper savingsAccountHelper;
@@ -95,11 +95,8 @@ public class SchedulerJobsTestResults {
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.requestSpec.header("Fineract-Platform-TenantId", "default");
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.responseSpecForSchedulerJob = new ResponseSpecBuilder().expectStatusCode(202).build();
         this.accountHelper = new AccountHelper(this.requestSpec, this.responseSpec);
         this.journalEntryHelper = new JournalEntryHelper(this.requestSpec, this.responseSpec);
@@ -904,7 +901,7 @@ public class SchedulerJobsTestResults {
 
     private Integer createSavingsProduct(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String minOpenningBalance) {
-        System.out.println("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
         SavingsProductHelper savingsProductHelper = new SavingsProductHelper();
         final String savingsProductJSON = savingsProductHelper //
                 .withInterestCompoundingPeriodTypeAsDaily() //
@@ -914,8 +911,8 @@ public class SchedulerJobsTestResults {
         return SavingsProductHelper.createSavingsProduct(savingsProductJSON, requestSpec, responseSpec);
     }
 
-    private static Integer createSavingsProduct(final String minOpenningBalance, final Account... accounts) {
-        System.out.println("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
+    private Integer createSavingsProduct(final String minOpenningBalance, final Account... accounts) {
+        log.info("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
         final String savingsProductJSON = new SavingsProductHelper().withInterestCompoundingPeriodTypeAsDaily() //
                 .withInterestPostingPeriodTypeAsQuarterly() //
                 .withInterestCalculationPeriodTypeAsDailyBalance() //
@@ -924,7 +921,7 @@ public class SchedulerJobsTestResults {
     }
 
     private Integer createLoanProduct(final String chargeId) {
-        System.out.println("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
         final String loanProductJSON = new LoanProductTestBuilder() //
                 .withPrincipal("15,000.00") //
                 .withNumberOfRepayments("4") //
@@ -939,7 +936,7 @@ public class SchedulerJobsTestResults {
     }
 
     private Integer applyForLoanApplication(final String clientID, final String loanProductID, final String savingsID) {
-        System.out.println("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
+        log.info("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
         final String loanApplicationJSON = new LoanApplicationTestBuilder() //
                 .withPrincipal("15,000.00") //
                 .withLoanTermFrequency("4") //
@@ -958,7 +955,7 @@ public class SchedulerJobsTestResults {
     }
 
     private Integer createFixedDepositProduct(final String validFrom, final String validTo, Account... accounts) {
-        System.out.println("------------------------------CREATING NEW FIXED DEPOSIT PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW FIXED DEPOSIT PRODUCT ---------------------------------------");
         FixedDepositProductHelper fixedDepositProductHelper = new FixedDepositProductHelper(this.requestSpec, this.responseSpec);
         final String fixedDepositProductJSON = fixedDepositProductHelper //
                 // .withAccountingRuleAsCashBased(accounts)
@@ -970,7 +967,7 @@ public class SchedulerJobsTestResults {
     private Integer applyForFixedDepositApplication(final String clientID, final String productID, final String validFrom,
             final String validTo, final String submittedOnDate, final String penalInterestType, String savingsId,
             final boolean transferInterest, final FixedDepositAccountHelper fixedDepositAccountHelper) {
-        System.out.println("--------------------------------APPLYING FOR FIXED DEPOSIT ACCOUNT --------------------------------");
+        log.info("--------------------------------APPLYING FOR FIXED DEPOSIT ACCOUNT --------------------------------");
         final String fixedDepositApplicationJSON = new FixedDepositAccountHelper(this.requestSpec, this.responseSpec)
                 //
                 .withSubmittedOnDate(submittedOnDate).withSavings(savingsId).transferInterest(true)

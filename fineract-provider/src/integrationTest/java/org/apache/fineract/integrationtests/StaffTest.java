@@ -18,35 +18,27 @@
  */
 package org.apache.fineract.integrationtests;
 
-import java.util.HashMap;
-import java.util.List;
-
+import com.google.gson.Gson;
+import com.jayway.restassured.builder.ResponseSpecBuilder;
+import com.jayway.restassured.specification.ResponseSpecification;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.organisation.StaffHelper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.google.gson.Gson;
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import java.util.HashMap;
+import java.util.List;
 
-public class StaffTest {
+public class StaffTest extends BaseIntegrationTest {
 
-    private RequestSpecification requestSpec;
-    private ResponseSpecification responseSpec;
     private ResponseSpecification responseSpecForValidationError;
     private ResponseSpecification responseSpecForNotFoundError;
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.responseSpecForValidationError = new ResponseSpecBuilder().expectStatusCode(400).build();
         this.responseSpecForNotFoundError = new ResponseSpecBuilder().expectStatusCode(404).build();
     }

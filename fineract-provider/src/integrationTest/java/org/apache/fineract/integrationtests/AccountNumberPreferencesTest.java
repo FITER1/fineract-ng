@@ -48,10 +48,8 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @Slf4j
-public class AccountNumberPreferencesTest {
+public class AccountNumberPreferencesTest extends BaseIntegrationTest {
 
-    private RequestSpecification requestSpec;
-    private ResponseSpecification responseSpec;
     private ResponseSpecification responseValidationError;
     private ResponseSpecification responseNotFoundError;
     private ResponseSpecification responseForbiddenError;
@@ -91,10 +89,7 @@ public class AccountNumberPreferencesTest {
     
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
         this.responseValidationError = new ResponseSpecBuilder().expectStatusCode(400).build();
         this.responseNotFoundError = new ResponseSpecBuilder().expectStatusCode(404).build();
         this.responseForbiddenError = new ResponseSpecBuilder().expectStatusCode(403).build();

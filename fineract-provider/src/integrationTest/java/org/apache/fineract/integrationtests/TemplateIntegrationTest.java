@@ -18,39 +18,20 @@
  */
 package org.apache.fineract.integrationtests;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import com.google.gson.Gson;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.google.gson.Gson;
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-public class TemplateIntegrationTest {
+public class TemplateIntegrationTest extends BaseIntegrationTest {
 
     private final String GET_TEMPLATES_URL = "/templates?tenantIdentifier=default";
     private final String GET_TEMPLATE_ID_URL = "/templates/%s?tenantIdentifier=default";
     private final String RESPONSE_ATTRIBUTE_NAME = "name";
-
-    private ResponseSpecification responseSpec;
-    private RequestSpecification requestSpec;
-
-    @Before
-    public void setup() {
-
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
-    }
 
     @Ignore
     @Test

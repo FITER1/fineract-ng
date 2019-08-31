@@ -67,10 +67,8 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "unused", "rawtypes", "unchecked", "static-access" })
 @Slf4j
-public class RecurringDepositTest {
+public class RecurringDepositTest extends BaseIntegrationTest {
 
-    private ResponseSpecification responseSpec;
-    private RequestSpecification requestSpec;
     private RecurringDepositProductHelper recurringDepositProductHelper;
     private SavingsAccountHelper savingsAccountHelper;
     private AccountHelper accountHelper;
@@ -107,11 +105,8 @@ public class RecurringDepositTest {
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.requestSpec.header("Fineract-Platform-TenantId", "default");
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.journalEntryHelper = new JournalEntryHelper(this.requestSpec, this.responseSpec);
         this.financialActivityAccountHelper = new FinancialActivityAccountHelper(this.requestSpec);
     }

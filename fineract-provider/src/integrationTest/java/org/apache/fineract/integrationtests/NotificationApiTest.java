@@ -18,33 +18,15 @@
  */
 package org.apache.fineract.integrationtests;
 
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.NotificationHelper;
-import org.apache.fineract.integrationtests.common.Utils;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
 
 @Slf4j
-public class NotificationApiTest {
-
-    private ResponseSpecification responseSpec;
-    private RequestSpecification requestSpec;
-
-    @Before
-    public void setUp() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
-    }
+public class NotificationApiTest extends BaseIntegrationTest {
 
     @Test
     @SuppressWarnings("unchecked")

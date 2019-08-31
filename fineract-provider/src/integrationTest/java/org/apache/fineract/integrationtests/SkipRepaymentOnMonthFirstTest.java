@@ -18,50 +18,30 @@
  */
 package org.apache.fineract.integrationtests;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-
+import junit.framework.Assert;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.CalendarHelper;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.GlobalConfigurationHelper;
 import org.apache.fineract.integrationtests.common.GroupHelper;
-import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.loans.LoanApplicationTestBuilder;
 import org.apache.fineract.integrationtests.common.loans.LoanProductTestBuilder;
 import org.apache.fineract.integrationtests.common.loans.LoanTransactionHelper;
-import org.junit.Before;
 import org.junit.Test;
 
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings({ "static-access", "rawtypes", "unchecked", "deprecation" })
 @Slf4j
-public class SkipRepaymentOnMonthFirstTest {
+public class SkipRepaymentOnMonthFirstTest extends BaseIntegrationTest {
 
-	private ResponseSpecification responseSpec;
-	private RequestSpecification requestSpec;
 	private GlobalConfigurationHelper globalConfigurationHelper;
 	private LoanTransactionHelper loanTransactionHelper;
 	private CalendarHelper calendarHelper;
-
-	@Before
-	public void setup() {
-		Utils.initializeRESTAssured();
-		this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-		this.requestSpec.header("Authorization",
-				"Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-		this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
-	}
 
 	@Test
 	public void testSkippingRepaymentOnFirstDayOfMonth() {

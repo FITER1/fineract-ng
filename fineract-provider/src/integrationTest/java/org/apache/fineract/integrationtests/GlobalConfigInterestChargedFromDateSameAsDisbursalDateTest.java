@@ -18,35 +18,17 @@
  */
 package org.apache.fineract.integrationtests;
 
+import org.apache.fineract.integrationtests.common.GlobalConfigurationHelper;
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.fineract.integrationtests.common.GlobalConfigurationHelper;
-import org.apache.fineract.integrationtests.common.Utils;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
-
-
-public class GlobalConfigInterestChargedFromDateSameAsDisbursalDateTest {
+public class GlobalConfigInterestChargedFromDateSameAsDisbursalDateTest extends BaseIntegrationTest {
     
-    private ResponseSpecification responseSpec;
-    private RequestSpecification requestSpec;
     private GlobalConfigurationHelper globalConfigurationHelper;
-    
-    @Before
-    public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
-    }
     
     @SuppressWarnings( {"static-access", "rawtypes", "unchecked"})
     @Test

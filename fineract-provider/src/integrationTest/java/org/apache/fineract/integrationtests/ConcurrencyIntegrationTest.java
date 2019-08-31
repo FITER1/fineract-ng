@@ -42,10 +42,8 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @Slf4j
-public class ConcurrencyIntegrationTest {
+public class ConcurrencyIntegrationTest extends BaseIntegrationTest {
 
-    private ResponseSpecification responseSpec;
-    private RequestSpecification requestSpec;
     private LoanTransactionHelper loanTransactionHelper;
 
     private static final String NO_ACCOUNTING = "1";
@@ -54,10 +52,8 @@ public class ConcurrencyIntegrationTest {
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
     }
 

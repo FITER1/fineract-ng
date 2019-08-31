@@ -18,44 +18,31 @@
  */
 package org.apache.fineract.integrationtests;
 
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.path.json.JsonPath;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.fineract.integrationtests.common.HookHelper;
+import org.apache.fineract.integrationtests.common.OfficeHelper;
+import org.apache.http.conn.HttpHostConnectException;
 import org.junit.Assert;
-
-import static org.junit.Assert.fail;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.fineract.integrationtests.common.HookHelper;
-import org.apache.fineract.integrationtests.common.OfficeHelper;
-import org.apache.fineract.integrationtests.common.Utils;
-import org.apache.http.conn.HttpHostConnectException;
-import org.junit.Before;
-import org.junit.Test;
-
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.path.json.JsonPath;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import static org.junit.Assert.fail;
 
 @Slf4j
-public class HookIntegrationTest {
-
-    private RequestSpecification requestSpec;
-    private ResponseSpecification responseSpec;
+public class HookIntegrationTest extends BaseIntegrationTest {
 
     private HookHelper hookHelper;
     private OfficeHelper officeHelper;
 
     @Before
     public void setUp() throws Exception {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.hookHelper = new HookHelper(this.requestSpec, this.responseSpec);
         this.officeHelper = new OfficeHelper(this.requestSpec, this.responseSpec);
     }

@@ -55,26 +55,10 @@ import com.jayway.restassured.specification.ResponseSpecification;
  * @see org.apache.fineract.integrationtests.common.BatchHelper
  * @see org.apache.fineract.batch.domain.BatchRequest
  */
-public class BatchApiTest {
-
-    private ResponseSpecification responseSpec;
-    private RequestSpecification requestSpec;
+public class BatchApiTest extends BaseIntegrationTest {
 
     public BatchApiTest() {
         super();
-    }
-
-    /**
-     * Sets up the essential settings for the TEST like contentType,
-     * expectedStatusCode. It uses the '@Before' annotation provided by jUnit.
-     */
-    @Before
-    public void setup() {
-
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
     }
 
     /**

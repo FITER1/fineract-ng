@@ -22,32 +22,9 @@ import org.apache.fineract.integrationtests.common.OfficeDomain;
 import org.apache.fineract.integrationtests.common.OfficeHelper;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
-
-public class OfficeIntegrationTest {
-
-	private ResponseSpecification responseSpec;
-	private RequestSpecification requestSpec;
-
-	@Before
-	public void setup() {
-		Utils.initializeRESTAssured();
-		this.requestSpec = new RequestSpecBuilder().setContentType(
-				ContentType.JSON).build();
-		this.requestSpec
-				.header("Authorization",
-						"Basic "
-								+ Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-		this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200)
-				.build();
-	}
+public class OfficeIntegrationTest extends BaseIntegrationTest {
 
 	@Test
 	public void testOfficeModification() {
