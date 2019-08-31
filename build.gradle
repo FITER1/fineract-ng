@@ -292,6 +292,7 @@ allprojects  {
             dependency "org.apache.openjpa:openjpa-kernel:3.1.0"
             dependency "org.apache.openjpa:openjpa-lib:3.1.0"
             dependency "org.apache.openjpa:openjpa-integration-jmx:3.1.0"
+            dependency "org.eclipse.persistence:eclipselink:2.7.4"
             dependency "org.apache.bval:org.apache.bval.bundle:2.0.2"
             dependency "org.apache.tika:tika-core:1.22"
             dependency "com.google.guava:guava:19.0"
@@ -406,6 +407,7 @@ allprojects  {
             dependency "javax.transaction:javax.transaction-api:1.3"
             dependency "com.sun.xml.ws:jaxws-ri:2.3.1"
             dependency "javax.annotation:javax.annotation-api:1.3.2"
+            dependency "javax.ws.rs:javax.ws.rs-api:2.1.1"
             dependency "com.google.code.findbugs:jsr305:3.0.2"
             dependency "com.fasterxml:classmate:1.3.1"
             dependency "com.h2database:h2:1.4.197"
@@ -452,7 +454,6 @@ allprojects  {
             dependency "com.amazon.redshift:redshift-jdbc42-no-awssdk:1.2.32.1056"
             dependency "com.avides.springboot.testcontainer:springboot-testcontainer-activemq:0.1.0-RC5"
             dependency "com.avides.springboot.testcontainer:springboot-testcontainer-mysql:0.1.0-RC11"
-            dependency "com.avides.springboot.testcontainer:springboot-testcontainer-awss3mock:0.1.0-RC5"
         }
 
         imports {
@@ -468,6 +469,7 @@ allprojects  {
             mavenBom "org.glassfish.jaxb:jaxb-bom:2.3.2"
             mavenBom "org.apache.camel:camel-bom:${camelVersion}"
             mavenBom "com.amazonaws:aws-java-sdk-pom:${awsSdkVersion}"
+            // mavenBom "org.junit:junit-bom:5.5.1"
         }
     }
 }
@@ -490,6 +492,10 @@ subprojects {
     artifacts.archives packageSources
 
     test {
+        jvmArgs "-Dopenjpa.Log=Enhance=ERROR"
+
+        useJUnitPlatform()
+
         maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
 
         reports {
@@ -500,16 +506,20 @@ subprojects {
 
     sourceSets {
         integrationTest {
-            compileClasspath += sourceSets.main.output
-            runtimeClasspath += sourceSets.main.output
-            java.srcDir file("src/integrationTest/java")
-            resources.srcDir file("src/integrationTest/resources")
+            java {
+                compileClasspath += main.output + test.output
+                runtimeClasspath += main.output + test.output
+                srcDir "src/integrationTest/java"
+            }
+            resources.srcDir "src/integrationTest/resources"
         }
     }
 
     configurations {
-        integrationTestImplementation.extendsFrom implementation
-        integrationTestRuntimeOnly.extendsFrom runtimeOnly
+        integrationTestImplementation.extendsFrom testImplementation
+        integrationTestRuntimeOnly.extendsFrom testRuntime
+        // integrationTestImplementation.extendsFrom implementation
+        // integrationTestRuntimeOnly.extendsFrom runtimeOnly
     }
 
     configurations.all {
@@ -523,11 +533,22 @@ subprojects {
             compileOnly "org.slf4j:jul-to-slf4j"
             compileOnly "org.projectlombok:lombok"
             testCompileOnly "org.projectlombok:lombok"
+            integrationTestImplementation "org.projectlombok:lombok"
             annotationProcessor "org.projectlombok:lombok"
             annotationProcessor "com.querydsl:querydsl-apt"
+            annotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa"
             testAnnotationProcessor "org.projectlombok:lombok"
             testAnnotationProcessor "com.querydsl:querydsl-apt"
+            testAnnotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa"
+            // integrationTestAnnotationProcessor "org.projectlombok:lombok"
+            // integrationTestAnnotationProcessor "com.querydsl:querydsl-apt"
+            // integrationTestAnnotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa"
         }
+    }
+
+    task integrationTest(type: Test) {
+        testClassesDirs = sourceSets.integrationTest.output.classesDirs
+        classpath = sourceSets.integrationTest.runtimeClasspath
     }
 }
 

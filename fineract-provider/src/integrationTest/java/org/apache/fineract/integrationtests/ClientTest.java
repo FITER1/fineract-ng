@@ -18,38 +18,29 @@
  */
 package org.apache.fineract.integrationtests;
 
-import java.util.HashMap;
-
 import org.apache.fineract.integrationtests.common.ClientHelper;
-import org.apache.fineract.integrationtests.common.Utils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import java.util.HashMap;
 
-public class ClientTest {
+public class ClientTest extends BaseIntegrationTest {
+    private static final Logger log = LoggerFactory.getLogger(ClientTest.class);
 
-    private ResponseSpecification responseSpec;
-    private RequestSpecification requestSpec;
     private ClientHelper clientHelper;
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
 
+        this.clientHelper = new ClientHelper(this.requestSpec, this.responseSpec);
     }
 
     @Test
     public void testClientStatus() {
-        this.clientHelper = new ClientHelper(this.requestSpec, this.responseSpec);
         final Integer clientId = ClientHelper.createClient(this.requestSpec, this.responseSpec);
         Assert.assertNotNull(clientId);
 
@@ -76,7 +67,6 @@ public class ClientTest {
 
         clientStatusHashMap = this.clientHelper.withdrawClient(clientId);
         ClientStatusChecker.verifyClientWithdrawn(clientStatusHashMap);
-
     }
     
     @Test
@@ -142,7 +132,5 @@ public class ClientTest {
 
         clientStatusHashMap = this.clientHelper.withdrawClient(clientId);
         ClientStatusChecker.verifyClientWithdrawn(clientStatusHashMap);
-
     }
-
 }

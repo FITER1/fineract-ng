@@ -18,33 +18,39 @@
  */
 package org.apache.fineract.integrationtests.common;
 
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.path.json.JsonPath;
+import com.jayway.restassured.specification.RequestSpecification;
+import com.jayway.restassured.specification.ResponseSpecification;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.http.conn.HttpHostConnectException;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.Random;
+import java.util.TimeZone;
+
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 
-import java.io.File;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.conn.HttpHostConnectException;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDate;
-
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.path.json.JsonPath;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
 /**
  * Util for RestAssured tests. This class here in src/integrationTest is
  * copy/pasted to src/test; please keep them in sync.
  */
 @SuppressWarnings("unchecked")
 public class Utils {
+    private static final Logger log = LoggerFactory.getLogger(Utils.class);
 
     public static final String TENANT_PARAM_NAME = "tenantIdentifier";
     public static final String DEFAULT_TENANT = "default";
@@ -52,17 +58,23 @@ public class Utils {
 
     public static final String TENANT_TIME_ZONE = "Asia/Kolkata";
 
-    private static final String LOGIN_URL = "/fineract-provider/api/v1/authentication?username=mifos&password=password&" + TENANT_IDENTIFIER;
+    // TODO: @aleks remove
+    @Deprecated
+    private static final String LOGIN_URL = "/authentication?username=mifos&password=password&" + TENANT_IDENTIFIER;
 
+    // TODO: @aleks remove
+    @Deprecated
     public static void initializeRESTAssured() {
         RestAssured.baseURI = "https://localhost";
         RestAssured.port = 8443;
         RestAssured.keystore("src/main/resources/keystore.jks", "openmf");
     }
 
+    // TODO: @aleks remove
+    @Deprecated
     public static String loginIntoServerAndGetBase64EncodedAuthenticationKey() {
         try {
-            System.out.println("-----------------------------------LOGIN-----------------------------------------");
+            log.info("-----------------------------------LOGIN-----------------------------------------");
             final String json = RestAssured.post(LOGIN_URL).asString();
             assertThat("Failed to login into fineract platform", StringUtils.isBlank(json), is(false));
             return JsonPath.with(json).get("base64EncodedAuthenticationKey");

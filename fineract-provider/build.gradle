@@ -115,12 +115,21 @@ dependencies {
     testCompile "com.jayway.restassured:rest-assured"
     testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "org.testcontainers:mysql"
+    // testCompile "org.testcontainers:localstack"
     // testCompile "com.avides.springboot.testcontainer:springboot-testcontainer-activemq"
     // testCompile "com.avides.springboot.testcontainer:springboot-testcontainer-mysql"
-    // testCompile "com.avides.springboot.testcontainer:springboot-testcontainer-awss3mock"
 
     integrationTestImplementation "junit:junit"
     integrationTestImplementation "com.jayway.restassured:rest-assured"
+    integrationTestImplementation "com.google.code.gson:gson"
+    integrationTestImplementation "com.google.guava:guava"
+    integrationTestImplementation "org.apache.poi:poi"
+    integrationTestImplementation "org.apache.poi:poi-ooxml"
+    integrationTestImplementation "org.apache.poi:poi-ooxml-schemas"
+    integrationTestImplementation "javax.ws.rs:javax.ws.rs-api"
+    integrationTestImplementation "joda-time:joda-time"
+    integrationTestImplementation "org.apache.openjpa:openjpa"
+    integrationTestImplementation "mysql:mysql-connector-java"
 }
 
 tasks.distZip.enabled = false
@@ -134,11 +143,15 @@ def distributionsCopySpec = copySpec {
     }
 }
 
+bootJar {
+    archiveFileName = "fineract-provider.jar"
+}
+
 task fatJarTar(type: Tar, dependsOn: "bootJar") { with distributionsCopySpec }
 
 docker {
-    name "hub.docker.org/apache/fineract:latest"
-    tag "build", "hub.docker.org/apache/fineract:${project.version}"
+    name "fineract:latest"
+    tag "build", "fineract:${project.version}"
     dependsOn fatJarTar
     files tasks.fatJarTar.outputs
 }
