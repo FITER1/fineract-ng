@@ -59,7 +59,7 @@ public class FundWritePlatformServiceJpaRepositoryImpl implements FundWritePlatf
 
     @Transactional
     @Override
-    @CacheEvict(value = "funds", key = "#fineractProperties.getTenantId().concat('fn')")
+    @CacheEvict(value = "funds", key = "@fineractProperties.getTenantId().concat('fn')")
     public CommandProcessingResult createFund(final JsonCommand command) {
 
         try {
@@ -84,7 +84,7 @@ public class FundWritePlatformServiceJpaRepositoryImpl implements FundWritePlatf
 
     @Transactional
     @Override
-    @CacheEvict(value = "funds", key = "#fineractProperties.getTenantId().concat('fn')")
+    @CacheEvict(value = "funds", key = "@fineractProperties.getTenantId().concat('fn')")
     public CommandProcessingResult updateFund(final Long fundId, final JsonCommand command) {
 
         try {

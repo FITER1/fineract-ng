@@ -81,8 +81,8 @@ public class OfficeWritePlatformServiceJpaRepositoryImpl implements OfficeWriteP
     @Transactional
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "offices", key = "#fineractProperties.getTenantId().concat(#root.target.context.authenticatedUser().getOffice().getHierarchy()+'of')"),
-            @CacheEvict(value = "officesForDropdown", key = "#fineractProperties.getTenantId().concat(#root.target.context.authenticatedUser().getOffice().getHierarchy()+'ofd')") })
+            @CacheEvict(value = "offices", key = "@fineractProperties.getTenantId().concat(#root.target.context.authenticatedUser().getOffice().getHierarchy()+'of')"),
+            @CacheEvict(value = "officesForDropdown", key = "@fineractProperties.getTenantId().concat(#root.target.context.authenticatedUser().getOffice().getHierarchy()+'ofd')") })
     public CommandProcessingResult createOffice(final JsonCommand command) {
 
         try {
@@ -125,9 +125,9 @@ public class OfficeWritePlatformServiceJpaRepositoryImpl implements OfficeWriteP
     @Transactional
     @Override
     @Caching(evict = {
-            @CacheEvict(value = "offices", key = "#fineractProperties.getTenantId().concat(#root.target.context.authenticatedUser().getOffice().getHierarchy()+'of')"),
-            @CacheEvict(value = "officesForDropdown", key = "#fineractProperties.getTenantId().concat(#root.target.context.authenticatedUser().getOffice().getHierarchy()+'ofd')"),
-            @CacheEvict(value = "officesById", key = "#fineractProperties.getTenantId().concat(#officeId)") })
+            @CacheEvict(value = "offices", key = "@fineractProperties.getTenantId().concat(#root.target.context.authenticatedUser().getOffice().getHierarchy()+'of')"),
+            @CacheEvict(value = "officesForDropdown", key = "@fineractProperties.getTenantId().concat(#root.target.context.authenticatedUser().getOffice().getHierarchy()+'ofd')"),
+            @CacheEvict(value = "officesById", key = "@fineractProperties.getTenantId().concat(#officeId)") })
     public CommandProcessingResult updateOffice(final Long officeId, final JsonCommand command) {
 
         try {

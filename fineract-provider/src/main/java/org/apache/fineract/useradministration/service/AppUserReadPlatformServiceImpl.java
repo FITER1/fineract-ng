@@ -77,7 +77,7 @@ public class AppUserReadPlatformServiceImpl implements AppUserReadPlatformServic
     }
 
     @Override
-    @Cacheable(value = "users", key = "#fineractProperties.getTenantId().concat(#root.target.context.authenticatedUser().getOffice().getHierarchy())")
+    @Cacheable(value = "users", key = "@fineractProperties.getTenantId().concat(#root.target.context.authenticatedUser().getOffice().getHierarchy())")
     public Collection<AppUserData> retrieveAllUsers() {
 
         final AppUser currentUser = this.context.authenticatedUser();

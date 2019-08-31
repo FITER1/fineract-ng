@@ -88,7 +88,7 @@ public class ChargeWritePlatformServiceJpaRepositoryImpl implements ChargeWriteP
 
     @Transactional
     @Override
-    @CacheEvict(value = "charges", key = "#fineractProperties.getTenantId().concat('ch')")
+    @CacheEvict(value = "charges", key = "@fineractProperties.getTenantId().concat('ch')")
     public CommandProcessingResult createCharge(final JsonCommand command) {
         try {
             this.context.authenticatedUser();
@@ -130,7 +130,7 @@ public class ChargeWritePlatformServiceJpaRepositoryImpl implements ChargeWriteP
 
     @Transactional
     @Override
-    @CacheEvict(value = "charges", key = "#fineractProperties.getTenantId().concat('ch')")
+    @CacheEvict(value = "charges", key = "@fineractProperties.getTenantId().concat('ch')")
     public CommandProcessingResult updateCharge(final Long chargeId, final JsonCommand command) {
 
         try {
@@ -200,7 +200,7 @@ public class ChargeWritePlatformServiceJpaRepositoryImpl implements ChargeWriteP
 
     @Transactional
     @Override
-    @CacheEvict(value = "charges", key = "#fineractProperties.getTenantId().concat('ch')")
+    @CacheEvict(value = "charges", key = "@fineractProperties.getTenantId().concat('ch')")
     public CommandProcessingResult deleteCharge(final Long chargeId) {
 
         final Charge chargeForDelete = this.chargeRepository.findById(chargeId).orElse(null);
