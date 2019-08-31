@@ -45,7 +45,7 @@ services:
       - "1883:1883"
       - "61614:61614"
   fineract:
-    image: hub.docker.org/apache/fineract:latest
+    image: fineract:latest
     environment:
       - FINERACT_DB_URL=jdbc:mysql://mysql:3306/mifostenant-default
       - FINERACT_DB_USERNAME=root
@@ -91,4 +91,4 @@ services:
     ports:
       - "8443:8443"
       - "8008:8008"
-    command: sh -c "java -agentlib:jdwp=transport=dt_socket,server=y,address=*:8008,suspend=n -Xmx512m -Duser.timezone=UTC --illegal-access=permit --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED --add-exports=java.base/sun.nio.ch=ALL-UNNAMED -jar -Djava.net.preferIPv4Stack=true fineract-provider-*.jar --spring.profiles.active=default,basicauth"
+    # command: sh -c "java -agentlib:jdwp=transport=dt_socket,server=y,address=*:8008,suspend=n -Xmx512m -Djava.security.egd=file:/dev/./urandom -Duser.timezone=UTC -Djava.net.preferIPv4Stack=true --illegal-access=permit --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED --add-exports=java.base/sun.nio.ch=ALL-UNNAMED -jar fineract-provider.jar --spring.profiles.active=default,basicauth"
