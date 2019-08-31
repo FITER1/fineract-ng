@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.fineract.integrationtests.BaseIntegrationTest;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.CommonConstants;
 import org.apache.fineract.integrationtests.common.GroupHelper;
@@ -52,10 +53,8 @@ import com.jayway.restassured.specification.ResponseSpecification;
  */
 
 @Slf4j
-public class EntityDatatableChecksIntegrationTest {
+public class EntityDatatableChecksIntegrationTest extends BaseIntegrationTest {
 
-    private RequestSpecification requestSpec;
-    private ResponseSpecification responseSpec;
     private EntityDatatableChecksHelper entityDatatableChecksHelper;
     private DatatableHelper datatableHelper;
     private SavingsAccountHelper savingsAccountHelper;
@@ -72,16 +71,10 @@ public class EntityDatatableChecksIntegrationTest {
 
     public static final String DATE_TIME_FORMAT = "dd MMMM yyyy HH:mm";
 
-    public EntityDatatableChecksIntegrationTest() {
-        // TODO Auto-generated constructor stub
-    }
-
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.entityDatatableChecksHelper = new EntityDatatableChecksHelper(this.requestSpec, this.responseSpec);
         this.datatableHelper = new DatatableHelper(this.requestSpec, this.responseSpec);
     }

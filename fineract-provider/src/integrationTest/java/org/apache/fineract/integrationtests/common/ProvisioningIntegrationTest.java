@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.fineract.integrationtests.BaseIntegrationTest;
 import org.apache.fineract.integrationtests.common.accounting.Account;
 import org.apache.fineract.integrationtests.common.accounting.AccountHelper;
 import org.apache.fineract.integrationtests.common.loans.LoanApplicationTestBuilder;
@@ -50,22 +51,18 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 @Slf4j
-public class ProvisioningIntegrationTest {
+public class ProvisioningIntegrationTest extends BaseIntegrationTest {
 
     private static final String NONE = "1";
     private final static int LOANPRODUCTS_SIZE = 10;
 
-    private RequestSpecification requestSpec;
-    private ResponseSpecification responseSpec;
     private AccountHelper accountHelper;
     private LoanTransactionHelper loanTransactionHelper;
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
+        super.setup();
+
         this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
         this.accountHelper = new AccountHelper(this.requestSpec, this.responseSpec);
         Assume.assumeTrue(!isAlreadyProvisioningEntriesCreated());
