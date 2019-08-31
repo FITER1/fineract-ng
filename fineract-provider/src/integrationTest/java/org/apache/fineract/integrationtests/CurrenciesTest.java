@@ -35,6 +35,7 @@ public class CurrenciesTest extends BaseIntegrationTest {
         CurrencyDomain currency = CurrenciesHelper.getCurrencybyCode(requestSpec, responseSpec, "USD");
         CurrencyDomain usd = CurrencyDomain.create("USD", "US Dollar", 2, "$", "currency.USD", "US Dollar ($)").build();
 
+        Assert.assertNotNull(currency);
         Assert.assertTrue(currency.getDecimalPlaces() >= 0);
         Assert.assertNotNull(currency.getName());
         Assert.assertNotNull(currency.getDisplaySymbol());
