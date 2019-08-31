@@ -97,7 +97,7 @@ public class JournalEntryHelper {
     }
 
     private String createURLForGettingAccountEntries(final Account account, final String date, final Integer officeId) {
-        String url = new String("/fineract-provider/api/v1/journalentries?glAccountId=" + account.getAccountID() + "&type="
+        String url = new String("/journalentries?glAccountId=" + account.getAccountID() + "&type="
                 + account.getAccountType() + "&fromDate=" + date + "&toDate=" + date + "&tenantIdentifier=default"
                 + "&orderBy=id&sortOrder=desc&locale=en&dateFormat=dd MMMM yyyy");
         if (officeId != null) {
@@ -113,7 +113,7 @@ public class JournalEntryHelper {
     }
 
     private String createURLForGettingAccountEntriesByTransactionId(final String transactionId) {
-        return new String("/fineract-provider/api/v1/journalentries?transactionId=" + transactionId + "&tenantIdentifier=default"
+        return new String("/journalentries?transactionId=" + transactionId + "&tenantIdentifier=default"
                 + "&orderBy=id&sortOrder=desc&locale=en&dateFormat=dd MMMM yyyy");
     }
 

@@ -31,7 +31,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 @SuppressWarnings("rawtypes")
 public class FixedDepositAccountStatusChecker {
 
-    private static final String FIXED_DEPOSIT_ACCOUNT_URL = "/fineract-provider/api/v1/fixeddepositaccounts";
+    private static final String FIXED_DEPOSIT_ACCOUNT_URL = "/fixeddepositaccounts";
 
     public static void verifyFixedDepositIsApproved(final HashMap fixedDepositStatusHashMap) {
         System.out.println("-------------------- VERIFYING FIXED DEPOSIT APPLICATION IS APPROVED --------------------");

@@ -35,7 +35,7 @@ public class DatatableHelper {
     private final RequestSpecification requestSpec;
     private final ResponseSpecification responseSpec;
 
-    private static final String DATATABLE_URL = "/fineract-provider/api/v1/datatables";
+    private static final String DATATABLE_URL = "/datatables";
 
     public DatatableHelper(final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
         this.requestSpec = requestSpec;

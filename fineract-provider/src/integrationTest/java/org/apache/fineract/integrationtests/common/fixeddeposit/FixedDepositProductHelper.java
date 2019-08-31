@@ -47,8 +47,8 @@ public class FixedDepositProductHelper {
         this.responseSpec = responseSpec;
     }
 
-    private static final String FIXED_DEPOSIT_PRODUCT_URL = "/fineract-provider/api/v1/fixeddepositproducts";
-    private static final String INTEREST_CHART_URL = "/fineract-provider/api/v1/interestratecharts";
+    private static final String FIXED_DEPOSIT_PRODUCT_URL = "/fixeddepositproducts";
+    private static final String INTEREST_CHART_URL = "/interestratecharts";
     private static final String CREATE_FIXED_DEPOSIT_PRODUCT_URL = FIXED_DEPOSIT_PRODUCT_URL + "?" + Utils.TENANT_IDENTIFIER;
 
     private static final String LOCALE = "en_GB";

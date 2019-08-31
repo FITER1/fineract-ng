@@ -26,7 +26,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class PasswordPreferencesHelper {
 
-    private static final String PASSWORD_PREFERENCES_URL = "/fineract-provider/api/v1/passwordpreferences";
+    private static final String PASSWORD_PREFERENCES_URL = "/passwordpreferences";
 
     public static Object updatePasswordPreferences(final RequestSpecification requestSpec, final ResponseSpecification responseSpec, 
             String validationPolicyId) {

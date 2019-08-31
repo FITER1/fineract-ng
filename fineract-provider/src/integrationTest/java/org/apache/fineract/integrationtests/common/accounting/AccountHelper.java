@@ -29,7 +29,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 @SuppressWarnings("rawtypes")
 public class AccountHelper {
 
-    private final String CREATE_GL_ACCOUNT_URL = "/fineract-provider/api/v1/glaccounts?" + Utils.TENANT_IDENTIFIER;
+    private final String CREATE_GL_ACCOUNT_URL = "/glaccounts?" + Utils.TENANT_IDENTIFIER;
     private final String GL_ACCOUNT_ID_RESPONSE = "resourceId";
 
     private final RequestSpecification requestSpec;
@@ -69,13 +69,13 @@ public class AccountHelper {
     }
     
     public ArrayList getAccountingWithRunningBalances() {
-        final String GET_RUNNING_BALANCE_URL = "/fineract-provider/api/v1/glaccounts?fetchRunningBalance=true";
+        final String GET_RUNNING_BALANCE_URL = "/glaccounts?fetchRunningBalance=true";
         final ArrayList<HashMap> accountRunningBalance = Utils.performServerGet(this.requestSpec, this.responseSpec, GET_RUNNING_BALANCE_URL, "");
         return accountRunningBalance;
     }
     
     public HashMap getAccountingWithRunningBalanceById(final String accountId) {
-        final String GET_RUNNING_BALANCE_URL = "/fineract-provider/api/v1/glaccounts/" + accountId + "?fetchRunningBalance=true";
+        final String GET_RUNNING_BALANCE_URL = "/glaccounts/" + accountId + "?fetchRunningBalance=true";
         final HashMap accountRunningBalance = Utils.performServerGet(this.requestSpec, this.responseSpec, GET_RUNNING_BALANCE_URL, "");
         return accountRunningBalance;
     }

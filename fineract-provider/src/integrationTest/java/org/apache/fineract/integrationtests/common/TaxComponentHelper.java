@@ -28,7 +28,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class TaxComponentHelper {
 
-    private static final String CREATE_TAX_COMPONENT_URL = "/fineract-provider/api/v1/taxes/component?" + Utils.TENANT_IDENTIFIER;
+    private static final String CREATE_TAX_COMPONENT_URL = "/taxes/component?" + Utils.TENANT_IDENTIFIER;
 
     public static Integer createTaxComponent(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String percentage, final Integer liabilityAccountId) {

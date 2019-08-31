@@ -30,7 +30,7 @@ import java.util.List;
 
 public class FundsResourceHandler {
 
-    private static final String FUNDS_URL = "/fineract-provider/api/v1/funds";
+    private static final String FUNDS_URL = "/funds";
     private static final String CREATE_FUNDS_URL = FUNDS_URL + "?" + Utils.TENANT_IDENTIFIER;
 
     public static Integer createFund(final String fundJSON,

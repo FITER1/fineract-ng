@@ -33,7 +33,7 @@ public class HookHelper {
 	private final RequestSpecification requestSpec;
     private final ResponseSpecification responseSpec;
 
-    private static final String CREATE_HOOK_URL = "/fineract-provider/api/v1/hooks?" + Utils.TENANT_IDENTIFIER;
+    private static final String CREATE_HOOK_URL = "/hooks?" + Utils.TENANT_IDENTIFIER;
     
     public HookHelper(final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
         this.requestSpec = requestSpec;
@@ -67,26 +67,26 @@ public class HookHelper {
     
     public Integer updateHook(final String payloadURL, final Long hookId) {
         System.out.println("---------------------------------UPDATING HOOK---------------------------------------------");
-        final String UPDATE_HOOK_URL = "/fineract-provider/api/v1/hooks/" + hookId + "?" + Utils.TENANT_IDENTIFIER;
+        final String UPDATE_HOOK_URL = "/hooks/" + hookId + "?" + Utils.TENANT_IDENTIFIER;
         return Utils.performServerPut(this.requestSpec, this.responseSpec, UPDATE_HOOK_URL, getTestHookAsJson(payloadURL), "resourceId");
     }
 
     public Integer deleteHook(final Long hookId) {
         System.out.println("---------------------------------DELETING HOOK---------------------------------------------");
-        final String DELETE_HOOK_URL = "/fineract-provider/api/v1/hooks/" + hookId + "?" + Utils.TENANT_IDENTIFIER;
+        final String DELETE_HOOK_URL = "/hooks/" + hookId + "?" + Utils.TENANT_IDENTIFIER;
         return Utils.performServerDelete(this.requestSpec, this.responseSpec, DELETE_HOOK_URL, "resourceId");
     }
     
     public void verifyHookCreatedOnServer(final Long hookId) {
         System.out.println("------------------------------CHECK CREATE HOOK DETAILS------------------------------------\n");
-        final String GET_URL = "/fineract-provider/api/v1/hooks/" + hookId + "?" + Utils.TENANT_IDENTIFIER;
+        final String GET_URL = "/hooks/" + hookId + "?" + Utils.TENANT_IDENTIFIER;
         final Integer responseHookId = Utils.performServerGet(this.requestSpec, this.responseSpec, GET_URL, "id");
         assertEquals(hookId.toString(), responseHookId.toString());
     }
     
     public void verifyUpdateHook(final String updateURL, final Long hookId) {
         System.out.println("------------------------------CHECK UPDATE HOOK DETAILS------------------------------------\n");
-        final String GET_URL = "/fineract-provider/api/v1/hooks/" + hookId + "?" + Utils.TENANT_IDENTIFIER;
+        final String GET_URL = "/hooks/" + hookId + "?" + Utils.TENANT_IDENTIFIER;
         ArrayList map = Utils.performServerGet(this.requestSpec, this.responseSpec, GET_URL, "config");
         HashMap<String, String> hash = (HashMap<String, String>) map.get(1);
         assertEquals(updateURL, hash.get("fieldValue"));
@@ -94,7 +94,7 @@ public class HookHelper {
     
     public void verifyDeleteHook(final Long hookId) {
         System.out.println("------------------------------CHECK DELETE HOOK DETAILS------------------------------------\n");
-        final String GET_URL = "/fineract-provider/api/v1/hooks/" + hookId + "?" + Utils.TENANT_IDENTIFIER;
+        final String GET_URL = "/hooks/" + hookId + "?" + Utils.TENANT_IDENTIFIER;
         ResponseSpecification responseSpec404 = new ResponseSpecBuilder().expectStatusCode(404).build();
         ArrayList array = Utils.performServerGet(this.requestSpec, responseSpec404, GET_URL, "errors");
 		HashMap<String, String> map = (HashMap<String, String>)array.get(0);

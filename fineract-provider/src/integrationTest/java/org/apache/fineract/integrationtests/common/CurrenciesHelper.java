@@ -29,7 +29,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 @SuppressWarnings({ "unused", "rawtypes", "unchecked" })
 public class CurrenciesHelper {
 
-    private static final String CURRENCIES_URL = "/fineract-provider/api/v1/currencies";
+    private static final String CURRENCIES_URL = "/currencies";
 
     public static ArrayList<CurrencyDomain> getAllCurrencies(final RequestSpecification requestSpec,
             final ResponseSpecification responseSpec) {

@@ -28,8 +28,8 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class AccountTransferHelper {
 
-    private static final String ACCOUNT_TRANSFER_URL = "/fineract-provider/api/v1/accounttransfers";
-    private static final String LOAN_REFUND_BY_TRANSFER_URL = "/fineract-provider/api/v1/accounttransfers/refundByTransfer";
+    private static final String ACCOUNT_TRANSFER_URL = "/accounttransfers";
+    private static final String LOAN_REFUND_BY_TRANSFER_URL = "/accounttransfers/refundByTransfer";
     private static final String LOCALE = "en_GB";
     private static final String OFFICE_ID = "1";
     private static final String TRANSFER_DESCRIPTION = "Transfer";

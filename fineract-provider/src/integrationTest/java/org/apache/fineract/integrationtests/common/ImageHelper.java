@@ -25,7 +25,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class ImageHelper {
 
-    private static final String STAFF_IMAGE_URL = "/fineract-provider/api/v1/staff/";
+    private static final String STAFF_IMAGE_URL = "/staff/";
     private static final String IMAGES_URI = "/images";
 
     public static Integer createImageForStaff(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,

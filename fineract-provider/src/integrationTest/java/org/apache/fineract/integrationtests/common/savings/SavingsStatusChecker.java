@@ -30,7 +30,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 @SuppressWarnings("rawtypes")
 public class SavingsStatusChecker {
     
-    private static final String SAVINGS_ACCOUNT_URL = "/fineract-provider/api/v1/savingsaccounts";
+    private static final String SAVINGS_ACCOUNT_URL = "/savingsaccounts";
 
     public static void verifySavingsIsApproved(final HashMap savingsStatusHashMap) {
         System.out.println("\n-------------------------------------- VERIFYING SAVINGS APPLICATION IS APPROVED ------------------------------------");

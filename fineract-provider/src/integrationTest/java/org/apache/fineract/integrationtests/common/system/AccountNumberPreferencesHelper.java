@@ -32,7 +32,7 @@ public class AccountNumberPreferencesHelper {
 
 	private final ResponseSpecification responseSpec;
 
-	private static final String ACCOUNT_NUMBER_FORMATS_REQUEST_URL = "/fineract-provider/api/v1/accountnumberformats";
+	private static final String ACCOUNT_NUMBER_FORMATS_REQUEST_URL = "/accountnumberformats";
 
 	public AccountNumberPreferencesHelper(
 			final RequestSpecification requestSpec,

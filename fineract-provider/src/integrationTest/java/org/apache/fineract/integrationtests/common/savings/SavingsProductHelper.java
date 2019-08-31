@@ -36,7 +36,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 @SuppressWarnings("unused")
 public class SavingsProductHelper {
 
-    private static final String SAVINGS_PRODUCT_URL = "/fineract-provider/api/v1/savingsproducts";
+    private static final String SAVINGS_PRODUCT_URL = "/savingsproducts";
     private static final String CREATE_SAVINGS_PRODUCT_URL = SAVINGS_PRODUCT_URL + "?" + Utils.TENANT_IDENTIFIER;
 
     private static final String LOCALE = "en_GB";

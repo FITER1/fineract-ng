@@ -190,7 +190,7 @@ public class CenterIntegrationTest {
             map.put("active", "true");
             map.put("activationDate", "04 March 2011");
 
-            groupMembers[i] = Utils.performServerPost(requestSpec, responseSpec, "/fineract-provider/api/v1/groups?"
+            groupMembers[i] = Utils.performServerPost(requestSpec, responseSpec, "/groups?"
                     + Utils.TENANT_IDENTIFIER, new Gson().toJson(map), "groupId");
         }
         return groupMembers;

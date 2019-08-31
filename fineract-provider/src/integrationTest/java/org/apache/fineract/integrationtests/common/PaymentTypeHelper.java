@@ -30,8 +30,8 @@ import com.jayway.restassured.specification.ResponseSpecification;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class PaymentTypeHelper {
 
-    private static final String CREATE_PAYMENTTYPE_URL = "/fineract-provider/api/v1/paymenttypes?" + Utils.TENANT_IDENTIFIER;
-    private static final String PAYMENTTYPE_URL = "/fineract-provider/api/v1/paymenttypes";
+    private static final String CREATE_PAYMENTTYPE_URL = "/paymenttypes?" + Utils.TENANT_IDENTIFIER;
+    private static final String PAYMENTTYPE_URL = "/paymenttypes";
 
     public static Integer createPaymentType(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String name, final String description, final Boolean isCashPayment, final Integer position) {

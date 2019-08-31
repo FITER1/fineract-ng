@@ -41,7 +41,7 @@ public class FixedDepositAccountHelper {
         this.responseSpec = responseSpec;
     }
 
-    private static final String FIXED_DEPOSIT_ACCOUNT_URL = "/fineract-provider/api/v1/fixeddepositaccounts";
+    private static final String FIXED_DEPOSIT_ACCOUNT_URL = "/fixeddepositaccounts";
     private static final String APPLY_FIXED_DEPOSIT_ACCOUNT_URL = FIXED_DEPOSIT_ACCOUNT_URL + "?" + Utils.TENANT_IDENTIFIER;
     private static final String APPROVE_FIXED_DEPOSIT_COMMAND = "approve";
     private static final String UNDO_APPROVAL_FIXED_DEPOSIT_COMMAND = "undoapproval";

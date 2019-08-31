@@ -32,8 +32,8 @@ public class XBRLIntegrationTestHelper {
     private final RequestSpecification requestSpec;
     private final ResponseSpecification responseSpec;
 
-    private static final String GET_TAXONOMY_LIST_URL = "/fineract-provider/api/v1/mixtaxonomy?" + Utils.TENANT_IDENTIFIER;
-    private static final String TAXONOMY_MAPPING_URL = "/fineract-provider/api/v1/mixmapping?" + Utils.TENANT_IDENTIFIER;
+    private static final String GET_TAXONOMY_LIST_URL = "/mixtaxonomy?" + Utils.TENANT_IDENTIFIER;
+    private static final String TAXONOMY_MAPPING_URL = "/mixmapping?" + Utils.TENANT_IDENTIFIER;
 
     public XBRLIntegrationTestHelper(final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
         this.requestSpec = requestSpec;

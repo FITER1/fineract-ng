@@ -29,7 +29,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class TaxGroupHelper {
 
-    private static final String CREATE_TAX_COMPONENT_URL = "/fineract-provider/api/v1/taxes/group?" + Utils.TENANT_IDENTIFIER;
+    private static final String CREATE_TAX_COMPONENT_URL = "/taxes/group?" + Utils.TENANT_IDENTIFIER;
 
     public static Integer createTaxGroup(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Collection<Integer> taxComponentIds) {

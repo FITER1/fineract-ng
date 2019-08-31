@@ -36,8 +36,8 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class TemplateIntegrationTest {
 
-    private final String GET_TEMPLATES_URL = "/fineract-provider/api/v1/templates?tenantIdentifier=default";
-    private final String GET_TEMPLATE_ID_URL = "/fineract-provider/api/v1/templates/%s?tenantIdentifier=default";
+    private final String GET_TEMPLATES_URL = "/templates?tenantIdentifier=default";
+    private final String GET_TEMPLATE_ID_URL = "/templates/%s?tenantIdentifier=default";
     private final String RESPONSE_ATTRIBUTE_NAME = "name";
 
     private ResponseSpecification responseSpec;

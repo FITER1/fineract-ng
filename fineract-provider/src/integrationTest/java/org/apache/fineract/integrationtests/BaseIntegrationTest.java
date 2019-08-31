@@ -44,7 +44,7 @@ public abstract class BaseIntegrationTest {
     @ClassRule
     public static DockerComposeContainer fineract = new DockerComposeContainer(new File("src/integrationTest/resources/compose-test.yml"))
         .withExposedService("mysql_1", 3306)
-        .withExposedService("fineract_1", 8443, Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(120)))
+        .withExposedService("fineract_1", 8443, Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(300))) // NOTE: needs enough time to finish all the db migrations etc.
         .withLocalCompose(true)
         .withLogConsumer("fineract_1", new Slf4jLogConsumer(log))
         // .waitingFor("fineract_1", Wait.forHttps("/api/v1/jobs").forPort(8443).withBasicCredentials("mifos", "password"))

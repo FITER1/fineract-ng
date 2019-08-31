@@ -49,7 +49,7 @@ public class SavingsAccountHelper {
     private final RequestSpecification requestSpec;
     private final ResponseSpecification responseSpec;
 
-    private static final String SAVINGS_ACCOUNT_URL = "/fineract-provider/api/v1/savingsaccounts";
+    private static final String SAVINGS_ACCOUNT_URL = "/savingsaccounts";
     private static final String APPROVE_SAVINGS_COMMAND = "approve";
     private static final String UNDO_APPROVAL_SAVINGS_COMMAND = "undoApproval";
     private static final String ACTIVATE_SAVINGS_COMMAND = "activate";
@@ -689,7 +689,7 @@ public class SavingsAccountHelper {
 
     public String getOutputTemplateLocation(final String importDocumentId){
         requestSpec.header(HttpHeaders.CONTENT_TYPE,MediaType.TEXT_PLAIN);
-        return Utils.performServerOutputTemplateLocationGet(requestSpec,responseSpec,"/fineract-provider/api/v1/imports/getOutputTemplateLocation"+"?"
+        return Utils.performServerOutputTemplateLocationGet(requestSpec,responseSpec,"/imports/getOutputTemplateLocation"+"?"
                 +Utils.TENANT_IDENTIFIER,importDocumentId);
     }
 }

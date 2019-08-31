@@ -30,8 +30,8 @@ import com.jayway.restassured.specification.ResponseSpecification;
 @SuppressWarnings({"unused", "rawtypes", "unchecked" })
 public class StandingInstructionsHelper {
 
-    private static final String STANDING_INSTRUCTIONS_URL = "/fineract-provider/api/v1/standinginstructions";
-    private static final String STANDING_INSTRUCTIONS_RUNHISTORY_URL = "/fineract-provider/api/v1/standinginstructionrunhistory";
+    private static final String STANDING_INSTRUCTIONS_URL = "/standinginstructions";
+    private static final String STANDING_INSTRUCTIONS_RUNHISTORY_URL = "/standinginstructionrunhistory";
     private static final String LOCALE = "en_GB";
     private static final String OFFICE_ID = "1";
     private static final String INSTRUCTION_TYPE_FIXED = "1";

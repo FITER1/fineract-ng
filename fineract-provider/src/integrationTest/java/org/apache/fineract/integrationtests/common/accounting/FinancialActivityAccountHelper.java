@@ -29,7 +29,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 @SuppressWarnings("rawtypes")
 public class FinancialActivityAccountHelper {
 
-    private static final String FINANCIAL_ACTIVITY_ACCOUNT_MAPPING_URL = "/fineract-provider/api/v1/financialactivityaccounts";
+    private static final String FINANCIAL_ACTIVITY_ACCOUNT_MAPPING_URL = "/financialactivityaccounts";
     private final RequestSpecification requestSpec;
 
     public FinancialActivityAccountHelper(final RequestSpecification requestSpec) {

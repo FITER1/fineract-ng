@@ -38,13 +38,13 @@ public class CodeHelper {
 	public static final String SUBRESPONSE_ID_ATTRIBUTE_NAME = "subResourceId";
 	public static final String CODE_NAME_ATTRIBUTE_NAME = "name";
 	public static final String CODE_SYSTEM_DEFINED_ATTRIBUTE_NAME = "systemDefined";
-	public static final String CODE_URL = "/fineract-provider/api/v1/codes";
+	public static final String CODE_URL = "/codes";
 
 	public static final String CODE_VALUE_ID_ATTRIBUTE_NAME = "id";
 	public static final String CODE_VALUE_NAME_ATTRIBUTE_NAME = "name";
 	public static final String CODE_VALUE_DESCRIPTION_ATTRIBUTE_NAME = "description";
 	public static final String CODE_VALUE_POSITION_ATTRIBUTE_NAME = "position";
-	public static final String CODE_VALUE_URL = "/fineract-provider/api/v1/codes/[codeId]/codevalues";
+	public static final String CODE_VALUE_URL = "/codes/[codeId]/codevalues";
 
 	public static Object createCode(final RequestSpecification requestSpec,
 			final ResponseSpecification responseSpec, final String codeName,

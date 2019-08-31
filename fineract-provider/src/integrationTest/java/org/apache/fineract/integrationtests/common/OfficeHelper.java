@@ -37,7 +37,7 @@ import javax.ws.rs.core.MediaType;
 
 public class OfficeHelper {
 
-	private static final String OFFICE_URL = "/fineract-provider/api/v1/offices";
+	private static final String OFFICE_URL = "/offices";
 	private final RequestSpecification requestSpec;
 	private final ResponseSpecification responseSpec;
 
@@ -99,7 +99,7 @@ public class OfficeHelper {
 
 	public String getOutputTemplateLocation(final String importDocumentId){
 		requestSpec.header(HttpHeaders.CONTENT_TYPE,MediaType.TEXT_PLAIN);
-		return Utils.performServerOutputTemplateLocationGet(requestSpec,responseSpec,"/fineract-provider/api/v1/imports/getOutputTemplateLocation"+"?"
+		return Utils.performServerOutputTemplateLocationGet(requestSpec,responseSpec,"/imports/getOutputTemplateLocation"+"?"
 				+Utils.TENANT_IDENTIFIER,importDocumentId);
 	}
 	public Workbook getOfficeWorkBook(final String dateFormat) throws IOException {

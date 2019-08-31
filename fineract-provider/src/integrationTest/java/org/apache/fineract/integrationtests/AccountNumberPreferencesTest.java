@@ -287,7 +287,7 @@ public class AccountNumberPreferencesTest {
         this.groupID = GroupHelper.activateGroup(this.requestSpec, this.responseSpec, groupID.toString());
         GroupHelper.verifyGroupActivatedOnServer(this.requestSpec, this.responseSpec, groupID, true);
         
-        final String GROUP_URL = "/fineract-provider/api/v1/groups/" + this.groupID + "?" + Utils.TENANT_IDENTIFIER;
+        final String GROUP_URL = "/groups/" + this.groupID + "?" + Utils.TENANT_IDENTIFIER;
         this.groupAccountNo = Utils.performServerGet(requestSpec, responseSpec, GROUP_URL, "accountNo");
         
         if (isAccountPreferenceSetUp) {
@@ -318,7 +318,7 @@ public class AccountNumberPreferencesTest {
         if (isAccountPreferenceSetUp) {
         	String centerPrefixName = (String) this.accountNumberPreferencesHelper.getAccountNumberPreference(
                     this.centerAccountNumberPreferenceId, "prefixType.value");
-            final String CENTER_URL = "/fineract-provider/api/v1/centers/" + this.centerId + "?" + Utils.TENANT_IDENTIFIER;
+            final String CENTER_URL = "/centers/" + this.centerId + "?" + Utils.TENANT_IDENTIFIER;
         	
             if (centerPrefixName.equals(this.officeName)) {
                 final String centerOfficeName = Utils.performServerGet(requestSpec, responseSpec, CENTER_URL, "officeName");  

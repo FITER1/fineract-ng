@@ -32,7 +32,7 @@ import org.apache.fineract.portfolio.charge.domain.ChargeTimeType;
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class ChargesHelper {
 
-    private static final String CHARGES_URL = "/fineract-provider/api/v1/charges";
+    private static final String CHARGES_URL = "/charges";
     private static final String CREATE_CHARGES_URL = CHARGES_URL + "?" + Utils.TENANT_IDENTIFIER;
 
     private static final Integer CHARGE_APPLIES_TO_LOAN = 1;

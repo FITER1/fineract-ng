@@ -29,7 +29,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class CalendarHelper {
 
-    private static final String BASE_URL = "/fineract-provider/api/v1/";
+    private static final String BASE_URL = "/";
     private static final String PARENT_ENTITY_NAME = "groups/";
     private static final String ENITY_NAME = "/calendars";
     private static final String Center_Entity = "centers/";
@@ -82,7 +82,7 @@ public class CalendarHelper {
     public static void verifyCalendarCreatedOnServer(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer generatedGroupId, final Integer generatedCalendarId) {
         System.out.println("------------------------------CHECK CALENDAR DETAILS------------------------------------\n");
-        final String CLIENT_URL = "/fineract-provider/api/v1/groups/" + generatedGroupId + "?associations=all&" + Utils.TENANT_IDENTIFIER;
+        final String CLIENT_URL = "/groups/" + generatedGroupId + "?associations=all&" + Utils.TENANT_IDENTIFIER;
         final String responseCalendarDetailsinJSON = Utils.performServerGet(requestSpec, responseSpec, CLIENT_URL,
                 "collectionMeetingCalendar");
         final Integer responseCalendarId = from(responseCalendarDetailsinJSON).get("id");

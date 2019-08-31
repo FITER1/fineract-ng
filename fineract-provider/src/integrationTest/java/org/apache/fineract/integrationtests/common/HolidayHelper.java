@@ -32,7 +32,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 @SuppressWarnings({ "unused", "rawtypes" })
 public class HolidayHelper {
 
-    private static final String HOLIDAYS_URL = "/fineract-provider/api/v1/holidays";
+    private static final String HOLIDAYS_URL = "/holidays";
     private static final String CREATE_HOLIDAY_URL = HOLIDAYS_URL + "?" + Utils.TENANT_IDENTIFIER;
 
     private static final String OFFICE_ID = "1";

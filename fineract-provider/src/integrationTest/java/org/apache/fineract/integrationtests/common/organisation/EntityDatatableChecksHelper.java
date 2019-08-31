@@ -31,7 +31,7 @@ public class EntityDatatableChecksHelper {
     private final RequestSpecification requestSpec;
     private final ResponseSpecification responseSpec;
 
-    private static final String DATATABLE_CHECK_URL = "/fineract-provider/api/v1/entityDatatableChecks";
+    private static final String DATATABLE_CHECK_URL = "/entityDatatableChecks";
 
     public EntityDatatableChecksHelper(final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
         this.requestSpec = requestSpec;

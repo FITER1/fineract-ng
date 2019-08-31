@@ -37,7 +37,7 @@ import static com.jayway.restassured.RestAssured.given;
 
 public class CurrencyHelper {
 
-    private static final String CURRENCY_URL = "/fineract-provider/api/v1/currencies?" + Utils.TENANT_IDENTIFIER;
+    private static final String CURRENCY_URL = "/currencies?" + Utils.TENANT_IDENTIFIER;
     private static final String CURRENCY_URL_SELECTED = CURRENCY_URL + "&fields=selectedCurrencyOptions";
 
     private static final List<String> permittedCurrencyArray = Arrays.asList("currencyOptions",

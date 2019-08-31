@@ -27,7 +27,7 @@ public class LoanRescheduleRequestHelper {
 	private final RequestSpecification requestSpec;
     private final ResponseSpecification responseSpec;
     
-    private static final String LOAN_RESCHEDULE_REQUEST_URL = "/fineract-provider/api/v1/rescheduleloans";
+    private static final String LOAN_RESCHEDULE_REQUEST_URL = "/rescheduleloans";
     
     public LoanRescheduleRequestHelper(final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
         this.requestSpec = requestSpec;

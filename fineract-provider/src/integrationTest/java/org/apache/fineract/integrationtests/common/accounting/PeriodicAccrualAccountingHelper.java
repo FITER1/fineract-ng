@@ -28,7 +28,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class PeriodicAccrualAccountingHelper {
 
-    private static final String PERIODIC_ACCRUAL_URL = "/fineract-provider/api/v1/runaccruals";
+    private static final String PERIODIC_ACCRUAL_URL = "/runaccruals";
     private final RequestSpecification requestSpec;
     private final ResponseSpecification responseSpec;
 

@@ -26,7 +26,7 @@ public class NotificationHelper {
     private final RequestSpecification requestSpec;
     private final ResponseSpecification responseSpec;
 
-    private static final String NOTIFICATION_API_URL = "/fineract-provider/api/v1/notifications?" + Utils.TENANT_IDENTIFIER;
+    private static final String NOTIFICATION_API_URL = "/notifications?" + Utils.TENANT_IDENTIFIER;
 
     public NotificationHelper(RequestSpecification requestSpec, ResponseSpecification responseSpec) {
         this.requestSpec = requestSpec;

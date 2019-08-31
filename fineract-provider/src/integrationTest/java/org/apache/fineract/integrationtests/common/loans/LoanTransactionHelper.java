@@ -49,7 +49,7 @@ public class LoanTransactionHelper {
     private final RequestSpecification requestSpec;
     private final ResponseSpecification responseSpec;
 
-    private static final String CREATE_LOAN_PRODUCT_URL = "/fineract-provider/api/v1/loanproducts?" + Utils.TENANT_IDENTIFIER;
+    private static final String CREATE_LOAN_PRODUCT_URL = "/loanproducts?" + Utils.TENANT_IDENTIFIER;
     private static final String APPLY_LOAN_URL = "/fineract-provider/api/v1/loans?" + Utils.TENANT_IDENTIFIER;
     private static final String LOAN_ACCOUNT_URL="/fineract-provider/api/v1/loans";
     private static final String APPROVE_LOAN_COMMAND = "approve";

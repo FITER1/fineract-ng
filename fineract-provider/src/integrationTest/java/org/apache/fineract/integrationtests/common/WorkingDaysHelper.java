@@ -27,7 +27,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class WorkingDaysHelper {
 
-    private static final String WORKINGDAYS_URL = "/fineract-provider/api/v1/workingdays";
+    private static final String WORKINGDAYS_URL = "/workingdays";
 
     public static Object updateWorkingDays(final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
         final String UPDATE_WORKINGDAYS_URL = WORKINGDAYS_URL + "?" + Utils.TENANT_IDENTIFIER;
