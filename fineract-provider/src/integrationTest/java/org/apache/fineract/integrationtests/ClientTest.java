@@ -18,18 +18,16 @@
  */
 package org.apache.fineract.integrationtests;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 
+@Slf4j
 public class ClientTest extends BaseIntegrationTest {
-    private static final Logger log = LoggerFactory.getLogger(ClientTest.class);
-
     private ClientHelper clientHelper;
 
     @Before

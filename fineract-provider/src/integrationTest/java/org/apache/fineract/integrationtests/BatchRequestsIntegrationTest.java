@@ -21,6 +21,7 @@ package org.apache.fineract.integrationtests;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.batch.domain.BatchRequest;
 import org.apache.fineract.batch.domain.BatchResponse;
 import org.apache.fineract.integrationtests.common.BatchHelper;
@@ -46,6 +47,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
  * 
  * @author Rishabh Shukla
  */
+@Slf4j
 public class BatchRequestsIntegrationTest {
 
     private ResponseSpecification responseSpec;
@@ -90,7 +92,7 @@ public class BatchRequestsIntegrationTest {
         for (Integer i = 0; i < clientsCount; i++) {
             clientIDs[i] = ClientHelper.createClient(this.requestSpec, this.responseSpec);
             groupID = GroupHelper.associateClient(this.requestSpec, this.responseSpec, groupID.toString(), clientIDs[i].toString());
-            System.out.println("client " + clientIDs[i] + " has been added to the group " + groupID);
+            log.info("client " + clientIDs[i] + " has been added to the group " + groupID);
         }
 
         // Generate a random count of number of new loan products to be created

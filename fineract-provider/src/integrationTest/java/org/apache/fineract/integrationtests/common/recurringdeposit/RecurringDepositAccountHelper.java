@@ -45,7 +45,7 @@ public class RecurringDepositAccountHelper {
         this.responseSpec = responseSpec;
     }
 
-    private static final String RECURRING_DEPOSIT_ACCOUNT_URL = "/fineract-provider/api/v1/recurringdepositaccounts";
+    private static final String RECURRING_DEPOSIT_ACCOUNT_URL = "/recurringdepositaccounts";
     private static final String APPLY_RECURRING_DEPOSIT_ACCOUNT_URL = RECURRING_DEPOSIT_ACCOUNT_URL + "?" + Utils.TENANT_IDENTIFIER;
     private static final String APPROVE_RECURRING_DEPOSIT_COMMAND = "approve";
     private static final String UNDO_APPROVAL_RECURRING_DEPOSIT_COMMAND = "undoapproval";

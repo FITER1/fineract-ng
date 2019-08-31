@@ -18,11 +18,7 @@
  */
 package org.apache.fineract.integrationtests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-
-import java.util.HashMap;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.GroupHelper;
 import org.apache.fineract.integrationtests.common.Utils;
@@ -34,20 +30,18 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Group Test for checking Group: Creation, Activation, Client Association,
  * Updating & Deletion
  */
-public class GroupTest {
+@Slf4j
+public class GroupTest extends BaseIntegrationTest {
 
-    private ResponseSpecification responseSpec;
-    private RequestSpecification requestSpec;
     private LoanTransactionHelper loanTransactionHelper;
     private final String principal = "10000.00";
     private final String accountingRule = "1";
@@ -56,12 +50,9 @@ public class GroupTest {
 
     @Before
     public void setup() {
-        Utils.initializeRESTAssured();
-        this.requestSpec = new RequestSpecBuilder().setContentType(ContentType.JSON).build();
-        this.requestSpec.header("Authorization", "Basic " + Utils.loginIntoServerAndGetBase64EncodedAuthenticationKey());
-        this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
-        this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
+        super.setup();
 
+        this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
     }
 
     @Test
@@ -109,11 +100,11 @@ public class GroupTest {
 
         // create staff
         Integer createStaffId1 = StaffHelper.createStaff(this.requestSpec, this.responseSpec);
-        System.out.println("--------------creating first staff with id-------------" + createStaffId1);
+        log.info("--------------creating first staff with id-------------" + createStaffId1);
         Assert.assertNotNull(createStaffId1);
 
         Integer createStaffId2 = StaffHelper.createStaff(this.requestSpec, this.responseSpec);
-        System.out.println("--------------creating second staff with id-------------" + createStaffId2);
+        log.info("--------------creating second staff with id-------------" + createStaffId2);
         Assert.assertNotNull(createStaffId2);
 
         // assign staff "createStaffId1" to group
@@ -157,7 +148,7 @@ public class GroupTest {
     }
 
     private Integer applyForLoanApplication(final Integer clientID, final Integer loanProductID, String principal) {
-        System.out.println("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
+        log.info("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
         final String loanApplicationJSON = new LoanApplicationTestBuilder() //
                 .withPrincipal(principal) //
                 .withLoanTermFrequency("4") //

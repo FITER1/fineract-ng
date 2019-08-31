@@ -28,8 +28,8 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class RolesHelper {
 
-    private static final String CREATE_ROLE_URL = "/fineract-provider/api/v1/roles?" + Utils.TENANT_IDENTIFIER;
-    private static final String ROLE_URL = "/fineract-provider/api/v1/roles";
+    private static final String CREATE_ROLE_URL = "/roles?" + Utils.TENANT_IDENTIFIER;
+    private static final String ROLE_URL = "/roles";
     private static final String DISABLE_ROLE_COMMAND = "disable";
     private static final String ENABLE_ROLE_COMMAND = "enable";
 
@@ -46,7 +46,7 @@ public class RolesHelper {
 
     public static HashMap<String, Object> getRoleDetails(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer roleId) {
-        final String GET_ROLE_URL = "/fineract-provider/api/v1/roles/" + roleId + "?" + Utils.TENANT_IDENTIFIER;
+        final String GET_ROLE_URL = "/roles/" + roleId + "?" + Utils.TENANT_IDENTIFIER;
         HashMap<String, Object> role = Utils.performServerGet(requestSpec, responseSpec, GET_ROLE_URL, "");
         return role;
     }

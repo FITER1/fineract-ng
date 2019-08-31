@@ -540,9 +540,9 @@ subprojects {
             testAnnotationProcessor "org.projectlombok:lombok"
             testAnnotationProcessor "com.querydsl:querydsl-apt"
             testAnnotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa"
-            // integrationTestAnnotationProcessor "org.projectlombok:lombok"
-            // integrationTestAnnotationProcessor "com.querydsl:querydsl-apt"
-            // integrationTestAnnotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa"
+            integrationTestAnnotationProcessor "org.projectlombok:lombok"
+            integrationTestAnnotationProcessor "com.querydsl:querydsl-apt"
+            integrationTestAnnotationProcessor "org.springframework.boot:spring-boot-starter-data-jpa"
         }
     }
 

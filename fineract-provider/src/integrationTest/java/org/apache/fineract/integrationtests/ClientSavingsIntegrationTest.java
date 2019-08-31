@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.CommonConstants;
@@ -61,6 +62,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
  * Client Savings Integration Test for checking Savings Application.
  */
 @SuppressWarnings({ "rawtypes", "unused" })
+@Slf4j
 public class ClientSavingsIntegrationTest {
 
     public static final String DEPOSIT_AMOUNT = "2000";
@@ -1622,7 +1624,7 @@ public class ClientSavingsIntegrationTest {
         interestPosted = new Float(decimalFormat.format(interestPosted));
         actualInterestPosted = new Float(decimalFormat.format(accountDetailsPostInterestPosted));
         assertEquals("Verifying interest posted", interestPosted, accountDetailsPostInterestPosted);
-        System.out.println("------Post Interest As On After doing a post interest Successfully worked--------");
+        log.info("------Post Interest As On After doing a post interest Successfully worked--------");
 
         todaysDate = Calendar.getInstance();
         final String CLOSEDON_DATE = dateFormat.format(todaysDate.getTime());
@@ -1710,7 +1712,7 @@ public class ClientSavingsIntegrationTest {
         final String POSTED_TRANSACTION_DATE = dateFormat.format(postedDate.getTime());        
         Calendar postedLastDate = Calendar.getInstance();
         int countOfDate=postedDate.getActualMaximum(Calendar.DAY_OF_MONTH);
-        System.out.println("count Of Date---> "+countOfDate);
+        log.info("count Of Date---> "+countOfDate);
         postedLastDate.set(Calendar.DAY_OF_MONTH,countOfDate);
         final String POSTED_LAST_TRANSACTION_DATE = dateFormat.format(postedLastDate.getTime());
 
@@ -1790,7 +1792,7 @@ public class ClientSavingsIntegrationTest {
         interestPosted = new Float(decimalFormat.format(interestPosted));
         actualInterestPosted = new Float(decimalFormat.format(actualInterestPosted));
        assertEquals("Verifying interest posted", interestPosted, actualInterestPosted);           
-       System.out.println("------Post Interest As On Successful Worked--------");
+       log.info("------Post Interest As On Successful Worked--------");
        
        this.savingsAccountHelper.postInterestAsOnSavings(savingsId, POSTED_LAST_TRANSACTION_DATE);
        HashMap accountLastDetails = this.savingsAccountHelper.getSavingsDetails(savingsId);
@@ -1810,7 +1812,7 @@ public class ClientSavingsIntegrationTest {
        interestLastPosted = new Float(decimalLastFormat.format(interestLastPosted));
        actualInterestPosted = new Float(decimalFormat.format(actualInterestPosted));
       assertEquals("Verifying interest posted", interestLastPosted, actualInterestPosted);           
-      System.out.println("------Post Interest As On Successful Worked--------");
+      log.info("------Post Interest As On Successful Worked--------");
        
     }
     
@@ -2077,7 +2079,7 @@ public class ClientSavingsIntegrationTest {
     private Integer createSavingsProduct(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String minOpenningBalance, String minBalanceForInterestCalculation, String minRequiredBalance,
             String enforceMinRequiredBalance, final boolean allowOverdraft, final String taxGroupId, boolean withDormancy) {
-        System.out.println("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
         SavingsProductHelper savingsProductHelper = new SavingsProductHelper();
         if (allowOverdraft) {
             final String overDraftLimit = "2000.0";
@@ -2111,7 +2113,7 @@ public class ClientSavingsIntegrationTest {
 
     /*
      * private void verifySavingsInterest(final Object savingsInterest) {
-     * System.out.println(
+     * log.info(
      * "--------------------VERIFYING THE BALANCE, INTEREST --------------------------"
      * );
      * 

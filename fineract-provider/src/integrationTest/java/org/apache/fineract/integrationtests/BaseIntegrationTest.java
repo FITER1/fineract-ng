@@ -25,22 +25,18 @@ import com.jayway.restassured.config.SSLConfig;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Rule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
 
 import java.io.File;
 import java.time.Duration;
 
+@Slf4j
 public abstract class BaseIntegrationTest {
-    private static final Logger log = LoggerFactory.getLogger(BaseIntegrationTest.class);
-
     @ClassRule
     public static DockerComposeContainer fineract = new DockerComposeContainer(new File("src/integrationTest/resources/compose-test.yml"))
         .withExposedService("mysql_1", 3306)

@@ -27,7 +27,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class ShareAccountTransactionHelper {
 
-    private static final String SHARE_ACCOUNT_URL = "/fineract-provider/api/v1/accounts/share";
+    private static final String SHARE_ACCOUNT_URL = "/accounts/share";
     private static final String CREATE_SHARE_ACCOUNT_URL = SHARE_ACCOUNT_URL + "?" + Utils.TENANT_IDENTIFIER;
 
     public static Integer createShareAccount(final String shareProductJSON, final RequestSpecification requestSpec,

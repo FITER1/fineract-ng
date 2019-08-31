@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.CommonConstants;
 import org.apache.fineract.integrationtests.common.PasswordPreferencesHelper;
 import org.apache.fineract.integrationtests.common.Utils;
@@ -36,6 +37,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
+@Slf4j
 public class PasswordPreferencesIntegrationTest {
 
     private ResponseSpecification responseSpec;
@@ -62,7 +64,7 @@ public class PasswordPreferencesIntegrationTest {
     private void validateIfThePasswordIsUpdated(String validationPolicyId){
         Integer id = PasswordPreferencesHelper.getActivePasswordPreference(requestSpec, responseSpec);
         assertEquals(validationPolicyId, id.toString());
-        System.out.println("---------------------------------PASSWORD PREFERENCE VALIDATED SUCCESSFULLY-----------------------------------------");
+        log.info("---------------------------------PASSWORD PREFERENCE VALIDATED SUCCESSFULLY-----------------------------------------");
 
     }
     

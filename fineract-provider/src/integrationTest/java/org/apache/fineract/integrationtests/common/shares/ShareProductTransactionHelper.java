@@ -28,7 +28,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class ShareProductTransactionHelper {
 
-    private static final String SHARE_PRODUCT_URL = "/fineract-provider/api/v1/products/share";
+    private static final String SHARE_PRODUCT_URL = "/products/share";
     private static final String CREATE_SHARE_PRODUCT_URL = SHARE_PRODUCT_URL + "?" + Utils.TENANT_IDENTIFIER;
     
     public static Integer createShareProduct(final String savingsProductJSON, final RequestSpecification requestSpec,

@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.CommonConstants;
 import org.apache.fineract.integrationtests.common.GroupHelper;
@@ -52,6 +53,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
  * Group Savings Integration Test for checking Savings Application.
  */
 @SuppressWarnings({ "rawtypes", "unused" })
+@Slf4j
 public class GroupSavingsIntegrationTest {
 
     public static final String DEPOSIT_AMOUNT = "2000";
@@ -538,7 +540,7 @@ public class GroupSavingsIntegrationTest {
     public static Integer createSavingsProduct(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String minOpenningBalance, final String minBalanceForInterestCalculation, final String minRequiredBalance,
             final String enforceMinRequiredBalance) {
-        System.out.println("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
         SavingsProductHelper savingsProductHelper = new SavingsProductHelper();
         final String savingsProductJSON = savingsProductHelper //
                 .withInterestCompoundingPeriodTypeAsDaily() //

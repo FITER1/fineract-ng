@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.CommonConstants;
 import org.apache.fineract.integrationtests.common.OfficeHelper;
@@ -56,6 +57,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
  * JUnit Test Cases for Account Transfer for.
  */
 @SuppressWarnings({ "rawtypes", "unused" })
+@Slf4j
 public class AccountTransferTest {
 
     public static final String MINIMUM_OPENING_BALANCE = "30000.0";
@@ -445,7 +447,7 @@ public class AccountTransferTest {
 
     private Integer createSavingsProduct(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String minOpenningBalance, final Account... accounts) {
-        System.out.println("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
         SavingsProductHelper savingsProductHelper = new SavingsProductHelper();
         final String savingsProductJSON = savingsProductHelper //
                 .withInterestCompoundingPeriodTypeAsDaily() //
@@ -456,7 +458,7 @@ public class AccountTransferTest {
     }
 
     private Integer createLoanProduct(final Account... accounts) {
-        System.out.println("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
         final String loanProductJSON = new LoanProductTestBuilder() //
                 .withPrincipal("8,000.00") //
                 .withNumberOfRepayments("4") //
@@ -472,7 +474,7 @@ public class AccountTransferTest {
     }
 
     private Integer applyForLoanApplication(final Integer clientID, final Integer loanProductID) {
-        System.out.println("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
+        log.info("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
         final String loanApplicationJSON = new LoanApplicationTestBuilder() //
                 .withPrincipal("8,000.00") //
                 .withLoanTermFrequency("4") //

@@ -31,7 +31,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 @SuppressWarnings("rawtypes")
 public class RecurringDepositAccountStatusChecker {
 
-    private static final String RECURRING_DEPOSIT_ACCOUNT_URL = "/fineract-provider/api/v1/recurringdepositaccounts";
+    private static final String RECURRING_DEPOSIT_ACCOUNT_URL = "/recurringdepositaccounts";
 
     public static void verifyRecurringDepositIsApproved(final HashMap recurringDepositStatusHashMap) {
         System.out.println("-------------------- VERIFYING RECURRING DEPOSIT APPLICATION IS APPROVED --------------------");

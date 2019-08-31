@@ -31,6 +31,7 @@ import java.util.HashMap;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.mix.data.MixTaxonomyData;
 import org.apache.fineract.mix.data.NamespaceData;
 import org.apache.fineract.mix.service.NamespaceReadPlatformServiceImpl;
@@ -47,6 +48,7 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 @RunWith(MockitoJUnitRunner.class)
+@Slf4j
 public class XBRLBuilderTest {
 
     @Mock
@@ -72,7 +74,7 @@ public class XBRLBuilderTest {
         when(data1.getName()).thenReturn("Assets");
         map.put(data1, new BigDecimal(10000));
         final String result = this.xbrlBuilder.build(map, Date.valueOf("2005-11-11"), Date.valueOf("2013-07-17"), "USD");
-        System.out.println(result);
+        log.info(result);
         NodeList nodes = null;
         try {
             nodes = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(result.getBytes()))

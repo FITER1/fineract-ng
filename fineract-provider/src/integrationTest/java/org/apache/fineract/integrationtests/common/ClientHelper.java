@@ -21,12 +21,11 @@ package org.apache.fineract.integrationtests.common;
 import com.google.gson.Gson;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.bulkimport.data.GlobalEntityType;
 import org.apache.fineract.integrationtests.common.system.CodeHelper;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
@@ -40,9 +39,8 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
+@Slf4j
 public class ClientHelper {
-    private static final Logger log = LoggerFactory.getLogger(ClientHelper.class);
-
     private final RequestSpecification requestSpec;
     private final ResponseSpecification responseSpec;
 

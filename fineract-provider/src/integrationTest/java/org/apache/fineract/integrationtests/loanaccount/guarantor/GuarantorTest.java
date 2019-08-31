@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.CommonConstants;
 import org.apache.fineract.integrationtests.common.Utils;
@@ -48,6 +49,7 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
+@Slf4j
 public class GuarantorTest {
 
     private ResponseSpecification responseSpec;
@@ -148,7 +150,7 @@ public class GuarantorTest {
         verifySavingsOnHoldBalance(externalSavigsId_2, null);
         Assert.assertNotNull(externalGuarantee_2);
 
-        System.out.println("-----------------------------------APPROVE LOAN-----------------------------------------");
+        log.info("-----------------------------------APPROVE LOAN-----------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.approveLoan(LOAN_DISBURSEMENT_DATE, loanID);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
@@ -159,14 +161,14 @@ public class GuarantorTest {
         verifySavingsOnHoldBalance(externalSavigsId_1, external1_hold_funds);
         verifySavingsOnHoldBalance(externalSavigsId_2, external2_hold_funds);
 
-        System.out.println("-----------------------------------UNDO APPROVE LOAN-----------------------------------------");
+        log.info("-----------------------------------UNDO APPROVE LOAN-----------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.undoApproval(loanID);
         LoanStatusChecker.verifyLoanIsPending(loanStatusHashMap);
         verifySavingsOnHoldBalance(selfSavigsId, new Float(0));
         verifySavingsOnHoldBalance(externalSavigsId_1, new Float(0));
         verifySavingsOnHoldBalance(externalSavigsId_2, new Float(0));
 
-        System.out.println("-----------------------------------APPROVE LOAN-----------------------------------------");
+        log.info("-----------------------------------APPROVE LOAN-----------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.approveLoan(LOAN_DISBURSEMENT_DATE, loanID);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
@@ -174,7 +176,7 @@ public class GuarantorTest {
         verifySavingsOnHoldBalance(externalSavigsId_1, external1_hold_funds);
         verifySavingsOnHoldBalance(externalSavigsId_2, external2_hold_funds);
 
-        System.out.println("-------------------------------DISBURSE LOAN-------------------------------------------");
+        log.info("-------------------------------DISBURSE LOAN-------------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.disburseLoan(LOAN_DISBURSEMENT_DATE, loanID);
         LoanStatusChecker.verifyLoanIsActive(loanStatusHashMap);
 
@@ -305,7 +307,7 @@ public class GuarantorTest {
         Assert.assertNotNull(externalGuarantee_2);
         verifySavingsOnHoldBalance(externalSavigsId_2, null);
 
-        System.out.println("-----------------------------------APPROVE LOAN-----------------------------------------");
+        log.info("-----------------------------------APPROVE LOAN-----------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.approveLoan(LOAN_DISBURSEMENT_DATE, loanID);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
@@ -316,14 +318,14 @@ public class GuarantorTest {
         verifySavingsOnHoldBalance(externalSavigsId_1, external1_hold_funds);
         verifySavingsOnHoldBalance(externalSavigsId_2, external2_hold_funds);
 
-        System.out.println("-----------------------------------UNDO APPROVE LOAN-----------------------------------------");
+        log.info("-----------------------------------UNDO APPROVE LOAN-----------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.undoApproval(loanID);
         LoanStatusChecker.verifyLoanIsPending(loanStatusHashMap);
         verifySavingsOnHoldBalance(selfSavigsId, new Float(0));
         verifySavingsOnHoldBalance(externalSavigsId_1, new Float(0));
         verifySavingsOnHoldBalance(externalSavigsId_2, new Float(0));
 
-        System.out.println("-----------------------------------APPROVE LOAN-----------------------------------------");
+        log.info("-----------------------------------APPROVE LOAN-----------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.approveLoan(LOAN_DISBURSEMENT_DATE, loanID);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
@@ -365,7 +367,7 @@ public class GuarantorTest {
             }
         }
 
-        System.out.println("-------------------------------DISBURSE LOAN-------------------------------------------");
+        log.info("-------------------------------DISBURSE LOAN-------------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.disburseLoan(LOAN_DISBURSEMENT_DATE, loanID);
         LoanStatusChecker.verifyLoanIsActive(loanStatusHashMap);
 
@@ -459,7 +461,7 @@ public class GuarantorTest {
         verifySavingsOnHoldBalance(externalSavigsId_1, null);
         Assert.assertNotNull(externalGuarantee_1);
 
-        System.out.println("-----------------------------------APPROVE LOAN-----------------------------------------");
+        log.info("-----------------------------------APPROVE LOAN-----------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.approveLoan(LOAN_DISBURSEMENT_DATE, loanID);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
@@ -468,7 +470,7 @@ public class GuarantorTest {
         verifySavingsOnHoldBalance(selfSavigsId, self1_hold_funds);
         verifySavingsOnHoldBalance(externalSavigsId_1, external1_hold_funds);
 
-        System.out.println("-------------------------------DISBURSE LOAN-------------------------------------------");
+        log.info("-------------------------------DISBURSE LOAN-------------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.disburseLoan(LOAN_DISBURSEMENT_DATE, loanID);
         LoanStatusChecker.verifyLoanIsActive(loanStatusHashMap);
 
@@ -532,7 +534,7 @@ public class GuarantorTest {
         verifySavingsOnHoldBalance(externalSavigsId_1, null);
         Assert.assertNotNull(externalGuarantee_1);
 
-        System.out.println("-----------------------------------APPROVE LOAN-----------------------------------------");
+        log.info("-----------------------------------APPROVE LOAN-----------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.approveLoan(LOAN_DISBURSEMENT_DATE, loanID);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
@@ -541,7 +543,7 @@ public class GuarantorTest {
         verifySavingsOnHoldBalance(selfSavigsId, self1_hold_funds);
         verifySavingsOnHoldBalance(externalSavigsId_1, external1_hold_funds);
 
-        System.out.println("-------------------------------DISBURSE LOAN-------------------------------------------");
+        log.info("-------------------------------DISBURSE LOAN-------------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.disburseLoan(LOAN_DISBURSEMENT_DATE, loanID);
         LoanStatusChecker.verifyLoanIsActive(loanStatusHashMap);
 
@@ -601,7 +603,7 @@ public class GuarantorTest {
         Assert.assertNotNull(externalGuarantee_1);
         verifySavingsOnHoldBalance(externalSavigsId_1, null);
 
-        System.out.println("-----------------------------------APPROVE LOAN-----------------------------------------");
+        log.info("-----------------------------------APPROVE LOAN-----------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.approveLoan(LOAN_DISBURSEMENT_DATE, loanID);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
@@ -610,7 +612,7 @@ public class GuarantorTest {
         verifySavingsOnHoldBalance(selfSavigsId, self1_hold_funds);
         verifySavingsOnHoldBalance(externalSavigsId_1, external1_hold_funds);
 
-        System.out.println("-------------------------------DISBURSE LOAN-------------------------------------------");
+        log.info("-------------------------------DISBURSE LOAN-------------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.disburseLoan(LOAN_DISBURSEMENT_DATE, loanID);
         LoanStatusChecker.verifyLoanIsActive(loanStatusHashMap);
 
@@ -662,7 +664,7 @@ public class GuarantorTest {
 
     private Integer createLoanProductWithHoldFunds(final String mandatoryGuarantee, final String minimumGuaranteeFromGuarantor,
             final String minimumGuaranteeFromOwnFunds) {
-        System.out.println("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
         LoanProductTestBuilder builder = new LoanProductTestBuilder().withPrincipal("10000.00").withNumberOfRepayments("4")
                 .withRepaymentAfterEvery("1").withRepaymentTypeAsWeek().withinterestRatePerPeriod("2")
                 .withInterestRateFrequencyTypeAsMonths().withAmortizationTypeAsEqualPrincipalPayment().withInterestTypeAsDecliningBalance()
@@ -673,7 +675,7 @@ public class GuarantorTest {
     }
 
     private Integer applyForLoanApplication(final Integer clientID, final Integer loanProductID, final String disbursementDate) {
-        System.out.println("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
+        log.info("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
         final String loanApplicationJSON = new LoanApplicationTestBuilder() //
                 .withPrincipal("10000.00") //
                 .withLoanTermFrequency("4") //

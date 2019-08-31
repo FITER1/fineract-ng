@@ -42,8 +42,8 @@ public class RecurringDepositProductHelper {
         this.responseSpec = responseSpec;
     }
 
-    private static final String RECURRING_DEPOSIT_PRODUCT_URL = "/fineract-provider/api/v1/recurringdepositproducts";
-    private static final String INTEREST_CHART_URL = "/fineract-provider/api/v1/interestratecharts";
+    private static final String RECURRING_DEPOSIT_PRODUCT_URL = "/recurringdepositproducts";
+    private static final String INTEREST_CHART_URL = "/interestratecharts";
     private static final String CREATE_RECURRING_DEPOSIT_PRODUCT_URL = RECURRING_DEPOSIT_PRODUCT_URL + "?" + Utils.TENANT_IDENTIFIER;
 
     private static final String LOCALE = "en_GB";

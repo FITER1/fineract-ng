@@ -23,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.xbrl.XBRLIntegrationTestHelper;
 import org.junit.Before;
@@ -35,6 +36,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
+@Slf4j
 public class XBRLIntegrationTest {
 
     private RequestSpecification requestSpec;
@@ -59,7 +61,7 @@ public class XBRLIntegrationTest {
     }
 
     private void verifyTaxonomyList(final ArrayList<HashMap> taxonomyList) {
-        System.out.println("--------------------VERIFYING TAXONOMY LIST--------------------------");
+        log.info("--------------------VERIFYING TAXONOMY LIST--------------------------");
         assertEquals("Checking for the 1st taxonomy", "AdministrativeExpense", taxonomyList.get(0).get("name"));
     }
 

@@ -23,6 +23,7 @@ import com.jayway.restassured.builder.ResponseSpecBuilder;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.NotificationHelper;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.junit.Assert;
@@ -31,6 +32,7 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
+@Slf4j
 public class NotificationApiTest {
 
     private ResponseSpecification responseSpec;
@@ -49,7 +51,7 @@ public class NotificationApiTest {
     public void testNotificationRetrieval() {
         HashMap<String, Object> response = (HashMap<String, Object>) NotificationHelper.getNotifications(this.requestSpec,
                 this.responseSpec, "");
-        System.out.println("Response : " + response.toString());
+        log.info("Response : " + response.toString());
         Assert.assertNotNull(response);
     }
 }

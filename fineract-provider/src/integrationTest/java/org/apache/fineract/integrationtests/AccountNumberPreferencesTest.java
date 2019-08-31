@@ -22,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.CenterDomain;
 import org.apache.fineract.integrationtests.common.CenterHelper;
 import org.apache.fineract.integrationtests.common.ClientHelper;
@@ -46,6 +47,7 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
+@Slf4j
 public class AccountNumberPreferencesTest {
 
     private RequestSpecification requestSpec;
@@ -151,7 +153,7 @@ public class AccountNumberPreferencesTest {
             Integer id = (Integer) preferenceId.get("id");
             HashMap<String, Object> delResponse = this.accountNumberPreferencesHelper.deleteAccountNumberPreference(id, this.responseSpec,
                     "");
-            System.out.println("Successfully deleted account number preference (ID: " + delResponse.get("resourceId") + ")");
+            log.info("Successfully deleted account number preference (ID: " + delResponse.get("resourceId") + ")");
         }
         /* Deletion of invalid account preference ID should fail */
         System.out
@@ -182,23 +184,23 @@ public class AccountNumberPreferencesTest {
     private void createAccountNumberPreference() {
         this.clientAccountNumberPreferenceId = (Integer) this.accountNumberPreferencesHelper.createClientAccountNumberPreference(
                 this.responseSpec, "resourceId");
-        System.out.println("Successfully created account number preferences for Client (ID: " + this.clientAccountNumberPreferenceId);
+        log.info("Successfully created account number preferences for Client (ID: " + this.clientAccountNumberPreferenceId);
 
         this.loanAccountNumberPreferenceId = (Integer) this.accountNumberPreferencesHelper.createLoanAccountNumberPreference(
                 this.responseSpec, "resourceId");
-        System.out.println("Successfully created account number preferences for Loan (ID: " + this.loanAccountNumberPreferenceId);
+        log.info("Successfully created account number preferences for Loan (ID: " + this.loanAccountNumberPreferenceId);
 
         this.savingsAccountNumberPreferenceId = (Integer) this.accountNumberPreferencesHelper.createSavingsAccountNumberPreference(
                 this.responseSpec, "resourceId");
-        System.out.println("Successfully created account number preferences for Savings (ID: " + this.savingsAccountNumberPreferenceId);
+        log.info("Successfully created account number preferences for Savings (ID: " + this.savingsAccountNumberPreferenceId);
         
         this.groupsAccountNumberPreferenceId = (Integer) this.accountNumberPreferencesHelper.createGroupsAccountNumberPreference(
                 this.responseSpec, "resourceId");
-        System.out.println("Successfully created account number preferences for Groups (ID: " + this.groupsAccountNumberPreferenceId);
+        log.info("Successfully created account number preferences for Groups (ID: " + this.groupsAccountNumberPreferenceId);
         
         this.centerAccountNumberPreferenceId = (Integer) this.accountNumberPreferencesHelper.createCenterAccountNumberPreference(
                 this.responseSpec, "resourceId");
-        System.out.println("Successfully created account number preferences for Center (ID: " + this.centerAccountNumberPreferenceId);
+        log.info("Successfully created account number preferences for Center (ID: " + this.centerAccountNumberPreferenceId);
 
         this.accountNumberPreferencesHelper.verifyCreationOfAccountNumberPreferences(this.clientAccountNumberPreferenceId,
                 this.loanAccountNumberPreferenceId, this.savingsAccountNumberPreferenceId, this.groupsAccountNumberPreferenceId, 
@@ -246,7 +248,7 @@ public class AccountNumberPreferencesTest {
         HashMap<String, Object> accountNumberPreferences = this.accountNumberPreferencesHelper.updateAccountNumberPreference(
                 this.clientAccountNumberPreferenceId, "101", this.responseSpec, "");
 
-        System.out.println("--------------------------UPDATION SUCCESSFUL FOR ACCOUNT NUMBER PREFERENCE ID "
+        log.info("--------------------------UPDATION SUCCESSFUL FOR ACCOUNT NUMBER PREFERENCE ID "
                 + accountNumberPreferences.get("resourceId"));
 
         this.accountNumberPreferencesHelper.verifyUpdationOfAccountNumberPreferences((Integer) accountNumberPreferences.get("resourceId"),
@@ -386,20 +388,20 @@ public class AccountNumberPreferencesTest {
     private void createLoanProduct() {
         this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
 
-        System.out.println("---------------------------------CREATING LOAN PRODUCT------------------------------------------");
+        log.info("---------------------------------CREATING LOAN PRODUCT------------------------------------------");
 
         final String loanProductJSON = new LoanProductTestBuilder().withPrincipal(loanPrincipalAmount)
                 .withNumberOfRepayments(numberOfRepayments).withinterestRatePerPeriod(interestRatePerPeriod)
                 .withInterestRateFrequencyTypeAsYear().build(null);
 
         this.loanProductId = this.loanTransactionHelper.getLoanProductId(loanProductJSON);
-        System.out.println("Successfully created loan product  (ID: " + this.loanProductId + ")");
+        log.info("Successfully created loan product  (ID: " + this.loanProductId + ")");
     }
 
     private void createAndValidateLoanEntity(Boolean isAccountPreferenceSetUp) {
         this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
 
-        System.out.println("---------------------------------NEW LOAN APPLICATION------------------------------------------");
+        log.info("---------------------------------NEW LOAN APPLICATION------------------------------------------");
 
         final String loanApplicationJSON = new LoanApplicationTestBuilder().withPrincipal(loanPrincipalAmount)
                 .withLoanTermFrequency(numberOfRepayments).withLoanTermFrequencyAsMonths().withNumberOfRepayments(numberOfRepayments)
@@ -408,7 +410,7 @@ public class AccountNumberPreferencesTest {
                 .withSubmittedOnDate(dateString).withExpectedDisbursementDate(dateString).withPrincipalGrace("2").withInterestGrace("2")
                 .build(this.clientId.toString(), this.loanProductId.toString(), null);
 
-        System.out.println("Loan Application :" + loanApplicationJSON);
+        log.info("Loan Application :" + loanApplicationJSON);
 
         this.loanId = this.loanTransactionHelper.getLoanId(loanApplicationJSON);
         String loanAccountNo = (String) this.loanTransactionHelper.getLoanDetail(this.requestSpec, this.responseSpec, this.loanId,
@@ -425,17 +427,17 @@ public class AccountNumberPreferencesTest {
                         this.loanProductId, "shortName");
                 this.validateAccountNumberLengthAndStartsWithPrefix(loanAccountNo, loanShortName);
             }
-            System.out.println("SUCCESSFULLY CREATED LOAN APPLICATION BASED ON ACCOUNT PREFERENCES (ID: " + this.loanId + ")");
+            log.info("SUCCESSFULLY CREATED LOAN APPLICATION BASED ON ACCOUNT PREFERENCES (ID: " + this.loanId + ")");
         } else {
             this.validateAccountNumberLengthAndStartsWithPrefix(loanAccountNo, null);
-            System.out.println("SUCCESSFULLY CREATED LOAN APPLICATION (ID: " + loanId + ")");
+            log.info("SUCCESSFULLY CREATED LOAN APPLICATION (ID: " + loanId + ")");
         }
     }
 
     private void createSavingsProduct() {
         this.responseSpec = new ResponseSpecBuilder().expectStatusCode(200).build();
 
-        System.out.println("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
 
         SavingsProductHelper savingsProductHelper = new SavingsProductHelper();
 
@@ -452,7 +454,7 @@ public class AccountNumberPreferencesTest {
                 .withMinRequiredBalance(minRequiredBalance).withEnforceMinRequiredBalance(enforceMinRequiredBalance)
                 .withMinimumOpenningBalance(this.MINIMUM_OPENING_BALANCE).build();
         this.savingsProductId = SavingsProductHelper.createSavingsProduct(savingsProductJSON, this.requestSpec, this.responseSpec);
-        System.out.println("Sucessfully created savings product (ID: " + this.savingsProductId + ")");
+        log.info("Sucessfully created savings product (ID: " + this.savingsProductId + ")");
 
     }
 
@@ -478,10 +480,10 @@ public class AccountNumberPreferencesTest {
                 String loanShortName = (String) this.savingsAccountHelper.getSavingsAccountDetail(this.savingsId, "shortName");
                 this.validateAccountNumberLengthAndStartsWithPrefix(savingsAccountNo, loanShortName);
             }
-            System.out.println("SUCCESSFULLY CREATED SAVINGS APPLICATION BASED ON ACCOUNT PREFERENCES (ID: " + this.loanId + ")");
+            log.info("SUCCESSFULLY CREATED SAVINGS APPLICATION BASED ON ACCOUNT PREFERENCES (ID: " + this.loanId + ")");
         } else {
             this.validateAccountNumberLengthAndStartsWithPrefix(savingsAccountNo, null);
-            System.out.println("SUCCESSFULLY CREATED SAVINGS APPLICATION (ID: " + this.savingsId + ")");
+            log.info("SUCCESSFULLY CREATED SAVINGS APPLICATION (ID: " + this.savingsId + ")");
         }
     }
 }

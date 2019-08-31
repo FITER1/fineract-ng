@@ -42,7 +42,7 @@ public class InteropHelper {
 
     private final static Logger log = LoggerFactory.getLogger(InteropTest.class);
 
-    private static final String BASE_URL = "/fineract-provider/api/v1/interoperation";
+    private static final String BASE_URL = "/interoperation";
     private static final String HEALTH_URL = BASE_URL + "/health";
     private static final String PARTIES_URL = BASE_URL + "/parties";
     private static final String TRANSACTIONS_URL = BASE_URL + "/transactions";

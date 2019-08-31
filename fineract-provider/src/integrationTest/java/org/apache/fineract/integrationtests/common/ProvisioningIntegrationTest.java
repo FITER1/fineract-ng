@@ -27,6 +27,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.accounting.Account;
 import org.apache.fineract.integrationtests.common.accounting.AccountHelper;
 import org.apache.fineract.integrationtests.common.loans.LoanApplicationTestBuilder;
@@ -48,6 +49,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
+@Slf4j
 public class ProvisioningIntegrationTest {
 
     private static final String NONE = "1";
@@ -86,7 +88,7 @@ public class ProvisioningIntegrationTest {
             loanStatusHashMap = this.loanTransactionHelper.approveLoan("20 September 2011", loanID);
             LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
             LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
-            System.out.println("-------------------------------DISBURSE LOAN-------------------------------------------");
+            log.info("-------------------------------DISBURSE LOAN-------------------------------------------");
             loanStatusHashMap = this.loanTransactionHelper.disburseLoan("20 September 2011", loanID);
             LoanStatusChecker.verifyLoanIsActive(loanStatusHashMap);
             loans.add(loanID);
@@ -183,7 +185,7 @@ public class ProvisioningIntegrationTest {
     }
     
     private Integer createLoanProduct(final boolean multiDisburseLoan, final String accountingRule, final Account... accounts) {
-        System.out.println("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
         LoanProductTestBuilder builder = new LoanProductTestBuilder() //
                 .withPrincipal("1,00,000.00") //
                 .withNumberOfRepayments("4") //
@@ -205,7 +207,7 @@ public class ProvisioningIntegrationTest {
 
     private Integer applyForLoanApplication(final Integer clientID, final Integer loanProductID, List<HashMap> charges,
             final String savingsId, String principal) {
-        System.out.println("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
+        log.info("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
         final String loanApplicationJSON = new LoanApplicationTestBuilder() //
                 .withPrincipal(principal) //
                 .withLoanTermFrequency("4") //

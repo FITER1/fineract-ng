@@ -20,6 +20,7 @@ package org.apache.fineract.integrationtests;
 
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.loans.LoanApplicationTestBuilder;
@@ -41,6 +42,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
  * Interest and Write-Off.
  */
 @SuppressWarnings({ "rawtypes" })
+@Slf4j
 public class LoanWithWaiveInterestAndWriteOffIntegrationTest {
 
     private ResponseSpecification responseSpec;
@@ -76,7 +78,7 @@ public class LoanWithWaiveInterestAndWriteOffIntegrationTest {
         HashMap loanStatusHashMap = LoanStatusChecker.getStatusOfLoan(this.requestSpec, this.responseSpec, loanID);
         LoanStatusChecker.verifyLoanIsPending(loanStatusHashMap);
 
-        System.out.println("-----------------------------------APPROVE LOAN-----------------------------------------");
+        log.info("-----------------------------------APPROVE LOAN-----------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.approveLoan("28 September 2010", loanID);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
@@ -85,14 +87,14 @@ public class LoanWithWaiveInterestAndWriteOffIntegrationTest {
         loanStatusHashMap = this.loanTransactionHelper.undoApproval(loanID);
         LoanStatusChecker.verifyLoanIsPending(loanStatusHashMap);
 
-        System.out.println("-----------------------------------RE-APPROVE LOAN-----------------------------------------");
+        log.info("-----------------------------------RE-APPROVE LOAN-----------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.approveLoan("1 October 2010", loanID);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
 
         // DISBURSE
         loanStatusHashMap = this.loanTransactionHelper.disburseLoan(this.DISBURSEMENT_DATE, loanID);
-        System.out.println("DISBURSE " + loanStatusHashMap);
+        log.info("DISBURSE " + loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsActive(loanStatusHashMap);
 
         // PERFORM REPAYMENTS AND CHECK LOAN STATUS
@@ -105,7 +107,7 @@ public class LoanWithWaiveInterestAndWriteOffIntegrationTest {
 
         // DIBURSE AGAIN
         loanStatusHashMap = this.loanTransactionHelper.disburseLoan(this.DISBURSEMENT_DATE, loanID);
-        System.out.println("DISBURSE " + loanStatusHashMap);
+        log.info("DISBURSE " + loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsActive(loanStatusHashMap);
 
         // MAKE REPAYMENTS
@@ -144,14 +146,14 @@ public class LoanWithWaiveInterestAndWriteOffIntegrationTest {
         HashMap loanStatusHashMap = LoanStatusChecker.getStatusOfLoan(this.requestSpec, this.responseSpec, loanID);
         LoanStatusChecker.verifyLoanIsPending(loanStatusHashMap);
 
-        System.out.println("-----------------------------------APPROVE LOAN-----------------------------------------");
+        log.info("-----------------------------------APPROVE LOAN-----------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.approveLoan("28 September 2010", loanID);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
 
         // DISBURSE
         loanStatusHashMap = this.loanTransactionHelper.disburseLoan(this.DISBURSEMENT_DATE, loanID);
-        System.out.println("DISBURSE " + loanStatusHashMap);
+        log.info("DISBURSE " + loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsActive(loanStatusHashMap);
 
         // MAKE REPAYMENTS
@@ -181,7 +183,7 @@ public class LoanWithWaiveInterestAndWriteOffIntegrationTest {
     }
 
     private Integer createLoanProduct() {
-        System.out.println("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
         final String loanProductJSON = new LoanProductTestBuilder().withPrincipal(this.LP_PRINCIPAL).withRepaymentTypeAsMonth()
                 .withRepaymentAfterEvery(this.LP_REPAYMENT_PERIOD).withNumberOfRepayments(this.LP_REPAYMENTS).withRepaymentTypeAsMonth()
                 .withinterestRatePerPeriod(this.LP_INTEREST_RATE).withInterestRateFrequencyTypeAsMonths()
@@ -191,7 +193,7 @@ public class LoanWithWaiveInterestAndWriteOffIntegrationTest {
     }
 
     private Integer applyForLoanApplication(final Integer clientID, final Integer loanProductID) {
-        System.out.println("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
+        log.info("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
         final String loanApplicationJSON = new LoanApplicationTestBuilder().withPrincipal(this.PRINCIPAL)
                 .withLoanTermFrequency(this.LOAN_TERM_FREQUENCY).withLoanTermFrequencyAsMonths()
                 .withNumberOfRepayments(this.NUMBER_OF_REPAYMENTS).withRepaymentEveryAfter(this.REPAYMENT_PERIOD)

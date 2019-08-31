@@ -25,8 +25,8 @@ import org.apache.fineract.integrationtests.common.Utils;
 
 
 public class UserHelper {
-    private static final String CREATE_USER_URL = "/fineract-provider/api/v1/users?" + Utils.TENANT_IDENTIFIER;
-    private static final String USER_URL = "/fineract-provider/api/v1/users";
+    private static final String CREATE_USER_URL = "/users?" + Utils.TENANT_IDENTIFIER;
+    private static final String USER_URL = "/users";
 
     public static Integer createUser(final RequestSpecification requestSpec, final ResponseSpecification responseSpec, int roleId, int staffId) {
         return Utils.performServerPost(requestSpec, responseSpec, CREATE_USER_URL, getTestCreateUserAsJSON(roleId, staffId), "resourceId");

@@ -29,7 +29,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class GuarantorHelper {
 
-    private static final String LOAN_URL = "/fineract-provider/api/v1/loans/";
+    private static final String LOAN_URL = "/loans/";
     private static final String GUARANTOR_API_URL = "/guarantors/";
     private static final String TENANT = "?" + Utils.TENANT_IDENTIFIER;
     private final RequestSpecification requestSpec;

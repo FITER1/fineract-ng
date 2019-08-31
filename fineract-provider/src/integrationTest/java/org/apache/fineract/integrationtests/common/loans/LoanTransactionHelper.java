@@ -50,8 +50,8 @@ public class LoanTransactionHelper {
     private final ResponseSpecification responseSpec;
 
     private static final String CREATE_LOAN_PRODUCT_URL = "/loanproducts?" + Utils.TENANT_IDENTIFIER;
-    private static final String APPLY_LOAN_URL = "/fineract-provider/api/v1/loans?" + Utils.TENANT_IDENTIFIER;
-    private static final String LOAN_ACCOUNT_URL="/fineract-provider/api/v1/loans";
+    private static final String APPLY_LOAN_URL = "/loans?" + Utils.TENANT_IDENTIFIER;
+    private static final String LOAN_ACCOUNT_URL="/loans";
     private static final String APPROVE_LOAN_COMMAND = "approve";
     private static final String UNDO_APPROVAL_LOAN_COMMAND = "undoApproval";
     private static final String DISBURSE_LOAN_COMMAND = "disburse";
@@ -86,7 +86,7 @@ public class LoanTransactionHelper {
     }
 
     public Integer getLoanOfficerId(final String loanId) {
-        final String GET_LOAN_URL = "/fineract-provider/api/v1/loans/" + loanId + "?" + Utils.TENANT_IDENTIFIER;
+        final String GET_LOAN_URL = "/loans/" + loanId + "?" + Utils.TENANT_IDENTIFIER;
         return Utils.performServerGet(this.requestSpec, this.responseSpec, GET_LOAN_URL, "loanOfficerId");
     }
 
@@ -95,62 +95,62 @@ public class LoanTransactionHelper {
     }
 
     public Integer updateLoan(final Integer id, final String loanApplicationJSON) {
-        return Utils.performServerPut(this.requestSpec, this.responseSpec, "/fineract-provider/api/v1/loans/" + id + "?"
+        return Utils.performServerPut(this.requestSpec, this.responseSpec, "/loans/" + id + "?"
                 + Utils.TENANT_IDENTIFIER, loanApplicationJSON, "loanId");
     }
 
     public ArrayList getLoanRepaymentSchedule(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer loanID) {
-        final String URL = "/fineract-provider/api/v1/loans/" + loanID + "?associations=repaymentSchedule&" + Utils.TENANT_IDENTIFIER;
+        final String URL = "/loans/" + loanID + "?associations=repaymentSchedule&" + Utils.TENANT_IDENTIFIER;
         final HashMap response = Utils.performServerGet(requestSpec, responseSpec, URL, "repaymentSchedule");
         return (ArrayList) response.get("periods");
     }
 
     public ArrayList getLoanCharges(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer loanID) {
-        final String URL = "/fineract-provider/api/v1/loans/" + loanID + "?associations=charges&" + Utils.TENANT_IDENTIFIER;
+        final String URL = "/loans/" + loanID + "?associations=charges&" + Utils.TENANT_IDENTIFIER;
         return (ArrayList)  Utils.performServerGet(requestSpec, responseSpec, URL, "charges");
     }
 
     public ArrayList getLoanFutureRepaymentSchedule(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer loanID) {
-        final String URL = "/fineract-provider/api/v1/loans/" + loanID + "?associations=repaymentSchedule,futureSchedule&"
+        final String URL = "/loans/" + loanID + "?associations=repaymentSchedule,futureSchedule&"
                 + Utils.TENANT_IDENTIFIER;
         final HashMap response = Utils.performServerGet(requestSpec, responseSpec, URL, "repaymentSchedule");
         return (ArrayList) response.get("futurePeriods");
     }
 
     public HashMap getLoanSummary(final RequestSpecification requestSpec, final ResponseSpecification responseSpec, final Integer loanID) {
-        final String URL = "/fineract-provider/api/v1/loans/" + loanID + "?associations=all&" + Utils.TENANT_IDENTIFIER;
+        final String URL = "/loans/" + loanID + "?associations=all&" + Utils.TENANT_IDENTIFIER;
         final HashMap response = Utils.performServerGet(requestSpec, responseSpec, URL, "summary");
         return response;
     }
 
     public Object getLoanDetail(final RequestSpecification requestSpec, final ResponseSpecification responseSpec, final Integer loanID,
             final String param) {
-        final String URL = "/fineract-provider/api/v1/loans/" + loanID + "?associations=all&" + Utils.TENANT_IDENTIFIER;
+        final String URL = "/loans/" + loanID + "?associations=all&" + Utils.TENANT_IDENTIFIER;
         return Utils.performServerGet(requestSpec, responseSpec, URL, param);
     }
 
     public String getLoanDetails(final RequestSpecification requestSpec, final ResponseSpecification responseSpec, final Integer loanID) {
-        final String URL = "/fineract-provider/api/v1/loans/" + loanID + "?associations=all&" + Utils.TENANT_IDENTIFIER;
+        final String URL = "/loans/" + loanID + "?associations=all&" + Utils.TENANT_IDENTIFIER;
         return Utils.performServerGet(requestSpec, responseSpec, URL, null);
     }
 
     public Object getLoanProductDetail(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer loanProductId, final String jsonAttributeToGetBack) {
-        final String URL = "/fineract-provider/api/v1/loanproducts/" + loanProductId + "?associations=all&" + Utils.TENANT_IDENTIFIER;
+        final String URL = "/loanproducts/" + loanProductId + "?associations=all&" + Utils.TENANT_IDENTIFIER;
         return Utils.performServerGet(requestSpec, responseSpec, URL, jsonAttributeToGetBack);
     }
 
     public String getLoanProductDetails(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer loanProductId) {
-        final String URL = "/fineract-provider/api/v1/loanproducts/" + loanProductId + "?associations=all&" + Utils.TENANT_IDENTIFIER;
+        final String URL = "/loanproducts/" + loanProductId + "?associations=all&" + Utils.TENANT_IDENTIFIER;
         return Utils.performServerGet(requestSpec, responseSpec, URL, null);
     }
 
     public ArrayList getLoanCharges(final Integer loanId) {
-        final String GET_LOAN_CHARGES_URL = "/fineract-provider/api/v1/loans/" + loanId + "/charges?" + Utils.TENANT_IDENTIFIER;
+        final String GET_LOAN_CHARGES_URL = "/loans/" + loanId + "/charges?" + Utils.TENANT_IDENTIFIER;
         return Utils.performServerGet(requestSpec, responseSpec, GET_LOAN_CHARGES_URL, "");
     }
 
@@ -258,19 +258,19 @@ public class LoanTransactionHelper {
 
     public Integer addChargesForLoan(final Integer loanId, final String request) {
         System.out.println("--------------------------------- ADD CHARGES FOR LOAN --------------------------------");
-        final String ADD_CHARGES_URL = "/fineract-provider/api/v1/loans/" + loanId + "/charges?" + Utils.TENANT_IDENTIFIER;
+        final String ADD_CHARGES_URL = "/loans/" + loanId + "/charges?" + Utils.TENANT_IDENTIFIER;
         final HashMap response = Utils.performServerPost(requestSpec, responseSpec, ADD_CHARGES_URL, request, "");
         return (Integer) response.get("resourceId");
     }
 
     public Object addChargesForAllreadyDisursedLoan(final Integer loanId, final String request, final ResponseSpecification responseSpecification) {
-        final String ADD_CHARGES_URL = "/fineract-provider/api/v1/loans/" + loanId + "/charges?" + Utils.TENANT_IDENTIFIER;
+        final String ADD_CHARGES_URL = "/loans/" + loanId + "/charges?" + Utils.TENANT_IDENTIFIER;
         return Utils.performServerPost(this.requestSpec, responseSpecification, ADD_CHARGES_URL, request, "");
     }
     
     public Integer updateChargesForLoan(final Integer loanId, final Integer loanchargeId, final String request) {
         System.out.println("--------------------------------- ADD CHARGES FOR LOAN --------------------------------");
-        final String UPDATE_CHARGES_URL = "/fineract-provider/api/v1/loans/" + loanId + "/charges/" + loanchargeId + "?"
+        final String UPDATE_CHARGES_URL = "/loans/" + loanId + "/charges/" + loanchargeId + "?"
                 + Utils.TENANT_IDENTIFIER;
         final HashMap response = Utils.performServerPut(requestSpec, responseSpec, UPDATE_CHARGES_URL, request, "");
         return (Integer) response.get("resourceId");
@@ -278,7 +278,7 @@ public class LoanTransactionHelper {
 
     public Integer deleteChargesForLoan(final Integer loanId, final Integer loanchargeId) {
         System.out.println("--------------------------------- DELETE CHARGES FOR LOAN --------------------------------");
-        final String DELETE_CHARGES_URL = "/fineract-provider/api/v1/loans/" + loanId + "/charges/" + loanchargeId + "?"
+        final String DELETE_CHARGES_URL = "/loans/" + loanId + "/charges/" + loanchargeId + "?"
                 + Utils.TENANT_IDENTIFIER;
         final HashMap response = Utils.performServerDelete(requestSpec, responseSpec, DELETE_CHARGES_URL, "");
         return (Integer) response.get("resourceId");
@@ -286,7 +286,7 @@ public class LoanTransactionHelper {
 
     public Integer waiveChargesForLoan(final Integer loanId, final Integer loanchargeId, final String json) {
         System.out.println("--------------------------------- WAIVE CHARGES FOR LOAN --------------------------------");
-        final String CHARGES_URL = "/fineract-provider/api/v1/loans/" + loanId + "/charges/" + loanchargeId + "?command=waive&"
+        final String CHARGES_URL = "/loans/" + loanId + "/charges/" + loanchargeId + "?command=waive&"
                 + Utils.TENANT_IDENTIFIER;
         final HashMap response = Utils.performServerPost(requestSpec, responseSpec, CHARGES_URL, json, "");
         return (Integer) response.get("resourceId");
@@ -294,7 +294,7 @@ public class LoanTransactionHelper {
 
     public Integer payChargesForLoan(final Integer loanId, final Integer loanchargeId, final String json) {
         System.out.println("--------------------------------- WAIVE CHARGES FOR LOAN --------------------------------");
-        final String CHARGES_URL = "/fineract-provider/api/v1/loans/" + loanId + "/charges/" + loanchargeId + "?command=pay&"
+        final String CHARGES_URL = "/loans/" + loanId + "/charges/" + loanchargeId + "?command=pay&"
                 + Utils.TENANT_IDENTIFIER;
         final HashMap response = Utils.performServerPost(requestSpec, responseSpec, CHARGES_URL, json, "");
         return (Integer) response.get("resourceId");
@@ -496,11 +496,11 @@ public class LoanTransactionHelper {
     }
 
     private String createLoanOperationURL(final String command, final Integer loanID) {
-        return "/fineract-provider/api/v1/loans/" + loanID + "?command=" + command + "&" + Utils.TENANT_IDENTIFIER;
+        return "/loans/" + loanID + "?command=" + command + "&" + Utils.TENANT_IDENTIFIER;
     }
 
     private String createLoanTransactionURL(final String command, final Integer loanID) {
-        return "/fineract-provider/api/v1/loans/" + loanID + "/transactions?command=" + command + "&" + Utils.TENANT_IDENTIFIER;
+        return "/loans/" + loanID + "/transactions?command=" + command + "&" + Utils.TENANT_IDENTIFIER;
     }
 
     private HashMap performLoanTransaction(final String postURLForLoanTransaction, final String jsonToBeSent) {
@@ -533,7 +533,7 @@ public class LoanTransactionHelper {
 
     private Object adjustLoanTransaction(final Integer loanId, final Integer tansactionId, final String jsonToBeSent,
             final String responseAttribute) {
-        final String URL = "/fineract-provider/api/v1/loans/" + loanId + "/transactions/" + tansactionId + "?" + Utils.TENANT_IDENTIFIER;
+        final String URL = "/loans/" + loanId + "/transactions/" + tansactionId + "?" + Utils.TENANT_IDENTIFIER;
         return Utils.performServerPost(this.requestSpec, this.responseSpec, URL, jsonToBeSent, responseAttribute);
     }
 
@@ -549,14 +549,14 @@ public class LoanTransactionHelper {
     }
 
     public HashMap getPrepayAmount(final RequestSpecification requestSpec, final ResponseSpecification responseSpec, final Integer loanID) {
-        final String URL = "/fineract-provider/api/v1/loans/" + loanID + "/transactions/template?command=prepayLoan&"
+        final String URL = "/loans/" + loanID + "/transactions/template?command=prepayLoan&"
                 + Utils.TENANT_IDENTIFIER;
         final HashMap response = Utils.performServerGet(requestSpec, responseSpec, URL, "");
         return response;
     }
 
     private String createLoanRefundTransferURL() {
-        return "/fineract-provider/api/v1/accounttransfers/refundByTransfer?tenantIdentifier=default";
+        return "/accounttransfers/refundByTransfer?tenantIdentifier=default";
     }
 
     public void verifyRepaymentScheduleEntryFor(final int repaymentNumber, final float expectedPrincipalOutstanding, final Integer loanID) {
@@ -662,11 +662,11 @@ public class LoanTransactionHelper {
     }
     
     private String createEditDisbursementURL(Integer loanID, Integer disbursementId) {
-        return "/fineract-provider/api/v1/loans/" + loanID + "/disbursements/" + disbursementId + "?" + Utils.TENANT_IDENTIFIER;
+        return "/loans/" + loanID + "/disbursements/" + disbursementId + "?" + Utils.TENANT_IDENTIFIER;
     }
     
     private String createAddAndDeleteDisbursementURL(Integer loanID) {
-        return "/fineract-provider/api/v1/loans/" + loanID + "/disbursements/editDisbursements?" +  Utils.TENANT_IDENTIFIER;
+        return "/loans/" + loanID + "/disbursements/editDisbursements?" +  Utils.TENANT_IDENTIFIER;
     }
     
     public static String getEditDisbursementsAsJSON(final String approvalAmount, final String expectedDisbursementDate, 
@@ -733,7 +733,7 @@ public class LoanTransactionHelper {
 
     public String getOutputTemplateLocation(final String importDocumentId){
         requestSpec.header(HttpHeaders.CONTENT_TYPE,MediaType.TEXT_PLAIN);
-        return Utils.performServerOutputTemplateLocationGet(requestSpec,responseSpec,"/fineract-provider/api/v1/imports/getOutputTemplateLocation"+"?"
+        return Utils.performServerOutputTemplateLocationGet(requestSpec,responseSpec,"/imports/getOutputTemplateLocation"+"?"
                 +Utils.TENANT_IDENTIFIER,importDocumentId);
     }
 }

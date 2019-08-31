@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.GroupHelper;
 import org.apache.fineract.integrationtests.common.Utils;
@@ -43,6 +44,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
  * Group Loan Integration Test for checking Loan Application Repayment Schedule.
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
+@Slf4j
 public class GroupLoanIntegrationTest {
 
     private ResponseSpecification responseSpec;
@@ -74,7 +76,7 @@ public class GroupLoanIntegrationTest {
     }
 
     private Integer createLoanProduct() {
-        System.out.println("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
         final String loanProductJSON = new LoanProductTestBuilder() //
                 .withPrincipal("12,000.00") //
                 .withNumberOfRepayments("4") //
@@ -89,7 +91,7 @@ public class GroupLoanIntegrationTest {
     }
 
     private Integer applyForLoanApplication(final Integer groupID, final Integer loanProductID) {
-        System.out.println("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
+        log.info("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
         final String loanApplicationJSON = new LoanApplicationTestBuilder() //
                 .withPrincipal("12,000.00") //
                 .withLoanTermFrequency("4") //
@@ -104,12 +106,12 @@ public class GroupLoanIntegrationTest {
                 .withExpectedDisbursementDate("20 September 2011") //
                 .withSubmittedOnDate("20 September 2011") //
                 .withLoanType("group").build(groupID.toString(), loanProductID.toString(), null);
-        System.out.println(loanApplicationJSON);
+        log.info(loanApplicationJSON);
         return this.loanTransactionHelper.getLoanId(loanApplicationJSON);
     }
 
     private void verifyLoanRepaymentSchedule(final ArrayList<HashMap> loanSchedule) {
-        System.out.println("--------------------VERIFYING THE PRINCIPAL DUES,INTEREST DUE AND DUE DATE--------------------------");
+        log.info("--------------------VERIFYING THE PRINCIPAL DUES,INTEREST DUE AND DUE DATE--------------------------");
 
         assertEquals("Checking for Due Date for 1st Month", new ArrayList<>(Arrays.asList(2011, 10, 20)),
                 loanSchedule.get(1).get("dueDate"));

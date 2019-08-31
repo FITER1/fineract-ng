@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.CenterDomain;
 import org.apache.fineract.integrationtests.common.CenterHelper;
 import org.apache.fineract.integrationtests.common.OfficeHelper;
@@ -41,6 +42,7 @@ import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
+@Slf4j
 public class CenterIntegrationTest {
 
     private RequestSpecification requestSpec;
@@ -200,7 +202,7 @@ public class CenterIntegrationTest {
     public void testStaffAssignmentDuringCenterCreation() {
 
         final Integer staffId = StaffHelper.createStaff(this.requestSpec, this.responseSpec);
-        System.out.println("--------------creating first staff with id-------------" + staffId);
+        log.info("--------------creating first staff with id-------------" + staffId);
         Assert.assertNotNull(staffId);
 
         final int centerWithStaffId = CenterHelper.createCenterWithStaffId(this.requestSpec, this.responseSpec, staffId);
@@ -214,7 +216,7 @@ public class CenterIntegrationTest {
     @Test
     public void testAssignStaffToCenter() {
         final Integer staffId = StaffHelper.createStaff(this.requestSpec, this.responseSpec);
-        System.out.println("--------------creating first staff with id-------------" + staffId);
+        log.info("--------------creating first staff with id-------------" + staffId);
         Assert.assertNotNull(staffId);
 
         final Integer groupID = CenterHelper.createCenter(this.requestSpec, this.responseSpec);
@@ -235,7 +237,7 @@ public class CenterIntegrationTest {
     @Test
     public void testUnassignStaffToCenter() {
         final Integer staffId = StaffHelper.createStaff(this.requestSpec, this.responseSpec);
-        System.out.println("--------------creating first staff with id-------------" + staffId);
+        log.info("--------------creating first staff with id-------------" + staffId);
         Assert.assertNotNull(staffId);
 
         final Integer groupID = CenterHelper.createCenter(this.requestSpec, this.responseSpec);

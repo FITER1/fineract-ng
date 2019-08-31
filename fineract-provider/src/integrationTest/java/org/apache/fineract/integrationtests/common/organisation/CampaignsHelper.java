@@ -42,7 +42,7 @@ public class CampaignsHelper {
     private final RequestSpecification requestSpec;
     private final ResponseSpecification responseSpec;
 
-    private static final String SMS_CAMPAIGNS_URL = "/fineract-provider/api/v1/smscampaigns";
+    private static final String SMS_CAMPAIGNS_URL = "/smscampaigns";
     public static final String DATE_FORMAT = "dd MMMM yyyy";
     public static final String DATE_TIME_FORMAT = "dd MMMM yyyy HH:mm:ss";
 

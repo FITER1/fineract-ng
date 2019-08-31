@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.loans.LoanApplicationTestBuilder;
@@ -45,6 +46,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
+@Slf4j
 public class LoanDisbursementDetailsIntegrationTest {
 
     private ResponseSpecification responseSpec;
@@ -77,13 +79,13 @@ public class LoanDisbursementDetailsIntegrationTest {
         createTranches.add(this.loanTransactionHelper.createTrancheDetail(id, "01 Sep 2015", "5000"));
 
         final Integer clientID = ClientHelper.createClient(this.requestSpec, this.responseSpec, "01 January 2014");
-        System.out.println("---------------------------------CLIENT CREATED WITH ID---------------------------------------------------"
+        log.info("---------------------------------CLIENT CREATED WITH ID---------------------------------------------------"
                 + clientID);
 
         final Integer loanProductID = this.loanTransactionHelper.getLoanProductId(new LoanProductTestBuilder()
                 .withInterestTypeAsDecliningBalance().withMoratorium("", "").withAmortizationTypeAsEqualInstallments().withTranches(true)
                 .withInterestCalculationPeriodTypeAsRepaymentPeriod(true).build(null));
-        System.out.println("----------------------------------LOAN PRODUCT CREATED WITH ID-------------------------------------------"
+        log.info("----------------------------------LOAN PRODUCT CREATED WITH ID-------------------------------------------"
                 + loanProductID);
 
         final Integer loanIDWithEmi = applyForLoanApplicationWithEmiAmount(clientID, loanProductID, proposedAmount, createTranches,
@@ -104,7 +106,7 @@ public class LoanDisbursementDetailsIntegrationTest {
         HashMap loanStatusHashMap = LoanStatusChecker.getStatusOfLoan(this.requestSpec, this.responseSpec, loanIDWithEmi);
         LoanStatusChecker.verifyLoanIsPending(loanStatusHashMap);
 
-        System.out.println("-----------------------------------APPROVE LOAN-----------------------------------------------------------");
+        log.info("-----------------------------------APPROVE LOAN-----------------------------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.approveLoanWithApproveAmount("01 June 2015", "01 June 2015", "10000", loanIDWithEmi,
                 createTranches);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
@@ -131,7 +133,7 @@ public class LoanDisbursementDetailsIntegrationTest {
         HashMap loanStatusMap = LoanStatusChecker.getStatusOfLoan(this.requestSpec, this.responseSpec, loanIDWithoutEmi);
         LoanStatusChecker.verifyLoanIsPending(loanStatusMap);
 
-        System.out.println("-----------------------------------APPROVE LOAN-----------------------------------------------------------");
+        log.info("-----------------------------------APPROVE LOAN-----------------------------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.approveLoanWithApproveAmount("01 June 2015", "01 June 2015", "10000",
                 loanIDWithoutEmi, createTranches);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
@@ -213,7 +215,7 @@ public class LoanDisbursementDetailsIntegrationTest {
 
         assertEquals(period.get("dueDate").toString(), expectedRepaymentSchedule.getDueDate());
         assertEquals(period.get("principalLoanBalanceOutstanding"), expectedRepaymentSchedule.getPrincipalLoanBalanceOutstanding());
-        System.out.println(period.get("totalOriginalDueForPeriod").toString());
+        log.info(period.get("totalOriginalDueForPeriod").toString());
         assertEquals(new Float(period.get("totalOriginalDueForPeriod").toString()), expectedRepaymentSchedule
                 .getTotalOriginalDueForPeriod().floatValue(), 0.0f);
 
@@ -346,7 +348,7 @@ public class LoanDisbursementDetailsIntegrationTest {
     private Integer applyForLoanApplicationWithEmiAmount(final Integer clientID, final Integer loanProductID, final String proposedAmount,
             List<HashMap> tranches, final String installmentAmount) {
 
-        System.out.println("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
+        log.info("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
         final String loanApplicationJSON = new LoanApplicationTestBuilder()
         //
                 .withPrincipal(proposedAmount)
@@ -377,23 +379,23 @@ public class LoanDisbursementDetailsIntegrationTest {
         createTranches.add(this.loanTransactionHelper.createTrancheDetail(id, "01 March 2014", "1000"));
 
         final Integer clientID = ClientHelper.createClient(this.requestSpec, this.responseSpec, "01 January 2014");
-        System.out.println("---------------------------------CLIENT CREATED WITH ID---------------------------------------------------"
+        log.info("---------------------------------CLIENT CREATED WITH ID---------------------------------------------------"
                 + clientID);
 
         final Integer loanProductID = this.loanTransactionHelper.getLoanProductId(new LoanProductTestBuilder()
                 .withInterestTypeAsDecliningBalance().withTranches(true).withInterestCalculationPeriodTypeAsRepaymentPeriod(true)
                 .build(null));
-        System.out.println("----------------------------------LOAN PRODUCT CREATED WITH ID-------------------------------------------"
+        log.info("----------------------------------LOAN PRODUCT CREATED WITH ID-------------------------------------------"
                 + loanProductID);
 
         this.loanID = applyForLoanApplicationWithTranches(clientID, loanProductID, proposedAmount, createTranches);
-        System.out.println("-----------------------------------LOAN CREATED WITH LOANID-------------------------------------------------"
+        log.info("-----------------------------------LOAN CREATED WITH LOANID-------------------------------------------------"
                 + loanID);
 
         HashMap loanStatusHashMap = LoanStatusChecker.getStatusOfLoan(this.requestSpec, this.responseSpec, loanID);
         LoanStatusChecker.verifyLoanIsPending(loanStatusHashMap);
 
-        System.out.println("-----------------------------------APPROVE LOAN-----------------------------------------------------------");
+        log.info("-----------------------------------APPROVE LOAN-----------------------------------------------------------");
         loanStatusHashMap = this.loanTransactionHelper.approveLoanWithApproveAmount(approveDate, expectedDisbursementDate, approvalAmount,
                 loanID, createTranches);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
@@ -478,7 +480,7 @@ public class LoanDisbursementDetailsIntegrationTest {
 
     private Integer applyForLoanApplicationWithTranches(final Integer clientID, final Integer loanProductID, String principal,
             List<HashMap> tranches) {
-        System.out.println("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
+        log.info("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
         final String loanApplicationJSON = new LoanApplicationTestBuilder()
         //
                 .withPrincipal(principal)

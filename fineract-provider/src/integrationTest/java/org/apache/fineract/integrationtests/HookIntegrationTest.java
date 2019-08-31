@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.integrationtests;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 
 import static org.junit.Assert.fail;
@@ -40,6 +41,7 @@ import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
+@Slf4j
 public class HookIntegrationTest {
 
     private RequestSpecification requestSpec;
@@ -80,7 +82,7 @@ public class HookIntegrationTest {
                     final Integer notificationOfficeId = JsonPath.with(json).get("officeId");
                     Assert.assertEquals("Equality check for created officeId and hook received payload officeId", createdOfficeID,
                             notificationOfficeId);
-                    System.out.println("Notification Office Id - " + notificationOfficeId);
+                    log.info("Notification Office Id - " + notificationOfficeId);
                     i = 6;
                 } catch (Exception e) {
                     TimeUnit.SECONDS.sleep(3);
@@ -105,13 +107,13 @@ public class HookIntegrationTest {
         Long hookId = this.hookHelper.createHook(payloadURL).longValue();
         Assert.assertNotNull(hookId);
         this.hookHelper.verifyHookCreatedOnServer(hookId);
-    	System.out.println("---------------------SUCCESSFULLY CREATED AND VERIFIED HOOK-------------------------"+hookId);
+    	log.info("---------------------SUCCESSFULLY CREATED AND VERIFIED HOOK-------------------------"+hookId);
     	this.hookHelper.updateHook(updateURL, hookId);
     	this.hookHelper.verifyUpdateHook(updateURL, hookId);
-    	System.out.println("---------------------SUCCESSFULLY UPDATED AND VERIFIED HOOK-------------------------"+hookId);
+    	log.info("---------------------SUCCESSFULLY UPDATED AND VERIFIED HOOK-------------------------"+hookId);
     	this.hookHelper.deleteHook(hookId);
     	this.hookHelper.verifyDeleteHook(hookId);
-    	System.out.println("---------------------SUCCESSFULLY DELETED AND VERIFIED HOOK-------------------------"+hookId);
+    	log.info("---------------------SUCCESSFULLY DELETED AND VERIFIED HOOK-------------------------"+hookId);
 
     }
 }

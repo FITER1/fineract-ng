@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.CommonConstants;
 import org.apache.fineract.integrationtests.common.GlobalConfigurationHelper;
@@ -43,6 +44,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "rawtypes", "unused", "unchecked" })
+@Slf4j
 public class FlexibleSavingsInterestPostingIntegrationTest {
 
     public static final String ACCOUNT_TYPE_INDIVIDUAL = "INDIVIDUAL";
@@ -85,8 +87,9 @@ public class FlexibleSavingsInterestPostingIntegrationTest {
         HashMap accountDetails = this.savingsAccountHelper.getSavingsDetails(savingsId);
         ArrayList<HashMap<String, Object>> transactions = (ArrayList<HashMap<String, Object>>) accountDetails.get("transactions");
         HashMap<String, Object> interestPostingTransaction = transactions.get(transactions.size() - 2);
-        for (Entry<String, Object> entry : interestPostingTransaction.entrySet())
-            System.out.println(entry.getKey() + "-" + entry.getValue().toString());
+        for (Entry<String, Object> entry : interestPostingTransaction.entrySet()) {
+            log.info(entry.getKey() + "-" + entry.getValue().toString());
+        }
         // 1st Dec 13 to 31st March 14 - 365 days, daily compounding using daily
         // balance
         // 33.7016 obtained from formula in excel provided by Subramanya

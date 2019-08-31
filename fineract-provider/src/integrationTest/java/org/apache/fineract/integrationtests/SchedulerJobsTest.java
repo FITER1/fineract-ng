@@ -21,6 +21,7 @@ package org.apache.fineract.integrationtests;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.SchedulerJobHelper;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.junit.Assert;
@@ -34,6 +35,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "rawtypes", "unchecked", "static-access" })
+@Slf4j
 public class SchedulerJobsTest {
 
     private ResponseSpecification responseSpec;
@@ -108,7 +110,7 @@ public class SchedulerJobsTest {
                 Thread.sleep(15000);
                 schedulerJob = this.schedulerJobHelper.getSchedulerJobById(this.requestSpec, this.responseSpec, jobId.toString());
                 Assert.assertNotNull(schedulerJob);
-                System.out.println("Job " +jobId.toString() +" is Still Running");
+                log.info("Job {} is still running", jobId.toString());
             }
             ArrayList<HashMap> jobHistoryData = this.schedulerJobHelper.getSchedulerJobHistory(this.requestSpec, this.responseSpec,
                     jobId.toString());

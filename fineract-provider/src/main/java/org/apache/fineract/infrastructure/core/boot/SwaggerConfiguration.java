@@ -47,7 +47,7 @@ public class SwaggerConfiguration {
         config.setLicense("Apache 2.0");
         config.setSchemes(new String[]{"https"});
         config.setHost("localhost:" + environment.getProperty("local.server.port"));
-        config.setBasePath("fineract-provider/api/v1");
+        config.setBasePath("api/v1");
         config.setTermsOfServiceUrl("https://demo.openmf.org/api-docs/apiLive.htm");
         config.setContact("https://gitter.im/openMF/mifos");
         config.setResourcePackage("org.apache.fineract");

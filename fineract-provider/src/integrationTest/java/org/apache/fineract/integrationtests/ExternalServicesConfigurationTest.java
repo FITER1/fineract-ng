@@ -21,6 +21,7 @@ package org.apache.fineract.integrationtests;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ExternalServicesConfigurationHelper;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.junit.Assert;
@@ -34,6 +35,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "rawtypes", "unchecked", "static-access" })
+@Slf4j
 public class ExternalServicesConfigurationTest {
 
     private ResponseSpecification responseSpec;
@@ -69,7 +71,7 @@ public class ExternalServicesConfigurationTest {
                     value = "testnull";
                 }
                 String newValue = "test";
-                System.out.println(name + ":" + value);
+                log.info(name + ":" + value);
                 HashMap arrayListValue = this.externalServicesConfigurationHelper.updateValueForExternaServicesConfiguration(requestSpec,
                         responseSpec, "S3", name, newValue);
                 Assert.assertNotNull(arrayListValue.get("value"));
@@ -97,7 +99,7 @@ public class ExternalServicesConfigurationTest {
                     value = "testnull";
                 }
                 String newValue = "test";
-                System.out.println(name + ":" + value);
+                log.info(name + ":" + value);
                 HashMap arrayListValue = this.externalServicesConfigurationHelper.updateValueForExternaServicesConfiguration(requestSpec,
                         responseSpec, "SMTP", name, newValue);
                 Assert.assertNotNull(arrayListValue.get("value"));

@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.CommonConstants;
 import org.apache.fineract.integrationtests.common.GroupHelper;
@@ -50,6 +51,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
  * Retrieval of Entity-Datatable Check
  */
 
+@Slf4j
 public class EntityDatatableChecksIntegrationTest {
 
     private RequestSpecification requestSpec;
@@ -409,7 +411,7 @@ public class EntityDatatableChecksIntegrationTest {
     private Integer createSavingsProduct(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String minOpenningBalance, String minBalanceForInterestCalculation, String minRequiredBalance,
             String enforceMinRequiredBalance, final boolean allowOverdraft, final String taxGroupId, boolean withDormancy) {
-        System.out.println("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW SAVINGS PRODUCT ---------------------------------------");
         SavingsProductHelper savingsProductHelper = new SavingsProductHelper();
         if (allowOverdraft) {
             final String overDraftLimit = "2000.0";
@@ -435,7 +437,7 @@ public class EntityDatatableChecksIntegrationTest {
     }
 
     private Integer createLoanProduct(final String inMultiplesOf, final String digitsAfterDecimal, final String repaymentStrategy) {
-        System.out.println("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW LOAN PRODUCT ---------------------------------------");
         final String loanProductJSON = new LoanProductTestBuilder() //
                 .withPrincipal("10000000.00") //
                 .withNumberOfRepayments("24") //
@@ -452,7 +454,7 @@ public class EntityDatatableChecksIntegrationTest {
 
     private Integer applyForLoanApplication(final Integer clientID, final Integer loanProductID, String graceOnPrincipalPayment,
             final String registeredTableName) {
-        System.out.println("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
+        log.info("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
         final String loanApplicationJSON = new LoanApplicationTestBuilder() //
                 .withPrincipal("10000000.00") //
                 .withLoanTermFrequency("24") //
@@ -473,7 +475,7 @@ public class EntityDatatableChecksIntegrationTest {
 
     private Object applyForLoanApplicationWithError(final Integer clientID, final Integer loanProductID, String graceOnPrincipalPayment,
             final String responseAttribute) {
-        System.out.println("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
+        log.info("--------------------------------APPLYING FOR LOAN APPLICATION--------------------------------");
         final String loanApplicationJSON = new LoanApplicationTestBuilder() //
                 .withPrincipal("10000000.00") //
                 .withLoanTermFrequency("24") //

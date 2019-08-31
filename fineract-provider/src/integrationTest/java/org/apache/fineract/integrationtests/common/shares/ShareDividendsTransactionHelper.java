@@ -29,7 +29,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class ShareDividendsTransactionHelper {
 
-    private static final String SHARE_PRODUCT_URL = "/fineract-provider/api/v1/shareproduct";
+    private static final String SHARE_PRODUCT_URL = "/shareproduct";
     private static final String DIVIDEND = "dividend" ;
     
     public static Integer createShareProductDividends(final Integer productId, final String dividendJson, final RequestSpecification requestSpec,

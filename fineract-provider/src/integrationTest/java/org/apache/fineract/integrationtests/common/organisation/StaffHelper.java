@@ -30,9 +30,9 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 public class StaffHelper {
 
-    private static final String TRANSFER_STAFF_URL = "/fineract-provider/api/v1/groups";
+    private static final String TRANSFER_STAFF_URL = "/groups";
 
-    private static final String CREATE_STAFF_URL = "/fineract-provider/api/v1/staff";
+    private static final String CREATE_STAFF_URL = "/staff";
 
     private static final String RESOURCE_ID = "resourceId";
 

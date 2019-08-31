@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.loans.LoanStatusChecker;
@@ -37,6 +38,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
+@Slf4j
 public class VariableInstallmentsIntegrationTest {
 
     
@@ -58,7 +60,7 @@ public class VariableInstallmentsIntegrationTest {
     public void testVariableLoanProductCreation() {
         final String json = VariableInstallmentsDecliningBalanceHelper.createLoanProductWithVaribleConfig(false, NONE);
         final Integer loanProductID = this.loanTransactionHelper.getLoanProductId(json);
-        System.out.println("------------------------------RETRIEVING CREATED LOAN PRODUCT DETAILS ---------------------------------------");
+        log.info("------------------------------RETRIEVING CREATED LOAN PRODUCT DETAILS ---------------------------------------");
         Map loanProduct = (Map)loanTransactionHelper.getLoanProductDetail(requestSpec, responseSpec, loanProductID, "") ;
         Assert.assertTrue((Boolean)loanProduct.get("allowVariableInstallments")) ;
         Assert.assertEquals(new Integer(5), loanProduct.get("minimumGap")) ;
@@ -70,7 +72,7 @@ public class VariableInstallmentsIntegrationTest {
     public void testLoanProductCreation() {
         final String  josn = VariableInstallmentsDecliningBalanceHelper.createLoanProductWithoutVaribleConfig(false, NONE);
         Integer loanProductID = this.loanTransactionHelper.getLoanProductId(josn);
-        System.out.println("------------------------------RETRIEVING CREATED LOAN PRODUCT DETAILS ---------------------------------------");
+        log.info("------------------------------RETRIEVING CREATED LOAN PRODUCT DETAILS ---------------------------------------");
         Map loanProduct = (Map)loanTransactionHelper.getLoanProductDetail(requestSpec, responseSpec, loanProductID, "") ;
         Assert.assertTrue(!(Boolean)loanProduct.get("allowVariableInstallments")) ;
     }
