@@ -29,11 +29,13 @@ services:
     logging:
       driver: none
     volumes:
-      - ./fineract-db/docker:/docker-entrypoint-initdb.d
+      #- ./fineract-db/docker:/docker-entrypoint-initdb.d
+      #- /tmp/fineract:/var/lib/mysql
     networks:
       - fineract
     environment:
       - MYSQL_ROOT_PASSWORD=mysql
+      - MYSQL_DATABASE=mifostenant-default
     ports:
       - "3306:3306"
   activemq:
