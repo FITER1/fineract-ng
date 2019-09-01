@@ -121,7 +121,7 @@ public class CenterHelper {
         log.info("---------------------------------ASSOCIATING GROUPS AT " + id + "--------------------------------------------");
         HashMap hash = Utils.performServerPost(requestSpec, responseSpec, ASSOCIATE_GROUP_CENTER_URL,
                 new Gson().toJson(groupMemberHashMap), "changes");
-        log.info(hash);
+        log.info("Group: {}", hash);
         ArrayList<String> arr = (ArrayList<String>) hash.get("groupMembers");
         int[] ret = new int[arr.size()];
         for (int i = 0; i < ret.length; i++) {

@@ -18,16 +18,15 @@
  */
 package org.apache.fineract.integrationtests.common.fixeddeposit;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.HashMap;
-
+import com.jayway.restassured.specification.RequestSpecification;
+import com.jayway.restassured.specification.ResponseSpecification;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.junit.Assert;
 
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import java.util.HashMap;
+
+import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("rawtypes")
 @Slf4j
@@ -38,43 +37,43 @@ public class FixedDepositAccountStatusChecker {
     public static void verifyFixedDepositIsApproved(final HashMap fixedDepositStatusHashMap) {
         log.info("-------------------- VERIFYING FIXED DEPOSIT APPLICATION IS APPROVED --------------------");
         assertTrue("Error in Approving Fixed deposit application", getStatus(fixedDepositStatusHashMap, "approved"));
-        log.info(fixedDepositStatusHashMap);
+        log.info("Approving Fixed deposit application: {}", fixedDepositStatusHashMap);
     }
 
     public static void verifyFixedDepositIsPending(final HashMap fixedDepositStatusHashMap) {
         log.info("-------------------- VERIFYING FIXED DEPOSIT APPLICATION IS PENDING --------------------");
         assertTrue("FIXED DEPOSIT ACCOUNT IS NOT IN PENDING STATE", getStatus(fixedDepositStatusHashMap, "submittedAndPendingApproval"));
-        log.info(fixedDepositStatusHashMap);
+        log.info("Approving Fixed deposit application: {}", fixedDepositStatusHashMap);
     }
 
     public static void verifyFixedDepositIsActive(final HashMap fixedDepositStatusHashMap) {
         log.info("----------------- VERIFYING FIXED DEPOSIT APPLICATION IS ACTIVE -----------------");
         assertTrue("ERROR IN ACTIVATING THE FIXED DEPOSIT APPLICATION", getStatus(fixedDepositStatusHashMap, "active"));
-        log.info(fixedDepositStatusHashMap);
+        log.info("Approving Fixed deposit application: {}", fixedDepositStatusHashMap);
     }
 
     public static void verifyFixedDepositIsRejected(final HashMap fixedDepositStatusHashMap) {
         log.info("-------------- VERIFYING FIXED DEPOSIT APPLICATION IS REJECTED ----------------");
         assertTrue("ERROR IN REJECTING THE FIXED DEPOSIT APPLICATION", getStatus(fixedDepositStatusHashMap, "rejected"));
-        log.info(fixedDepositStatusHashMap);
+        log.info("Approving Fixed deposit application: {}", fixedDepositStatusHashMap);
     }
 
     public static void verifyFixedDepositIsWithdrawn(final HashMap fixedDepositStatusHashMap) {
         log.info("---------------- VERIFYING FIXED DEPOSIT APPLICATION IS WITHDRAWN ----------------");
         assertTrue("ERROR IN WITHDRAW  THE FIXED DEPOSIT APPLICATION", getStatus(fixedDepositStatusHashMap, "withdrawnByApplicant"));
-        log.info(fixedDepositStatusHashMap);
+        log.info("Approving Fixed deposit application: {}", fixedDepositStatusHashMap);
     }
 
     public static void verifyFixedDepositAccountIsClosed(final HashMap fixedDepositStatusHashMap) {
         log.info("--------------------- VERIFYING FIXED DEPOSIT APPLICATION IS CLOSED ---------------------");
         assertTrue("ERROR IN CLOSING THE FIXED DEPOSIT APPLICATION", getStatus(fixedDepositStatusHashMap, "closed"));
-        log.info(fixedDepositStatusHashMap);
+        log.info("Approving Fixed deposit application: {}", fixedDepositStatusHashMap);
     }
 
     public static void verifyFixedDepositAccountIsNotActive(final HashMap fixedDepositStatusHashMap) {
         log.info("------------------ VERIFYING FIXED DEPOSIT APPLICATION IS INACTIVE --------------------");
         Assert.assertFalse(getStatus(fixedDepositStatusHashMap, "active"));
-        log.info(fixedDepositStatusHashMap);
+        log.info("Approving Fixed deposit application: {}", fixedDepositStatusHashMap);
     }
 
     public static HashMap getStatusOfFixedDepositAccount(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
@@ -87,13 +86,13 @@ public class FixedDepositAccountStatusChecker {
     public static void verifyFixedDepositAccountIsPrematureClosed(HashMap fixedDepositStatusHashMap) {
         log.info("--------------------- VERIFYING FIXED DEPOSIT APPLICATION IS CLOSED ---------------------");
         assertTrue("ERROR IN PREMATURELY CLOSING THE FIXED DEPOSIT ACCOUNT", getStatus(fixedDepositStatusHashMap, "prematureClosed"));
-        log.info(fixedDepositStatusHashMap);
+        log.info("Approving Fixed deposit application: {}", fixedDepositStatusHashMap);
     }
     
     public static void verifyFixedDepositAccountIsMatured(HashMap fixedDepositStatusHashMap) {
         log.info("--------------------- VERIFYING FIXED DEPOSIT APPLICATION IS MATURED ---------------------");
         assertTrue("ERROR IN MATURITY JOB OF THE FIXED DEPOSIT ACCOUNT", getStatus(fixedDepositStatusHashMap, "matured"));
-        log.info(fixedDepositStatusHashMap);
+        log.info("Approving Fixed deposit application: {}", fixedDepositStatusHashMap);
     }
 
     private static boolean getStatus(final HashMap fixedDepositStatusMap, final String fixedDepositStatusString) {

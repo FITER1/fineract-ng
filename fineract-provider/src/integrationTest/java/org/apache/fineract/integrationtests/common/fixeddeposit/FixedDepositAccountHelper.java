@@ -199,7 +199,7 @@ public class FixedDepositAccountHelper {
                     principal += totalInterest;
                 }
                 totalInterest = 0.0f;
-                log.info(principal);
+                log.info("Pricinipal: {}", principal);
 
             }
             currentDate.add(Calendar.MONTH, 1);
