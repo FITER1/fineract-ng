@@ -169,8 +169,7 @@ public class SelfSavingsApiResource {
 	@Path("template")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-	public String template(@QueryParam("clientId") final Long clientId, @QueryParam("productId") final Long productId,
-			final String apiRequestBodyAsJson, @Context final UriInfo uriInfo) {
+	public String template(@QueryParam("clientId") final Long clientId, @QueryParam("productId") final Long productId, @Context final UriInfo uriInfo) {
 
 		validateAppuserClientsMapping(clientId);
 		Long groupId = null;
