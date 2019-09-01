@@ -16,13 +16,18 @@
 # under the License.
 #
 
-version: "2"
+version: "3.6"
+
+networks:
+  fineract: {}
 
 services:
   mysql:
     image: mysql:5.7
     volumes:
       - ./initdb:/docker-entrypoint-initdb.d
+    networks:
+      - fineract
     environment:
       - MYSQL_ROOT_PASSWORD=mysql
   fineract:
@@ -65,5 +70,7 @@ services:
       - FINERACT_CONNECTION_MIN_EVICTABLE_IDLE_TIME_MILLIS=60000
       - FINERACT_CONNECTION_MAX_RETRIES_ON_DEADLOCK=0
       - FINERACT_CONNECTION_MAX_INTERVAL_BETWEEN_RETRIES=1
+    networks:
+      - fineract
     depends_on:
       - mysql

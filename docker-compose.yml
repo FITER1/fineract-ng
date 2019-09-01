@@ -18,6 +18,9 @@
 
 version: "3.7"
 
+networks:
+  fineract: {}
+
 services:
   mysql:
     image: mysql:5.7
@@ -27,6 +30,8 @@ services:
       driver: none
     volumes:
       - ./fineract-db/docker:/docker-entrypoint-initdb.d
+    networks:
+      - fineract
     environment:
       - MYSQL_ROOT_PASSWORD=mysql
     ports:
@@ -37,6 +42,8 @@ services:
       driver: none
     volumes:
       - ./fineract-activemq/conf:/opt/activemq/conf
+    networks:
+      - fineract
     ports:
       - "61616:61616"
       - "8161:8161"
@@ -85,6 +92,8 @@ services:
       - FINERACT_CONNECTION_MIN_EVICTABLE_IDLE_TIME_MILLIS=60000
       - FINERACT_CONNECTION_MAX_RETRIES_ON_DEADLOCK=0
       - FINERACT_CONNECTION_MAX_INTERVAL_BETWEEN_RETRIES=1
+    networks:
+      - fineract
     depends_on:
       - mysql
       - activemq
