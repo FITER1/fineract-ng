@@ -44,7 +44,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 @Slf4j
 public class BatchHelper {
 
-    private static final String BATCH_API_URL = "/batches?" + Utils.TENANT_IDENTIFIER;
+    private static final String BATCH_API_URL = "/batches";
     private static final String BATCH_API_URL_EXT = BATCH_API_URL + "&enclosingTransaction=true";
 
     private BatchHelper() {

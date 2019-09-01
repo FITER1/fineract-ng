@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.batch.domain.BatchRequest;
 import org.apache.fineract.batch.domain.BatchResponse;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
@@ -55,6 +56,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
  * @see org.apache.fineract.integrationtests.common.BatchHelper
  * @see org.apache.fineract.batch.domain.BatchRequest
  */
+@Slf4j
 public class BatchApiTest extends BaseIntegrationTest {
 
     public BatchApiTest() {
@@ -318,6 +320,8 @@ public class BatchApiTest extends BaseIntegrationTest {
         batchRequests.add(br4);
 
         final String jsonifiedRequest = BatchHelper.toJsonString(batchRequests);
+
+        log.info("Batch request: {}", jsonifiedRequest);
 
         final List<BatchResponse> response = BatchHelper.postBatchRequestsWithoutEnclosingTransaction(this.requestSpec, this.responseSpec,
                 jsonifiedRequest);
