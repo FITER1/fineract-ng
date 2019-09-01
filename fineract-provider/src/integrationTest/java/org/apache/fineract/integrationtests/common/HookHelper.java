@@ -18,16 +18,16 @@
  */
 package org.apache.fineract.integrationtests.common;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-
 import com.google.gson.Gson;
 import com.jayway.restassured.builder.ResponseSpecBuilder;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import static org.junit.Assert.assertEquals;
 
 @Slf4j
 public class HookHelper {
@@ -98,8 +98,7 @@ public class HookHelper {
         log.info("------------------------------CHECK DELETE HOOK DETAILS------------------------------------\n");
         final String GET_URL = "/hooks/" + hookId + "?" + Utils.TENANT_IDENTIFIER;
         ResponseSpecification responseSpec404 = new ResponseSpecBuilder().expectStatusCode(404).build();
-        ArrayList array = Utils.performServerGet(this.requestSpec, responseSpec404, GET_URL, "errors");
-		HashMap<String, String> map = (HashMap<String, String>)array.get(0);
-        assertEquals("error.msg.hook.identifier.not.found",map.get("userMessageGlobalisationCode"));
+        String code = Utils.performServerGet(this.requestSpec, responseSpec404, GET_URL, "userMessageGlobalisationCode");
+        assertEquals("error.msg.resource.not.found", code);
     }
 }
