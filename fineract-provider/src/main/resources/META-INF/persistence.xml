@@ -31,7 +31,7 @@
         	<property name="openjpa.Compatibility" value="QuotedNumbersInQueries=true"/>
         	<property name="openjpa.jdbc.DBDictionary" value="org.apache.fineract.infrastructure.core.domain.MySQLDictionaryCustom"/>
         	<!--<property name="openjpa.InverseManager" value="true(Action=warn)"/> -->
-      		<!-- <property name="openjpa.Log" value="DefaultLevel=WARN, Runtime=INFO, Tool=INFO, SQL=TRACE"/>-->
+      		<property name="openjpa.Log" value="DefaultLevel=WARN, Runtime=ERROR, Tool=ERROR, SQL=TRACE"/>
        		<property name="openjpa.jdbc.MappingDefaults" value="ForeignKeyDeleteAction=CASCADE"/>
 		</properties>
 	</persistence-unit>

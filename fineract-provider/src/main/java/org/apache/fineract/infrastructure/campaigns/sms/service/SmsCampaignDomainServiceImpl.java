@@ -497,19 +497,4 @@ public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
 			}
 		}
     }
-    
-    /*private abstract class Task implements Runnable {
-    	
-    	protected final FineractPlatformTenant tenant;
-    	
-    	protected final String reportName ;
-    	
-    	private final Object entity ;
-    	
-    	public Task(final FineractPlatformTenant tenant, final String reportName, final Object entity) {
-            this.tenant = tenant;
-            this.reportName = reportName ;
-            this.entity = entity ;
-    	}
-    }*/
 }
