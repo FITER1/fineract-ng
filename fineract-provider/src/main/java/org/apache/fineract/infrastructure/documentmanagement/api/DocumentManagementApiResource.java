@@ -18,27 +18,6 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.api;
 
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.*;
 import org.apache.fineract.infrastructure.core.api.ApiRequestParameterHelper;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -50,17 +29,29 @@ import org.apache.fineract.infrastructure.documentmanagement.data.FileData;
 import org.apache.fineract.infrastructure.documentmanagement.service.DocumentReadPlatformService;
 import org.apache.fineract.infrastructure.documentmanagement.service.DocumentWritePlatformService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.UriInfo;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 // TODO: @aleks doesn't pass model validation
-//       should be: @Path("documents/{entityType}/{entityId}")
-@Path("{entityType}/{entityId}/documents")
-// @Component
+//       should be: @Path("entities/{entityType}/{entityId}/documents")
+//       was      : @Path("{entityType}/{entityId}/documents")
+@Path("entities/{entityType}/{entityId}/documents")
+@Component
 @Scope("singleton")
 @Api(value = "Documents", description = "Multiple Documents (a combination of a name, description and a file) may be attached to different Entities like Clients, Groups, Staff, Loans, Savings and Client Identifiers in the system\n" + "\n" + "Note: The currently allowed Entities are\n" + "\n" + "Clients: URL Pattern as clients\n" + "Staff: URL Pattern as staff\n" + "Loans: URL Pattern as loans\n" + "Savings: URL Pattern as savings\n" + "Client Identifiers: URL Pattern as client_identifiers\n" + "Groups: URL Pattern as groups")
 public class DocumentManagementApiResource {
@@ -103,15 +94,18 @@ public class DocumentManagementApiResource {
         return this.toApiJsonSerializer.serialize(settings, documentDatas, this.RESPONSE_DATA_PARAMETERS);
     }
 
+    // NOTE: Swagger annotations don't work here
     @POST
-    @Consumes({ MediaType.MULTIPART_FORM_DATA })
+    @Consumes({ MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM })
     @Produces({ MediaType.APPLICATION_JSON })
     @ApiOperation(value = "Create a Document", notes = "Note: A document is created using a Multi-part form upload \n" + "\n" + "Body Parts\n" + "\n" + "name : \n" + "Name or summary of the document\n" + "\n" + "description : \n" + "Description of the document\n" + "\n" + "file : \n" + "The file to be uploaded\n" + "\n" + "Mandatory Fields : \n" + "file and description")
     @ApiResponses({@ApiResponse(code = 200, message = "Not Shown (multi-part form data)", response = DocumentManagementApiResourceSwagger.PostEntityTypeEntityIdDocumentsResponse.class)})
-    public String createDocument(@PathParam("entityType") @ApiParam(value = "entityType") final String entityType, @PathParam("entityId") @ApiParam(value = "entityId") final Long entityId,
-            @HeaderParam("Content-Length") @ApiParam(value = "Content-Length") final Long fileSize, @FormDataParam("file") @ApiParam(value = "file") final InputStream inputStream,
-            @FormDataParam("file") final @ApiParam(value = "file") FormDataContentDisposition fileDetails, @FormDataParam("file") @ApiParam(value = "file") final FormDataBodyPart bodyPart,
-            @FormDataParam("name") @ApiParam(value = "name") final String name, @FormDataParam("description") @ApiParam(value = "description") final String description) {
+    public String createDocument(@PathParam("entityType") final String entityType,
+                                 @PathParam("entityId") final Long entityId,
+                                 @FormDataParam("file") final InputStream file,
+                                 @FormDataParam("file") final FormDataContentDisposition fileDetails,
+                                 @FormDataParam("name") final String name,
+                                 @FormDataParam("description") final String description) {
 
         /**
          * TODO: also need to have a backup and stop reading from stream after
@@ -123,24 +117,27 @@ public class DocumentManagementApiResource {
          * permissable
          **/
         final DocumentCommand documentCommand = new DocumentCommand(null, null, entityType, entityId, name, fileDetails.getFileName(),
-                fileSize, bodyPart.getMediaType().toString(), description, null);
+            fileDetails.getSize(), fileDetails.getType(), description, null);
 
-        final Long documentId = this.documentWritePlatformService.createDocument(documentCommand, inputStream);
+        final Long documentId = this.documentWritePlatformService.createDocument(documentCommand, file);
 
         return this.toApiJsonSerializer.serialize(CommandProcessingResult.resourceResult(documentId, null));
     }
 
+    // NOTE: Swagger annotations don't work here
     @PUT
     @Path("{documentId}")
-    @Consumes({ MediaType.MULTIPART_FORM_DATA })
+    @Consumes({ MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM })
     @Produces({ MediaType.APPLICATION_JSON })
     @ApiOperation(value = "Update a Document", notes = "Note: A document is updated using a Multi-part form upload \n" + "Body Parts\n" + "name\n" + "Name or summary of the document\n" + "description\n" + "Description of the document\n" + "file\n" + "The file to be uploaded")
     @ApiResponses({@ApiResponse(code = 200, message = "Not Shown (multi-part form data)", response = DocumentManagementApiResourceSwagger.PutEntityTypeEntityIdDocumentsResponse.class)})
-    public String updateDocument(@PathParam("entityType") @ApiParam(value = "entityType") final String entityType, @PathParam("entityId") @ApiParam(value = "entityId") final Long entityId,
-                                 @PathParam("documentId") @ApiParam(value = "documentId") final Long documentId, @HeaderParam("Content-Length") @ApiParam(value = "Content-Length") final Long fileSize,
-                                 @FormDataParam("file") @ApiParam(value = "file") final InputStream inputStream, @FormDataParam("file") @ApiParam(value = "file") final FormDataContentDisposition fileDetails,
-                                 @FormDataParam("file") @ApiParam(value = "file") final FormDataBodyPart bodyPart, @FormDataParam("name") @ApiParam(value = "name") final String name,
-                                 @FormDataParam("description") @ApiParam(value = "description") final String description) {
+    public String updateDocument(@PathParam("entityType") final String entityType,
+                                 @PathParam("entityId") final Long entityId,
+                                 @PathParam("documentId") final Long documentId,
+                                 @FormDataParam("file") final InputStream inputStream,
+                                 @FormDataParam("file") final FormDataContentDisposition fileDetails,
+                                 @FormDataParam("name") final String name,
+                                 @FormDataParam("description") final String description) {
 
         final Set<String> modifiedParams = new HashSet<>();
         modifiedParams.add("name");
@@ -157,10 +154,10 @@ public class DocumentManagementApiResource {
             modifiedParams.add("type");
             modifiedParams.add("location");
             documentCommand = new DocumentCommand(modifiedParams, documentId, entityType, entityId, name, fileDetails.getFileName(),
-                    fileSize, bodyPart.getMediaType().toString(), description, null);
+                fileDetails.getSize(), fileDetails.getType(), description, null);
         } else {
             documentCommand = new DocumentCommand(modifiedParams, documentId, entityType, entityId, name, null, null, null, description,
-                    null);
+                null);
         }
         /***
          * TODO: does not return list of changes, should be done for consistency
