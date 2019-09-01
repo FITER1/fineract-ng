@@ -58,36 +58,6 @@ public class Utils {
 
     public static final String TENANT_TIME_ZONE = "Asia/Kolkata";
 
-    // TODO: @aleks remove
-    @Deprecated
-    private static final String LOGIN_URL = "/authentication?username=mifos&password=password&" + TENANT_IDENTIFIER;
-
-    // TODO: @aleks remove
-    @Deprecated
-    public static void initializeRESTAssured() {
-        RestAssured.baseURI = "https://localhost";
-        RestAssured.port = 8443;
-        RestAssured.keystore("src/main/resources/keystore.jks", "openmf");
-    }
-
-    // TODO: @aleks remove
-    @Deprecated
-    public static String loginIntoServerAndGetBase64EncodedAuthenticationKey() {
-        try {
-            log.info("-----------------------------------LOGIN-----------------------------------------");
-            final String json = RestAssured.post(LOGIN_URL).asString();
-            assertThat("Failed to login into fineract platform", StringUtils.isBlank(json), is(false));
-            return JsonPath.with(json).get("base64EncodedAuthenticationKey");
-        } catch (final Exception e) {
-            if (e instanceof HttpHostConnectException) {
-                final HttpHostConnectException hh = (HttpHostConnectException) e;
-                fail("Failed to connect to fineract platform:" + hh.getMessage());
-            }
-
-            throw new RuntimeException(e);
-        }
-    }
-
     public static <T> T performServerGet(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String getURL, final String jsonAttributeToGetBack) {
         final String json = given().spec(requestSpec).expect().spec(responseSpec).log().ifError().when().get(getURL).andReturn().asString();
