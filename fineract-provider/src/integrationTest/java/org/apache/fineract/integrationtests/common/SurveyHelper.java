@@ -21,11 +21,13 @@ package org.apache.fineract.integrationtests.common;
 import com.google.gson.Gson;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 
+@Slf4j
 public class SurveyHelper {
 
     private static final String FULFIL_SURVEY_URL = "/survey/ppi_kenya_2009/clientId?" + Utils.TENANT_IDENTIFIER;
@@ -36,7 +38,7 @@ public class SurveyHelper {
 
     public static Integer fulfilSurvey(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String activationDate) {
-        System.out.println("---------------------------------FULFIL PPI ---------------------------------------------");
+        log.info("---------------------------------FULFIL PPI ---------------------------------------------");
         return Utils.performServerPost(requestSpec, responseSpec,FULFIL_SURVEY_URL, getTestPPIAsJSON(), "clientId");
     }
 
@@ -58,13 +60,13 @@ public class SurveyHelper {
         map.put("ppi_towels_cd_q9_towels", "134");
         map.put("ppi_fryingpans_cd_q10_fryingpans", "138");
 
-        System.out.println("map : " + map);
+        log.info("map : " + map);
         return new Gson().toJson(map);
     }
 
     public static void verifySurveyCreatedOnServer(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer generatedClientID) {
-        System.out.println("------------------------------CHECK CLIENT DETAILS------------------------------------\n");
+        log.info("------------------------------CHECK CLIENT DETAILS------------------------------------\n");
         final String SURVEY_URL = "/Survey/ppi_kenya_2009/clientid/entryId" + generatedClientID + "?" + Utils.TENANT_IDENTIFIER;
         final Integer responseClientID = Utils.performServerGet(requestSpec, responseSpec, SURVEY_URL, "id");
         assertEquals("ERROR IN CREATING THE CLIENT", generatedClientID, responseClientID);

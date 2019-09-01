@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.batch.domain.BatchRequest;
 import org.apache.fineract.batch.domain.BatchResponse;
 import org.junit.Assert;
@@ -40,6 +41,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
  * 
  * @see org.apache.fineract.integrationtests.BatchApiTest
  */
+@Slf4j
 public class BatchHelper {
 
     private static final String BATCH_API_URL = "/batches?" + Utils.TENANT_IDENTIFIER;
@@ -424,7 +426,7 @@ public class BatchHelper {
      */
     public static void verifyClientCreatedOnServer(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String externalId) {
-        System.out.println("------------------------------CHECK CLIENT DETAILS------------------------------------\n");
+        log.info("------------------------------CHECK CLIENT DETAILS------------------------------------\n");
         final String CLIENT_URL = "/clients?externalId=" + externalId + "&" + Utils.TENANT_IDENTIFIER;
         final Integer responseRecords = Utils.performServerGet(requestSpec, responseSpec, CLIENT_URL, "totalFilteredRecords");
         Assert.assertEquals("No records found with given externalId", (long) responseRecords, (long) 0);

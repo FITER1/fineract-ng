@@ -20,19 +20,21 @@ package org.apache.fineract.integrationtests.common;
 
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.accounting.Account;
 
 import com.google.gson.Gson;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
+@Slf4j
 public class TaxComponentHelper {
 
     private static final String CREATE_TAX_COMPONENT_URL = "/taxes/component?" + Utils.TENANT_IDENTIFIER;
 
     public static Integer createTaxComponent(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String percentage, final Integer liabilityAccountId) {
-        System.out.println("---------------------------------CREATING A TAX COMPONENT---------------------------------------------");
+        log.info("---------------------------------CREATING A TAX COMPONENT---------------------------------------------");
         return Utils.performServerPost(requestSpec, responseSpec, CREATE_TAX_COMPONENT_URL,
                 getTaxComponentAsJSON(percentage, liabilityAccountId), "resourceId");
     }
@@ -43,7 +45,7 @@ public class TaxComponentHelper {
             map.put("creditAccountType", Account.AccountType.LIABILITY.toString());
             map.put("creditAcountId", String.valueOf(creditAccountId));
         }
-        System.out.println("map : " + map);
+        log.info("map : " + map);
         return new Gson().toJson(map);
     }
 

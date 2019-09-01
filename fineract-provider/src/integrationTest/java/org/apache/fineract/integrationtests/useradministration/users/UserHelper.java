@@ -21,9 +21,10 @@ package org.apache.fineract.integrationtests.useradministration.users;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.Utils;
 
-
+@Slf4j
 public class UserHelper {
     private static final String CREATE_USER_URL = "/users?" + Utils.TENANT_IDENTIFIER;
     private static final String USER_URL = "/users";
@@ -38,7 +39,7 @@ public class UserHelper {
                 + " \"officeId\": \"1\", \"staffId\": " + "\""
                 + Integer.toString(staffId)+"\",\"roles\": [\""
                 + Integer.toString(roleId) + "\"], \"sendPasswordToEmail\": false}";
-        System.out.println(json);
+        log.info(json);
         return json;
 
     }

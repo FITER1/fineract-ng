@@ -21,6 +21,7 @@ package org.apache.fineract.integrationtests.common.shares;
 import com.google.gson.Gson;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.integrationtests.BaseIntegrationTest;
 import org.apache.fineract.integrationtests.common.ClientHelper;
@@ -33,6 +34,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+@Slf4j
 public class ShareAccountIntegrationTests extends BaseIntegrationTest {
 
     private RequestSpecification requestSpec;
@@ -43,21 +45,21 @@ public class ShareAccountIntegrationTests extends BaseIntegrationTest {
     public void testCreateShareProduct() {
         // This method will check create share product, get share product,
         // update share product.
-        System.out.println("------------------------------CREATING NEW SHARE PRODUCT ---------------------------------------");
+        log.info("------------------------------CREATING NEW SHARE PRODUCT ---------------------------------------");
         shareProductHelper = new ShareProductHelper();
         final Integer shareProductId = createShareProduct();
         Assert.assertNotNull(shareProductId);
-        System.out.println("------------------------------CREATING SHARE PRODUCT COMPLETE---------------------------------------");
+        log.info("------------------------------CREATING SHARE PRODUCT COMPLETE---------------------------------------");
 
-        System.out.println("------------------------------RETRIEVING SHARE PRODUCT---------------------------------------");
+        log.info("------------------------------RETRIEVING SHARE PRODUCT---------------------------------------");
         Map<String, Object> shareProductData = ShareProductTransactionHelper
                 .retrieveShareProduct(shareProductId, requestSpec, responseSpec);
         Assert.assertNotNull(shareProductData);
         shareProductHelper.verifyShareProduct(shareProductData);
 
-        System.out.println("------------------------------RETRIEVING SHARE PRODUCT COMPLETE---------------------------------------");
+        log.info("------------------------------RETRIEVING SHARE PRODUCT COMPLETE---------------------------------------");
 
-        System.out.println("------------------------------UPDATING SHARE PRODUCT---------------------------------------");
+        log.info("------------------------------UPDATING SHARE PRODUCT---------------------------------------");
 
         Map<String, Object> shareProductDataForUpdate = new HashMap<>();
 
@@ -74,7 +76,7 @@ public class ShareAccountIntegrationTests extends BaseIntegrationTest {
         String updatedSharesIssued = String.valueOf(updatedShareProductData.get("totalSharesIssued"));
         Assert.assertEquals("2000", updatedTotalShares);
         Assert.assertEquals("2000", updatedSharesIssued);
-        System.out.println("------------------------------UPDATING SHARE PRODUCT COMPLETE---------------------------------------");
+        log.info("------------------------------UPDATING SHARE PRODUCT COMPLETE---------------------------------------");
 
     }
 

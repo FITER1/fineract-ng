@@ -20,10 +20,12 @@ package org.apache.fineract.integrationtests.loanaccount.guarantor;
 
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.Utils;
 
 import com.google.gson.Gson;
 
+@Slf4j
 public class GuarantorTestBuilder {
 
     private static final String GUARANTOR_TYPE_CUSTOMER = "1";
@@ -59,7 +61,7 @@ public class GuarantorTestBuilder {
             map.put("amount", guaranteeAmount);
             map.put("savingsId", savingsId);
         }
-        System.out.println("map : " + map);
+        log.info("map : " + map);
         return new Gson().toJson(map);
     }
 

@@ -148,6 +148,8 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
 		LocalDate nextDueDateForAnnualFee = LocalDate.of(annualFeeDueDateAsArrayList.get(0), annualFeeDueDateAsArrayList.get(1), annualFeeDueDateAsArrayList.get(2));
 		LocalDate todaysDate = LocalDate.now(ZoneId.of("Asia/Kolkata"));
 
+		log.info("Next due date annual fee: {} <-> {}", nextDueDateForAnnualFee, todaysDate);
+
 		Assert.assertTrue("Verifying that all due Annual Fees have been paid ",
 				nextDueDateForAnnualFee.isAfter(todaysDate));
 

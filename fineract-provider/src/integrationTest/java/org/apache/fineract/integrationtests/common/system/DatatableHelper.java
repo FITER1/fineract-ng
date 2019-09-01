@@ -24,12 +24,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.Utils;
 
 import com.google.gson.Gson;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
+@Slf4j
 public class DatatableHelper {
 
     private final RequestSpecification requestSpec;
@@ -60,7 +62,7 @@ public class DatatableHelper {
 
     public static void verifyDatatableCreatedOnServer(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String generatedDatatableName) {
-        System.out.println("------------------------------CHECK DATATABLE DETAILS------------------------------------\n");
+        log.info("------------------------------CHECK DATATABLE DETAILS------------------------------------\n");
         final String responseRegisteredTableName = Utils.performServerGet(requestSpec, responseSpec, DATATABLE_URL + "/"
                 + generatedDatatableName + "?" + Utils.TENANT_IDENTIFIER, "registeredTableName");
         assertEquals("ERROR IN CREATING THE DATATABLE", generatedDatatableName, responseRegisteredTableName);
@@ -78,7 +80,7 @@ public class DatatableHelper {
         addDatatableColumns(datatableColumnsList, "Date of Approval", "Date", false, null);
         map.put("columns", datatableColumnsList);
         String requestJsonString = new Gson().toJson(map);
-        System.out.println("map : " + requestJsonString);
+        log.info("map : " + requestJsonString);
         return requestJsonString;
     }
 

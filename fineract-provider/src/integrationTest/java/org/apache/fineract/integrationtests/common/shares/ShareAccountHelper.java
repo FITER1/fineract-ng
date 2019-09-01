@@ -24,8 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 
 
+@Slf4j
 public class ShareAccountHelper {
 
     private static final String LOCALE = "en_GB";
@@ -97,7 +99,7 @@ public class ShareAccountHelper {
         }
         
         String shareAccountCreateJson = new Gson().toJson(map);
-        System.out.println(shareAccountCreateJson);
+        log.info(shareAccountCreateJson);
         return shareAccountCreateJson;
     }
     

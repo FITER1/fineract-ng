@@ -203,8 +203,7 @@ public class DisbursalAndRepaymentScheduleTest extends BaseIntegrationTest {
 
     @Test
     public void testChangeGroupMeetingMaturedOnDate() {
-        System.out
-                .println("---------------------------------STARTING GROUP LOAN MEETING CHANGE DATE EXPECTED MATURED CHANGE------------------------------------------");
+        log.info("---------------------------------STARTING GROUP LOAN MEETING CHANGE DATE EXPECTED MATURED CHANGE------------------------------------------");
 
         Calendar meetingCalendar = Calendar.getInstance();
         meetingCalendar.setFirstDayOfWeek(Calendar.MONDAY);

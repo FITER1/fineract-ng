@@ -947,8 +947,7 @@ public class ClientSavingsIntegrationTest extends BaseIntegrationTest {
 				decimalFormat.format(accountDetailsPostInterestPosted));
 		assertEquals("Verifying interest posted", interestPosted,
 				accountDetailsPostInterestPosted);
-		System.out
-				.println("-----Post Interest As on Successfully Worked----------");
+		log.info("-----Post Interest As on Successfully Worked----------");
 
 		transactionDate.set(Calendar.DAY_OF_MONTH, 3);
 		TRANSACTION_DATE = dateFormat.format(transactionDate.getTime());
@@ -984,8 +983,7 @@ public class ClientSavingsIntegrationTest extends BaseIntegrationTest {
 				decimalFormat.format(accountDetailsPostInterestPosted));
 		assertEquals("Verifying interest posted", interestPosted,
 				accountDetailsPostInterestPosted);
-		System.out
-				.println("-----Post Interest As on Successfully Worked-------");
+		log.info("-----Post Interest As on Successfully Worked-------");
 
 		DateFormat transactionFormat = new SimpleDateFormat("dd MMMM yyyy",
 				Locale.US);
@@ -1025,8 +1023,7 @@ public class ClientSavingsIntegrationTest extends BaseIntegrationTest {
 					decimalFormat.format(accountDetailsPostInterestPosted));
 			assertEquals("Verifying interest posted", interestPosted,
 					accountDetailsPostInterestPosted);
-			System.out
-					.println("-----Post Interest As on Successfully Worked----------");
+			log.info("-----Post Interest As on Successfully Worked----------");
 		}
 		DateFormat lastTransactionDateFormat = new SimpleDateFormat(
 				"dd MMMM yyyy", Locale.US);
@@ -1069,8 +1066,7 @@ public class ClientSavingsIntegrationTest extends BaseIntegrationTest {
 					decimalFormat.format(accountDetailsPostInterestPosted));
 			assertEquals("Verifying interest posted", interestPosted,
 					accountDetailsPostInterestPosted);
-			System.out
-					.println("-----Post Interest As on Successfully Worked----------");
+			log.info("-----Post Interest As on Successfully Worked----------");
 
 		}
 		transactionDate.set(Calendar.DAY_OF_MONTH, 1);
@@ -1106,8 +1102,7 @@ public class ClientSavingsIntegrationTest extends BaseIntegrationTest {
 				decimalFormat.format(accountDetailsPostInterestPosted));
 		assertEquals("Verifying interest posted", interestPosted,
 				accountDetailsPostInterestPosted);
-		System.out
-				.println("-----Post Interest As on Successfully Worked----------");
+		log.info("-----Post Interest As on Successfully Worked----------");
 
 	}
 	
@@ -1292,8 +1287,7 @@ public class ClientSavingsIntegrationTest extends BaseIntegrationTest {
 				decimalFormat.format(accountDetailsPostInterestPosted));
 		assertEquals("Verifying interest posted", interestPosted,
 				accountDetailsPostInterestPosted);
-		System.out
-				.println("-----Post Interest As on Successfully Worked----------");
+		log.info("-----Post Interest As on Successfully Worked----------");
 
 		transactionDate.set(Calendar.DAY_OF_MONTH, 3);
 		TRANSACTION_DATE = dateFormat.format(transactionDate.getTime());
@@ -1329,8 +1323,7 @@ public class ClientSavingsIntegrationTest extends BaseIntegrationTest {
 				decimalFormat.format(accountDetailsPostInterestPosted));
 		assertEquals("Verifying interest posted", interestPosted,
 				accountDetailsPostInterestPosted);
-		System.out
-				.println("-----Post Interest As on Successfully Worked-------");
+		log.info("-----Post Interest As on Successfully Worked-------");
 
 		DateFormat transactionFormat = new SimpleDateFormat("dd MMMM yyyy",
 				Locale.US);
@@ -1370,8 +1363,7 @@ public class ClientSavingsIntegrationTest extends BaseIntegrationTest {
 					decimalFormat.format(accountDetailsPostInterestPosted));
 			assertEquals("Verifying interest posted", interestPosted,
 					accountDetailsPostInterestPosted);
-			System.out
-					.println("-----Post Interest As on Successfully Worked----------");
+			log.info("-----Post Interest As on Successfully Worked----------");
 		}
 		DateFormat lastTransactionDateFormat = new SimpleDateFormat(
 				"dd MMMM yyyy", Locale.US);
@@ -1414,8 +1406,7 @@ public class ClientSavingsIntegrationTest extends BaseIntegrationTest {
 					decimalFormat.format(accountDetailsPostInterestPosted));
 			assertEquals("Verifying interest posted", interestPosted,
 					accountDetailsPostInterestPosted);
-			System.out
-					.println("-----Post Interest As on Successfully Worked----------");
+			log.info("-----Post Interest As on Successfully Worked----------");
 
 		}
 		transactionDate.set(Calendar.DAY_OF_MONTH, 1);
@@ -1451,8 +1442,7 @@ public class ClientSavingsIntegrationTest extends BaseIntegrationTest {
 				decimalFormat.format(accountDetailsPostInterestPosted));
 		assertEquals("Verifying interest posted", interestPosted,
 				accountDetailsPostInterestPosted);
-		System.out
-				.println("-----Post Interest As on Successfully Worked----------");
+		log.info("-----Post Interest As on Successfully Worked----------");
 	}
        
     @SuppressWarnings("unchecked")

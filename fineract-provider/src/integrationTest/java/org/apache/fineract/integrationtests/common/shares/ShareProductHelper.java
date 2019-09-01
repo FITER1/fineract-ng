@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.joda.time.LocalDate;
@@ -33,6 +34,7 @@ import org.junit.Assert;
 import com.google.gson.Gson;
 
 
+@Slf4j
 public class ShareProductHelper {
 
     
@@ -96,7 +98,7 @@ public class ShareProductHelper {
         }
         
         String shareProductCreateJson = new Gson().toJson(map);
-        System.out.println(shareProductCreateJson);
+        log.info(shareProductCreateJson);
         return shareProductCreateJson;
     }
     

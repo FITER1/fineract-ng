@@ -23,7 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class LoanApplicationTestBuilder {
 
     private static final String DAYS = "0";
@@ -138,7 +140,7 @@ public class LoanApplicationTestBuilder {
         if (datatables != null) {
             map.put("datatables", this.datatables);
         }
-        System.out.println("Loan Application request : " + map);
+        log.info("Loan Application request : " + map);
         return new Gson().toJson(map);
     }
 

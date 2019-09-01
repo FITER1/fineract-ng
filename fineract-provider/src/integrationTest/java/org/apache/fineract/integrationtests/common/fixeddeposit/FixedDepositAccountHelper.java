@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.CommonConstants;
 import org.apache.fineract.integrationtests.common.Utils;
 
@@ -31,6 +32,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "unused", "rawtypes" })
+@Slf4j
 public class FixedDepositAccountHelper {
 
     private final RequestSpecification requestSpec;
@@ -129,13 +131,13 @@ public class FixedDepositAccountHelper {
         map.put("transferInterestToSavings", transferInterest);
 
         String fixedDepositAccountJson = new Gson().toJson(map);
-        System.out.println(fixedDepositAccountJson);
+        log.info(fixedDepositAccountJson);
         return fixedDepositAccountJson;
     }
 
     public static Integer applyFixedDepositApplication(final String fixedDepositAccountAsJson, final RequestSpecification requestSpec,
             final ResponseSpecification responseSpec) {
-        System.out.println("--------------------- APPLYING FOR FIXED DEPOSIT ACCOUNT ------------------------");
+        log.info("--------------------- APPLYING FOR FIXED DEPOSIT ACCOUNT ------------------------");
         return Utils.performServerPost(requestSpec, responseSpec, APPLY_FIXED_DEPOSIT_ACCOUNT_URL, fixedDepositAccountAsJson,
                 CommonConstants.RESPONSE_RESOURCE_ID);
     }
@@ -143,7 +145,7 @@ public class FixedDepositAccountHelper {
     public static HashMap getFixedDepositAccountById(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer accountID) {
         final String GET_FIXED_DEPOSIT_BY_ID_URL = FIXED_DEPOSIT_ACCOUNT_URL + "/" + accountID + "?" + Utils.TENANT_IDENTIFIER;
-        System.out.println("------------------------ RETRIEVING FIXED DEPOSIT ACCOUNT BY ID -------------------------");
+        log.info("------------------------ RETRIEVING FIXED DEPOSIT ACCOUNT BY ID -------------------------");
         return Utils.performServerGet(requestSpec, responseSpec, GET_FIXED_DEPOSIT_BY_ID_URL, "");
     }
 
@@ -197,7 +199,7 @@ public class FixedDepositAccountHelper {
                     principal += totalInterest;
                 }
                 totalInterest = 0.0f;
-                System.out.println(principal);
+                log.info(principal);
 
             }
             currentDate.add(Calendar.MONTH, 1);
@@ -235,60 +237,60 @@ public class FixedDepositAccountHelper {
     }
 
     public HashMap approveFixedDeposit(final Integer fixedDepositAccountID, final String approvedOnDate) {
-        System.out.println("--------------------------------- APPROVING FIXED DEPOSIT APPLICATION ------------------------------------");
+        log.info("--------------------------------- APPROVING FIXED DEPOSIT APPLICATION ------------------------------------");
         return performFixedDepositApplicationActions(createFixedDepositOperationURL(APPROVE_FIXED_DEPOSIT_COMMAND, fixedDepositAccountID),
                 getApproveFixedDepositAccountAsJSON(approvedOnDate));
     }
 
     public HashMap undoApproval(final Integer fixedDepositAccountID) {
-        System.out.println("--------------------------------- UNDO APPROVING FIXED DEPOSIT APPLICATION -------------------------------");
+        log.info("--------------------------------- UNDO APPROVING FIXED DEPOSIT APPLICATION -------------------------------");
         final String undoBodyJson = "{'note':'UNDO APPROVAL'}";
         return performFixedDepositApplicationActions(
                 createFixedDepositOperationURL(UNDO_APPROVAL_FIXED_DEPOSIT_COMMAND, fixedDepositAccountID), undoBodyJson);
     }
 
     public HashMap rejectApplication(final Integer fixedDepositAccountID, final String rejectedOnDate) {
-        System.out.println("--------------------------------- REJECT FIXED DEPOSIT APPLICATION -------------------------------");
+        log.info("--------------------------------- REJECT FIXED DEPOSIT APPLICATION -------------------------------");
         return performFixedDepositApplicationActions(createFixedDepositOperationURL(REJECT_FIXED_DEPOSIT_COMMAND, fixedDepositAccountID),
                 getRejectedFixedDepositAsJSON(rejectedOnDate));
     }
 
     public HashMap withdrawApplication(final Integer fixedDepositAccountID, final String withdrawApplicationOnDate) {
-        System.out.println("--------------------------------- Withdraw FIXED DEPOSIT APPLICATION -------------------------------");
+        log.info("--------------------------------- Withdraw FIXED DEPOSIT APPLICATION -------------------------------");
         return performFixedDepositApplicationActions(
                 createFixedDepositOperationURL(WITHDRAWN_BY_CLIENT_FIXED_DEPOSIT_COMMAND, fixedDepositAccountID),
                 getWithdrawnFixedDepositAccountAsJSON(withdrawApplicationOnDate));
     }
 
     public HashMap activateFixedDeposit(final Integer fixedDepositAccountID, final String activationDate) {
-        System.out.println("---------------------------------- ACTIVATING FIXED DEPOSIT APPLICATION ----------------------------------");
+        log.info("---------------------------------- ACTIVATING FIXED DEPOSIT APPLICATION ----------------------------------");
         return performFixedDepositApplicationActions(createFixedDepositOperationURL(ACTIVATE_FIXED_DEPOSIT_COMMAND, fixedDepositAccountID),
                 getActivatedFixedDepositAccountAsJSON(activationDate));
     }
 
     public Object deleteFixedDepositApplication(final Integer fixedDepositAccountID, final String jsonAttributeToGetBack) {
-        System.out.println("---------------------------------- DELETE FIXED DEPOSIT APPLICATION ----------------------------------");
+        log.info("---------------------------------- DELETE FIXED DEPOSIT APPLICATION ----------------------------------");
         return Utils.performServerDelete(this.requestSpec, this.responseSpec, FIXED_DEPOSIT_ACCOUNT_URL + "/" + fixedDepositAccountID + "?"
                 + Utils.TENANT_IDENTIFIER, jsonAttributeToGetBack);
 
     }
 
     public Integer calculateInterestForFixedDeposit(final Integer fixedDepositAccountId) {
-        System.out.println("--------------------------------- CALCULATING INTEREST FOR FIXED DEPOSIT --------------------------------");
+        log.info("--------------------------------- CALCULATING INTEREST FOR FIXED DEPOSIT --------------------------------");
         return (Integer) performFixedDepositActions(
                 createFixedDepositCalculateInterestURL(CALCULATE_INTEREST_FIXED_DEPOSIT_COMMAND, fixedDepositAccountId),
                 getCalculatedInterestForFixedDepositApplicationAsJSON(), CommonConstants.RESPONSE_RESOURCE_ID);
     }
 
     public Integer postInterestForFixedDeposit(final Integer fixedDepositAccountId) {
-        System.out.println("--------------------------------- POST INTEREST FOR FIXED DEPOSIT --------------------------------");
+        log.info("--------------------------------- POST INTEREST FOR FIXED DEPOSIT --------------------------------");
         return (Integer) performFixedDepositActions(
                 createFixedDepositCalculateInterestURL(POST_INTEREST_FIXED_DEPOSIT_COMMAND, fixedDepositAccountId),
                 getCalculatedInterestForFixedDepositApplicationAsJSON(), CommonConstants.RESPONSE_RESOURCE_ID);
     }
 
     public HashMap calculatePrematureAmountForFixedDeposit(final Integer fixedDepositAccountId, final String closedOnDate) {
-        System.out.println("--------------------- CALCULATING PREMATURE AMOUNT FOR FIXED DEPOSIT ----------------------------");
+        log.info("--------------------- CALCULATING PREMATURE AMOUNT FOR FIXED DEPOSIT ----------------------------");
         return (HashMap) performFixedDepositActions(
                 createFixedDepositCalculateInterestURL(CALCULATE_PREMATURE_AMOUNT_COMMAND, fixedDepositAccountId),
                 getCalculatedPrematureAmountForFixedDepositAccountAsJSON(closedOnDate), "");
@@ -296,7 +298,7 @@ public class FixedDepositAccountHelper {
 
     public Object prematureCloseForFixedDeposit(final Integer fixedDepositAccountId, final String closedOnDate, final String closureType,
             final Integer toSavingsId, final String jsonAttributeToGetBack) {
-        System.out.println("--------------------- PREMATURE CLOSE FOR FIXED DEPOSIT ----------------------------");
+        log.info("--------------------- PREMATURE CLOSE FOR FIXED DEPOSIT ----------------------------");
         return performFixedDepositActions(createFixedDepositCalculateInterestURL(PREMATURE_CLOSE_COMMAND, fixedDepositAccountId),
                 getPrematureCloseForFixedDepositAccountAsJSON(closedOnDate, closureType, toSavingsId), jsonAttributeToGetBack);
     }
@@ -308,7 +310,7 @@ public class FixedDepositAccountHelper {
         map.put("approvedOnDate", approvedOnDate);
         map.put("note", "Approval NOTE");
         String fixedDepositAccountApproveJson = new Gson().toJson(map);
-        System.out.println(fixedDepositAccountApproveJson);
+        log.info(fixedDepositAccountApproveJson);
         return fixedDepositAccountApproveJson;
     }
 
@@ -319,7 +321,7 @@ public class FixedDepositAccountHelper {
         map.put("rejectedOnDate", rejectedOnDate);
         map.put("note", "Rejected NOTE");
         String fixedDepositAccountJson = new Gson().toJson(map);
-        System.out.println(fixedDepositAccountJson);
+        log.info(fixedDepositAccountJson);
         return fixedDepositAccountJson;
     }
 
@@ -330,7 +332,7 @@ public class FixedDepositAccountHelper {
         map.put("withdrawnOnDate", withdrawnApplicationOnDate);
         map.put("note", "Withdraw NOTE");
         String fixedDepositAccountJson = new Gson().toJson(map);
-        System.out.println(fixedDepositAccountJson);
+        log.info(fixedDepositAccountJson);
         return fixedDepositAccountJson;
     }
 
@@ -340,14 +342,14 @@ public class FixedDepositAccountHelper {
         map.put("dateFormat", CommonConstants.dateFormat);
         map.put("activatedOnDate", activationDate);
         String fixedDepositAccountActivateJson = new Gson().toJson(map);
-        System.out.println(fixedDepositAccountActivateJson);
+        log.info(fixedDepositAccountActivateJson);
         return fixedDepositAccountActivateJson;
     }
 
     private String getCalculatedInterestForFixedDepositApplicationAsJSON() {
         final HashMap<String, String> map = new HashMap<>();
         String fixedDepositAccountCalculatedInterestJson = new Gson().toJson(map);
-        System.out.println(fixedDepositAccountCalculatedInterestJson);
+        log.info(fixedDepositAccountCalculatedInterestJson);
         return fixedDepositAccountCalculatedInterestJson;
     }
 
@@ -357,7 +359,7 @@ public class FixedDepositAccountHelper {
         map.put("dateFormat", CommonConstants.dateFormat);
         map.put("closedOnDate", closedOnDate);
         String fixedDepositAccountPrematureClosureJson = new Gson().toJson(map);
-        System.out.println(fixedDepositAccountPrematureClosureJson);
+        log.info(fixedDepositAccountPrematureClosureJson);
         return fixedDepositAccountPrematureClosureJson;
     }
 
@@ -373,7 +375,7 @@ public class FixedDepositAccountHelper {
             map.put("transferDescription", "Transferring To Savings Account");
         }
         String fixedDepositAccountPrematureCloseJson = new Gson().toJson(map);
-        System.out.println(fixedDepositAccountPrematureCloseJson);
+        log.info(fixedDepositAccountPrematureCloseJson);
         return fixedDepositAccountPrematureCloseJson;
     }
 
@@ -401,7 +403,7 @@ public class FixedDepositAccountHelper {
     }
 
     public static ArrayList retrieveAllFixedDepositAccounts(final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
-        System.out.println("-------------------- RETRIEVING ALL FIXED DEPOSIT ACCOUNTS ---------------------");
+        log.info("-------------------- RETRIEVING ALL FIXED DEPOSIT ACCOUNTS ---------------------");
         final ArrayList response = Utils.performServerGet(requestSpec, responseSpec, FIXED_DEPOSIT_ACCOUNT_URL + "?"
                 + Utils.TENANT_IDENTIFIER, "");
         return response;

@@ -74,8 +74,7 @@ public class LoanDisbursementDetailsIntegrationTest extends BaseIntegrationTest 
         final Integer loanIDWithEmi = applyForLoanApplicationWithEmiAmount(clientID, loanProductID, proposedAmount, createTranches,
                 installmentAmount);
 
-        System.out
-                .println("-----------------------------------LOAN CREATED WITH EMI LOANID-------------------------------------------------"
+        log.info("-----------------------------------LOAN CREATED WITH EMI LOANID-------------------------------------------------"
                         + loanIDWithEmi);
 
         HashMap repaymentScheduleWithEmi = (HashMap) this.loanTransactionHelper.getLoanDetail(this.requestSpec, this.responseSpec,
@@ -94,8 +93,7 @@ public class LoanDisbursementDetailsIntegrationTest extends BaseIntegrationTest 
                 createTranches);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
-        System.out
-                .println("-----------------------------------MULTI DISBURSAL LOAN WITH EMI APPROVED SUCCESSFULLY---------------------------------------");
+        log.info("-----------------------------------MULTI DISBURSAL LOAN WITH EMI APPROVED SUCCESSFULLY---------------------------------------");
 
         final Integer loanIDWithoutEmi = applyForLoanApplicationWithEmiAmount(clientID, loanProductID, proposedAmount, createTranches,
                 withoutInstallmentAmount);
@@ -106,8 +104,7 @@ public class LoanDisbursementDetailsIntegrationTest extends BaseIntegrationTest 
         ArrayList<HashMap> periods1 = (ArrayList<HashMap>) repaymentScheduleWithEmi.get("periods");
         assertEquals(periods1.size(), 15);
 
-        System.out
-                .println("-----------------------------------LOAN CREATED WITHOUT EMI LOANID-------------------------------------------------"
+        log.info("-----------------------------------LOAN CREATED WITHOUT EMI LOANID-------------------------------------------------"
                         + loanIDWithoutEmi);
 
         /* To be uncommented once issue MIFOSX-2006 is closed. */
@@ -121,8 +118,7 @@ public class LoanDisbursementDetailsIntegrationTest extends BaseIntegrationTest 
                 loanIDWithoutEmi, createTranches);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
-        System.out
-                .println("-----------------------------------MULTI DISBURSAL LOAN WITHOUT EMI APPROVED SUCCESSFULLY---------------------------------------");
+        log.info("-----------------------------------MULTI DISBURSAL LOAN WITHOUT EMI APPROVED SUCCESSFULLY---------------------------------------");
 
     }
 
@@ -383,8 +379,7 @@ public class LoanDisbursementDetailsIntegrationTest extends BaseIntegrationTest 
                 loanID, createTranches);
         LoanStatusChecker.verifyLoanIsApproved(loanStatusHashMap);
         LoanStatusChecker.verifyLoanIsWaitingForDisbursal(loanStatusHashMap);
-        System.out
-                .println("-----------------------------------MULTI DISBURSAL LOAN APPROVED SUCCESSFULLY---------------------------------------");
+        log.info("-----------------------------------MULTI DISBURSAL LOAN APPROVED SUCCESSFULLY---------------------------------------");
         ArrayList<HashMap> disbursementDetails = (ArrayList<HashMap>) this.loanTransactionHelper.getLoanDetail(this.requestSpec,
                 this.responseSpec, this.loanID, "disbursementDetails");
         this.disbursementId = (Integer) disbursementDetails.get(0).get("id");

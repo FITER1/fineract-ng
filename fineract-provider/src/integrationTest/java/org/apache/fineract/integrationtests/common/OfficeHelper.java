@@ -29,12 +29,14 @@ import com.google.gson.Gson;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 
+@Slf4j
 public class OfficeHelper {
 
 	private static final String OFFICE_URL = "/offices";
@@ -70,7 +72,7 @@ public class OfficeHelper {
 		map.put("locale", "en");
 		map.put("openingDate", openingDate);
 
-		System.out.println("map : " + map);
+		log.info("map : " + map);
 
 		return Utils.performServerPut(requestSpec, responseSpec, OFFICE_URL
 				+ "/" + id + "?" + Utils.TENANT_IDENTIFIER,
@@ -84,7 +86,7 @@ public class OfficeHelper {
 		map.put("dateFormat", "dd MMMM yyyy");
 		map.put("locale", "en");
 		map.put("openingDate", openingDate);
-		System.out.println("map : " + map);
+		log.info("map : " + map);
 		return new Gson().toJson(map);
 	}
 

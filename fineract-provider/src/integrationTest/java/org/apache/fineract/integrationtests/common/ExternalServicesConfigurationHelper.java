@@ -24,7 +24,9 @@ import java.util.HashMap;
 import com.google.gson.Gson;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ExternalServicesConfigurationHelper {
 
     private final RequestSpecification requestSpec;
@@ -39,7 +41,7 @@ public class ExternalServicesConfigurationHelper {
             final ResponseSpecification responseSpec, final String serviceName) {
         final String GET_EXTERNAL_SERVICES_CONFIG_BY_SERVICE_NAME_URL = "/externalservice/" + serviceName + "?"
                 + Utils.TENANT_IDENTIFIER;
-        System.out.println("------------------------ RETRIEVING GLOBAL CONFIGURATION BY ID -------------------------");
+        log.info("------------------------ RETRIEVING GLOBAL CONFIGURATION BY ID -------------------------");
         return Utils.performServerGet(requestSpec, responseSpec, GET_EXTERNAL_SERVICES_CONFIG_BY_SERVICE_NAME_URL, "");
     }
 
@@ -47,7 +49,7 @@ public class ExternalServicesConfigurationHelper {
             final ResponseSpecification responseSpec, final String serviceName, final String name, final String value) {
         final String EXTERNAL_SERVICES_CONFIG_UPDATE_URL = "/externalservice/" + serviceName + "?"
                 + Utils.TENANT_IDENTIFIER;
-        System.out.println("---------------------------------UPDATE VALUE FOR GLOBAL CONFIG---------------------------------------------");
+        log.info("---------------------------------UPDATE VALUE FOR GLOBAL CONFIG---------------------------------------------");
         HashMap map = Utils.performServerPut(requestSpec, responseSpec, EXTERNAL_SERVICES_CONFIG_UPDATE_URL,
                 updateExternalServicesConfigUpdateValueAsJSON(name, value), "");
 
@@ -57,7 +59,7 @@ public class ExternalServicesConfigurationHelper {
     public static String updateExternalServicesConfigUpdateValueAsJSON(final String name, final String value) {
         final HashMap<String, String> map = new HashMap<>();
         map.put(name, value);
-        System.out.println("map : " + map);
+        log.info("map : " + map);
         return new Gson().toJson(map);
     }
 

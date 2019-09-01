@@ -1030,7 +1030,6 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
 
     public BigDecimal calculateWithdrawalFee(final BigDecimal transactionAmount) {
         BigDecimal result = BigDecimal.ZERO;
-        System.out.println("isWithdrawalFeeApplicableForTransfer() = " + isWithdrawalFeeApplicableForTransfer());
         if (isWithdrawalFeeApplicableForTransfer()) {
             for (SavingsAccountCharge charge : this.charges()) {
                 if (charge.isWithdrawalFee() && charge.isActive()) {

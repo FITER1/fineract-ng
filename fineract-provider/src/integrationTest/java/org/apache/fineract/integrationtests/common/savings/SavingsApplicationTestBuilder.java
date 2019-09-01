@@ -22,7 +22,9 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class SavingsApplicationTestBuilder {
 
     private static final String LOCALE = "en_GB";
@@ -57,7 +59,7 @@ public class SavingsApplicationTestBuilder {
             map.put("datatables", this.datatables);
         }
         String savingsApplicationJSON = new Gson().toJson(map);
-        System.out.println(savingsApplicationJSON);
+        log.info(savingsApplicationJSON);
         return savingsApplicationJSON;
     }
 

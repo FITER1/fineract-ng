@@ -207,8 +207,7 @@ public class AccountNumberPreferencesTest extends BaseIntegrationTest {
 
     private void createAccountNumberPreferenceDuplicateData(final String accountType, final String prefixType) {
         /* Creating account Preference with duplicate data should fail */
-        System.out
-                .println("---------------------------------CREATING ACCOUNT NUMBER PREFERENCE WITH DUPLICATE DATA------------------------------------------");
+        log.info("---------------------------------CREATING ACCOUNT NUMBER PREFERENCE WITH DUPLICATE DATA------------------------------------------");
 
         HashMap<String, Object> creationError = this.accountNumberPreferencesHelper.createAccountNumberPreferenceWithInvalidData(
                 this.responseForbiddenError, accountType, prefixType, "");
@@ -221,8 +220,7 @@ public class AccountNumberPreferencesTest extends BaseIntegrationTest {
     private void createAccountNumberPreferenceInvalidData(final String accountType, final String prefixType) {
 
         /* Creating account Preference with invalid data should fail */
-        System.out
-                .println("---------------------------------CREATING ACCOUNT NUMBER PREFERENCE WITH INVALID DATA------------------------------------------");
+        log.info("---------------------------------CREATING ACCOUNT NUMBER PREFERENCE WITH INVALID DATA------------------------------------------");
 
         HashMap<String, Object> creationError = this.accountNumberPreferencesHelper.createAccountNumberPreferenceWithInvalidData(
                 this.responseValidationError, accountType, prefixType, "");
@@ -249,8 +247,7 @@ public class AccountNumberPreferencesTest extends BaseIntegrationTest {
                 this.responseSpec, this.requestSpec);
 
         /* Update invalid account preference id should fail */
-        System.out
-                .println("---------------------------------UPDATING ACCOUNT NUMBER PREFERENCE WITH INVALID DATA------------------------------------------");
+        log.info("---------------------------------UPDATING ACCOUNT NUMBER PREFERENCE WITH INVALID DATA------------------------------------------");
 
         /* Invalid Account Type */
         HashMap<String, Object> updationError = this.accountNumberPreferencesHelper.updateAccountNumberPreference(9999, "101",

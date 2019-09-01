@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.report.ReportData;
 import org.joda.time.LocalDateTime;
@@ -37,6 +38,7 @@ import com.google.gson.reflect.TypeToken;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
+@Slf4j
 public class CampaignsHelper {
 
     private final RequestSpecification requestSpec;
@@ -54,7 +56,7 @@ public class CampaignsHelper {
     }
 
     public Integer createCampaign(String reportName, Integer triggerType) {
-        System.out.println("---------------------------------CREATING A CAMPAIGN---------------------------------------------");
+        log.info("---------------------------------CREATING A CAMPAIGN---------------------------------------------");
         final String CREATE_SMS_CAMPAIGNS_URL = SMS_CAMPAIGNS_URL + "?" + Utils.TENANT_IDENTIFIER;
         return Utils.performServerPost(requestSpec, responseSpec, CREATE_SMS_CAMPAIGNS_URL, getCreateCampaignJSON(reportName, triggerType),
                 "resourceId");
@@ -62,7 +64,7 @@ public class CampaignsHelper {
 
     public void verifyCampaignCreatedOnServer(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer generatedCampaignId) {
-        System.out.println("------------------------------CHECK CAMPAIGN DETAILS------------------------------------\n");
+        log.info("------------------------------CHECK CAMPAIGN DETAILS------------------------------------\n");
         final String RETRIEVE_SMS_CAMPAIGNS_URL = SMS_CAMPAIGNS_URL + "/" + generatedCampaignId + "?" + Utils.TENANT_IDENTIFIER;
         final Integer responseCampaignId = Utils.performServerGet(requestSpec, responseSpec, RETRIEVE_SMS_CAMPAIGNS_URL, "id");
         assertEquals("ERROR IN CREATING THE CAMPAIGN", generatedCampaignId, responseCampaignId);
@@ -70,7 +72,7 @@ public class CampaignsHelper {
 
     public Integer updateCampaign(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer generatedCampaignId, String reportName, Integer triggerType) {
-        System.out.println("------------------------------UPDATE CAMPAIGN DETAILS------------------------------------\n");
+        log.info("------------------------------UPDATE CAMPAIGN DETAILS------------------------------------\n");
         final String UPDATE_SMS_CAMPAIGNS_URL = SMS_CAMPAIGNS_URL + "/" + generatedCampaignId + "?" + Utils.TENANT_IDENTIFIER;
         return Utils.performServerPut(requestSpec, responseSpec, UPDATE_SMS_CAMPAIGNS_URL, getUpdateCampaignJSON(reportName, triggerType),
                 "resourceId");
@@ -78,14 +80,14 @@ public class CampaignsHelper {
 
     public Integer deleteCampaign(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer generatedCampaignId) {
-        System.out.println("------------------------------DELETE CAMPAIGN DETAILS------------------------------------\n");
+        log.info("------------------------------DELETE CAMPAIGN DETAILS------------------------------------\n");
         final String DELETE_SMS_CAMPAIGNS_URL = SMS_CAMPAIGNS_URL + "/" + generatedCampaignId + "?" + Utils.TENANT_IDENTIFIER;
         return Utils.performServerDelete(requestSpec, responseSpec, DELETE_SMS_CAMPAIGNS_URL, "resourceId");
     }
 
     public Integer performActionsOnCampaign(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer generatedCampaignId, String command) {
-        System.out.println("------------------------------PERFORM ACTION ON CAMPAIGN DETAILS------------------------------------\n");
+        log.info("------------------------------PERFORM ACTION ON CAMPAIGN DETAILS------------------------------------\n");
         final String SMS_CAMPAIGNS_ACTION_URL = SMS_CAMPAIGNS_URL + "/" + generatedCampaignId + "?command=" + command + "&"
                 + Utils.TENANT_IDENTIFIER;
         String actionDate = Utils.getLocalDateOfTenant().toString(DATE_FORMAT);
@@ -94,7 +96,7 @@ public class CampaignsHelper {
     }
 
     public Object performActionsOnCampaignWithFailure(final Integer generatedCampaignId, String command, String actionDate, String responseJsonAttribute) {
-        System.out.println("--------------------------PERFORM ACTION ON CAMPAIGN DETAILS WITH FAILURE-------------------------------\n");
+        log.info("--------------------------PERFORM ACTION ON CAMPAIGN DETAILS WITH FAILURE-------------------------------\n");
         final String SMS_CAMPAIGNS_ACTION_URL = SMS_CAMPAIGNS_URL + "/" + generatedCampaignId + "?command=" + command + "&"
                 + Utils.TENANT_IDENTIFIER;
         return Utils.performServerPost(this.requestSpec, this.responseSpec, SMS_CAMPAIGNS_ACTION_URL, getJSONForCampaignAction(command, actionDate),
@@ -124,7 +126,7 @@ public class CampaignsHelper {
         paramValueMap.put("reportName", reportName);
         map.put("paramValue", paramValueMap);
         String json = new Gson().toJson(map);
-        System.out.println(json);
+        log.info(json);
         return json;
     }
 
@@ -149,7 +151,7 @@ public class CampaignsHelper {
         paramValueMap.put("reportName", reportName);
         map.put("paramValue", paramValueMap);
         String json = new Gson().toJson(map);
-        System.out.println(json);
+        log.info(json);
         return json;
     }
 
@@ -160,7 +162,7 @@ public class CampaignsHelper {
         map.put("locale", "en");
         map.put("dateFormat", DATE_FORMAT);
         String json = new Gson().toJson(map);
-        System.out.println(json);
+        log.info(json);
         return json;
     }
 
@@ -169,7 +171,7 @@ public class CampaignsHelper {
     }
 
     private ArrayList<ReportData> getReports(String jsonAttributeToGetBack) {
-        System.out.println("--------------------------------- GET REPORTS OPTIONS -------------------------------");
+        log.info("--------------------------------- GET REPORTS OPTIONS -------------------------------");
         Assert.notNull(jsonAttributeToGetBack);
         final String templateUrl = SMS_CAMPAIGNS_URL + "/template?" + Utils.TENANT_IDENTIFIER;
         final String json = given().spec(requestSpec).expect().spec(responseSpec).log().ifError().when().get(templateUrl).andReturn()

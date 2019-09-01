@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.Random;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.conn.HttpHostConnectException;
 
@@ -45,6 +46,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
  * src/test.. can you help? ;)
  */
 @SuppressWarnings("unchecked")
+@Slf4j
 public class Utils {
 
     public static final String TENANT_IDENTIFIER = "tenantIdentifier=default";
@@ -59,7 +61,7 @@ public class Utils {
 
     public static String loginIntoServerAndGetBase64EncodedAuthenticationKey() {
         try {
-            System.out.println("-----------------------------------LOGIN-----------------------------------------");
+            log.info("-----------------------------------LOGIN-----------------------------------------");
             final String json = RestAssured.post(LOGIN_URL).asString();
             assertThat("Failed to login into fineract platform", StringUtils.isBlank(json), is(false));
             return JsonPath.with(json).get("base64EncodedAuthenticationKey");

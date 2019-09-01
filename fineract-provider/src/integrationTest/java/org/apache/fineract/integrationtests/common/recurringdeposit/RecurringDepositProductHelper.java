@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.accounting.Account;
 import org.apache.fineract.integrationtests.common.fixeddeposit.FixedDepositProductHelper;
@@ -32,6 +33,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "unused", "rawtypes" })
+@Slf4j
 public class RecurringDepositProductHelper {
 
     private final RequestSpecification requestSpec;
@@ -156,7 +158,7 @@ public class RecurringDepositProductHelper {
         }
 
         String RecurringDepositProductCreateJson = new Gson().toJson(map);
-        System.out.println(RecurringDepositProductCreateJson);
+        log.info(RecurringDepositProductCreateJson);
         return RecurringDepositProductCreateJson;
     }
 
@@ -229,14 +231,14 @@ public class RecurringDepositProductHelper {
 
     public static Integer createRecurringDepositProduct(final String recurrungDepositProductCreateJson,
             final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
-        System.out.println("------------------ CREATING RECURRING DEPOSIT PRODUCT--------------------");
+        log.info("------------------ CREATING RECURRING DEPOSIT PRODUCT--------------------");
         return Utils.performServerPost(requestSpec, responseSpec, CREATE_RECURRING_DEPOSIT_PRODUCT_URL, recurrungDepositProductCreateJson,
                 "resourceId");
     }
 
     public static ArrayList retrieveAllRecurringDepositProducts(final RequestSpecification requestSpec,
             final ResponseSpecification responseSpec) {
-        System.out.println("----------------- RETRIEVING ALL RECURRING DEPOSIT PRODUCTS---------------------------");
+        log.info("----------------- RETRIEVING ALL RECURRING DEPOSIT PRODUCTS---------------------------");
         final ArrayList response = Utils.performServerGet(requestSpec, responseSpec, RECURRING_DEPOSIT_PRODUCT_URL + "?"
                 + Utils.TENANT_IDENTIFIER, "");
         return response;
@@ -244,7 +246,7 @@ public class RecurringDepositProductHelper {
 
     public static HashMap retrieveRecurringDepositProductById(final RequestSpecification requestSpec,
             final ResponseSpecification responseSpec, final String productId) {
-        System.out.println("-------------------- RETRIEVING RECURRING DEPOSIT PRODUCT BY ID --------------------------");
+        log.info("-------------------- RETRIEVING RECURRING DEPOSIT PRODUCT BY ID --------------------------");
         final String GET_RD_PRODUCT_BY_ID_URL = RECURRING_DEPOSIT_PRODUCT_URL + "/" + productId + "?" + Utils.TENANT_IDENTIFIER;
         final HashMap response = Utils.performServerGet(requestSpec, responseSpec, GET_RD_PRODUCT_BY_ID_URL, "");
         return response;
@@ -252,7 +254,7 @@ public class RecurringDepositProductHelper {
 
     public static ArrayList getInterestRateChartSlabsByProductId(final RequestSpecification requestSpec,
             final ResponseSpecification responseSpec, final Integer productId) {
-        System.out.println("-------------------- RETRIEVE INTEREST CHART BY PRODUCT ID ---------------------");
+        log.info("-------------------- RETRIEVE INTEREST CHART BY PRODUCT ID ---------------------");
         final ArrayList response = Utils.performServerGet(requestSpec, responseSpec, INTEREST_CHART_URL + "?productId=" + productId,
                 "chartSlabs");
         return response;

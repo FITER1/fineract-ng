@@ -24,6 +24,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.CommonConstants;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.accounting.Account;
@@ -34,6 +35,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings("unused")
+@Slf4j
 public class SavingsProductHelper {
 
     private static final String SAVINGS_PRODUCT_URL = "/savingsproducts";
@@ -143,7 +145,7 @@ public class SavingsProductHelper {
 
         }
         String savingsProductCreateJson = new Gson().toJson(map);
-        System.out.println(savingsProductCreateJson);
+        log.info(savingsProductCreateJson);
         return savingsProductCreateJson;
     }
 
@@ -279,7 +281,7 @@ public class SavingsProductHelper {
 
     public static void verifySavingsProductCreatedOnServer(final RequestSpecification requestSpec,
             final ResponseSpecification responseSpec, final Integer generatedProductID) {
-        System.out.println("------------------------------CHECK CLIENT DETAILS------------------------------------\n");
+        log.info("------------------------------CHECK CLIENT DETAILS------------------------------------\n");
         final String GET_SAVINGS_PRODUCT_URL = SAVINGS_PRODUCT_URL + "/" + generatedProductID + "?" + Utils.TENANT_IDENTIFIER;
         final Integer responseSavingsProductID = Utils.performServerGet(requestSpec, responseSpec, GET_SAVINGS_PRODUCT_URL, "id");
         assertEquals("ERROR IN CREATING THE Savings Product", generatedProductID, responseSavingsProductID);

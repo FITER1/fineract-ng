@@ -21,6 +21,7 @@ package org.apache.fineract.integrationtests.common;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 
 import com.google.gson.Gson;
@@ -29,6 +30,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
+@Slf4j
 public class SchedulerJobHelper {
 
     private final RequestSpecification requestSpec;
@@ -41,7 +43,7 @@ public class SchedulerJobHelper {
 
     public static ArrayList getAllSchedulerJobs(final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
         final String GET_ALL_SCHEDULER_JOBS_URL = "/jobs?" + Utils.TENANT_IDENTIFIER;
-        System.out.println("------------------------ RETRIEVING ALL SCHEDULER JOBS -------------------------");
+        log.info("------------------------ RETRIEVING ALL SCHEDULER JOBS -------------------------");
         final ArrayList response = Utils.performServerGet(requestSpec, responseSpec, GET_ALL_SCHEDULER_JOBS_URL, "");
         return response;
     }
@@ -49,14 +51,14 @@ public class SchedulerJobHelper {
     public static HashMap getSchedulerJobById(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String jobId) {
         final String GET_SCHEDULER_JOB_BY_ID_URL = "/jobs/" + jobId + "?" + Utils.TENANT_IDENTIFIER;
-        System.out.println("------------------------ RETRIEVING SCHEDULER JOB BY ID -------------------------");
+        log.info("------------------------ RETRIEVING SCHEDULER JOB BY ID -------------------------");
         final HashMap response = Utils.performServerGet(requestSpec, responseSpec, GET_SCHEDULER_JOB_BY_ID_URL, "");
         return response;
     }
 
     public static HashMap getSchedulerStatus(final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
         final String GET_SCHEDULER_STATUS_URL = "/scheduler?" + Utils.TENANT_IDENTIFIER;
-        System.out.println("------------------------ RETRIEVING SCHEDULER STATUS -------------------------");
+        log.info("------------------------ RETRIEVING SCHEDULER STATUS -------------------------");
         final HashMap response = Utils.performServerGet(requestSpec, responseSpec, GET_SCHEDULER_STATUS_URL, "");
         return response;
     }
@@ -64,14 +66,14 @@ public class SchedulerJobHelper {
     public static void updateSchedulerStatus(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String command) {
         final String UPDATE_SCHEDULER_STATUS_URL = "/scheduler?command=" + command + "&" + Utils.TENANT_IDENTIFIER;
-        System.out.println("------------------------ UPDATING SCHEDULER STATUS -------------------------");
+        log.info("------------------------ UPDATING SCHEDULER STATUS -------------------------");
         Utils.performServerPost(requestSpec, responseSpec, UPDATE_SCHEDULER_STATUS_URL, runSchedulerJobAsJSON(), null);
     }
 
     public static HashMap updateSchedulerJob(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String jobId, final String active) {
         final String UPDATE_SCHEDULER_JOB_URL = "/jobs/" + jobId + "?" + Utils.TENANT_IDENTIFIER;
-        System.out.println("------------------------ UPDATING SCHEDULER JOB -------------------------");
+        log.info("------------------------ UPDATING SCHEDULER JOB -------------------------");
         final HashMap response = Utils.performServerPut(requestSpec, responseSpec, UPDATE_SCHEDULER_JOB_URL,
                 updateSchedulerJobAsJSON(active), "changes");
         return response;
@@ -80,14 +82,14 @@ public class SchedulerJobHelper {
     public static String updateSchedulerJobAsJSON(final String active) {
         final HashMap<String, String> map = new HashMap<>();
         map.put("active", active);
-        System.out.println("map : " + map);
+        log.info("map : " + map);
         return new Gson().toJson(map);
     }
 
     public static ArrayList getSchedulerJobHistory(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String jobId) {
         final String GET_SCHEDULER_STATUS_URL = "/jobs/" + jobId + "/runhistory?" + Utils.TENANT_IDENTIFIER;
-        System.out.println("------------------------ RETRIEVING SCHEDULER JOB HISTORY -------------------------");
+        log.info("------------------------ RETRIEVING SCHEDULER JOB HISTORY -------------------------");
         final HashMap response = Utils.performServerGet(requestSpec, responseSpec, GET_SCHEDULER_STATUS_URL, "");
         return (ArrayList) response.get("pageItems");
     }
@@ -95,14 +97,14 @@ public class SchedulerJobHelper {
     public static void runSchedulerJob(final RequestSpecification requestSpec, final String jobId) {
         final ResponseSpecification responseSpec = new ResponseSpecBuilder().expectStatusCode(202).build();
         final String RUN_SCHEDULER_JOB_URL = "/jobs/" + jobId + "?command=executeJob&" + Utils.TENANT_IDENTIFIER;
-        System.out.println("------------------------ RUN SCHEDULER JOB -------------------------");
+        log.info("------------------------ RUN SCHEDULER JOB -------------------------");
         Utils.performServerPost(requestSpec, responseSpec, RUN_SCHEDULER_JOB_URL, runSchedulerJobAsJSON(), null);
     }
 
     public static String runSchedulerJobAsJSON() {
         final HashMap<String, String> map = new HashMap<>();
         String runSchedulerJob = new Gson().toJson(map);
-        System.out.println(runSchedulerJob);
+        log.info(runSchedulerJob);
         return runSchedulerJob;
     }
 
@@ -126,15 +128,15 @@ public class SchedulerJobHelper {
                     Thread.sleep(15000);
                     schedulerJob = getSchedulerJobById(this.requestSpec, this.responseSpec, jobId.toString());
                     Assert.assertNotNull(schedulerJob);
-                    System.out.println("Job is Still Running");
+                    log.info("Job is Still Running");
                 }
 
                 ArrayList<HashMap> jobHistoryData = getSchedulerJobHistory(this.requestSpec, this.responseSpec, jobId.toString());
 
                 // print error associated with recent job failure (if any)
-                System.out.println("Job run error message (printed only if the job fails: "
+                log.info("Job run error message (printed only if the job fails: "
                         + jobHistoryData.get(jobHistoryData.size() - 1).get("jobRunErrorMessage"));
-                System.out.println("Job failure error log (printed only if the job fails: "
+                log.info("Job failure error log (printed only if the job fails: "
                         + jobHistoryData.get(jobHistoryData.size() - 1).get("jobRunErrorLog"));
 
                 // Verifying the Status of the Recently executed Scheduler Job

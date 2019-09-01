@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import com.google.common.reflect.TypeToken;
@@ -32,6 +33,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
+@Slf4j
 public class CenterHelper {
 
     private static final String CENTERS_URL = "/centers";
@@ -41,7 +43,7 @@ public class CenterHelper {
 
     public static CenterDomain retrieveByID(int id, final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
         final String GET_CENTER_BY_ID_URL = CENTERS_URL + "/" + id + "?associations=groupMembers&" + Utils.TENANT_IDENTIFIER;
-        System.out.println("------------------------ RETRIEVING CENTER AT " + id + "-------------------------");
+        log.info("------------------------ RETRIEVING CENTER AT " + id + "-------------------------");
         Object get = Utils.performServerGet(requestSpec, responseSpec, GET_CENTER_BY_ID_URL, "");
 		final String jsonData = new Gson().toJson(get);
         return new Gson().fromJson(jsonData, new TypeToken<CenterDomain>() {}.getType());
@@ -50,7 +52,7 @@ public class CenterHelper {
     public static ArrayList<CenterDomain> paginatedListCenters(final RequestSpecification requestSpec,
             final ResponseSpecification responseSpec) {
         final String GET_CENTER = CENTERS_URL + "?paged=true&limit=-1&" + Utils.TENANT_IDENTIFIER;
-        System.out.println("------------------------ RETRIEVING CENTERS-------------------------");
+        log.info("------------------------ RETRIEVING CENTERS-------------------------");
         Object get = Utils.performServerGet(requestSpec, responseSpec, GET_CENTER, "pageItems");
         final String jsonData = new Gson().toJson(get);
         return new Gson().fromJson(jsonData, new TypeToken<ArrayList<CenterDomain>>() {}.getType());
@@ -58,7 +60,7 @@ public class CenterHelper {
 
     public static ArrayList<CenterDomain> listCenters(final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
         final String GET_CENTER = CENTERS_URL + "?limit=-1&" + Utils.TENANT_IDENTIFIER;
-        System.out.println("------------------------ RETRIEVING CENTERS-------------------------");
+        log.info("------------------------ RETRIEVING CENTERS-------------------------");
         Object get = Utils.performServerGet(requestSpec, responseSpec, GET_CENTER, "");
         final String jsonData = new Gson().toJson(get);
         return new Gson().fromJson(jsonData, new TypeToken<ArrayList<CenterDomain>>() {}.getType());
@@ -98,14 +100,14 @@ public class CenterHelper {
             hm.put("activationDate", activationDate);
         }
         
-        System.out.println("------------------------CREATING CENTER-------------------------");
+        log.info("------------------------CREATING CENTER-------------------------");
         return Utils.performServerPost(requestSpec, responseSpec, CREATE_CENTER_URL, new Gson().toJson(hm), "resourceId");
     }
 
     public static HashMap<String, String> updateCenter(final int id, HashMap request, final RequestSpecification requestSpec,
             final ResponseSpecification responseSpec) {
         final String UPDATE_CENTER_URL = CENTERS_URL + "/" + id + "?" + Utils.TENANT_IDENTIFIER;
-        System.out.println("---------------------------------UPDATE CENTER AT " + id + "---------------------------------------------");
+        log.info("---------------------------------UPDATE CENTER AT " + id + "---------------------------------------------");
         HashMap<String, String> hash = Utils.performServerPut(requestSpec, responseSpec, UPDATE_CENTER_URL, new Gson().toJson(request),
                 "changes");
         return hash;
@@ -116,10 +118,10 @@ public class CenterHelper {
         final String ASSOCIATE_GROUP_CENTER_URL = CENTERS_URL + "/" + id + "?command=associateGroups&" + Utils.TENANT_IDENTIFIER;
         HashMap groupMemberHashMap = new HashMap();
         groupMemberHashMap.put("groupMembers", groupMembers);
-        System.out.println("---------------------------------ASSOCIATING GROUPS AT " + id + "--------------------------------------------");
+        log.info("---------------------------------ASSOCIATING GROUPS AT " + id + "--------------------------------------------");
         HashMap hash = Utils.performServerPost(requestSpec, responseSpec, ASSOCIATE_GROUP_CENTER_URL,
                 new Gson().toJson(groupMemberHashMap), "changes");
-        System.out.println(hash);
+        log.info(hash);
         ArrayList<String> arr = (ArrayList<String>) hash.get("groupMembers");
         int[] ret = new int[arr.size()];
         for (int i = 0; i < ret.length; i++) {
@@ -130,38 +132,38 @@ public class CenterHelper {
 
     public static void deleteCenter(final int id, final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
         final String DELETE_CENTER_URL = CENTERS_URL + "/" + id + "?" + Utils.TENANT_IDENTIFIER;
-        System.out.println("---------------------------------DELETING CENTER AT " + id + "--------------------------------------------");
+        log.info("---------------------------------DELETING CENTER AT " + id + "--------------------------------------------");
         Utils.performServerDelete(requestSpec, responseSpec, DELETE_CENTER_URL, "");
     }
 
     public static Integer createCenter(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             @SuppressWarnings("unused") final boolean active) {
-        System.out.println("---------------------------------CREATING A CENTER---------------------------------------------");
+        log.info("---------------------------------CREATING A CENTER---------------------------------------------");
         return createCenter(requestSpec, responseSpec, "CREATED_DATE");
     }
 
     public static Integer createCenter(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String activationDate) {
-        System.out.println("---------------------------------CREATING A CENTER---------------------------------------------");
+        log.info("---------------------------------CREATING A CENTER---------------------------------------------");
         return Utils.performServerPost(requestSpec, responseSpec, CREATE_CENTER_URL, getTestCenterAsJSON(true, activationDate), "groupId");
     }
 
     public static Integer createCenter(final RequestSpecification requestSpec, final ResponseSpecification responseSpec) {
-        System.out.println("---------------------------------CREATING A CENTER---------------------------------------------");
+        log.info("---------------------------------CREATING A CENTER---------------------------------------------");
         return Utils.performServerPost(requestSpec, responseSpec, CREATE_CENTER_URL, getTestCenterAsJSON(true, CenterHelper.CREATED_DATE),
                 "groupId");
     }
 
     public static int createCenterWithStaffId(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer staffId) {
-        System.out.println("---------------------------------CREATING A CENTER---------------------------------------------");
+        log.info("---------------------------------CREATING A CENTER---------------------------------------------");
         return Utils.performServerPost(requestSpec, responseSpec, CREATE_CENTER_URL,
                 getTestCenterWithStaffAsJSON(true, CenterHelper.CREATED_DATE, staffId), "groupId");
     }
 
     public static void verifyCenterCreatedOnServer(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer generatedCenterID) {
-        System.out.println("------------------------------CHECK CENTER DETAILS------------------------------------\n");
+        log.info("------------------------------CHECK CENTER DETAILS------------------------------------\n");
         final String CENTER_URL = "/centers/" + generatedCenterID + "?" + Utils.TENANT_IDENTIFIER;
         final Integer responseCenterID = Utils.performServerGet(requestSpec, responseSpec, CENTER_URL, "id");
         assertEquals("ERROR IN CREATING THE CENTER", generatedCenterID, responseCenterID);
@@ -169,7 +171,7 @@ public class CenterHelper {
 
     public static void verifyCenterActivatedOnServer(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Integer generatedCenterID, final boolean generatedCenterStatus) {
-        System.out.println("------------------------------CHECK CENTER STATUS------------------------------------\n");
+        log.info("------------------------------CHECK CENTER STATUS------------------------------------\n");
         final String CENTER_URL = "/centers/" + generatedCenterID + "?" + Utils.TENANT_IDENTIFIER;
         final Boolean responseCenterStatus = Utils.performServerGet(requestSpec, responseSpec, CENTER_URL, "active");
         assertEquals("ERROR IN ACTIVATING THE CENTER", generatedCenterStatus, responseCenterStatus);
@@ -178,7 +180,7 @@ public class CenterHelper {
     public static Integer activateCenter(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String centerId) {
         final String CENTER_ASSOCIATE_URL = "/centers/" + centerId + "?command=activate&" + Utils.TENANT_IDENTIFIER;
-        System.out.println("---------------------------------ACTIVATE A CENTER---------------------------------------------");
+        log.info("---------------------------------ACTIVATE A CENTER---------------------------------------------");
         return Utils.performServerPost(requestSpec, responseSpec, CENTER_ASSOCIATE_URL, activateCenterAsJSON(""), "groupId");
     }
 
@@ -223,14 +225,14 @@ public class CenterHelper {
     public static String assignStaffAsJSON(final Long staffId) {
         final HashMap<String, Object> map = new HashMap<>();
         map.put("staffId", staffId);
-        System.out.println("map : " + map);
+        log.info("map : " + map);
         return new Gson().toJson(map);
     }
 
     public static String unassignStaffAsJSON(final Long staffId) {
         final HashMap<String, Object> map = new HashMap<>();
         map.put("staffId", staffId);
-        System.out.println("map : " + map);
+        log.info("map : " + map);
         return new Gson().toJson(map);
     }
 
@@ -242,9 +244,9 @@ public class CenterHelper {
             map.put("activationDate", activationDate);
         } else {
             map.put("activationDate", "CREATED_DATE");
-            System.out.println("defaulting to fixed date: CREATED_DATE");
+            log.info("defaulting to fixed date: CREATED_DATE");
         }
-        System.out.println("map : " + map);
+        log.info("map : " + map);
         return new Gson().toJson(map);
     }
 
@@ -260,7 +262,7 @@ public class CenterHelper {
             final String groupId, final Long staffId) {
         final String GROUP_ASSIGN_STAFF_URL = "/groups/" + groupId + "?" + Utils.TENANT_IDENTIFIER
                 + "&command=assignStaff";
-        System.out.println("---------------------------------Assign Staff---------------------------------------------");
+        log.info("---------------------------------Assign Staff---------------------------------------------");
         return Utils.performServerPost(requestSpec, responseSpec, GROUP_ASSIGN_STAFF_URL, assignStaffAsJSON(staffId), "changes");
     }
 
@@ -268,7 +270,7 @@ public class CenterHelper {
             final String groupId, final Long staffId) {
         final String GROUP_ASSIGN_STAFF_URL = "/groups/" + groupId + "?" + Utils.TENANT_IDENTIFIER
                 + "&command=unassignStaff";
-        System.out.println("---------------------------------Unassign Staff---------------------------------------------");
+        log.info("---------------------------------Unassign Staff---------------------------------------------");
         return Utils.performServerPost(requestSpec, responseSpec, GROUP_ASSIGN_STAFF_URL, unassignStaffAsJSON(staffId), "changes");
     }
 

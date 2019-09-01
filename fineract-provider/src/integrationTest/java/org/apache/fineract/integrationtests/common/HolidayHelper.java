@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.Utils;
 
 import com.google.gson.Gson;
@@ -30,6 +31,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
 @SuppressWarnings({ "unused", "rawtypes" })
+@Slf4j
 public class HolidayHelper {
 
     private static final String HOLIDAYS_URL = "/holidays";
@@ -61,14 +63,14 @@ public class HolidayHelper {
         map.put("repaymentsRescheduledTo", "08 April 2013");
         map.put("reschedulingType", 2);
         String HolidayCreateJson = new Gson().toJson(map);
-        System.out.println(HolidayCreateJson);
+        log.info(HolidayCreateJson);
         return HolidayCreateJson;
     }
     
     public static String getActivateHolidayDataAsJSON() {
         final HashMap<String, String> map = new HashMap<>();
         String activateHoliday = new Gson().toJson(map);
-        System.out.println(activateHoliday);
+        log.info(activateHoliday);
         return activateHoliday;
     }
 
@@ -84,7 +86,7 @@ public class HolidayHelper {
     public static HashMap getHolidayById(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final String holidayID) {
         final String GET_HOLIDAY_BY_ID_URL = HOLIDAYS_URL + "/" + holidayID + "?" + Utils.TENANT_IDENTIFIER;
-        System.out.println("------------------------ RETRIEVING HOLIDAY BY ID -------------------------");
+        log.info("------------------------ RETRIEVING HOLIDAY BY ID -------------------------");
         final HashMap response = Utils.performServerGet(requestSpec, responseSpec, GET_HOLIDAY_BY_ID_URL, "");
         return response;
     }

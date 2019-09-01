@@ -150,7 +150,6 @@ public class CenterDomain implements Comparable<CenterDomain> {
         }
         if (externalId != null) map.put("externalId", externalId);
         if (groupMembers != null) map.put("groupMembers", groupMembers);
-        System.out.println(map);
         return new Gson().toJson(map);
     }
 

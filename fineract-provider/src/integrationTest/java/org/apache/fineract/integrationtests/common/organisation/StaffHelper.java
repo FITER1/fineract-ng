@@ -22,12 +22,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.Utils;
 
 import com.google.gson.Gson;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
+@Slf4j
 public class StaffHelper {
 
     private static final String TRANSFER_STAFF_URL = "/groups";
@@ -49,7 +51,7 @@ public class StaffHelper {
         final HashMap<String, Object> map = new HashMap<>();
         map.put("staffId", staffToTransferId);
         map.put("note", note);
-        System.out.println("map : " + map);
+        log.info("map : " + map);
         return new Gson().toJson(map);
     }
 
@@ -100,7 +102,7 @@ public class StaffHelper {
         map.put("locale", "en");
         map.put("dateFormat", "dd MMMM yyyy");
         map.put("joiningDate", "20 September 2011") ;
-        System.out.println("map : " + map);
+        log.info("map : " + map);
         return new Gson().toJson(map);
     }
 
@@ -122,7 +124,7 @@ public class StaffHelper {
         if(fieldList.contains("mobileNo")) {
             map.put("mobileNo", "+123515198");
         }
-        System.out.println("map : " + map);
+        log.info("map : " + map);
         return new Gson().toJson(map);
     }
 }

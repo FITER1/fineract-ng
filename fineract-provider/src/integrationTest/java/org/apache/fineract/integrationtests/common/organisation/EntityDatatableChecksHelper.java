@@ -20,12 +20,14 @@ package org.apache.fineract.integrationtests.common.organisation;
 
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.Utils;
 
 import com.google.gson.Gson;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 
+@Slf4j
 public class EntityDatatableChecksHelper {
 
     private final RequestSpecification requestSpec;
@@ -61,7 +63,7 @@ public class EntityDatatableChecksHelper {
             map.put("productId", productId);
         }
         String requestJsonString = new Gson().toJson(map);
-        System.out.println("map : " + requestJsonString);
+        log.info("map : " + requestJsonString);
         return requestJsonString;
     }
 

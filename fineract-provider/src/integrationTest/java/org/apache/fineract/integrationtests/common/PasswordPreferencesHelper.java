@@ -23,7 +23,9 @@ import java.util.HashMap;
 import com.google.gson.Gson;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class PasswordPreferencesHelper {
 
     private static final String PASSWORD_PREFERENCES_URL = "/passwordpreferences";
@@ -31,15 +33,14 @@ public class PasswordPreferencesHelper {
     public static Object updatePasswordPreferences(final RequestSpecification requestSpec, final ResponseSpecification responseSpec, 
             String validationPolicyId) {
         final String UPDATE_PASSWORD_PREFERENCES_URL = PASSWORD_PREFERENCES_URL + "?" + Utils.TENANT_IDENTIFIER;
-        System.out.println("---------------------------------UPDATE PASSWORD PREFERENCE---------------------------------------------");
+        log.info("---------------------------------UPDATE PASSWORD PREFERENCE---------------------------------------------");
         return Utils.performServerPut(requestSpec, responseSpec, UPDATE_PASSWORD_PREFERENCES_URL, updatePreferencesAsJson(validationPolicyId), "");
     }
 
     public static Object updateWithInvalidValidationPolicyId(final RequestSpecification requestSpec,
             final ResponseSpecification responseSpec,String invalidValidationPolicyId, String jsonAttributeToGetback) {
         final String UPDATE_PASSWORD_PREFERENCES_URL = PASSWORD_PREFERENCES_URL + "?" + Utils.TENANT_IDENTIFIER;
-        System.out
-                .println("---------------------------------UPDATE PASSWORD PREFERENCES WITH INVALID ID-----------------------------------------");
+        log.info("---------------------------------UPDATE PASSWORD PREFERENCES WITH INVALID ID-----------------------------------------");
         return Utils.performServerPut(requestSpec, responseSpec, UPDATE_PASSWORD_PREFERENCES_URL, updatePreferencesWithInvalidId(invalidValidationPolicyId),
                 jsonAttributeToGetback);
     }

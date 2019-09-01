@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.Utils;
 import org.springframework.util.Assert;
 
@@ -35,6 +36,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 
 import static com.jayway.restassured.RestAssured.given;
 
+@Slf4j
 public class CurrencyHelper {
 
     private static final String CURRENCY_URL = "/currencies?" + Utils.TENANT_IDENTIFIER;
@@ -63,7 +65,7 @@ public class CurrencyHelper {
 
 
     private ArrayList<Currency> getCurrencies(final String getUrl, final List<String> permittedCurrencyArrays) {
-        System.out.println("--------------------------------- GET CURRENCY OPTIONS -------------------------------");
+        log.info("--------------------------------- GET CURRENCY OPTIONS -------------------------------");
         final String json = given().spec(requestSpec).expect().spec(responseSpec).log().ifError().when()
                 .get(getUrl).andReturn().asString();
         final Gson gson = new Gson();
@@ -81,7 +83,7 @@ public class CurrencyHelper {
     }
 
     public List<String> updateCurrencies(final List<String> currencies) {
-        System.out.println("--------------------------------- UPDATE CURRENCY OPTIONS -------------------------------");
+        log.info("--------------------------------- UPDATE CURRENCY OPTIONS -------------------------------");
         final String json = given().spec(requestSpec).body(getUpdateJSON(currencies)).expect().spec(responseSpec).log().ifError().when()
                 .put(CURRENCY_URL).andReturn().asString();
         final Gson gson = new Gson();

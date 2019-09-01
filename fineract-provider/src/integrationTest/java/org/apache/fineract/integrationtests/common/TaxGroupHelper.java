@@ -26,14 +26,16 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class TaxGroupHelper {
 
     private static final String CREATE_TAX_COMPONENT_URL = "/taxes/group?" + Utils.TENANT_IDENTIFIER;
 
     public static Integer createTaxGroup(final RequestSpecification requestSpec, final ResponseSpecification responseSpec,
             final Collection<Integer> taxComponentIds) {
-        System.out.println("---------------------------------CREATING A TAX GROUP---------------------------------------------");
+        log.info("---------------------------------CREATING A TAX GROUP---------------------------------------------");
         return Utils.performServerPost(requestSpec, responseSpec, CREATE_TAX_COMPONENT_URL, getTaxGroupAsJSON(taxComponentIds), "resourceId");
     }
 

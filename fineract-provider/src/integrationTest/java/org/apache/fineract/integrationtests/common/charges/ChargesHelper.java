@@ -21,6 +21,7 @@ package org.apache.fineract.integrationtests.common.charges;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.CommonConstants;
 import org.apache.fineract.integrationtests.common.Utils;
 
@@ -30,6 +31,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 import org.apache.fineract.portfolio.charge.domain.ChargeTimeType;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
+@Slf4j
 public class ChargesHelper {
 
     private static final String CHARGES_URL = "/charges";
@@ -83,7 +85,7 @@ public class ChargesHelper {
         map.put("chargeTimeType", CHARGE_SPECIFIED_DUE_DATE);
         map.put("feeInterval", 2);
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
 
@@ -103,7 +105,7 @@ public class ChargesHelper {
         final HashMap<String, Object> map = populateDefaultsForSavings(amount.toString(), currencyCode);
         map.put("chargeTimeType", timeType.getValue());
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
 
@@ -112,7 +114,7 @@ public class ChargesHelper {
         map.put("feeOnMonthDay", ChargesHelper.feeOnMonthDay);
         map.put("chargeTimeType", CHARGE_ANNUAL_FEE);
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
 
@@ -122,7 +124,7 @@ public class ChargesHelper {
         map.put("chargeTimeType", CHARGE_MONTHLY_FEE);
         map.put("feeInterval", 2);
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
     
@@ -131,7 +133,7 @@ public class ChargesHelper {
         map.put("chargeTimeType", WEEKLY_FEE);
         map.put("feeInterval", 1);
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
 
@@ -139,7 +141,7 @@ public class ChargesHelper {
         final HashMap<String, Object> map = populateDefaultsForSavings();
         map.put("chargeTimeType", CHARGE_OVERDRAFT_FEE);
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
 
@@ -179,7 +181,7 @@ public class ChargesHelper {
         map.put("amount", amount);
         map.put("chargeCalculationType", chargeCalculationType);
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
 
@@ -201,7 +203,7 @@ public class ChargesHelper {
         map.put("chargeCalculationType", chargeCalculationType);
 
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
 
@@ -229,7 +231,7 @@ public class ChargesHelper {
         map.put("chargeCalculationType", chargeCalculationType);
 
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
 
@@ -244,21 +246,21 @@ public class ChargesHelper {
     public static String getShareAccountActivationChargeJson() {
         HashMap<String, Object> map = populateDefaultsShareActivationCharge() ;
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
     
     public static String getShareAccountPurchaseChargeJson() {
         HashMap<String, Object> map = populateDefaultsSharePurchaseFlatCharge() ;
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
     
     public static String getShareAccountRedeemChargeJson() {
         HashMap<String, Object> map = populateDefaultsShareRedeemFlatCharge() ;
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
     
@@ -271,7 +273,7 @@ public class ChargesHelper {
         map.put("feeOnMonthDay", ChargesHelper.feeOnMonthDay);
         map.put("feeInterval", 2);
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
     
@@ -283,7 +285,7 @@ public class ChargesHelper {
         map.put("chargeTimeType", CHARGE_OVERDUE_INSTALLMENT_FEE);
         map.put("chargeCalculationType", ChargesHelper.CHARGE_CALCULATION_TYPE_PERCENTAGE_AMOUNT_AND_INTEREST);
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println(chargesCreateJson);
+        log.info(chargesCreateJson);
         return chargesCreateJson;
     }
 
@@ -390,7 +392,7 @@ public class ChargesHelper {
         map.put("locale", CommonConstants.locale);
         map.put("amount", "200.0");
         String json = new Gson().toJson(map);
-        System.out.println(json);
+        log.info(json);
         return json;
     }
 
@@ -399,7 +401,7 @@ public class ChargesHelper {
         map.put("locale", CommonConstants.locale);
         map.put("chargeCalculationType", CHARGE_CALCULATION_TYPE_PERCENTAGE_AMOUNT);
         String json = new Gson().toJson(map);
-        System.out.println(json);
+        log.info(json);
         return json;
     }
 
@@ -409,7 +411,7 @@ public class ChargesHelper {
         map.put("chargeCalculationType", CHARGE_CALCULATION_TYPE_PERCENTAGE_AMOUNT);
         map.put("chargePaymentMode", CHARGE_PAYMENT_MODE_ACCOUNT_TRANSFER);
         String json = new Gson().toJson(map);
-        System.out.println(json);
+        log.info(json);
         return json;
     }
 
@@ -419,7 +421,7 @@ public class ChargesHelper {
         map.put("chargeCalculationType", CHARGE_CALCULATION_TYPE_PERCENTAGE_AMOUNT_AND_INTEREST);
         map.put("chargePaymentMode", CHARGE_PAYMENT_MODE_ACCOUNT_TRANSFER);
         String json = new Gson().toJson(map);
-        System.out.println(json);
+        log.info(json);
         return json;
     }
 
@@ -429,7 +431,7 @@ public class ChargesHelper {
         map.put("chargeCalculationType", CHARGE_CALCULATION_TYPE_PERCENTAGE_INTEREST);
         map.put("chargePaymentMode", CHARGE_PAYMENT_MODE_ACCOUNT_TRANSFER);
         String json = new Gson().toJson(map);
-        System.out.println(json);
+        log.info(json);
         return json;
     }
 
@@ -439,7 +441,7 @@ public class ChargesHelper {
         map.put("feeFrequency", ChargesHelper.CHARGE_FEE_FREQUENCY_DAYS);
         map.put("feeInterval", 2);
         String json = new Gson().toJson(map);
-        System.out.println(json);
+        log.info(json);
         return json;
     }
 
@@ -449,7 +451,7 @@ public class ChargesHelper {
         map.put("feeFrequency", ChargesHelper.CHARGE_FEE_FREQUENCY_WEEKS);
         map.put("feeInterval", 2);
         String json = new Gson().toJson(map);
-        System.out.println(json);
+        log.info(json);
         return json;
     }
 
@@ -459,7 +461,7 @@ public class ChargesHelper {
         map.put("feeFrequency", ChargesHelper.CHARGE_FEE_FREQUENCY_MONTHS);
         map.put("feeInterval", 2);
         String json = new Gson().toJson(map);
-        System.out.println(json);
+        log.info(json);
         return json;
     }
 
@@ -469,14 +471,14 @@ public class ChargesHelper {
         map.put("feeFrequency", ChargesHelper.CHARGE_FEE_FREQUENCY_YEARS);
         map.put("feeInterval", 2);
         String json = new Gson().toJson(map);
-        System.out.println(json);
+        log.info(json);
         return json;
     }
     
     public static String getChargeSpecifiedDueDateJSON() {
         final HashMap<String, Object> map = populateDefaultsClientCharge();
         String chargesCreateJson = new Gson().toJson(map);
-        System.out.println("chargesCreateJson:"+chargesCreateJson);
+        log.info("chargesCreateJson:"+chargesCreateJson);
         return chargesCreateJson;
     }
 
