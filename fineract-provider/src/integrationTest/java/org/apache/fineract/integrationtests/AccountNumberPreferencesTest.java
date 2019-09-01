@@ -151,8 +151,7 @@ public class AccountNumberPreferencesTest extends BaseIntegrationTest {
             log.info("Successfully deleted account number preference (ID: " + delResponse.get("resourceId") + ")");
         }
         /* Deletion of invalid account preference ID should fail */
-        System.out
-                .println("---------------------------------DELETING ACCOUNT NUMBER PREFERENCE WITH INVALID ID------------------------------------------");
+        log.info("---------------------------------DELETING ACCOUNT NUMBER PREFERENCE WITH INVALID ID------------------------------------------");
 
         HashMap<String, Object> deletionError = this.accountNumberPreferencesHelper.deleteAccountNumberPreference(10,
                 this.responseNotFoundError, "");

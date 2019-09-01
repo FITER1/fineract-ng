@@ -18,14 +18,15 @@
  */
 package org.apache.fineract.integrationtests.common.system;
 
+import com.jayway.restassured.specification.RequestSpecification;
+import com.jayway.restassured.specification.ResponseSpecification;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.fineract.integrationtests.common.Utils;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.apache.fineract.integrationtests.common.Utils;
-
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
-
+@Slf4j
 public class AccountNumberPreferencesHelper {
 
 	private final RequestSpecification requestSpec;
@@ -43,8 +44,7 @@ public class AccountNumberPreferencesHelper {
 
 	public Object createClientAccountNumberPreference(
 			ResponseSpecification responseSpec, String jsonAttributeToGetBack) {
-		System.out
-				.println("---------------------------------CREATING CLIENT ACCOUNT NUMBER PREFERENCE------------------------------------------");
+		log.info("---------------------------------CREATING CLIENT ACCOUNT NUMBER PREFERENCE------------------------------------------");
 
 		final String requestJSON = new AccountNumberPreferencesTestBuilder()
 				.clientBuild();
@@ -58,8 +58,7 @@ public class AccountNumberPreferencesHelper {
 
 	public Object createLoanAccountNumberPreference(
 			ResponseSpecification responseSpec, String jsonAttributeToGetBack) {
-		System.out
-				.println("---------------------------------CREATING LOAN ACCOUNT NUMBER PREFERENCE------------------------------------------");
+		log.info("---------------------------------CREATING LOAN ACCOUNT NUMBER PREFERENCE------------------------------------------");
 
 		final String requestJSON = new AccountNumberPreferencesTestBuilder()
 				.loanBuild();
@@ -72,8 +71,7 @@ public class AccountNumberPreferencesHelper {
 
 	public Object createSavingsAccountNumberPreference(
 			ResponseSpecification responseSpec, String jsonAttributeToGetBack) {
-		System.out
-				.println("---------------------------------CREATING SAVINGS ACCOUNT NUMBER PREFERENCE------------------------------------------");
+		log.info("---------------------------------CREATING SAVINGS ACCOUNT NUMBER PREFERENCE------------------------------------------");
 
 		final String requestJSON = new AccountNumberPreferencesTestBuilder()
 				.savingsBuild();
@@ -87,8 +85,7 @@ public class AccountNumberPreferencesHelper {
 	
 	public Object createGroupsAccountNumberPreference(
 			ResponseSpecification responseSpec, String jsonAttributeToGetBack) {
-		System.out
-				.println("---------------------------------CREATING GROUPS ACCOUNT NUMBER PREFERENCE------------------------------------------");
+		log.info("---------------------------------CREATING GROUPS ACCOUNT NUMBER PREFERENCE------------------------------------------");
 
 		final String requestJSON = new AccountNumberPreferencesTestBuilder()
 				.groupsBuild();
@@ -102,8 +99,7 @@ public class AccountNumberPreferencesHelper {
 	
 	public Object createCenterAccountNumberPreference(
 			ResponseSpecification responseSpec, String jsonAttributeToGetBack) {
-		System.out
-				.println("---------------------------------CREATING CENTER ACCOUNT NUMBER PREFERENCE------------------------------------------");
+		log.info("---------------------------------CREATING CENTER ACCOUNT NUMBER PREFERENCE------------------------------------------");
 
 		final String requestJSON = new AccountNumberPreferencesTestBuilder()
 				.centerBuild();
@@ -148,8 +144,7 @@ public class AccountNumberPreferencesHelper {
 			final Integer accountNumberFormatId,
 			ResponseSpecification responseSpec, String jsonAttributeToGetBack) {
 
-		System.out
-				.println("---------------------------------DELETING ACCOUNT NUMBER PREFERENCE------------------------------------------");
+		log.info("---------------------------------DELETING ACCOUNT NUMBER PREFERENCE------------------------------------------");
 
 		final String URL = ACCOUNT_NUMBER_FORMATS_REQUEST_URL + "/"
 				+ accountNumberFormatId + "?" + Utils.TENANT_IDENTIFIER;

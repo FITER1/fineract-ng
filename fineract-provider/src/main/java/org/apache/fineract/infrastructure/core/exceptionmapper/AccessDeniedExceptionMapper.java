@@ -18,16 +18,14 @@
  */
 package org.apache.fineract.infrastructure.core.exceptionmapper;
 
+import org.apache.fineract.infrastructure.core.data.ApiGlobalErrorResponse;
+import org.springframework.security.access.AccessDeniedException;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-
-import org.apache.fineract.infrastructure.core.data.ApiGlobalErrorResponse;
-import org.springframework.context.annotation.Scope;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.stereotype.Component;
 
 /**
  * An {@link ExceptionMapper} to map {@link AccessDeniedException} thrown by
@@ -38,8 +36,6 @@ import org.springframework.stereotype.Component;
  * sufficient privileges.
  */
 @Provider
-@Component
-@Scope("singleton")
 public class AccessDeniedExceptionMapper implements ExceptionMapper<AccessDeniedException> {
 
     @Override

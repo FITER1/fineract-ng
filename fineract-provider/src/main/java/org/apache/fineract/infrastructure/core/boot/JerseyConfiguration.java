@@ -22,7 +22,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import io.swagger.jaxrs.listing.SwaggerSerializers;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.fineract.infrastructure.core.exceptionmapper.*;
 import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.glassfish.jersey.media.sse.SseFeature;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -36,7 +38,6 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import javax.annotation.PostConstruct;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Path;
-import javax.ws.rs.ext.Provider;
 import java.util.Arrays;
 
 @Slf4j
@@ -49,23 +50,33 @@ public class JerseyConfiguration extends ResourceConfig {
 
     @PostConstruct
     public void init() {
-        final String[] providerBeans = this.applicationContext.getBeanNamesForAnnotation(Provider.class);
         final String[] resourceBeans = this.applicationContext.getBeanNamesForAnnotation(Path.class);
 
+        // packages("org.apache.fineract.infrastructure.core.exceptionmapper");
         // register(RequestContextFilter.class);
         // register(JacksonFeature.class);
         register(MultiPartFeature.class);
         register(SseFeature.class);
 
-        Arrays.stream(providerBeans).forEach(providerBean -> {
-            final Object provider = this.applicationContext.getBean(providerBean);
+        register(UnsupportedParameterExceptionMapper.class);
+        register(BadCredentialsExceptionMapper.class);
+        register(MalformedJsonExceptionMapper.class);
+        register(AccessDeniedExceptionMapper.class);
+        register(InvalidJsonExceptionMapper.class);
+        register(JsonSyntaxExceptionMapper.class);
+        register(UnsupportedCommandExceptionMapper.class);
+        register(PlatformServiceUnavailableExceptionMapper.class);
+        register(PlatformDataIntegrityExceptionMapper.class);
+        register(PlatformInternalServerExceptionMapper.class);
+        register(PlatformDomainRuleExceptionMapper.class);
+        register(UnAuthenticatedUserExceptionMapper.class);
+        register(PlatformResourceNotFoundExceptionMapper.class);
+        register(InvalidTenantIdentifierExceptionMapper.class);
+        register(PlatformApiDataValidationExceptionMapper.class);
+        register(UnrecognizedQueryParamExceptionMapper.class);
+        register(NoAuthorizationExceptionMapper.class);
 
-            // log.warn("Register provider: {} - {}", resourceBean, resource.getClass().getName());
-
-            if(provider.getClass().getPackage().toString().startsWith("org.apache.fineract")) {
-                register(provider.getClass());
-            }
-        });
+        register(SwaggerSerializers.class);
 
         Arrays.stream(resourceBeans).forEach(resourceBean -> {
             final Object resource = this.applicationContext.getBean(resourceBean);

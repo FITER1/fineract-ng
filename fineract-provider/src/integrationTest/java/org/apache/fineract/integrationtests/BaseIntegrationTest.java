@@ -27,6 +27,7 @@ import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
@@ -34,10 +35,10 @@ import org.testcontainers.containers.wait.strategy.Wait;
 
 import java.io.File;
 import java.time.Duration;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Slf4j
 public abstract class BaseIntegrationTest {
-    @ClassRule
     public static DockerComposeContainer fineract = new DockerComposeContainer(new File("src/integrationTest/resources/compose-test.yml"))
         .withExposedService("mysql_1", 3306)
         .withExposedService("fineract_1", 8443, Wait.forListeningPort().withStartupTimeout(Duration.ofSeconds(300))) // NOTE: needs enough time to finish all the db migrations etc.
@@ -50,6 +51,15 @@ public abstract class BaseIntegrationTest {
 
     protected ResponseSpecification responseSpec;
     protected RequestSpecification requestSpec;
+
+    private static AtomicBoolean fineractRunning = new AtomicBoolean(false);
+
+    @BeforeClass
+    public static void setupClass() {
+        if(!fineractRunning.getAndSet(true)) {
+            fineract.start();
+        }
+    }
 
     @Before
     public void setup() {

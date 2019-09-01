@@ -18,16 +18,14 @@
  */
 package org.apache.fineract.infrastructure.core.exceptionmapper;
 
+import org.apache.fineract.infrastructure.core.data.ApiGlobalErrorResponse;
+import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-
-import org.apache.fineract.infrastructure.core.data.ApiGlobalErrorResponse;
-import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 /**
  * An {@link ExceptionMapper} to map {@link PlatformDataIntegrityException}
@@ -37,8 +35,6 @@ import org.springframework.stereotype.Component;
  * result in data integrity checks to be fired.
  */
 @Provider
-@Component
-@Scope("singleton")
 public class PlatformDataIntegrityExceptionMapper implements ExceptionMapper<PlatformDataIntegrityException> {
 
     @Override

@@ -18,16 +18,14 @@
  */
 package org.apache.fineract.infrastructure.core.exceptionmapper;
 
+import org.apache.fineract.infrastructure.core.data.ApiGlobalErrorResponse;
+import org.springframework.security.authentication.BadCredentialsException;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
-
-import org.apache.fineract.infrastructure.core.data.ApiGlobalErrorResponse;
-import org.springframework.context.annotation.Scope;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.stereotype.Component;
 
 /**
  * An {@link ExceptionMapper} to map {@link BadCredentialsException} thrown by
@@ -38,8 +36,6 @@ import org.springframework.stereotype.Component;
  * credentials.
  */
 @Provider
-@Component
-@Scope("singleton")
 public class BadCredentialsExceptionMapper implements ExceptionMapper<BadCredentialsException> {
 
     @Override
