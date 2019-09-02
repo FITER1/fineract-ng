@@ -25,7 +25,6 @@ import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.system.CodeHelper;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -262,12 +261,6 @@ public class SystemCodeTest extends BaseIntegrationTest {
                 createCodeResponseId, "");
 
         assertEquals("Number of code values is 0", 0, deletedCodeValuesList1.size());
-
-    }
-
-    @Ignore
-    @Test
-    public void testCodeValuesAssignedToTable() {
 
     }
 
