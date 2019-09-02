@@ -18,27 +18,11 @@
  */
 package org.apache.fineract.integrationtests;
 
-import static org.junit.Assert.assertEquals;
-
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
+import com.jayway.restassured.builder.ResponseSpecBuilder;
+import com.jayway.restassured.specification.RequestSpecification;
+import com.jayway.restassured.specification.ResponseSpecification;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.fineract.integrationtests.common.ClientHelper;
-import org.apache.fineract.integrationtests.common.GlobalConfigurationHelper;
-import org.apache.fineract.integrationtests.common.HolidayHelper;
-import org.apache.fineract.integrationtests.common.SchedulerJobHelper;
-import org.apache.fineract.integrationtests.common.StandingInstructionsHelper;
-import org.apache.fineract.integrationtests.common.Utils;
+import org.apache.fineract.integrationtests.common.*;
 import org.apache.fineract.integrationtests.common.accounting.Account;
 import org.apache.fineract.integrationtests.common.accounting.AccountHelper;
 import org.apache.fineract.integrationtests.common.accounting.JournalEntry;
@@ -56,19 +40,21 @@ import org.apache.fineract.integrationtests.common.savings.SavingsProductHelper;
 import org.apache.fineract.integrationtests.common.savings.SavingsStatusChecker;
 import org.apache.fineract.portfolio.account.PortfolioAccountType;
 import org.apache.fineract.portfolio.account.domain.AccountTransferType;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.runners.MethodSorters;
 
-import com.jayway.restassured.builder.RequestSpecBuilder;
-import com.jayway.restassured.builder.ResponseSpecBuilder;
-import com.jayway.restassured.http.ContentType;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.*;
+
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings({ "unused", "unchecked", "rawtypes", "static-access", "cast" })
 @Slf4j
+@FixMethodOrder(MethodSorters.JVM)
 public class SchedulerJobsTestResults extends BaseIntegrationTest {
 
     private static final String FROM_ACCOUNT_TYPE_LOAN = "1";
@@ -98,15 +84,18 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
         super.setup();
 
         this.responseSpecForSchedulerJob = new ResponseSpecBuilder().expectStatusCode(202).build();
+        this.schedulerJobHelper = new SchedulerJobHelper(this.requestSpec, this.responseSpec);
+        this.savingsAccountHelper = new SavingsAccountHelper(this.requestSpec, this.responseSpec);
+        this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
+        this.holidayHelper = new HolidayHelper(this.requestSpec, this.responseSpec);
+        this.globalConfigurationHelper = new GlobalConfigurationHelper(this.requestSpec, this.responseSpec);
         this.accountHelper = new AccountHelper(this.requestSpec, this.responseSpec);
         this.journalEntryHelper = new JournalEntryHelper(this.requestSpec, this.responseSpec);
+        this.standingInstructionsHelper = new StandingInstructionsHelper(this.requestSpec, this.responseSpec);
     }
 
     @Test
     public void testApplyAnnualFeeForSavingsJobOutcome() throws InterruptedException {
-        this.savingsAccountHelper = new SavingsAccountHelper(this.requestSpec, this.responseSpec);
-        this.schedulerJobHelper = new SchedulerJobHelper(this.requestSpec, this.responseSpec);
-
         final Integer clientID = ClientHelper.createClient(this.requestSpec, this.responseSpec);
         Assert.assertNotNull(clientID);
 
@@ -146,9 +135,7 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
 		final HashMap annualFeeDetails = (HashMap) savingsDetails.get("annualFee");
 		ArrayList<Integer> annualFeeDueDateAsArrayList = (ArrayList<Integer>) annualFeeDetails.get("dueDate");
 		LocalDate nextDueDateForAnnualFee = LocalDate.of(annualFeeDueDateAsArrayList.get(0), annualFeeDueDateAsArrayList.get(1), annualFeeDueDateAsArrayList.get(2));
-		LocalDate todaysDate = LocalDate.now(ZoneId.of("Asia/Kolkata"));
-
-		log.info("Next due date annual fee: {} <-> {}", nextDueDateForAnnualFee, todaysDate);
+		LocalDate todaysDate = LocalDate.now(Utils.getTimeZoneOfTenant().toZoneId());
 
 		Assert.assertTrue("Verifying that all due Annual Fees have been paid ",
 				nextDueDateForAnnualFee.isAfter(todaysDate));
@@ -157,9 +144,6 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
 
     @Test
     public void testInterestPostingForSavingsJobOutcome() throws InterruptedException {
-        this.savingsAccountHelper = new SavingsAccountHelper(this.requestSpec, this.responseSpec);
-        this.schedulerJobHelper = new SchedulerJobHelper(this.requestSpec, this.responseSpec);
-
         final Integer clientID = ClientHelper.createClient(this.requestSpec, this.responseSpec);
         Assert.assertNotNull(clientID);
 
@@ -194,10 +178,6 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
 
     @Test
     public void testTransferFeeForLoansFromSavingsJobOutcome() throws InterruptedException {
-        this.savingsAccountHelper = new SavingsAccountHelper(this.requestSpec, this.responseSpec);
-        this.schedulerJobHelper = new SchedulerJobHelper(this.requestSpec, this.responseSpec);
-        this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
-
         final Integer clientID = ClientHelper.createClient(this.requestSpec, this.responseSpec);
         Assert.assertNotNull(clientID);
 
@@ -260,11 +240,6 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
 
     @Test
     public void testApplyHolidaysToLoansJobOutcome() throws InterruptedException {
-        this.schedulerJobHelper = new SchedulerJobHelper(this.requestSpec, this.responseSpec);
-        this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
-        this.holidayHelper = new HolidayHelper(this.requestSpec, this.responseSpec);
-        this.globalConfigurationHelper = new GlobalConfigurationHelper(this.requestSpec, this.responseSpec);
-
         final Integer clientID = ClientHelper.createClient(this.requestSpec, this.responseSpec);
         Assert.assertNotNull(clientID);
 
@@ -331,9 +306,6 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
 
     @Test
     public void testApplyDueFeeChargesForSavingsJobOutcome() throws InterruptedException {
-        this.savingsAccountHelper = new SavingsAccountHelper(this.requestSpec, this.responseSpec);
-        this.schedulerJobHelper = new SchedulerJobHelper(this.requestSpec, this.responseSpec);
-
         final Integer clientID = ClientHelper.createClient(this.requestSpec, this.responseSpec);
         Assert.assertNotNull(clientID);
 
@@ -375,6 +347,7 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
 
         final Float balance = (Float) summaryBefore.get("accountBalance") - chargeAmount;
 
+        // NOTE: technically this one fails when executed together with the other ones, but when executed alone succeeds; thread unsafe code somewhere?
         Assert.assertEquals("Verifying the Balance after running Pay due Savings Charges", balance,
                 (Float) summaryAfter.get("accountBalance"));
 
@@ -382,9 +355,6 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
 
     @Test
     public void testUpdateAccountingRunningBalancesJobOutcome() throws InterruptedException {
-        this.savingsAccountHelper = new SavingsAccountHelper(this.requestSpec, this.responseSpec);
-        this.schedulerJobHelper = new SchedulerJobHelper(this.requestSpec, this.responseSpec);
-
         final Account assetAccount = this.accountHelper.createAssetAccount();
         final Account incomeAccount = this.accountHelper.createIncomeAccount();
         final Account expenseAccount = this.accountHelper.createExpenseAccount();
@@ -527,9 +497,6 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
     @Ignore
     @Test
     public void testUpdateLoanSummaryJobOutcome() throws InterruptedException {
-        this.schedulerJobHelper = new SchedulerJobHelper(this.requestSpec, this.responseSpec);
-        this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
-
         DateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.US);
 
         Calendar todaysDate = Calendar.getInstance();
@@ -583,10 +550,6 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
 
     @Test
     public void testExecuteStandingInstructionsJobOutcome() throws InterruptedException {
-        this.schedulerJobHelper = new SchedulerJobHelper(this.requestSpec, this.responseSpec);
-        this.savingsAccountHelper = new SavingsAccountHelper(this.requestSpec, this.responseSpec);
-        this.standingInstructionsHelper = new StandingInstructionsHelper(this.requestSpec, this.responseSpec);
-
         DateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.US);
         DateFormat monthDayFormat = new SimpleDateFormat("dd MMMM", Locale.US);
 
@@ -675,10 +638,6 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
 
     @Test
     public void testApplyPenaltyForOverdueLoansJobOutcome() throws InterruptedException {
-        this.savingsAccountHelper = new SavingsAccountHelper(this.requestSpec, this.responseSpec);
-        this.schedulerJobHelper = new SchedulerJobHelper(this.requestSpec, this.responseSpec);
-        this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
-
         final Integer clientID = ClientHelper.createClient(this.requestSpec, this.responseSpec);
         Assert.assertNotNull(clientID);
 
@@ -725,10 +684,6 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
 
     @Test
     public void testAvoidUnncessaryPenaltyWhenAmountZeroForOverdueLoansJobOutcome() throws InterruptedException {
-        this.savingsAccountHelper = new SavingsAccountHelper(this.requestSpec, this.responseSpec);
-        this.schedulerJobHelper = new SchedulerJobHelper(this.requestSpec, this.responseSpec);
-        this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
-
         final Integer clientID = ClientHelper.createClient(this.requestSpec, this.responseSpec);
         Assert.assertNotNull(clientID);
 
@@ -789,9 +744,6 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
 
     @Test
     public void testUpdateOverdueDaysForNPA() throws InterruptedException {
-        this.schedulerJobHelper = new SchedulerJobHelper(this.requestSpec, this.responseSpec);
-        this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
-
         final Integer clientID = ClientHelper.createClient(this.requestSpec, this.responseSpec);
         Assert.assertNotNull(clientID);
 
@@ -821,8 +773,6 @@ public class SchedulerJobsTestResults extends BaseIntegrationTest {
 
     @Test
     public void testInterestTransferForSavings() throws InterruptedException {
-        this.savingsAccountHelper = new SavingsAccountHelper(this.requestSpec, this.responseSpec);
-        this.schedulerJobHelper = new SchedulerJobHelper(this.requestSpec, this.responseSpec);
         FixedDepositProductHelper fixedDepositProductHelper = new FixedDepositProductHelper(this.requestSpec, this.responseSpec);
         AccountHelper accountHelper = new AccountHelper(this.requestSpec, this.responseSpec);
         FixedDepositAccountHelper fixedDepositAccountHelper = new FixedDepositAccountHelper(this.requestSpec, this.responseSpec);
