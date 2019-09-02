@@ -58,9 +58,9 @@ public class ProvisioningCriteria extends AbstractAuditableCustom<AppUser, Long>
     public ProvisioningCriteria(String criteriaName, AppUser createdBy, DateTime createdDate, AppUser lastModifiedBy, DateTime lastModifiedDate) {
         this.criteriaName = criteriaName;
         setCreatedBy(createdBy) ;
-        setCreatedDate(createdDate.toDate()) ;
+        setCreatedDate(createdDate==null ? DateTime.now().toDate() : createdDate.toDate()) ;
         setLastModifiedBy(lastModifiedBy) ;
-        setLastModifiedDate(lastModifiedDate.toDate()) ;
+        setLastModifiedDate(lastModifiedDate==null ? DateTime.now().toDate() : lastModifiedDate.toDate()) ;
     }
 
     public void setProvisioningCriteriaDefinitions(Set<ProvisioningCriteriaDefinition> provisioningCriteriaDefinition) {
