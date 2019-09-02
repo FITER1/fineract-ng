@@ -73,19 +73,12 @@ public class LoanScheduleHistoryWritePlatformServiceImpl implements LoanSchedule
             final BigDecimal feeChargesCharged = repaymentScheduleInstallment.getFeeChargesCharged(currency).getAmount();
             final BigDecimal penaltyCharges = repaymentScheduleInstallment.getPenaltyChargesCharged(currency).getAmount();
 
-            Date createdOnDate = null;
-            if (repaymentScheduleInstallment.getCreatedDate().isPresent()) {
-                createdOnDate = new Date(repaymentScheduleInstallment.getCreatedDate().map(Instant::getEpochSecond).orElse(0L));
-            }
+            Date createdOnDate = repaymentScheduleInstallment.getCreatedDate();
 
-            final AppUser createdByUser = repaymentScheduleInstallment.getCreatedBy().orElse(null);
-            final AppUser lastModifiedByUser = repaymentScheduleInstallment.getLastModifiedBy().orElse(null);
+            final AppUser createdByUser = repaymentScheduleInstallment.getCreatedBy();
+            final AppUser lastModifiedByUser = repaymentScheduleInstallment.getLastModifiedBy();
 
-            Date lastModifiedOnDate = null;
-
-            if (repaymentScheduleInstallment.getLastModifiedDate().isPresent()) {
-                lastModifiedOnDate = new Date(repaymentScheduleInstallment.getLastModifiedDate().map(Instant::getEpochSecond).orElse(0L));
-            }
+            Date lastModifiedOnDate = repaymentScheduleInstallment.getLastModifiedDate();
 
             LoanRepaymentScheduleHistory loanRepaymentScheduleHistory = LoanRepaymentScheduleHistory.instance(loan, loanRescheduleRequest,
                     installmentNumber, fromDate, dueDate, principal, interestCharged, feeChargesCharged, penaltyCharges, createdOnDate,
