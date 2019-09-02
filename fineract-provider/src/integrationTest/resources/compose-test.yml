@@ -16,7 +16,7 @@
 # under the License.
 #
 
-version: "3.6"
+version: "3.7"
 
 networks:
   fineract: {}
@@ -25,9 +25,9 @@ services:
   mysql:
     image: mysql:5.7
     volumes:
-      #- ./initdb:/docker-entrypoint-initdb.d
+      - ./initdb:/docker-entrypoint-initdb.d
       #- /tmp/fineract:/var/lib/mysql
-      - MYSQL_DATABASE=mifostenant-default
+      #- MYSQL_DATABASE=mifostenant-default
     networks:
       - fineract
     environment:

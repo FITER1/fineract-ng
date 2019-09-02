@@ -17,8 +17,8 @@
 -- under the License.
 --
 
-# create databases
-CREATE DATABASE IF NOT EXISTS `mifosplatform-tenants`;
+-- create databases
+-- CREATE DATABASE IF NOT EXISTS `mifosplatform-tenants`;
 CREATE DATABASE IF NOT EXISTS `mifostenant-default`;
 
 # create root user and grant rights
