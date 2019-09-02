@@ -19,12 +19,10 @@
 package org.apache.fineract.integrationtests.common.shares;
 
 import com.google.gson.Gson;
-import com.jayway.restassured.specification.RequestSpecification;
-import com.jayway.restassured.specification.ResponseSpecification;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.integrationtests.BaseIntegrationTest;
 import org.apache.fineract.integrationtests.common.ClientHelper;
+import org.apache.fineract.integrationtests.common.Utils;
 import org.apache.fineract.integrationtests.common.charges.ChargesHelper;
 import org.apache.fineract.integrationtests.common.savings.SavingsAccountHelper;
 import org.junit.Assert;
@@ -37,8 +35,6 @@ import java.util.*;
 @Slf4j
 public class ShareAccountIntegrationTests extends BaseIntegrationTest {
 
-    private RequestSpecification requestSpec;
-    private ResponseSpecification responseSpec;
     private ShareProductHelper shareProductHelper;
 
     @Test
@@ -185,7 +181,7 @@ public class ShareAccountIntegrationTests extends BaseIntegrationTest {
             } else if (transactionType.equals("charge.payment")) {
                 Assert.assertEquals("2.0", String.valueOf(transaction.get("amount")));
                 Assert.assertEquals("0", String.valueOf(transaction.get("amountPaid")));
-                Date transactionDate = DateUtils.getDateOfTenant() ;
+                Date transactionDate = Utils.getLocalDateOfTenant().toDate();
                 Assert.assertEquals(simple.format(transactionDate), simple.format(date));
             }
         }
@@ -236,7 +232,7 @@ public class ShareAccountIntegrationTests extends BaseIntegrationTest {
         Calendar cal = Calendar.getInstance();
         cal.set(dateList.get(0), dateList.get(1) - 1, dateList.get(2));
         Date rejectedDate = cal.getTime();
-        Date currentTenantDate = DateUtils.getDateOfTenant() ;
+        Date currentTenantDate = Utils.getLocalDateOfTenant().toDate();
         Assert.assertEquals(simple.format(currentTenantDate), simple.format(rejectedDate));
         
         List<Map<String, Object>> transactions = (List<Map<String, Object>>) shareAccountData.get("purchasedShares");
@@ -260,7 +256,7 @@ public class ShareAccountIntegrationTests extends BaseIntegrationTest {
             } else if (transactionType.equals("charge.payment")) {
                 Assert.assertEquals("2.0", String.valueOf(transaction.get("amount")));
                 Assert.assertEquals("0", String.valueOf(transaction.get("amountPaid")));
-                Date transactionDate = DateUtils.getDateOfTenant() ;
+                Date transactionDate = Utils.getLocalDateOfTenant().toDate();
                 Assert.assertEquals(simple.format(transactionDate), simple.format(date));
             }
         }
@@ -348,7 +344,7 @@ public class ShareAccountIntegrationTests extends BaseIntegrationTest {
             } else if (transactionType.equals("charge.payment")) {
                 Assert.assertEquals("2.0", String.valueOf(transaction.get("amount")));
                 Assert.assertEquals("0", String.valueOf(transaction.get("amountPaid")));
-                Date transactionDate = DateUtils.getDateOfTenant() ;
+                Date transactionDate = Utils.getLocalDateOfTenant().toDate();
                 Assert.assertEquals(simple.format(transactionDate), simple.format(date));
             }
         }
