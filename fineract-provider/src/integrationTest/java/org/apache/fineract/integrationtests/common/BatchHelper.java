@@ -45,7 +45,7 @@ import com.jayway.restassured.specification.ResponseSpecification;
 public class BatchHelper {
 
     private static final String BATCH_API_URL = "/batches";
-    private static final String BATCH_API_URL_EXT = BATCH_API_URL + "&enclosingTransaction=true";
+    private static final String BATCH_API_URL_EXT = BATCH_API_URL + "?enclosingTransaction=true";
 
     private BatchHelper() {
         super();

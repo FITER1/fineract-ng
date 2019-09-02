@@ -21,6 +21,9 @@ package org.apache.fineract.batch.service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.fineract.batch.domain.BatchRequest;
 import org.apache.fineract.batch.domain.BatchResponse;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
@@ -30,6 +33,8 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 // TODO: @aleks fix this
 /**
@@ -41,6 +46,7 @@ import java.util.Map.Entry;
  * @see BatchApiServiceImpl
  */
 @Component
+@Slf4j
 public class ResolutionHelper {
 
     /**
@@ -133,49 +139,73 @@ public class ResolutionHelper {
     public BatchRequest resoluteRequest(final BatchRequest request, final BatchResponse parentResponse) {
 
         // Create a duplicate request
+        // TODO: Java is by reference... br and request are one and the same
         final BatchRequest br = request;
 
-        // final JsonModel responseJsonModel = JsonModel.model(parentResponse.getBody());
-
-        // Gets the body from current Request as a JsonObject
-        final JsonObject jsonRequestBody = this.fromJsonHelper.parse(request.getBody()).getAsJsonObject();
-
-        JsonObject jsonResultBody = new JsonObject();
-
-        // Iterate through each element in the requestBody to find dependent
-        // parameter
-        for (Entry<String, JsonElement> element : jsonRequestBody.entrySet()) {
-            final String key = element.getKey();
-            final JsonElement value = resolveDependentVariables(element/*, responseJsonModel*/);
-            jsonResultBody.add(key, value);
-        }
-
-        // Set the body after dependency resolution
-        br.setBody(jsonResultBody.toString());
+        final JsonObject responseJsonModel = this.fromJsonHelper.parse(parentResponse.getBody()).getAsJsonObject();
 
         // Also check the relativeUrl for any dependency resolution
         String relativeUrl = request.getRelativeUrl();
 
         if (relativeUrl.contains("$.")) {
 
-            String queryParams = "";
-            if(relativeUrl.contains("?")) {
-                queryParams = relativeUrl.substring(relativeUrl.indexOf("?"));
-                relativeUrl = relativeUrl.substring(0, relativeUrl.indexOf("?"));
-            }
-            
-            final String[] parameters = relativeUrl.split("/");
-            
+            List<String> parameters = parseParameters(relativeUrl);
+
             for (String parameter : parameters) {
                 if (parameter.contains("$.")) {
-                    final String resParamValue = ""; /*responseJsonModel.get(parameter).toString();*/
-                    relativeUrl = relativeUrl.replace(parameter, resParamValue);
-                    br.setRelativeUrl(relativeUrl+queryParams);
+                    // TODO: add null checks to make this a bit more robust
+                    String key = parameter.substring(2);
+                    final String resParamValue = responseJsonModel.get(key).getAsString();
+
+                    String regex = "\\$\\." + key;
+                    relativeUrl = relativeUrl.replaceAll(regex, resParamValue);
                 }
             }
+
+            br.setRelativeUrl(relativeUrl);
+        }
+
+        String body = request.getBody();
+
+        if (!StringUtils.isEmpty(body) && body.contains("$.")) {
+            List<String> parameters = parseParameters(body);
+
+            for (String parameter : parameters) {
+                if (parameter.contains("$.")) {
+                    // TODO: add null checks to make this a bit more robust
+                    String key = parameter.substring(2);
+                    final String resParamValue = responseJsonModel.get(key).getAsString();
+
+                    String regex = "\\$\\." + key;
+                    if(NumberUtils.isCreatable(resParamValue) || "true".equalsIgnoreCase(resParamValue) || "false".equalsIgnoreCase(resParamValue)) {
+                        regex = "\"" + regex + "\""; // NOTE: remove quotes if it's a number or a boolean
+                    }
+                    body = body.replaceAll(regex, resParamValue);
+                }
+            }
+
+            br.setBody(body);
         }
 
         return br;
+    }
+
+    private List<String> parseParameters(String s) {
+        List<String> result = new ArrayList<>();
+
+        try {
+            Pattern p = Pattern.compile("(\\$\\.[\\w]+)");
+            Matcher m = p.matcher(s);
+
+            while (m.find()) {
+                result.add(m.group());
+            }
+
+        } catch (Exception e) {
+            log.error(e.toString(), e);
+        }
+
+        return result;
     }
 
     private JsonElement resolveDependentVariables(final Entry<String, JsonElement> entryElement/*, final JsonModel responseJsonModel*/) {
