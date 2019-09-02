@@ -7,6 +7,6 @@
           | |
           |_|
 
-${AnsiStyle.FAINT}${AnsiColor.BRIGHT_WHITE} (c) 2004-2019 fineract.apache.org
+${AnsiStyle.FAINT}${AnsiColor.BRIGHT_WHITE} (c) 2004-2019 https://fineract.apache.org
 
 ${AnsiStyle.FAINT}${AnsiColor.WHITE} Running Spring Boot ${spring-boot.version}${AnsiColor.BLACK}
