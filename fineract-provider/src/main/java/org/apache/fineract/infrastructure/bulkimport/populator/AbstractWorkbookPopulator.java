@@ -56,8 +56,7 @@ public abstract class AbstractWorkbookPopulator implements WorkbookPopulator {
   }
 
   protected void writeFormula(int colIndex, Row row, String formula) {
-          row.createCell(colIndex).setCellType(CellType.FORMULA);
-          row.createCell(colIndex).setCellFormula(formula);
+      row.createCell(colIndex).setCellFormula(formula);
   }
 
   protected void writeDate(int colIndex, Row row, String value, CellStyle dateCellStyle,String dateFormat) {
