@@ -48,6 +48,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Path("shareproduct/{productId}/dividend")
+@Component
 @Scope("singleton")
 public class ShareDividendApiResource {
 
