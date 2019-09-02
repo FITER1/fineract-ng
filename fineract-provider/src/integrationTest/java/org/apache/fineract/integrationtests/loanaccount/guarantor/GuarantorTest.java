@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.integrationtests.loanaccount.guarantor;
 
+import com.jayway.restassured.builder.ResponseSpecBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.BaseIntegrationTest;
 import org.apache.fineract.integrationtests.common.ClientHelper;
@@ -43,12 +44,12 @@ public class GuarantorTest extends BaseIntegrationTest {
     private LoanTransactionHelper loanTransactionHelper;
     private GuarantorHelper guarantorHelper;
     private SavingsAccountHelper savingsAccountHelper;
-    private final Float self1_balance = new Float(5000);
-    private final Float external1_balance = new Float(5000);
-    private final Float external2_balance = new Float(5000);
-    private final Float self1_guarantee = new Float(2000);
-    private final Float external1_guarantee = new Float(2000);
-    private final Float external2_guarantee = new Float(1000);
+    private final Float self1_balance = 5000f;
+    private final Float external1_balance = 5000f;
+    private final Float external2_balance = 5000f;
+    private final Float self1_guarantee = 2000f;
+    private final Float external1_guarantee = 2000f;
+    private final Float external2_guarantee = 1000f;
 
     @Before
     public void setUp() throws Exception {
@@ -62,6 +63,8 @@ public class GuarantorTest extends BaseIntegrationTest {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
     public void testGuarantor() {
+
+        LoanTransactionHelper lth = new LoanTransactionHelper(this.requestSpec, new ResponseSpecBuilder().expectStatusCode(400).build());
 
         Float self1_hold_funds = new Float(0);
         Float external1_hold_funds = new Float(0);
@@ -98,7 +101,7 @@ public class GuarantorTest extends BaseIntegrationTest {
         Integer withoutGuaranteeAmount = this.guarantorHelper.createGuarantor(loanID, guarantorJSON);
         Assert.assertNotNull(withoutGuaranteeAmount);
 
-        ArrayList<HashMap> errorData = (ArrayList<HashMap>) this.loanTransactionHelper.approveLoan(LOAN_DISBURSEMENT_DATE, null, loanID,
+        ArrayList<HashMap> errorData = (ArrayList<HashMap>) lth.approveLoan(LOAN_DISBURSEMENT_DATE, null, loanID,
                 CommonConstants.RESPONSE_ERROR);
         assertTrue(checkForErrorCode(errorData, "validation.msg.loan.guarantor.min.self.guarantee.required"));
         assertTrue(checkForErrorCode(errorData, "validation.msg.loan.guarantor.min.external.guarantee.required"));
@@ -110,7 +113,7 @@ public class GuarantorTest extends BaseIntegrationTest {
         verifySavingsOnHoldBalance(selfSavigsId, null);
         Assert.assertNotNull(selfGuarantee);
 
-        errorData = (ArrayList<HashMap>) this.loanTransactionHelper.approveLoan(LOAN_DISBURSEMENT_DATE, null, loanID,
+        errorData = (ArrayList<HashMap>) lth.approveLoan(LOAN_DISBURSEMENT_DATE, null, loanID,
                 CommonConstants.RESPONSE_ERROR);
         assertFalse(checkForErrorCode(errorData, "validation.msg.loan.guarantor.min.self.guarantee.required"));
         assertTrue(checkForErrorCode(errorData, "validation.msg.loan.guarantor.min.external.guarantee.required"));
@@ -122,7 +125,7 @@ public class GuarantorTest extends BaseIntegrationTest {
         verifySavingsOnHoldBalance(externalSavigsId_1, null);
         Assert.assertNotNull(externalGuarantee_1);
 
-        errorData = (ArrayList<HashMap>) this.loanTransactionHelper.approveLoan(LOAN_DISBURSEMENT_DATE, null, loanID,
+        errorData = (ArrayList<HashMap>) lth.approveLoan(LOAN_DISBURSEMENT_DATE, null, loanID,
                 CommonConstants.RESPONSE_ERROR);
         assertFalse(checkForErrorCode(errorData, "validation.msg.loan.guarantor.min.self.guarantee.required"));
         assertFalse(checkForErrorCode(errorData, "validation.msg.loan.guarantor.min.external.guarantee.required"));
@@ -217,6 +220,7 @@ public class GuarantorTest extends BaseIntegrationTest {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     @Test
     public void testGuarantor_UNDO_DISBURSAL() {
+        LoanTransactionHelper lth = new LoanTransactionHelper(this.requestSpec, new ResponseSpecBuilder().expectStatusCode(400).build());
 
         Float self1_hold_funds = new Float(0);
         Float external1_hold_funds = new Float(0);
@@ -255,7 +259,7 @@ public class GuarantorTest extends BaseIntegrationTest {
         Integer withoutGuaranteeAmount = this.guarantorHelper.createGuarantor(loanID, guarantorJSON);
         Assert.assertNotNull(withoutGuaranteeAmount);
 
-        ArrayList<HashMap> errorData = (ArrayList<HashMap>) this.loanTransactionHelper.approveLoan(LOAN_DISBURSEMENT_DATE, null, loanID,
+        ArrayList<HashMap> errorData = (ArrayList<HashMap>) lth.approveLoan(LOAN_DISBURSEMENT_DATE, null, loanID,
                 CommonConstants.RESPONSE_ERROR);
         assertTrue(checkForErrorCode(errorData, "validation.msg.loan.guarantor.min.self.guarantee.required"));
         assertTrue(checkForErrorCode(errorData, "validation.msg.loan.guarantor.min.external.guarantee.required"));
@@ -267,7 +271,7 @@ public class GuarantorTest extends BaseIntegrationTest {
         verifySavingsOnHoldBalance(selfSavigsId, null);
         Assert.assertNotNull(selfGuarantee);
 
-        errorData = (ArrayList<HashMap>) this.loanTransactionHelper.approveLoan(LOAN_DISBURSEMENT_DATE, null, loanID,
+        errorData = (ArrayList<HashMap>) lth.approveLoan(LOAN_DISBURSEMENT_DATE, null, loanID,
                 CommonConstants.RESPONSE_ERROR);
         assertFalse(checkForErrorCode(errorData, "validation.msg.loan.guarantor.min.self.guarantee.required"));
         assertTrue(checkForErrorCode(errorData, "validation.msg.loan.guarantor.min.external.guarantee.required"));
@@ -279,7 +283,7 @@ public class GuarantorTest extends BaseIntegrationTest {
         verifySavingsOnHoldBalance(externalSavigsId_1, null);
         Assert.assertNotNull(externalGuarantee_1);
 
-        errorData = (ArrayList<HashMap>) this.loanTransactionHelper.approveLoan(LOAN_DISBURSEMENT_DATE, null, loanID,
+        errorData = (ArrayList<HashMap>) lth.approveLoan(LOAN_DISBURSEMENT_DATE, null, loanID,
                 CommonConstants.RESPONSE_ERROR);
         assertFalse(checkForErrorCode(errorData, "validation.msg.loan.guarantor.min.self.guarantee.required"));
         assertFalse(checkForErrorCode(errorData, "validation.msg.loan.guarantor.min.external.guarantee.required"));
@@ -319,7 +323,7 @@ public class GuarantorTest extends BaseIntegrationTest {
         List<HashMap> guarantors = this.guarantorHelper.getAllGuarantor(loanID);
         this.guarantorHelper.deleteGuarantor(externalGuarantor, loanID);
         assertFalse((Boolean) this.guarantorHelper.getGuarantor(externalGuarantor, loanID, "status"));
-        HashMap errorlog = this.guarantorHelper.deleteGuarantor(withoutGuaranteeAmount, loanID);
+        HashMap errorlog = new GuarantorHelper(this.requestSpec, new ResponseSpecBuilder().expectStatusCode(404).build()).deleteGuarantor(withoutGuaranteeAmount, loanID);
         ArrayList<HashMap> error = (ArrayList<HashMap>) errorlog.get(CommonConstants.RESPONSE_ERROR);
         assertTrue(checkForErrorCode(error, "error.msg.loan.guarantor.not.found"));
         guarantors = this.guarantorHelper.getAllGuarantor(loanID);
@@ -327,7 +331,7 @@ public class GuarantorTest extends BaseIntegrationTest {
         List<HashMap> externalGuarantee_1_details = (List<HashMap>) this.guarantorHelper.getGuarantor(externalGuarantee_1, loanID,
                 "guarantorFundingDetails");
         Integer fundDetailId = (Integer) externalGuarantee_1_details.get(0).get("id");
-        errorlog = this.guarantorHelper.deleteGuarantor(externalGuarantee_1, fundDetailId, loanID);
+        errorlog = new GuarantorHelper(this.requestSpec, new ResponseSpecBuilder().expectStatusCode(400).build()).deleteGuarantor(externalGuarantee_1, fundDetailId, loanID);
         error = (ArrayList<HashMap>) errorlog.get(CommonConstants.RESPONSE_ERROR);
         assertTrue(checkForErrorCode(error, "validation.msg.loan.guarantor.min.external.guarantee.required"));
 
