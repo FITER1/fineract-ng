@@ -26,6 +26,6 @@ public interface CommonConstants {
     public static final String RESPONSE_RESOURCE_ID = "resourceId";
     public static final String RESPONSE_CHANGES = "changes";
     public static final String RESPONSE_STATUS = "status";
-    public static final String RESPONSE_ERROR = "errors";
+    public static final String RESPONSE_ERROR = "errorResponse";
     public static final String RESPONSE_ERROR_MESSAGE_CODE = "userMessageGlobalisationCode";
 }
