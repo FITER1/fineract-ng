@@ -47,6 +47,7 @@ import java.util.Set;
 import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.*;
 
 @Path("interestratecharts")
+@Component
 @Scope("singleton")
 @Api(value = "Interest Rate Chart", description = "This defines an interest rate scheme that can be associated to a term deposit product. This will have a slab (band or range) of deposit periods and the associated interest rates applicable along with incentives for each band.")
 public class InterestRateChartsApiResource {
