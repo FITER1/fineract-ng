@@ -19,26 +19,11 @@
 package org.apache.fineract.integrationtests;
 
 import org.apache.fineract.integrationtests.common.ImageHelper;
-import org.apache.fineract.integrationtests.common.accounting.AccountHelper;
-import org.apache.fineract.integrationtests.common.loans.LoanTransactionHelper;
 import org.apache.fineract.integrationtests.common.organisation.StaffHelper;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 public class StaffImageApiTest extends BaseIntegrationTest {
-
-    private LoanTransactionHelper loanTransactionHelper;
-    private AccountHelper accountHelper;
-
-    @Before
-    public void setup() {
-        super.setup();
-
-        this.loanTransactionHelper = new LoanTransactionHelper(this.requestSpec, this.responseSpec);
-        this.accountHelper = new AccountHelper(this.requestSpec, this.responseSpec);
-
-    }
 
     @Test
     public void createStaffImage() {
