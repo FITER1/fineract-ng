@@ -23,7 +23,8 @@ networks:
 
 services:
   mysql:
-    image: mysql:8
+    image: mysql:5.7
+    restart: on-failure
     logging:
       driver: none
     volumes:
@@ -50,6 +51,7 @@ services:
   #    - fineract
   fineract:
     image: fineract:latest
+    restart: on-failure
     environment:
       #- FINERACT_SERVER_PORT=8080
       - FINERACT_SERVER_PORT=8443
