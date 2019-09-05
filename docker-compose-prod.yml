@@ -39,7 +39,7 @@ services:
       - "127.0.0.1:3306:3306"
   # TODO: finish nginx configuration (letsencrypt certificates)
   #nginx:
-  #  image: nginx:1.15
+  #  image: nginx:1.17.3
   #  environment:
   #    - FINERACT_DOMAIN=${FINERACT_DOMAIN}
   #    - DOLLAR=$$
@@ -47,6 +47,9 @@ services:
   #    - "80:80"
   #    - "443:443"
   #  command: /bin/bash -c "envsubst < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+  #  volumes:
+  #    - /etc/letsencrypt:/etc/letsencrypt
+  #    - ./fineract-nginx/conf/default.conf.template:/etc/nginx/conf.d/default.conf.template
   #  networks:
   #    - fineract
   fineract:
