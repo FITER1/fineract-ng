@@ -20,7 +20,6 @@ apply plugin: "org.springframework.boot"
 apply plugin: "distribution"
 apply plugin: "com.palantir.docker"
 apply plugin: "com.gorylenko.gradle-git-properties"
-apply plugin: "openjpa"
 // apply plugin: "com.ewerk.gradle.plugins.querydsl"
 
 description = "Fineract"
@@ -40,27 +39,25 @@ springBoot {
     }
 }
 
-openjpa {
-    includes = ['**/AbstractPersistableCustom.class', '**/domain/*.class']
-    enhance {
-        enforcePropertyRestrictions true
-    }
-}
-
 /*
 querydsl {
     jpa = false
     springDataMongo = false
     querydslDefault = true
     aptOptions = [
-        'querydsl.entityAccessors=true',
-        'querydsl.useFields=false'
+        "querydsl.entityAccessors=true",
+        "querydsl.useFields=false"
     ]
 }
 */
 
 dependencies {
     runtimeOnly "org.springframework.boot:spring-boot-devtools"
+
+    runtimeAgent "org.springframework:spring-instrument"
+    runtimeAgent "org.aspectj:aspectjweaver"
+
+    implementation "org.springframework.boot:spring-boot-starter-aop"
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-data-jpa"
     implementation "org.springframework.boot:spring-boot-starter-security"
@@ -75,7 +72,7 @@ dependencies {
     implementation "org.glassfish.jersey.ext:jersey-spring5"
     implementation "org.ow2.asm:asm-all"
     implementation "org.springframework.security.oauth:spring-security-oauth2"
-    implementation "org.apache.openjpa:openjpa"
+    implementation "org.eclipse.persistence:org.eclipse.persistence.jpa"
     implementation "com.squareup.retrofit2:retrofit"
     implementation "com.squareup.okhttp3:okhttp"
     implementation "com.google.code.gson:gson"
@@ -87,7 +84,6 @@ dependencies {
     implementation "org.apache.poi:poi"
     implementation "org.apache.poi:poi-ooxml"
     implementation "org.apache.poi:poi-ooxml-schemas"
-    implementation "org.apache.openjpa:openjpa-all"
     implementation "com.lowagie:itext"
     implementation "org.mnode.ical4j:ical4j"
     implementation "org.flywaydb:flyway-core"
@@ -128,7 +124,6 @@ dependencies {
     integrationTestImplementation "org.apache.poi:poi-ooxml-schemas"
     integrationTestImplementation "javax.ws.rs:javax.ws.rs-api"
     integrationTestImplementation "joda-time:joda-time"
-    integrationTestImplementation "org.apache.openjpa:openjpa"
     integrationTestImplementation "mysql:mysql-connector-java"
 }
 
@@ -136,10 +131,12 @@ tasks.distZip.enabled = false
 
 def distributionsCopySpec = copySpec {
     into("fineract") {
+        from configurations.runtimeAgent
         from "${buildDir}/${libsDirName}"
         exclude { FileTreeElement details ->
             details.file.name.endsWith(".original") || details.file.name.endsWith("-sources.jar")
         }
+        // rename { "${artifact.name}.${artifact.extension}" }
     }
 }
 

@@ -182,9 +182,6 @@ public class LoanProduct extends AbstractPersistableCustom<Long> {
 
     @Column(name = "can_use_for_topup", nullable = false)
     private boolean canUseForTopup = false;
-    
-    @Column(name = "is_equal_amortization", nullable = false)
-    private boolean isEqualAmortization = false;
 
     public static LoanProduct assembleFromJson(final Fund fund, final LoanTransactionProcessingStrategy loanTransactionProcessingStrategy,
             final List<Charge> productCharges, final JsonCommand command, final AprCalculator aprCalculator, FloatingRate floatingRate) {
@@ -583,7 +580,7 @@ public class LoanProduct extends AbstractPersistableCustom<Long> {
             BigDecimal minDifferentialLendingRate, BigDecimal maxDifferentialLendingRate, BigDecimal defaultDifferentialLendingRate,
             Boolean isFloatingInterestRateCalculationAllowed, final Boolean isVariableInstallmentsAllowed,
             final Integer minimumGapBetweenInstallments, final Integer maximumGapBetweenInstallments,
-            final boolean syncExpectedWithDisbursementDate, final boolean canUseForTopup, final boolean isEqualAmortization) {
+            final boolean syncExpectedWithDisbursementDate, final boolean canUseForTopup, final boolean equalAmortization) {
         this.fund = fund;
         this.transactionProcessingStrategy = transactionProcessingStrategy;
         this.name = name.trim();
@@ -615,7 +612,7 @@ public class LoanProduct extends AbstractPersistableCustom<Long> {
                 interestPeriodFrequencyType, defaultAnnualNominalInterestRate, interestMethod, interestCalculationPeriodMethod,
                 considerPartialPeriodInterest, repayEvery, repaymentFrequencyType, defaultNumberOfInstallments, graceOnPrincipalPayment, recurringMoratoriumOnPrincipalPeriods,
                 graceOnInterestPayment, graceOnInterestCharged, amortizationMethod, inArrearsTolerance, graceOnArrearsAgeing,
-                daysInMonthType.getValue(), daysInYearType.getValue(), isInterestRecalculationEnabled, isEqualAmortization);
+                daysInMonthType.getValue(), daysInYearType.getValue(), isInterestRecalculationEnabled, equalAmortization);
 
         this.loanProductRelatedDetail.validateRepaymentPeriodWithGraceSettings();
 
@@ -660,7 +657,6 @@ public class LoanProduct extends AbstractPersistableCustom<Long> {
         this.syncExpectedWithDisbursementDate = 
         		syncExpectedWithDisbursementDate;
         this.canUseForTopup = canUseForTopup;
-        this.isEqualAmortization = isEqualAmortization;
     }
 
     public MonetaryCurrency getCurrency() {
@@ -1374,12 +1370,8 @@ public class LoanProduct extends AbstractPersistableCustom<Long> {
         return this.canUseForTopup;
     }
 
-    public boolean isEqualAmortization() {
-        return isEqualAmortization;
-    }
-
-    public void setEqualAmortization(boolean isEqualAmortization) {
-        this.isEqualAmortization = isEqualAmortization;
+    public boolean getEqualAmortization() {
+        return getLoanProductRelatedDetail().isEqualAmortization();
     }
 
 }

@@ -25,7 +25,6 @@ import org.apache.fineract.spm.domain.Survey;
 import org.apache.fineract.spm.domain.SurveyValidator;
 import org.apache.fineract.spm.exception.SurveyNotFoundException;
 import org.apache.fineract.spm.repository.SurveyRepository;
-import org.apache.openjpa.persistence.EntityExistsException;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +36,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.PersistenceException;
 
 @Service

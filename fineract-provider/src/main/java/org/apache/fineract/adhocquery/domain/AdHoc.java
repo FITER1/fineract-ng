@@ -38,6 +38,9 @@ import org.apache.fineract.useradministration.domain.AppUser;
 @Table(name = "m_adhoc")
 public class AdHoc extends AbstractAuditableCustom<AppUser, Long> {
 
+    public AdHoc() {
+    }
+
   	@Column(name = "name", length = 100)
     private  String name;
     

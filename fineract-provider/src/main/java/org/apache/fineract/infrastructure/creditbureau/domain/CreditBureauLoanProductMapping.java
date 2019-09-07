@@ -45,7 +45,7 @@ public class CreditBureauLoanProductMapping extends AbstractPersistableCustom<Lo
 	private boolean is_active;
 
 	@ManyToOne
-	private OrganisationCreditBureau organisation_creditbureau;
+	private OrganisationCreditBureau organisationCreditbureau;
 
 	@OneToOne
 	@JoinColumn(name="loan_product_id")
@@ -61,7 +61,7 @@ public class CreditBureauLoanProductMapping extends AbstractPersistableCustom<Lo
 		this.skipCreditCheckInFailure = skipCreditCheckInFailure;
 		this.stalePeriod = stalePeriod;
 		this.is_active = is_active;
-		this.organisation_creditbureau = organisationCreditbureau;
+		this.organisationCreditbureau = organisationCreditbureau;
 		this.loanProduct = loanProduct;
 	}
 
@@ -130,11 +130,11 @@ public class CreditBureauLoanProductMapping extends AbstractPersistableCustom<Lo
 	}
 
 	public OrganisationCreditBureau getOrganisationCreditbureau() {
-		return this.organisation_creditbureau;
+		return this.organisationCreditbureau;
 	}
 
 	public void setOrganisationCreditbureau(OrganisationCreditBureau organisationCreditbureau) {
-		this.organisation_creditbureau = organisationCreditbureau;
+		this.organisationCreditbureau = organisationCreditbureau;
 	}
 
 	public LoanProduct getLoanProduct() {

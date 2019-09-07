@@ -26,7 +26,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-
+import org.springframework.context.annotation.EnableLoadTimeWeaving;
 
 
 /**
@@ -107,6 +107,7 @@ exclude = {
 	@ComponentScan("org.apache.fineract.adhocquery"),
 	@ComponentScan("org.apache.fineract.spm")
 })
+@EnableLoadTimeWeaving // (aspectjWeaving = EnableLoadTimeWeaving.AspectJWeaving.ENABLED)
 public class ServerApplication {
 	public static void main(String[] args) throws Exception {
 		SpringApplication.run(ServerApplication.class, args);

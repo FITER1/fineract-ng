@@ -41,7 +41,7 @@ public class OrganisationCreditBureau extends AbstractPersistableCustom<Long> {
 
 	private boolean is_active;
 
-	@OneToMany(mappedBy = "organisation_creditbureau", cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<CreditBureauLoanProductMapping> creditBureauLoanProductMapping = new ArrayList<>();
 
 	public OrganisationCreditBureau(String alias, CreditBureau creditBureau, boolean is_active,

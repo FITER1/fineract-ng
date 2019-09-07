@@ -36,6 +36,9 @@ import org.apache.fineract.portfolio.client.domain.Client;
 @Table(name = "client_device_registration")
 public class DeviceRegistration extends AbstractPersistableCustom<Long> {
 
+	public DeviceRegistration() {
+	}
+
 	@OneToOne
 	@JoinColumn(name = "client_id", nullable = false, unique = true)
 	private Client client;

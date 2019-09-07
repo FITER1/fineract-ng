@@ -35,6 +35,9 @@ import org.apache.fineract.portfolio.client.domain.Client;
 @Table(name = "request_audit_table")
 public class SelfServiceRegistration extends AbstractPersistableCustom<Long> {
 
+    public SelfServiceRegistration() {
+    }
+
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     private Client client;

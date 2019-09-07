@@ -42,16 +42,16 @@ public class CreditBureau extends AbstractPersistableCustom<Long> {
 
 	private String implementationKey;
 
-	@OneToMany(mappedBy = "organisation_creditbureau", cascade = CascadeType.ALL)
-	private List<CreditBureauLoanProductMapping> CreditBureauLoanProductMapping = new ArrayList<>();
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<CreditBureauLoanProductMapping> creditBureauLoanProductMapping = new ArrayList<>();
 
 	public CreditBureau(String name, String product, String country, String implementationKey,
-			List<CreditBureauLoanProductMapping> CreditBureauLoanProductMapping) {
+			List<CreditBureauLoanProductMapping> creditBureauLoanProductMapping) {
 		this.name = name;
 		this.product = product;
 		this.country = country;
 		this.implementationKey = implementationKey;
-		this.CreditBureauLoanProductMapping = CreditBureauLoanProductMapping;
+		this.creditBureauLoanProductMapping = creditBureauLoanProductMapping;
 	}
 
 	public CreditBureau() {
@@ -102,11 +102,11 @@ public class CreditBureau extends AbstractPersistableCustom<Long> {
 	}
 
 	public List<CreditBureauLoanProductMapping> getCreditBureauLpMapping() {
-		return this.CreditBureauLoanProductMapping;
+		return this.creditBureauLoanProductMapping;
 	}
 
 	public void setCreditBureauLpMapping(List<CreditBureauLoanProductMapping> CreditBureauLoanProductMapping) {
-		this.CreditBureauLoanProductMapping = CreditBureauLoanProductMapping;
+		this.creditBureauLoanProductMapping = CreditBureauLoanProductMapping;
 	}
 
 }

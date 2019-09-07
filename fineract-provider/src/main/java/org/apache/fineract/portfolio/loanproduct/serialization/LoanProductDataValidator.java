@@ -1140,7 +1140,7 @@ public final class LoanProductDataValidator {
                     .value(npaChangeConfig).notNull().isOneOfTheseValues(true, false);
         }
         
-        boolean isEqualAmortization = loanProduct.isEqualAmortization();
+        boolean isEqualAmortization = loanProduct.getEqualAmortization();
         if (this.fromApiJsonHelper.parameterExists(LoanProductConstants.isEqualAmortizationParam, element)) {
             isEqualAmortization = this.fromApiJsonHelper.extractBooleanNamed(LoanProductConstants.isEqualAmortizationParam, element);
             baseDataValidator.reset().parameter(LoanProductConstants.isEqualAmortizationParam).value(isEqualAmortization).ignoreIfNull()

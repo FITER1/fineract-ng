@@ -293,6 +293,7 @@ allprojects  {
             dependency "org.apache.openjpa:openjpa-lib:3.1.0"
             dependency "org.apache.openjpa:openjpa-integration-jmx:3.1.0"
             dependency "org.eclipse.persistence:eclipselink:2.7.4"
+            dependency "org.eclipse.persistence:org.eclipse.persistence.jpa:2.7.4"
             dependency "org.apache.bval:org.apache.bval.bundle:2.0.2"
             dependency "org.apache.tika:tika-core:1.22"
             dependency "com.google.guava:guava:19.0"
@@ -521,6 +522,8 @@ subprojects {
         integrationTestRuntimeOnly.extendsFrom testRuntime
         // integrationTestImplementation.extendsFrom implementation
         // integrationTestRuntimeOnly.extendsFrom runtimeOnly
+
+        runtimeAgent
     }
 
     configurations.all {
