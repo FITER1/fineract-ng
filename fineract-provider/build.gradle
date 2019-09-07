@@ -21,7 +21,7 @@ apply plugin: "distribution"
 apply plugin: "com.palantir.docker"
 apply plugin: "com.gorylenko.gradle-git-properties"
 apply plugin: "openjpa"
-// apply plugin: "com.ewerk.gradle.plugins.querydsl"
+apply plugin: "com.ewerk.gradle.plugins.querydsl"
 
 description = "Fineract"
 
@@ -47,68 +47,79 @@ openjpa {
     }
 }
 
-/*
 querydsl {
-    jpa = false
-    springDataMongo = false
-    querydslDefault = true
+    jpa = true
+    querydslDefault = false
+    querydslSourcesDir = "$buildDir/generated/sources/querydsl/main"
+    /*
     aptOptions = [
-        'querydsl.entityAccessors=true',
-        'querydsl.useFields=false'
+        "querydsl.entityAccessors=true",
+        "querydsl.useFields=true"
     ]
+    */
 }
-*/
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir "$buildDir/generated/sources/querydsl/main"
+        }
+    }
+}
 
 dependencies {
     runtimeOnly "org.springframework.boot:spring-boot-devtools"
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
-    implementation "org.springframework.boot:spring-boot-starter-security"
-    implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation "org.springframework.boot:spring-boot-starter-activemq"
-    implementation "org.springframework.boot:spring-boot-starter-cache"
-    implementation "org.springframework.boot:spring-boot-starter-quartz"
-    implementation "org.springframework.boot:spring-boot-starter-jersey"
-    implementation "org.glassfish.jersey.media:jersey-media-multipart"
-    implementation "org.glassfish.jersey.media:jersey-media-sse"
-    implementation "org.glassfish.jersey.media:jersey-media-jaxb"
-    implementation "org.glassfish.jersey.ext:jersey-spring5"
-    implementation "org.ow2.asm:asm-all"
-    implementation "org.springframework.security.oauth:spring-security-oauth2"
-    implementation "org.apache.openjpa:openjpa"
-    implementation "com.squareup.retrofit2:retrofit"
-    implementation "com.squareup.okhttp3:okhttp"
-    implementation "com.google.code.gson:gson"
-    implementation "com.google.guava:guava"
-    implementation "joda-time:joda-time"
-    implementation "org.apache.commons:commons-email"
-    implementation "org.apache.commons:commons-lang3"
-    implementation "mysql:mysql-connector-java"
-    implementation "org.apache.poi:poi"
-    implementation "org.apache.poi:poi-ooxml"
-    implementation "org.apache.poi:poi-ooxml-schemas"
-    implementation "org.apache.openjpa:openjpa-all"
-    implementation "com.lowagie:itext"
-    implementation "org.mnode.ical4j:ical4j"
-    implementation "org.flywaydb:flyway-core"
-    implementation "com.amazonaws:aws-java-sdk-s3"
-    implementation "org.ehcache:ehcache"
-    implementation "com.github.spullara.mustache.java:compiler"
-    implementation "com.jayway.jsonpath:json-path"
-    implementation "org.apache.tika:tika-core"
-    implementation "io.swagger:swagger-jersey-jaxrs"
-    implementation "javax.validation:validation-api"
-    implementation "javax.cache:cache-api"
-    implementation "org.apache.bval:org.apache.bval.bundle:2.0.2"
-    implementation "joda-time:joda-time"
-    implementation "com.querydsl:querydsl-core"
-    implementation "com.querydsl:querydsl-sql"
-    implementation "com.querydsl:querydsl-sql-spring"
-    implementation "com.querydsl:querydsl-sql-codegen"
-    implementation "com.querydsl:querydsl-codegen"
-    implementation "com.querydsl:querydsl-jpa"
-    implementation "com.querydsl:querydsl-jpa-codegen"
-    implementation "com.querydsl:querydsl-apt"
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-data-jpa"
+    compile "org.springframework.boot:spring-boot-starter-security"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-activemq"
+    compile "org.springframework.boot:spring-boot-starter-cache"
+    compile "org.springframework.boot:spring-boot-starter-quartz"
+    compile "org.springframework.boot:spring-boot-starter-jersey"
+    compile "org.glassfish.jersey.media:jersey-media-multipart"
+    compile "org.glassfish.jersey.media:jersey-media-sse"
+    compile "org.glassfish.jersey.media:jersey-media-jaxb"
+    compile "org.glassfish.jersey.ext:jersey-spring5"
+    compile "org.ow2.asm:asm-all"
+    compile "org.springframework.security.oauth:spring-security-oauth2"
+    compile "org.apache.openjpa:openjpa"
+    compile "com.squareup.retrofit2:retrofit"
+    compile "com.squareup.okhttp3:okhttp"
+    compile "com.google.code.gson:gson"
+    compile "com.google.guava:guava"
+    compile "joda-time:joda-time"
+    compile "org.apache.commons:commons-email"
+    compile "org.apache.commons:commons-lang3"
+    compile "mysql:mysql-connector-java"
+    compile "org.apache.poi:poi"
+    compile "org.apache.poi:poi-ooxml"
+    compile "org.apache.poi:poi-ooxml-schemas"
+    compile "org.apache.openjpa:openjpa-all"
+    compile "com.lowagie:itext"
+    compile "org.mnode.ical4j:ical4j"
+    compile "org.flywaydb:flyway-core"
+    compile "com.amazonaws:aws-java-sdk-s3"
+    compile "org.ehcache:ehcache"
+    compile "com.github.spullara.mustache.java:compiler"
+    compile "com.jayway.jsonpath:json-path"
+    compile "org.apache.tika:tika-core"
+    compile "io.swagger:swagger-jersey-jaxrs"
+    compile "javax.validation:validation-api"
+    compile "javax.cache:cache-api"
+    compile "org.apache.bval:org.apache.bval.bundle:2.0.2"
+    compile "joda-time:joda-time"
+    compile "com.querydsl:querydsl-core"
+    compile "com.querydsl:querydsl-sql"
+    compile "com.querydsl:querydsl-sql-spring"
+    compile "com.querydsl:querydsl-sql-codegen"
+    compile "com.querydsl:querydsl-codegen"
+    compile "com.querydsl:querydsl-jpa"
+    compile "com.querydsl:querydsl-jpa-codegen"
 
     testCompile "junit:junit"
     testCompile "org.mockito:mockito-core"
