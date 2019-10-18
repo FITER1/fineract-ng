@@ -295,7 +295,7 @@ allprojects  {
             dependency "org.eclipse.persistence:eclipselink:2.7.4"
             dependency "org.apache.bval:org.apache.bval.bundle:2.0.2"
             dependency "org.apache.tika:tika-core:1.22"
-            dependency "com.google.guava:guava:19.0"
+            dependency "com.google.guava:guava:20.0"
             dependency "org.aspectj:aspectjrt:1.9.4"
             dependency "org.aspectj:aspectjweaver:1.9.4"
             dependency "org.hibernate:hibernate-validator:6.0.14.Final"
