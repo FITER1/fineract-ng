@@ -283,7 +283,7 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
 
         if (passWordEncodedValue != null) {
 
-            PageRequest pageRequest = new PageRequest(0, AppUserApiConstant.numberOfPreviousPasswords, Sort.Direction.DESC, "removalDate");
+            PageRequest pageRequest = PageRequest.of(0, AppUserApiConstant.numberOfPreviousPasswords, Sort.Direction.DESC, "removalDate");
 
             final List<AppUserPreviousPassword> nLastUsedPasswords = this.appUserPreviewPasswordRepository.findByUserId(user.getId(),
                     pageRequest);

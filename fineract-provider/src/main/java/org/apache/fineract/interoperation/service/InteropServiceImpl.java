@@ -57,7 +57,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -75,6 +74,7 @@ import java.util.Locale;
 import static org.apache.fineract.interoperation.util.InteropUtil.DEFAULT_LOCALE;
 import static org.apache.fineract.interoperation.util.InteropUtil.DEFAULT_ROUTING_CODE;
 import static org.apache.fineract.interoperation.util.InteropUtil.ISO8601_DATE_TIME_FORMAT;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
 public class InteropServiceImpl implements InteropService {
@@ -400,7 +400,7 @@ public class InteropServiceImpl implements InteropService {
     }
 
     public InteropIdentifier findIdentifier(@NotNull InteropIdentifierType idType, @NotNull String idValue, String subIdOrType) {
-        return identifierRepository.findOne(Specifications.where(idTypeEqual(idType)).and(idValueEqual(idValue)).and(subIdOrTypeEqual(subIdOrType))).orElse(null);
+        return identifierRepository.findOne(where(idTypeEqual(idType)).and(idValueEqual(idValue)).and(subIdOrTypeEqual(subIdOrType))).orElse(null);
     }
 
     public static Specification<InteropIdentifier> idTypeEqual(@NotNull InteropIdentifierType idType) {

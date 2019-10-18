@@ -103,7 +103,7 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
         Integer page = 0;
         int totalRecords = 0;
         do {
-            PageRequest pageRequest = new PageRequest(0, pageLimit);
+            PageRequest pageRequest = PageRequest.of(0, pageLimit);
             org.springframework.data.domain.Page<SmsMessage> pendingMessages = this.smsMessageRepository.findByStatusType(
                     SmsMessageStatusType.PENDING.getValue(), pageRequest);
             List<SmsMessage> toSaveMessages = new ArrayList<>() ;

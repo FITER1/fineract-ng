@@ -18,19 +18,19 @@
  */
 buildscript {
     ext {
-        springBootVersion = "2.1.7.RELEASE"
+        springBootVersion = "2.2.0.RELEASE"
         camelVersion = "2.24.1"
-        jacksonVersion = "2.9.9"
+        jacksonVersion = "2.10.0"
         codehausJacksonVersion = "1.9.13"
-        springVersion = "5.1.9.RELEASE"
-        springSecurityVersion = "5.1.6.RELEASE"
-        springDataVersion = "2.1.10.RELEASE"
+        springVersion = "5.2.0.RELEASE"
+        springSecurityVersion = "5.2.0.RELEASE"
+        springDataVersion = "2.2.0.RELEASE"
         jerseyVersion = "2.29"
         slf4jVersion = "1.7.28"
         nettyVersion = "4.1.39.Final"
-        lombokVersion = "1.18.8"
-        microMeterVersion = "1.2.0"
-        awsSdkVersion = "1.11.602"
+        lombokVersion = "1.18.10"
+        microMeterVersion = "1.3.0"
+        awsSdkVersion = "1.11.655"
     }
     repositories {
         mavenCentral()
