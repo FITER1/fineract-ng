@@ -18,6 +18,8 @@
  */
 package org.apache.fineract.infrastructure.core.boot;
 
+import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,11 +27,29 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Profile("basicauth")
 @EnableWebSecurity
 @Configuration
 public class SecurityBasicConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Bean
+    public CorsFilter corsFilter(CorsEndpointProperties corsEndpointProperties) {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(corsEndpointProperties.getAllowCredentials());
+        corsEndpointProperties.getAllowedOrigins().forEach(config::addAllowedOrigin);
+        corsEndpointProperties.getAllowedHeaders().forEach(config::addAllowedHeader);
+        corsEndpointProperties.getAllowedMethods().forEach(config::addAllowedMethod);
+        source.registerCorsConfiguration("/**", config);
+
+        return new CorsFilter(source);
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -50,6 +70,7 @@ public class SecurityBasicConfiguration extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
+            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .antMatchers("/api/**/authentication").permitAll()
             .antMatchers("/api/**/self/authentication").permitAll()
             .antMatchers("/api/**/self/registration").permitAll()
