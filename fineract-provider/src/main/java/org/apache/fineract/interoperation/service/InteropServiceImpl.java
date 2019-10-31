@@ -75,7 +75,6 @@ import java.util.function.Predicate;
 
 import static org.apache.fineract.interoperation.util.InteropUtil.DEFAULT_LOCALE;
 import static org.apache.fineract.interoperation.util.InteropUtil.DEFAULT_ROUTING_CODE;
-import static org.apache.fineract.interoperation.util.InteropUtil.ISO8601_DATE_TIME_FORMAT;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
@@ -139,7 +138,7 @@ public class InteropServiceImpl implements InteropService {
     @Transactional
     public InteropTransactionsData getAccountTransactions(@NotNull String accountId, boolean debit, boolean credit, java.time.LocalDateTime transactionsFrom, java.time.LocalDateTime transactionsTo) {
         SavingsAccount savingsAccount = validateAndGetSavingAccount(accountId);
-        ZoneId zoneId = ZoneId.of(ThreadLocalContextUtil.getTenant().getTimezoneId());
+        ZoneId zoneId = DateUtils.getTimeZoneOfTenant().toZoneId();
         Predicate<SavingsAccountTransaction> transFilter = t -> {
             SavingsAccountTransactionType transactionType = SavingsAccountTransactionType.fromInt(t.getTypeOf());
             if (debit != transactionType.isDebit() && credit != transactionType.isCredit())
