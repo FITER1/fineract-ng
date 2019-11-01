@@ -21,21 +21,28 @@ server {
   listen 80 default_server;
   listen [::]:80 default_server;
   server_name _;
-  return 301 https://${DOLLAR}host${DOLLAR}request_uri;
+  return 301 https://${DOLLAR}host/?baseApiUrl=https://$FINERACT_DOMAIN:$FINERACT_SERVER_PORT;
 }
 
 # community app and reverse proxy for api
 
 server {
-  #listen 443 ssl http2;
-  listen 80;
+  listen 443 ssl http2;
+  #listen 80;
   listen [::]:80;
   server_name $FINERACT_DOMAIN;
 
   server_tokens off;
 
-  #ssl_certificate /etc/letsencrypt/live/$FINERACT_DOMAIN/fullchain.pem;
-  #ssl_certificate_key /etc/letsencrypt/live/$FINERACT_DOMAIN/privkey.pem;
+  #ssl_certificate /etc/certificates/$FINERACT_DOMAIN.cert.pem;
+  #ssl_certificate_key /etc/certificates/$FINERACT_DOMAIN.key.pem;
+
+  #ssl_certificate /etc/certificates/cert.pem;
+  #ssl_certificate_key /etc/certificates/key.pem;
+
+   ssl_certificate /etc/certificates/localhost.cert.pem;
+   ssl_certificate_key /etc/certificates/localhost.key.pem;
+   ssl_trusted_certificate /etc/certificates/localhost.cert.pem;
 
   ssl_protocols TLSv1.2;
   ssl_prefer_server_ciphers on;
