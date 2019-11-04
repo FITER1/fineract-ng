@@ -99,6 +99,7 @@ services:
       - FINERACT_CORS_ALLOWED_HEADERS=*
       - FINERACT_CORS_ALLOWED_METHODS=*
       - FINERACT_CORS_ALLOWED_ORIGINS=*
+      - FINERACT_BASE_URL=/api/v1
     networks:
       - fineract
     depends_on:

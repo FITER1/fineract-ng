@@ -41,7 +41,7 @@ import javax.ws.rs.Path;
 import java.util.Arrays;
 
 @Slf4j
-@ApplicationPath("/api/v1")
+// @ApplicationPath("/api/v1")
 @Configuration
 public class JerseyConfiguration extends ResourceConfig {
 
