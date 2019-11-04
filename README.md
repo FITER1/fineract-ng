@@ -27,6 +27,16 @@ and stop and destroy it like this:
 Beware that this database container database keeps its state inside the container and not on the host filesystem.  It is lost when you destroy (rm) this container.  This is typically fine for development.  See [Caveats: Where to Store Data on the database container documentation](https://hub.docker.com/_/mysql) re. how to make it persistant instead of ephemeral.
 
 
+Quick setup Fiter
+============
+Create .env file in root project replacing the values of this variables:
+FINERACT_DOMAIN=localhost
+FINERACT_SERVER_PORT=8443
+
+Build mifos front-end from branch feature/fineract-ng
+https://github.com/FITER1/community-app.git
+
+
 Instructions how to run for local development
 ============
 

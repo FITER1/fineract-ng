@@ -114,7 +114,7 @@ services:
     image: nginx:1.17.3
     environment:
       - FINERACT_DOMAIN=${FINERACT_DOMAIN}
-      - FINERACT_SERVER_PORT:${FINERACT_SERVER_PORT}
+      - FINERACT_SERVER_PORT=${FINERACT_SERVER_PORT}
       - DOLLAR=$$
     ports:
       - "80:80"
