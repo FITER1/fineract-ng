@@ -15,4 +15,5 @@ out
 *.swp
 *.log
 .env
-fineract-nginx/certificates/
+*.pem
+fineract-certbot/data/certbot/conf/accounts/*

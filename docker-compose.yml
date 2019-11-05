@@ -34,7 +34,7 @@ services:
     networks:
       - fineract
     environment:
-      - MYSQL_ROOT_PASSWORD=mysql
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
       #- MYSQL_DATABASE=mifostenant-default
     ports:
       - "3306:3306"
@@ -58,8 +58,8 @@ services:
     environment:
       - FINERACT_SERVER_PORT=${FINERACT_SERVER_PORT}
       - FINERACT_DB_URL=jdbc:mysql://mysql:3306/mifostenant-default
-      - FINERACT_DB_USERNAME=root
-      - FINERACT_DB_PASSWORD=mysql
+      - FINERACT_DB_USERNAME=${FINERACT_DB_USERNAME}
+      - FINERACT_DB_PASSWORD=${FINERACT_DB_PASSWORD}
       - FINERACT_DB_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
       - FINERACT_DB_INITIALIZE=false
       - FINERACT_DB_POOL_CONNECTION_TIMEOUT=20000
@@ -110,6 +110,13 @@ services:
       - "8008:8008"
     command: sh -c "java -agentlib:jdwp=transport=dt_socket,server=y,address=*:8008,suspend=n -Xmx512m -Djava.security.egd=file:/dev/./urandom -Duser.timezone=UTC -Djava.net.preferIPv4Stack=true --illegal-access=permit --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED --add-exports=java.base/sun.nio.ch=ALL-UNNAMED -jar fineract-provider.jar --spring.profiles.active=default,basicauth"
 
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+    - ./fineract-certbot/data/certbot/conf:/etc/letsencrypt
+    - ./fineract-certbot/data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   nginx:
     image: nginx:1.17.3
@@ -122,8 +129,13 @@ services:
       - "443:443"
     command: /bin/bash -c "envsubst < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
     volumes:
-      - ./fineract-nginx/certificates:/etc/certificates
+      #- ./fineract-nginx/certificates:/etc/certificates
       - ./fineract-nginx/community-app:/usr/share/nginx/html/community-app
       - ./fineract-nginx/conf/default.conf.template:/etc/nginx/conf.d/default.conf.template
+      #- ./fineract-certbot/data/nginx:/etc/nginx/conf.d
+      - ./fineract-certbot/data/certbot/conf:/etc/letsencrypt
+      - ./fineract-certbot/data/certbot/www:/var/www/certbot
+    stdin_open: true
+    tty: true
     networks:
       - fineract

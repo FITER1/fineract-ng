@@ -193,7 +193,15 @@ allprojects  {
             //BSD License
             "**/assets/uglify.js",
             //Ignore out folder
-            "**/out/**"
+            "**/out/**",
+
+            //containers files
+            "**/fineract-nginx/**",
+            "**/fineract-certbot/**",
+            
+            //enviroment variables file
+            ".env"
+
         ]
     }
 

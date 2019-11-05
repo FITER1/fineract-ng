@@ -32,6 +32,7 @@ Fiter - Quick setup
 1. Create .env file in root project **replacing** the values of this variables:
 
     FINERACT_DOMAIN=localhost
+    ADMIN_EMAIL=julian@fiter.io
     FINERACT_SERVER_PORT=8443
     FINERACT_DB_USERNAME=root
     FINERACT_DB_PASSWORD=mysql
@@ -43,7 +44,7 @@ https://github.com/FITER1/community-app.git
 
 3. Run the following command to renew/create let's encrypt SSL certificates:
     ```
-    ./init-letsencrypt.sh domain.com admin@email.com
+    ./init-letsencrypt.sh
     ```
     
 4. Run gradle task and compose:
