@@ -27,16 +27,39 @@ and stop and destroy it like this:
 Beware that this database container database keeps its state inside the container and not on the host filesystem.  It is lost when you destroy (rm) this container.  This is typically fine for development.  See [Caveats: Where to Store Data on the database container documentation](https://hub.docker.com/_/mysql) re. how to make it persistent instead of ephemeral.
 
 
-Quick setup Fiter
-============
-Create .env file in root project replacing the values of this variables:
-FINERACT_DOMAIN=localhost
-FINERACT_SERVER_PORT=8443
+Fiter - Quick setup
+========================
+1. Create .env file in root project **replacing** the values of this variables:
 
-Build mifos front-end from branch feature/fineract-ng
+    FINERACT_DOMAIN=localhost
+    FINERACT_SERVER_PORT=8443
+    FINERACT_DB_USERNAME=root
+    FINERACT_DB_PASSWORD=mysql
+    MYSQL_ROOT_PASSWORD=mysql
+
+2. Build mifos front-end from branch feature/fineract-ng and copy community-app contents
+dir to .fineract-nginx/community-app
 https://github.com/FITER1/community-app.git
 
-
+3. Run the following command to renew/create let's encrypt SSL certificates:
+    ```
+    ./init-letsencrypt.sh domain.com admin@email.com
+    ```
+    
+4. Run gradle task and compose:
+    ```
+    ./gradlew clean build docker -x test
+    docker-compose up -d --build
+    ```
+        
+5. If you like to read container logs:
+    ```
+    docker-compose logs nginx
+    docker-compose logs fineract
+    docker-compose logs mysql
+    ```
+6. Open **[https://localhost]([https://localhost])**    
+    
 Instructions how to run for local development
 ============
 
