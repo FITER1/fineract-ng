@@ -17,3 +17,4 @@ out
 .env
 *.pem
 fineract-certbot/data/certbot/conf/accounts/*
+fineract-db/persistance/*
