@@ -42,15 +42,15 @@ Fiter - Quick setup
 dir to .fineract-nginx/community-app
 https://github.com/FITER1/community-app.git
 
-3. Run the following command to renew/create let's encrypt SSL certificates:
-    ```
-    ./init-letsencrypt.sh
-    ```
-    
 4. Run gradle task and compose:
     ```
     ./gradlew clean build docker -x test
     docker-compose up -d --build
+    ```
+    
+3. Run the following command to renew/create let's encrypt SSL certificates:
+    ```
+    ./init-letsencrypt.sh
     ```
         
 5. If you like to read container logs:
