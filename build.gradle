@@ -198,8 +198,7 @@ allprojects  {
             //containers files
             "**/fineract-nginx/**",
             "**/fineract-certbot/**",
-            "**./fineract-certbot/**",
-            "**./fineract-db/**",
+            "**/fineract-db/**",
             
             //enviroment variables file
             ".env"

@@ -31,12 +31,14 @@ Fiter - Quick setup
 ========================
 1. Create .env file in root project **replacing** the values of this variables:
 
+    ```
     FINERACT_DOMAIN=localhost
     ADMIN_EMAIL=julian@fiter.io
     FINERACT_SERVER_PORT=8443
     FINERACT_DB_USERNAME=root
     FINERACT_DB_PASSWORD=mysql
     MYSQL_ROOT_PASSWORD=mysql
+    ```
 
 2. Build mifos front-end from branch feature/fineract-ng and copy community-app contents
 dir to .fineract-nginx/community-app
