@@ -59,10 +59,13 @@ server {
   }
 
   location ${FINERACT_BASE_URL} {
-    error_log /var/log/nginx/error.log error;
-    access_log off;
+    set ${DOLLAR}fineract_proxy_url ${FINERACT_PROXY_URL};
 
-    proxy_pass ${FINERACT_PROXY_URL};
+    error_log /var/log/nginx/error.log error;
+    #access_log off;
+
+    #proxy_pass ${FINERACT_PROXY_URL};
+    proxy_pass ${DOLLAR}fineract_proxy_url;
     proxy_http_version 1.1;
     proxy_set_header Upgrade ${DOLLAR}http_upgrade;
     proxy_set_header Connection "upgrade";
