@@ -1,3 +1,4 @@
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements. See the NOTICE file
@@ -18,28 +19,14 @@
  */
 package org.apache.fineract.portfolio.charge.domain;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.*;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.charge.api.ChargesApiConstants;
@@ -48,12 +35,22 @@ import org.apache.fineract.portfolio.charge.exception.ChargeDueAtDisbursementCan
 import org.apache.fineract.portfolio.charge.exception.ChargeMustBePenaltyException;
 import org.apache.fineract.portfolio.charge.exception.ChargeParameterUpdateNotSupportedException;
 import org.apache.fineract.portfolio.charge.service.ChargeEnumerations;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanCharge;
 import org.apache.fineract.portfolio.tax.data.TaxGroupData;
 import org.apache.fineract.portfolio.tax.domain.TaxGroup;
 import org.joda.time.MonthDay;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_charge", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }, name = "name") })
 public class Charge extends AbstractPersistableCustom<Long> {
@@ -140,10 +137,6 @@ public class Charge extends AbstractPersistableCustom<Long> {
                 feeOnMonthDay, feeInterval, minCap, maxCap, feeFrequency, account, taxGroup);
     }
 
-    protected Charge() {
-        //
-    }
-
     private Charge(final String name, final BigDecimal amount, final String currencyCode, final ChargeAppliesTo chargeAppliesTo,
             final ChargeTimeType chargeTime, final ChargeCalculationType chargeCalculationType, final boolean penalty,
             final boolean active, final ChargePaymentMode paymentMode, final MonthDay feeOnMonthDay, final Integer feeInterval,
@@ -210,56 +203,6 @@ public class Charge extends AbstractPersistableCustom<Long> {
         if (!dataValidationErrors.isEmpty()) { throw new PlatformApiDataValidationException(dataValidationErrors); }
     }
 
-    @Override
-    public boolean equals(final Object obj) {
-        if (obj == null) { return false; }
-        if (obj == this) { return true; }
-        if (obj.getClass() != getClass()) { return false; }
-        final LoanCharge rhs = (LoanCharge) obj;
-        return new EqualsBuilder().appendSuper(super.equals(obj)) //
-                .append(getId(), rhs.getId()) //
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(3, 5) //
-                .append(getId()) //
-                .toHashCode();
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public BigDecimal getAmount() {
-        return this.amount;
-    }
-
-    public String getCurrencyCode() {
-        return this.currencyCode;
-    }
-
-    public Integer getChargeTimeType() {
-        return this.chargeTimeType;
-    }
-
-    public Integer getChargeCalculation() {
-        return this.chargeCalculation;
-    }
-
-    public boolean isActive() {
-        return this.active;
-    }
-
-    public boolean isPenalty() {
-        return this.penalty;
-    }
-
-    public boolean isDeleted() {
-        return this.deleted;
-    }
-
     public boolean isLoanCharge() {
         return ChargeAppliesTo.fromInt(this.chargeAppliesTo).isLoanCharge();
     }
@@ -298,14 +241,6 @@ public class Charge extends AbstractPersistableCustom<Long> {
 
     public boolean isPercentageOfDisbursementAmount() {
         return ChargeCalculationType.fromInt(this.chargeCalculation).isPercentageOfDisbursementAmount();
-    }
-
-    public BigDecimal getMinCap() {
-        return this.minCap;
-    }
-
-    public BigDecimal getMaxCap() {
-        return this.maxCap;
     }
 
     public Map<String, Object> update(final JsonCommand command) {
@@ -549,14 +484,6 @@ public class Charge extends AbstractPersistableCustom<Long> {
                 feeFrequencyType, accountData, taxGroupData);
     }
 
-    public Integer getChargePaymentMode() {
-        return this.chargePaymentMode;
-    }
-
-    public Integer getFeeInterval() {
-        return this.feeInterval;
-    }
-
     public boolean isMonthlyFee() {
         return ChargeTimeType.fromInt(this.chargeTimeType).isMonthlyFee();
     }
@@ -575,22 +502,6 @@ public class Charge extends AbstractPersistableCustom<Long> {
             feeOnMonthDay = new MonthDay(this.feeOnMonth, this.feeOnDay);
         }
         return feeOnMonthDay;
-    }
-
-    public Integer feeInterval() {
-        return this.feeInterval;
-    }
-
-    public Integer feeFrequency() {
-        return this.feeFrequency;
-    }
-
-    public GLAccount getAccount() {
-        return this.account;
-    }
-
-    public void setAccount(GLAccount account) {
-        this.account = account;
     }
 
     private Long getIncomeAccountId() {
@@ -612,13 +523,5 @@ public class Charge extends AbstractPersistableCustom<Long> {
     public boolean isDisbursementCharge() {
         return ChargeTimeType.fromInt(this.chargeTimeType).equals(ChargeTimeType.DISBURSEMENT)
                 || ChargeTimeType.fromInt(this.chargeTimeType).equals(ChargeTimeType.TRANCHE_DISBURSEMENT);
-    }
-
-    public TaxGroup getTaxGroup() {
-        return this.taxGroup;
-    }
-
-    public void setTaxGroup(TaxGroup taxGroup) {
-        this.taxGroup = taxGroup;
     }
 }

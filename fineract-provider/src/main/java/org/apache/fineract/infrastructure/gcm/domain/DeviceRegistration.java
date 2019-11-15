@@ -18,20 +18,18 @@
  */
 package org.apache.fineract.infrastructure.gcm.domain;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import lombok.*;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.portfolio.client.domain.Client;
 
+import javax.persistence.*;
+import java.util.Date;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "client_device_registration")
 public class DeviceRegistration extends AbstractPersistableCustom<Long> {
@@ -47,39 +45,10 @@ public class DeviceRegistration extends AbstractPersistableCustom<Long> {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatedOnDate;
 
-	private DeviceRegistration(final Client client, final String registrationId) {
-		this.client = client;
-		this.registrationId = registrationId;
-		this.updatedOnDate = DateUtils.getLocalDateTimeOfTenant().toDate();
+	public static DeviceRegistration instance(final Client client, final String registrationId) {
+		return DeviceRegistration.builder()
+			.client(client)
+			.registrationId(registrationId)
+			.build();
 	}
-
-	public static DeviceRegistration instance(final Client client,
-			final String registrationId) {
-		return new DeviceRegistration(client, registrationId);
-	}
-
-	public Client getClient() {
-		return this.client;
-	}
-
-	public void setClient(Client client) {
-		this.client = client;
-	}
-
-	public String getRegistrationId() {
-		return this.registrationId;
-	}
-
-	public void setRegistrationId(String registrationId) {
-		this.registrationId = registrationId;
-	}
-
-	public Date getUpdatedOnDate() {
-		return this.updatedOnDate;
-	}
-
-	public void setUpdatedOnDate(Date updatedOnDate) {
-		this.updatedOnDate = updatedOnDate;
-	}
-
 }

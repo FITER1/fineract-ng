@@ -68,14 +68,14 @@ public class EmailMessageAssembler {
         if (this.fromApiJsonHelper.parameterExists(EmailApiConstants.clientIdParamName, element)) {
             final Long clientId = this.fromApiJsonHelper.extractLongNamed(EmailApiConstants.clientIdParamName, element);
             client = this.clientRepository.findOneWithNotFoundDetection(clientId);
-            emailAddress = client.emailAddress();
+            emailAddress = client.getEmailAddress();
         }
 
         Staff staff = null;
         if (this.fromApiJsonHelper.parameterExists(EmailApiConstants.staffIdParamName, element)) {
             final Long staffId = this.fromApiJsonHelper.extractLongNamed(EmailApiConstants.staffIdParamName, element);
             staff = this.staffRepository.findOneWithNotFoundDetection(staffId);
-            emailAddress = staff.emailAddress();
+            emailAddress = staff.getEmailAddress();
         }
 
         final String message = this.fromApiJsonHelper.extractStringNamed(EmailApiConstants.messageParamName, element);

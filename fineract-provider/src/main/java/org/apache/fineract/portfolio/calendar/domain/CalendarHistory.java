@@ -18,19 +18,18 @@
  */
 package org.apache.fineract.portfolio.calendar.domain;
 
+import lombok.*;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+import org.joda.time.LocalDate;
+
+import javax.persistence.*;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
-import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_calendar_history")
 public class CalendarHistory extends AbstractPersistableCustom<Long> {
@@ -77,10 +76,6 @@ public class CalendarHistory extends AbstractPersistableCustom<Long> {
     @Column(name = "second_reminder", nullable = true)
     private Integer secondReminder;
 
-    protected CalendarHistory() {
-
-    }
-
     public CalendarHistory(Calendar calendar, Date startDate) {
         this.calendar = calendar;
         this.title = calendar.getTitle();
@@ -96,10 +91,6 @@ public class CalendarHistory extends AbstractPersistableCustom<Long> {
         this.remindById = calendar.getRemindById();
         this.firstReminder = calendar.getFirstReminder();
         this.secondReminder = calendar.getSecondReminder();
-    }
-
-    public String getRecurrence() {
-        return this.recurrence;
     }
 
     public LocalDate getStartDateLocalDate() {
@@ -118,33 +109,24 @@ public class CalendarHistory extends AbstractPersistableCustom<Long> {
         return endDateLocalDate;
     }
 
-    public boolean isEndDateAfterOrEqual(final LocalDate compareDate) {
+    private boolean isEndDateAfterOrEqual(final LocalDate compareDate) {
         if (this.endDate != null && compareDate != null) {
-            if (getEndDateLocalDate().isAfter(compareDate) || getEndDateLocalDate().isEqual(compareDate)) { return true; }
+            return getEndDateLocalDate().isAfter(compareDate) || getEndDateLocalDate().isEqual(compareDate);
         }
         return false;
     }
 
-    public boolean isStartDateBeforeOrEqual(final LocalDate compareDate) {
+    private boolean isStartDateBeforeOrEqual(final LocalDate compareDate) {
         if (this.startDate != null && compareDate != null) {
-            if (getStartDateLocalDate().isBefore(compareDate) || getStartDateLocalDate().equals(compareDate)) { return true; }
+            return getStartDateLocalDate().isBefore(compareDate) || getStartDateLocalDate().equals(compareDate);
         }
         return false;
     }
 
-    public boolean isBetweenStartAndEndDate(final LocalDate compareDate) {
+    boolean isBetweenStartAndEndDate(final LocalDate compareDate) {
         if (isStartDateBeforeOrEqual(compareDate)) {
-            if (getEndDateLocalDate() == null || isEndDateAfterOrEqual(compareDate)) { return true; }
+            return getEndDateLocalDate() == null || isEndDateAfterOrEqual(compareDate);
         }
         return false;
     }
-
-    public void updateEndDate(Date historyCalEndDate) {
-        this.endDate = historyCalEndDate;
-    }
-
-	public Calendar getCalendar() {
-		return this.calendar;
-	}
-        
 }

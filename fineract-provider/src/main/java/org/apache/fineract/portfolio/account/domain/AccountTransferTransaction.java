@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,25 +18,23 @@
  */
 package org.apache.fineract.portfolio.account.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import lombok.*;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
 import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Date;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_account_transfer_transaction")
 public class AccountTransferTransaction extends AbstractPersistableCustom<Long> {
@@ -77,78 +75,46 @@ public class AccountTransferTransaction extends AbstractPersistableCustom<Long> 
     @Column(name = "description", length = 100)
     private String description;
 
-    public static AccountTransferTransaction savingsToSavingsTransfer(final AccountTransferDetails accountTransferDetails,
-            final SavingsAccountTransaction withdrawal, final SavingsAccountTransaction deposit, final LocalDate transactionDate,
-            final Money transactionAmount, final String description) {
+    public static AccountTransferTransaction savingsToSavingsTransfer(final AccountTransferDetails accountTransferDetails, final SavingsAccountTransaction withdrawal, final SavingsAccountTransaction deposit, final LocalDate transactionDate, final Money transactionAmount, final String description) {
 
-        return new AccountTransferTransaction(accountTransferDetails, withdrawal, deposit, null, null, transactionDate, transactionAmount,
-                description);
+        return AccountTransferTransaction.builder().accountTransferDetails(accountTransferDetails).fromSavingsTransaction(withdrawal).toSavingsTransaction(deposit).amount(transactionAmount.getAmount()).date(transactionDate.toDate()).description(description).build();
     }
 
-    public static AccountTransferTransaction savingsToLoanTransfer(final AccountTransferDetails accountTransferDetails,
-            final SavingsAccountTransaction withdrawal, final LoanTransaction loanRepaymentTransaction, final LocalDate transactionDate,
-            final Money transactionAmount, final String description) {
-        return new AccountTransferTransaction(accountTransferDetails, withdrawal, null, loanRepaymentTransaction, null, transactionDate,
-                transactionAmount, description);
+    static AccountTransferTransaction savingsToLoanTransfer(final AccountTransferDetails accountTransferDetails, final SavingsAccountTransaction withdrawal, final LoanTransaction loanRepaymentTransaction, final LocalDate transactionDate, final Money transactionAmount, final String description) {
+        return AccountTransferTransaction.builder()
+            .accountTransferDetails(accountTransferDetails)
+            .fromSavingsTransaction(withdrawal)
+            .toLoanTransaction(loanRepaymentTransaction)
+            .amount(transactionAmount.getAmount())
+            .currency(transactionAmount.getCurrency())
+            .amount(transactionAmount.getAmountDefaultedToNullIfZero())
+            .date(transactionDate.toDate())
+            .description(description)
+            .build();
     }
 
-    public static AccountTransferTransaction LoanTosavingsTransfer(final AccountTransferDetails accountTransferDetails,
-            final SavingsAccountTransaction deposit, final LoanTransaction loanRefundTransaction, final LocalDate transactionDate,
-            final Money transactionAmount, final String description) {
-        return new AccountTransferTransaction(accountTransferDetails, null, deposit, null, loanRefundTransaction, transactionDate,
-                transactionAmount, description);
+    static AccountTransferTransaction loanToSavingsTransfer(final AccountTransferDetails accountTransferDetails, final SavingsAccountTransaction deposit, final LoanTransaction loanRefundTransaction, final LocalDate transactionDate, final Money transactionAmount, final String description) {
+        return AccountTransferTransaction.builder()
+            .accountTransferDetails(accountTransferDetails)
+            .fromLoanTransaction(loanRefundTransaction)
+            .toSavingsTransaction(deposit)
+            .amount(transactionAmount.getAmount())
+            .currency(transactionAmount.getCurrency())
+            .amount(transactionAmount.getAmountDefaultedToNullIfZero())
+            .date(transactionDate.toDate())
+            .description(description)
+            .build();
     }
 
-    protected AccountTransferTransaction() {
-        //
+    static AccountTransferTransaction loanToLoanTransfer(AccountTransferDetails accountTransferDetails, LoanTransaction disburseTransaction, LoanTransaction repaymentTransaction, LocalDate transactionDate, Money transactionMonetaryAmount, String description) {
+        return AccountTransferTransaction.builder()
+            .accountTransferDetails(accountTransferDetails)
+            .fromLoanTransaction(repaymentTransaction)
+            .toLoanTransaction(disburseTransaction)
+            .amount(transactionMonetaryAmount.getAmount())
+            .currency(transactionMonetaryAmount.getCurrency())
+            .amount(transactionMonetaryAmount.getAmountDefaultedToNullIfZero())
+            .date(transactionDate.toDate())
+            .description(description).build();
     }
-
-    private AccountTransferTransaction(final AccountTransferDetails accountTransferDetails, final SavingsAccountTransaction withdrawal,
-            final SavingsAccountTransaction deposit, final LoanTransaction loanRepaymentTransaction,
-            final LoanTransaction loanRefundTransaction, final LocalDate transactionDate, final Money transactionAmount,
-            final String description) {
-        this.accountTransferDetails = accountTransferDetails;
-        this.fromLoanTransaction = loanRefundTransaction;
-        this.fromSavingsTransaction = withdrawal;
-        this.toSavingsTransaction = deposit;
-        this.toLoanTransaction = loanRepaymentTransaction;
-        this.date = transactionDate.toDate();
-        this.currency = transactionAmount.getCurrency();
-        this.amount = transactionAmount.getAmountDefaultedToNullIfZero();
-        this.description = description;
-    }
-
-    public LoanTransaction getFromLoanTransaction() {
-        return this.fromLoanTransaction;
-    }
-
-    public SavingsAccountTransaction getFromTransaction() {
-        return this.fromSavingsTransaction;
-    }
-
-    public LoanTransaction getToLoanTransaction() {
-        return this.toLoanTransaction;
-    }
-
-    public SavingsAccountTransaction getToSavingsTransaction() {
-        return this.toSavingsTransaction;
-    }
-
-    public void reverse() {
-        this.reversed = true;
-    }
-
-    public void updateToLoanTransaction(LoanTransaction toLoanTransaction) {
-        this.toLoanTransaction = toLoanTransaction;
-    }
-
-    public AccountTransferDetails accountTransferDetails() {
-        return this.accountTransferDetails;
-    }
-
-        public static AccountTransferTransaction LoanToLoanTransfer(AccountTransferDetails accountTransferDetails, LoanTransaction disburseTransaction,
-                LoanTransaction repaymentTransaction, LocalDate transactionDate, Money transactionMonetaryAmount, String description) {
-            return new AccountTransferTransaction(accountTransferDetails, null, null, repaymentTransaction, disburseTransaction, transactionDate,
-                    transactionMonetaryAmount, description);
-        }
 }

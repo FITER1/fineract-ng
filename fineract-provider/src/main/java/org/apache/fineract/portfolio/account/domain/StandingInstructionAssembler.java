@@ -62,7 +62,7 @@ public class StandingInstructionAssembler {
         BigDecimal amount = null;
         final BigDecimal transferAmount = command.bigDecimalValueOfParameterNamed(amountParamName);
         if (transferAmount != null) {
-            final Money monetaryAmount = Money.of(accountTransferDetails.fromSavingsAccount().getCurrency(), transferAmount);
+            final Money monetaryAmount = Money.of(accountTransferDetails.getFromSavingsAccount().getCurrency(), transferAmount);
             amount = monetaryAmount.getAmount();
         }
         final Integer status = command.integerValueOfParameterNamed(statusParamName);
@@ -76,7 +76,7 @@ public class StandingInstructionAssembler {
         AccountTransferStandingInstruction accountTransferStandingInstruction = AccountTransferStandingInstruction.create(
                 accountTransferDetails, name, priority, standingInstructionType, status, amount, validFrom, validTill, recurrenceType,
                 recurrenceFrequency, recurrenceInterval, recurrenceOnMonthDay);
-        accountTransferDetails.updateAccountTransferStandingInstruction(accountTransferStandingInstruction);
+        accountTransferDetails.setAccountTransferStandingInstruction(accountTransferStandingInstruction);
     }
 
     public AccountTransferDetails assembleSavingsToLoanTransfer(final JsonCommand command) {

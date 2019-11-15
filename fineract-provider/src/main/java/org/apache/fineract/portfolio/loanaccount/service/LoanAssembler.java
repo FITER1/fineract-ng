@@ -327,7 +327,7 @@ public class LoanAssembler {
             staff = this.staffRepository.findById(loanOfficerId).orElse(null);
             if (staff == null) {
                 throw new StaffNotFoundException(loanOfficerId);
-            } else if (staff.isNotLoanOfficer()) { throw new StaffRoleException(loanOfficerId, StaffRoleException.STAFF_ROLE.LOAN_OFFICER); }
+            } else if (!staff.isLoanOfficer()) { throw new StaffRoleException(loanOfficerId, StaffRoleException.STAFF_ROLE.LOAN_OFFICER); }
         }
         return staff;
     }

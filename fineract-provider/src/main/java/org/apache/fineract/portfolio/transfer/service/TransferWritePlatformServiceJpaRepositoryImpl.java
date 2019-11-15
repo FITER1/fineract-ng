@@ -205,7 +205,7 @@ public class TransferWritePlatformServiceJpaRepositoryImpl implements TransferWr
 
             /** map all JLG loans for this client to the destinationGroup **/
             for (final CalendarInstance calendarInstance : activeLoanCalendarInstances) {
-                calendarInstance.updateCalendar(destinationGroupCalendar);
+                calendarInstance.setCalendar(destinationGroupCalendar);
                 this.calendarInstanceRepository.save(calendarInstance);
             }
             // reschedule all JLG Loans to follow new Calendar
@@ -220,10 +220,10 @@ public class TransferWritePlatformServiceJpaRepositoryImpl implements TransferWr
 
         /** In case of a loan officer transfer, set the new loan officer value **/
         if (sourceGroup.getId().equals(destinationGroup.getId()) && newLoanOfficer != null) {
-            client.updateStaff(newLoanOfficer);
+            client.setStaff(newLoanOfficer);
         }/*** Else default to destination group Officer (If present) ***/
         else if (destinationGroupLoanOfficer != null) {
-            client.updateStaff(destinationGroupLoanOfficer);
+            client.setStaff(destinationGroupLoanOfficer);
         }
 
         client.getGroups().add(destinationGroup);
@@ -446,10 +446,10 @@ public class TransferWritePlatformServiceJpaRepositoryImpl implements TransferWr
         switch (transferEventType) {
             case ACCEPTANCE:
                 client.setStatus(ClientStatus.ACTIVE.getValue());
-                client.updateTransferToOffice(null);
-                client.updateOffice(destinationOffice);
-                client.updateOfficeJoiningDate(client.getProposedTransferDate());
-                client.updateProposedTransferDate(null);
+                client.setTransferToOffice(null);
+                client.setOffice(destinationOffice);
+                client.setOfficeJoiningDate(client.getProposedTransferDate());
+                client.setProposedTransferDate(null);
                 if (client.getGroups().size() == 1) {
                     if (destinationGroup == null) {
                         throw new TransferNotSupportedException(TRANSFER_NOT_SUPPORTED_REASON.CLIENT_DESTINATION_GROUP_NOT_SPECIFIED,
@@ -458,28 +458,31 @@ public class TransferWritePlatformServiceJpaRepositoryImpl implements TransferWr
                     transferClientBetweenGroups(Iterables.get(client.getGroups(), 0), client, destinationGroup, true, staff);
                 } else if (client.getGroups().size() == 0 && destinationGroup != null) {
                     client.getGroups().add(destinationGroup);
-                    client.updateStaff(destinationGroup.getStaff());
+                    client.setStaff(destinationGroup.getStaff());
                     if (staff != null) {
-                        client.updateStaff(staff);
+                        client.setStaff(staff);
                     }
-                }else if(destinationGroup == null) { /** for individual with no groups  **/
-                    if(staff !=null){ client.updateStaff(staff);}
+                } else if(destinationGroup == null) {
+                    /** for individual with no groups  **/
+                    if(staff !=null) {
+                        client.setStaff(staff);
+                    }
                 }
             break;
             case PROPOSAL:
                 client.setStatus(ClientStatus.TRANSFER_IN_PROGRESS.getValue());
-                client.updateTransferToOffice(destinationOffice);
-                client.updateProposedTransferDate(transferDate.toDate());
+                client.setTransferToOffice(destinationOffice);
+                client.setProposedTransferDate(transferDate.toDate());
             break;
             case REJECTION:
                 client.setStatus(ClientStatus.TRANSFER_ON_HOLD.getValue());
-                client.updateTransferToOffice(null);
-                client.updateProposedTransferDate(null);
+                client.setTransferToOffice(null);
+                client.setProposedTransferDate(null);
             break;
             case WITHDRAWAL:
                 client.setStatus(ClientStatus.ACTIVE.getValue());
-                client.updateTransferToOffice(null);
-                client.updateProposedTransferDate(null);
+                client.setTransferToOffice(null);
+                client.setProposedTransferDate(null);
         }
 
 		this.noteWritePlatformService.createAndPersistClientNote(client, jsonCommand);

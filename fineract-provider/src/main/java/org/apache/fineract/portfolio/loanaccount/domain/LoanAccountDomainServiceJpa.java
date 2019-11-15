@@ -556,7 +556,7 @@ public class LoanAccountDomainServiceJpa implements LoanAccountDomainService {
     private void updateLoanTransaction(final Long loanTransactionId, final LoanTransaction newLoanTransaction) {
         final AccountTransferTransaction transferTransaction = this.accountTransferRepository.findByToLoanTransactionId(loanTransactionId);
         if (transferTransaction != null) {
-            transferTransaction.updateToLoanTransaction(newLoanTransaction);
+            transferTransaction.setToLoanTransaction(newLoanTransaction);
             this.accountTransferRepository.save(transferTransaction);
         }
     }

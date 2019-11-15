@@ -353,7 +353,7 @@ public class DepositApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
                             "error.msg.meeting.frequency.not.attached.to.group.to.which.client.belongs.to",
                             defaultUserMessage, account.clientId());
                 }
-                calendarInstance = CalendarInstance.from(parentCalendarInstance.getCalendar(), account.getId(),
+                calendarInstance = new CalendarInstance(parentCalendarInstance.getCalendar(), account.getId(),
                         CalendarEntityType.SAVINGS.getValue());
             }
         } else {
@@ -367,7 +367,7 @@ public class DepositApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
             
             final Calendar calendar = Calendar.createRepeatingCalendar(title, calendarStartDate, CalendarType.COLLECTION.getValue(),
                     CalendarFrequencyType.from(periodFrequencyType), frequency, repeatsOnDay, null);
-            calendarInstance = CalendarInstance.from(calendar, account.getId(), CalendarEntityType.SAVINGS.getValue());
+            calendarInstance = new CalendarInstance(calendar, account.getId(), CalendarEntityType.SAVINGS.getValue());
         }
         if (calendarInstance == null) {
             final String defaultUserMessage = "No valid recurring details available for recurring depost account creation.";
@@ -428,7 +428,7 @@ public class DepositApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
                 if (accountAssociations == null) {
                     isModified = true;
                 } else {
-                    final SavingsAccount savingsAccount = accountAssociations.linkedSavingsAccount();
+                    final SavingsAccount savingsAccount = accountAssociations.getLinkedSavingsAccount();
                     if (savingsAccount == null || savingsAccount.getId() != savingsAccountId) {
                         isModified = true;
                     }
@@ -442,7 +442,7 @@ public class DepositApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
                         accountAssociations = AccountAssociations.associateSavingsAccount(account, savingsAccount,
                                 AccountAssociationType.LINKED_ACCOUNT_ASSOCIATION.getValue(), isActive);
                     } else {
-                        accountAssociations.updateLinkedSavingsAccount(savingsAccount);
+                        accountAssociations.setLinkedSavingsAccount(savingsAccount);
                     }
                     changes.put(DepositsApiConstants.linkedAccountParamName, savingsAccountId);
                     this.accountAssociationsRepository.save(accountAssociations);

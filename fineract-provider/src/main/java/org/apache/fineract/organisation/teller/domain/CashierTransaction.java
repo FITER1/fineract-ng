@@ -19,18 +19,23 @@
 package org.apache.fineract.organisation.teller.domain;
 
 
+import lombok.*;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 import javax.persistence.*;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_cashier_transactions")
 public class CashierTransaction extends AbstractPersistableCustom<Long> {
@@ -71,13 +76,6 @@ public class CashierTransaction extends AbstractPersistableCustom<Long> {
     @Column(name = "currency_code", nullable = true)
     private String currencyCode;
 
-    /**
-     * Creates a new cashier.
-     */
-    public CashierTransaction() {
-        super();
-    }
-    
     public static CashierTransaction fromJson(
     		final Cashier cashier,
     		final JsonCommand command) {
@@ -90,24 +88,16 @@ public class CashierTransaction extends AbstractPersistableCustom<Long> {
         final String currencyCode = command.stringValueOfParameterNamed("currencyCode");
 
         // TODO: get client/loan/savings details
-        return new CashierTransaction (cashier, txnType, txnAmount, txnDate, 
-        		entityType, entityId, txnNote, currencyCode);
-        
-    }
-    
-    public CashierTransaction (Cashier cashier, Integer txnType, BigDecimal txnAmount, 
-    		LocalDate txnDate, String entityType, Long entityId, String txnNote, String currencyCode) {
-    	this.cashier = cashier;
-    	this.txnType = txnType;
-    	if (txnDate != null) {
-    		this.txnDate = txnDate.toDate();
-    	}
-    	this.txnAmount = txnAmount;
-    	this.entityType = entityType;
-    	this.entityId = entityId;
-    	this.txnNote = txnNote;
-    	this.createdDate = new Date(); 
-    	this.currencyCode = currencyCode;
+        return CashierTransaction.builder()
+            .cashier(cashier)
+            .txnType(txnType)
+            .txnAmount(txnAmount)
+            .txnDate(txnDate==null ? null : txnDate.toDate())
+            .entityType(entityType)
+            .entityId(entityId)
+            .txnNote(txnNote)
+            .currencyCode(currencyCode)
+            .build();
     }
     
     public Map<String, Object> update(final JsonCommand command) {
@@ -159,126 +149,11 @@ public class CashierTransaction extends AbstractPersistableCustom<Long> {
         return actualChanges;
     }
 
-
-    /**
-     * Returns the office of this cashier transaction.
-     *
-     * @return the office of this cashier transaction
-     * @see org.apache.fineract.organisation.office.domain.Office
-     */
-    public Office getOffice() {
-        return office;
-    }
-
-    /**
-     * Sets the office of this cashier transaction.
-     *
-     * @param office the office of this cashier transaction
-     * @see org.apache.fineract.organisation.office.domain.Office
-     */
-    public void setOffice(Office office) {
-        this.office = office;
-    }
-
-    /**
-     * Returns the teller of this cashier transaction.
-     *
-     * @return the teller of this cashier transaction
-     * @see org.apache.fineract.organisation.teller.domain.Teller
-     */
-    public Teller getTeller() {
-        return teller;
-    }
-
-    /**
-     * Sets the teller of this cashier transaction.
-     *
-     * @param teller the teller of this cashier transaction
-     * @see org.apache.fineract.organisation.teller.domain.Teller
-     */
-    public void setTeller(Teller teller) {
-        this.teller = teller;
-    }
-
-    /**
-     * Returns the transaction type of this cashier transaction.
-     * .
-     *
-     * @return the transaction type of this cashier transaction or {@code null} if not present.
-     */
-    public Integer getTxnType() {
-        return txnType;
-    }
-
-    /**
-     * Sets the transaction type of this cashier transaction.
-     *
-     * @param txnType description the transaction type of this cashier transaction
-     */
-    public void setTxnType(Integer txnType) {
-        this.txnType = txnType;
-    }
-
-    /**
-     * Returns the transaction date of this cashier transaction.
-     *
-     * @return the transaction date of this cashier transaction
-     */
-    public Date getTxnDate() {
-        return txnDate;
-    }
-    
-    public LocalDate getTxnLocalDate() {
+    private LocalDate getTxnLocalDate() {
         LocalDate txnLocalDate = null;
         if (this.txnDate != null) {
             txnLocalDate = LocalDate.fromDateFields(this.txnDate);
         }
         return txnLocalDate;
     }
-
-    /**
-     * Sets the transaction date of this cashier transaction.
-     *
-     * @param txnDate transaction date of this cashier transaction
-     */
-    public void setTxnDate(Date txnDate) {
-        this.txnDate = txnDate;
-    }
-
-    public String getEntityType() {
-        return entityType;
-    }
-
-    public void setEntityType(String entityType) {
-        this.entityType = entityType;
-    }
-
-    public Long getEntityId() {
-        return entityId;
-    }
-
-    public void setEntityId(Long entityId) {
-        this.entityId = entityId;
-    }
-
-    public String getTxnNote() {
-        return txnNote;
-    }
-    
-    public BigDecimal getTxnAmount() {
-        return txnAmount;
-    }
-
-    public void setTxnNote (String txnNote) {
-        this.txnNote = txnNote;
-    }
-    
-    public String getCurrencyCode() {
-        return this.currencyCode;
-    }
-    
-    public void setCurrencyCode(String currencyCode) {
-        this.currencyCode = currencyCode;
-    }
-
 }

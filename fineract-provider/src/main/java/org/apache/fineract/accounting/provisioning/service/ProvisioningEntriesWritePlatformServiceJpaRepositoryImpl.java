@@ -119,10 +119,10 @@ public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements
             this.journalEntryWritePlatformService.revertProvisioningJournalEntries(requestedEntry.getCreatedDate(),
                     existingEntryData.getId(), PortfolioProductType.PROVISIONING.getValue());
         }
-        if(requestedEntry.getLoanProductProvisioningEntries() == null || requestedEntry.getLoanProductProvisioningEntries().size() == 0) {
-            requestedEntry.setJournalEntryCreated(Boolean.FALSE);    
+        if(requestedEntry.getProvisioningEntries() == null || requestedEntry.getProvisioningEntries().size() == 0) {
+            requestedEntry.setIsJournalEntryCreated(Boolean.FALSE);
         }else {
-            requestedEntry.setJournalEntryCreated(Boolean.TRUE);
+            requestedEntry.setIsJournalEntryCreated(Boolean.TRUE);
         }
         
         this.provisioningEntryRepository.save(requestedEntry);
@@ -207,7 +207,7 @@ public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements
     public CommandProcessingResult reCreateProvisioningEntries(Long provisioningEntryId, JsonCommand command) {
         ProvisioningEntry requestedEntry = this.provisioningEntryRepository.findById(provisioningEntryId).orElse(null);
         if (requestedEntry == null) { throw new ProvisioningEntryNotfoundException(provisioningEntryId); }
-        requestedEntry.getLoanProductProvisioningEntries().clear();
+        requestedEntry.getProvisioningEntries().clear();
         this.provisioningEntryRepository.save(requestedEntry);
         Collection<LoanProductProvisioningEntry> entries = generateLoanProvisioningEntry(requestedEntry, requestedEntry.getCreatedDate());
         requestedEntry.setProvisioningEntries(entries);
@@ -231,7 +231,7 @@ public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements
             Long criteraId = data.getCriteriaId();
             LoanProductProvisioningEntry entry = new LoanProductProvisioningEntry(loanProduct, office, data.getCurrencyCode(),
                     provisioningCategory, data.getOverdueInDays(), amountToReserve.getAmount(), liabilityAccount, expenseAccount, criteraId);
-            entry.setProvisioningEntry(parent);
+            entry.setEntry(parent);
             if (!provisioningEntries.containsKey(entry)) {
                 provisioningEntries.put(entry, entry);
             } else {

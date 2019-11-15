@@ -18,21 +18,25 @@
  */
 package org.apache.fineract.infrastructure.creditbureau.domain;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.*;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_creditbureau")
 public class CreditBureau extends AbstractPersistableCustom<Long> {
-
 
 	private String name;
 
@@ -42,21 +46,9 @@ public class CreditBureau extends AbstractPersistableCustom<Long> {
 
 	private String implementationKey;
 
+	@Builder.Default
 	@OneToMany(mappedBy = "organisation_creditbureau", cascade = CascadeType.ALL)
 	private List<CreditBureauLoanProductMapping> CreditBureauLoanProductMapping = new ArrayList<>();
-
-	public CreditBureau(String name, String product, String country, String implementationKey,
-			List<CreditBureauLoanProductMapping> CreditBureauLoanProductMapping) {
-		this.name = name;
-		this.product = product;
-		this.country = country;
-		this.implementationKey = implementationKey;
-		this.CreditBureauLoanProductMapping = CreditBureauLoanProductMapping;
-	}
-
-	public CreditBureau() {
-
-	}
 
 	public static CreditBureau fromJson(final JsonCommand command) {
 
@@ -65,48 +57,11 @@ public class CreditBureau extends AbstractPersistableCustom<Long> {
 		final String tcountry = command.stringValueOfParameterNamed("country");
 		final String timplementationKey = command.stringValueOfParameterNamed("implementationKey");
 
-		return new CreditBureau(tname, tproduct, tcountry, timplementationKey, null);
-
+		return CreditBureau.builder()
+			.name(tname)
+			.product(tproduct)
+			.country(tcountry)
+			.implementationKey(timplementationKey)
+			.build();
 	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getProduct() {
-		return this.product;
-	}
-
-	public void setProduct(String product) {
-		this.product = product;
-	}
-
-	public String getCountry() {
-		return this.country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	public String getImplementationKey() {
-		return this.implementationKey;
-	}
-
-	public void setImplementationKey(String implementationKey) {
-		this.implementationKey = implementationKey;
-	}
-
-	public List<CreditBureauLoanProductMapping> getCreditBureauLpMapping() {
-		return this.CreditBureauLoanProductMapping;
-	}
-
-	public void setCreditBureauLpMapping(List<CreditBureauLoanProductMapping> CreditBureauLoanProductMapping) {
-		this.CreditBureauLoanProductMapping = CreditBureauLoanProductMapping;
-	}
-
 }

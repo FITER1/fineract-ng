@@ -164,7 +164,7 @@ public class AccountTransferDetailAssembler {
         final Client toClient = this.clientRepository.findOneWithNotFoundDetection(toClientId);
         final Integer transfertype = this.fromApiJsonHelper.extractIntegerNamed(transferTypeParamName, element, Locale.getDefault());
 
-        return AccountTransferDetails.LoanTosavingsTransfer(fromOffice, fromClient, fromLoanAccount, toOffice, toClient, toSavingsAccount,
+        return AccountTransferDetails.loanToSavingsTransfer(fromOffice, fromClient, fromLoanAccount, toOffice, toClient, toSavingsAccount,
                 transfertype);
     }
 
@@ -198,7 +198,7 @@ public class AccountTransferDetailAssembler {
         final Office toOffice = toSavingsAccount.office();
         final Client toClient = toSavingsAccount.getClient();
 
-        return AccountTransferDetails.LoanTosavingsTransfer(fromOffice, fromClient, fromLoanAccount, toOffice, toClient, toSavingsAccount,
+        return AccountTransferDetails.loanToSavingsTransfer(fromOffice, fromClient, fromLoanAccount, toOffice, toClient, toSavingsAccount,
                 transferType);
     }
 
@@ -208,7 +208,7 @@ public class AccountTransferDetailAssembler {
         final Office toOffice = toLoanAccount.getOffice();
         final Client toClient = toLoanAccount.client();
 
-        return AccountTransferDetails.LoanToLoanTransfer(fromOffice, fromClient, fromLoanAccount, toOffice, toClient, toLoanAccount,
+        return AccountTransferDetails.loanToLoanTransfer(fromOffice, fromClient, fromLoanAccount, toOffice, toClient, toLoanAccount,
                 transferType);
     }
 }

@@ -18,40 +18,27 @@
  */
 package org.apache.fineract.portfolio.client.domain;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
-
+import lombok.*;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
-import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OrganisationCurrency;
 import org.apache.fineract.portfolio.paymentdetail.domain.PaymentDetail;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_client_transaction", uniqueConstraints = { @UniqueConstraint(columnNames = { "external_id" }, name = "external_id") })
 public class ClientTransaction extends AbstractPersistableCustom<Long> {
@@ -101,14 +88,24 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
     @Transient
     private OrganisationCurrency currency;
 
-    protected ClientTransaction() {}
-
     public static ClientTransaction payCharge(final Client client, final Office office, PaymentDetail paymentDetail, final LocalDate date,
             final Money amount, final String currencyCode, final AppUser appUser) {
         final boolean isReversed = false;
         final String externalId = null;
-        return new ClientTransaction(client, office, paymentDetail, ClientTransactionType.PAY_CHARGE.getValue(), date, amount, isReversed,
-                externalId, DateUtils.getDateOfTenant(), currencyCode, appUser);
+
+        return ClientTransaction.builder()
+            .client(client)
+            .office(office)
+            .paymentDetail(paymentDetail)
+            .typeOf(ClientTransactionType.PAY_CHARGE.getValue())
+            .dateOf(date.toDate())
+            .amount(amount.getAmount())
+            .reversed(isReversed)
+            .externalId(externalId)
+            .createdDate(DateUtils.getDateOfTenant())
+            .currencyCode(currencyCode)
+            .appUser(appUser)
+            .build();
     }
 
     public static ClientTransaction waiver(final Client client, final Office office, final LocalDate date, final Money amount,
@@ -116,36 +113,26 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
         final boolean isReversed = false;
         final String externalId = null;
         final PaymentDetail paymentDetail = null;
-        return new ClientTransaction(client, office, paymentDetail, ClientTransactionType.WAIVE_CHARGE.getValue(), date, amount, isReversed,
-                externalId, DateUtils.getDateOfTenant(), currencyCode, appUser);
-    }
 
-    public ClientTransaction(Client client, Office office, PaymentDetail paymentDetail, Integer typeOf, LocalDate transactionLocalDate,
-            Money amount, boolean reversed, String externalId, Date createdDate, String currencyCode, AppUser appUser) {
-        super();
-        this.client = client;
-        this.office = office;
-        this.paymentDetail = paymentDetail;
-        this.typeOf = typeOf;
-        this.dateOf = transactionLocalDate.toDate();
-        this.amount = amount.getAmount();
-        this.reversed = reversed;
-        this.externalId = externalId;
-        this.createdDate = createdDate;
-        this.currencyCode = currencyCode;
-        this.appUser = appUser;
-    }
 
-    public void reverse() {
-        this.reversed = true;
+        return ClientTransaction.builder()
+            .client(client)
+            .office(office)
+            .paymentDetail(paymentDetail)
+            .typeOf(ClientTransactionType.WAIVE_CHARGE.getValue())
+            .dateOf(date.toDate())
+            .amount(amount.getAmount())
+            .reversed(isReversed)
+            .externalId(externalId)
+            .createdDate(DateUtils.getDateOfTenant())
+            .currencyCode(currencyCode)
+            .appUser(appUser)
+            .build();
     }
 
     /**
      * Converts the content of this Client Transaction to a map which can be
      * passed to the accounting module
-     * 
-     * 
-     * 
      */
     public Map<String, Object> toMapData() {
         final Map<String, Object> thisTransactionData = new LinkedHashMap<>();
@@ -154,7 +141,7 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
         Boolean accountingEnabledForAtleastOneCharge = false;
 
         thisTransactionData.put("id", getId());
-        thisTransactionData.put("clientId", getClientId());
+        thisTransactionData.put("clientId", getClient().getId());
         thisTransactionData.put("officeId", this.office.getId());
         thisTransactionData.put("type", transactionType);
         thisTransactionData.put("reversed", Boolean.valueOf(this.reversed));
@@ -197,40 +184,11 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
         return ClientTransactionType.WAIVE_CHARGE.getValue().equals(this.typeOf);
     }
 
-    public Set<ClientChargePaidBy> getClientChargePaidByCollection() {
-        return this.clientChargePaidByCollection;
-    }
-
-    public Long getClientId() {
-        return client.getId();
-    }
-
-    public Client getClient() {
-        return this.client ;
-    }
-    
     public Money getAmount() {
-        return Money.of(getCurrency(), this.amount);
-    }
-
-    public MonetaryCurrency getCurrency() {
-        return this.currency.toMonetaryCurrency();
-    }
-
-    public void setCurrency(OrganisationCurrency currency) {
-        this.currency = currency;
-    }
-
-    public String getCurrencyCode() {
-        return this.currencyCode;
-    }
-
-    public boolean isReversed() {
-        return this.reversed;
+        return Money.of(this.currency.toMonetaryCurrency(), this.amount);
     }
 
     public LocalDate getTransactionDate() {
         return new LocalDate(this.dateOf);
     }
-
 }

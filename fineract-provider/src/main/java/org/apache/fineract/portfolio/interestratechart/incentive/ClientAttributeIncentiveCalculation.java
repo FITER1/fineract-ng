@@ -41,8 +41,8 @@ public class ClientAttributeIncentiveCalculation extends AttributeIncentiveCalcu
                 }
             break;
             case AGE:
-                if (client.dateOfBirth() != null) {
-                    final LocalDate dobLacalDate = LocalDate.fromDateFields(client.dateOfBirth());
+                if (client.getDateOfBirth() != null) {
+                    final LocalDate dobLacalDate = LocalDate.fromDateFields(client.getDateOfBirth());
                     final int age = Years.yearsBetween(dobLacalDate, LocalDate.now()).getYears();
                     applyIncentive = applyIncentive(incentivesFields.conditionType(), Long.valueOf(incentivesFields.attributeValue()),
                             Long.valueOf(age));

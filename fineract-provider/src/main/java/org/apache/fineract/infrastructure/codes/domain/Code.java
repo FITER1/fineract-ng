@@ -18,23 +18,22 @@
  */
 package org.apache.fineract.infrastructure.codes.domain;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.codes.exception.SystemDefinedCodeCannotBeChangedException;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+import javax.persistence.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_code", uniqueConstraints = { @UniqueConstraint(columnNames = { "code_name" }, name = "code_name") })
 public class Code extends AbstractPersistableCustom<Long> {
@@ -43,35 +42,23 @@ public class Code extends AbstractPersistableCustom<Long> {
     private String name;
 
     @Column(name = "is_system_defined")
-    private boolean systemDefined;
+    private boolean systemDefined = false;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "code", orphanRemoval = true)
     private Set<CodeValue> values;
 
     public static Code fromJson(final JsonCommand command) {
-        final String name = command.stringValueOfParameterNamed("name");
-        return new Code(name);
+        return Code.builder()
+            .name(command.stringValueOfParameterNamed("name"))
+            .systemDefined(false)
+            .build();
     }
     
     public static Code createNew(final String name) {
-        return new Code(name);
-    }
-
-    protected Code() {
-        this.systemDefined = false;
-    }
-
-    private Code(final String name) {
-        this.name = name;
-        this.systemDefined = false;
-    }
-
-    public String name() {
-        return this.name;
-    }
-
-    public boolean isSystemDefined() {
-        return this.systemDefined;
+        return Code.builder()
+            .name(name)
+            .systemDefined(false)
+            .build();
     }
 
     public Map<String, Object> update(final JsonCommand command) {

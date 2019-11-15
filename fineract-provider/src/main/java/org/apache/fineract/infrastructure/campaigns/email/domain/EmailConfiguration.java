@@ -18,12 +18,18 @@
  */
 package org.apache.fineract.infrastructure.campaigns.email.domain;
 
+import lombok.*;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "scheduled_email_configuration")
 public class EmailConfiguration extends AbstractPersistableCustom<Long> {
@@ -32,29 +38,4 @@ public class EmailConfiguration extends AbstractPersistableCustom<Long> {
 	
 	@Column(name = "value", nullable = false)
     private String value;
-	
-	/** 
-	 * EmailConfiguration constructor
-	 **/
-	protected EmailConfiguration() {}
-	
-	/** 
-	 * EmailConfiguration constructor
-	 **/
-	public EmailConfiguration(String name, String value) {
-		this.name = name;
-		this.value = value;
-	}
-	
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public String getValue() {
-		return this.value;
-	}
 }

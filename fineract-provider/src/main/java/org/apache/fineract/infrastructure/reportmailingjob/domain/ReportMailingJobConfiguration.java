@@ -18,13 +18,19 @@
  */
 package org.apache.fineract.infrastructure.reportmailingjob.domain;
 
+import lombok.*;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_report_mailing_job_configuration", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }, name = "unique_name") })
 public class ReportMailingJobConfiguration extends AbstractPersistableCustom<Integer> {
@@ -36,39 +42,10 @@ public class ReportMailingJobConfiguration extends AbstractPersistableCustom<Int
     @Column(name = "value", nullable = false)
     private String value;
     
-    /** 
-     * ReportMailingJobConfiguration protected constructor
-     **/
-    protected ReportMailingJobConfiguration() { }
-    
-    /** 
-     * ReportMailingJobConfiguration private constructor
-     **/
-    private ReportMailingJobConfiguration(final String name, final String value) {
-        this.name = name;
-        this.value = value;
-    }
-    
-    /** 
-     * creates an instance of the ReportMailingJobConfiguration class
-     * 
-     * @return ReportMailingJobConfiguration object
-     **/
     public static ReportMailingJobConfiguration newInstance(final String name, final String value) {
-        return new ReportMailingJobConfiguration(name, value);
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @return the value
-     */
-    public String getValue() {
-        return value;
+        return ReportMailingJobConfiguration.builder()
+            .name(name)
+            .value(value)
+            .build();
     }
 }

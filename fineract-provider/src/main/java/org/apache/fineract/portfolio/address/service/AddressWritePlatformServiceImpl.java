@@ -280,7 +280,7 @@ public class AddressWritePlatformServiceImpl implements AddressWritePlatformServ
 		if (testActive != null) {
 
 			final boolean active = command.booleanPrimitiveValueOfParameterNamed("isActive");
-			clientAddressObj.setIs_active(active);
+			clientAddressObj.setActive(active);
 
 		}
 

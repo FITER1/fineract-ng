@@ -18,20 +18,21 @@
  */
 package org.apache.fineract.infrastructure.entityaccess.domain;
 
+import lombok.*;
+import org.apache.fineract.infrastructure.codes.domain.CodeValue;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+import org.apache.fineract.infrastructure.entityaccess.FineractEntityAccessConstants;
+
+import javax.persistence.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-import org.apache.fineract.infrastructure.codes.domain.CodeValue;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.entityaccess.FineractEntityAccessConstants;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_entity_to_entity_access")
 public class FineractEntityAccess extends AbstractPersistableCustom<Long> {
@@ -52,25 +53,16 @@ public class FineractEntityAccess extends AbstractPersistableCustom<Long> {
 	@Column(name = "second_entity_id")
     private Long secondEntityId;
 
-    protected FineractEntityAccess () {
-
-    }
-
     public static FineractEntityAccess createNew(final String entityType, final Long entityId,
     		final CodeValue accessType,
     		final String secondEntityType, final Long secondEntityId) {
-        return new FineractEntityAccess(entityType, entityId, accessType,
-        		secondEntityType, secondEntityId);
-    }
-
-    public FineractEntityAccess(final String entityType, final Long entityId,
-    		final CodeValue accessType,
-    		final String secondEntityType, final Long secondEntityId) {
-    	this.entityType = entityType;
-    	this.entityId = entityId;
-    	this.accessType = accessType;
-    	this.secondEntityType = secondEntityType;
-    	this.secondEntityId = secondEntityId;
+        return FineractEntityAccess.builder()
+            .entityType(entityType)
+            .entityId(entityId)
+            .accessType(accessType)
+            .secondEntityType(secondEntityType)
+            .secondEntityId(secondEntityId)
+            .build();
     }
 
     public static FineractEntityAccess fromJson(final CodeValue accessType, final JsonCommand command) {
@@ -82,10 +74,14 @@ public class FineractEntityAccess extends AbstractPersistableCustom<Long> {
         		FineractEntityAccessConstants.ENTITY_ACCESS_JSON_INPUT_PARAMS.SECOND_ENTITY_ID.getValue());
         final Long secondEntityId = command.longValueOfParameterNamed(
         		FineractEntityAccessConstants.ENTITY_ACCESS_JSON_INPUT_PARAMS.SECOND_ENTITY_ID.getValue());
-        
-        return new FineractEntityAccess (entityType, entityId, accessType,
-        		secondEntityType, secondEntityId);
 
+        return FineractEntityAccess.builder()
+            .entityType(entityType)
+            .entityId(entityId)
+            .accessType(accessType)
+            .secondEntityType(secondEntityType)
+            .secondEntityId(secondEntityId)
+            .build();
     }
 
     public Map<String, Object> update(final JsonCommand command) {
@@ -133,29 +129,4 @@ public class FineractEntityAccess extends AbstractPersistableCustom<Long> {
         
         return actualChanges;
     }
-
-    public String getEntityType() {
-        return this.entityType;
-    }
-
-    public Long getEntityId() {
-        return this.entityId;
-    }
-
-    public CodeValue getAccessType() {
-        return this.accessType;
-    }
-
-    public void updateAccessType(final CodeValue accessType) {
-        this.accessType = accessType;
-    }
-    
-    public String getSecondEntityType() {
-        return this.secondEntityType;
-    }
-
-    public Long getSecondEntityId() {
-        return this.secondEntityId;
-    }
-
 }

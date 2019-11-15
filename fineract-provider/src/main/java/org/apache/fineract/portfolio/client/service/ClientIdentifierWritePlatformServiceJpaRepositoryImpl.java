@@ -87,7 +87,7 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
             final CodeValue documentType = this.codeValueRepository.findOneWithNotFoundDetection(clientIdentifierCommand
                     .getDocumentTypeId());
             documentTypeId = documentType.getId();
-            documentTypeLabel = documentType.label();
+            documentTypeLabel = documentType.getLabel();
 
             final ClientIdentifier clientIdentifier = ClientIdentifier.fromJson(client, documentType, command);
 
@@ -95,7 +95,7 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
 
             return new CommandProcessingResultBuilder() //
                     .withCommandId(command.commandId()) //
-                    .withOfficeId(client.officeId()) //
+                    .withOfficeId(client.getOffice().getId()) //
                     .withClientId(clientId) //
                     .withEntityId(clientIdentifier.getId()) //
                     .build();
@@ -135,7 +135,7 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
                 if (documentType == null) { throw new CodeValueNotFoundException(documentTypeId); }
 
                 documentTypeId = documentType.getId();
-                documentTypeLabel = documentType.label();
+                documentTypeLabel = documentType.getLabel();
                 clientIdentifierForUpdate.update(documentType);
             }
 
@@ -156,7 +156,7 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
 
             return new CommandProcessingResultBuilder() //
                     .withCommandId(command.commandId()) //
-                    .withOfficeId(client.officeId()) //
+                    .withOfficeId(client.getOffice().getId()) //
                     .withClientId(clientId) //
                     .withEntityId(identifierId) //
                     .with(changes) //
@@ -183,7 +183,7 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
 
         return new CommandProcessingResultBuilder() //
                 .withCommandId(commandId) //
-                .withOfficeId(client.officeId()) //
+                .withOfficeId(client.getOffice().getId()) //
                 .withClientId(clientId) //
                 .withEntityId(identifierId) //
                 .build();

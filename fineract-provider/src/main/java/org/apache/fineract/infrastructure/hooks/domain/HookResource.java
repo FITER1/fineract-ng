@@ -18,14 +18,16 @@
  */
 package org.apache.fineract.infrastructure.hooks.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import lombok.*;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+import javax.persistence.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_hook_registered_events")
 public class HookResource extends AbstractPersistableCustom<Long> {
@@ -40,23 +42,11 @@ public class HookResource extends AbstractPersistableCustom<Long> {
 	@Column(name = "action_name", nullable = false, length = 45)
 	private String actionName;
 
-	protected HookResource() {
-		//
-	}
-
 	public static HookResource createNewWithoutHook(final String entityName,
 			final String actionName) {
-		return new HookResource(null, entityName, actionName);
-	}
-
-	private HookResource(final Hook hook, final String entityName,
-			final String actionName) {
-		this.hook = hook;
-		this.entityName = entityName;
-		this.actionName = actionName;
-	}
-
-	public void update(final Hook hook) {
-		this.hook = hook;
+		return HookResource.builder()
+			.actionName(actionName)
+			.entityName(entityName)
+			.build();
 	}
 }

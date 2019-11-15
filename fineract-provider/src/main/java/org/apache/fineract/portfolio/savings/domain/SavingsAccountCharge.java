@@ -207,7 +207,7 @@ public class SavingsAccountCharge extends AbstractPersistableCustom<Long> {
         }
 
         if (isMonthlyFee() || isWeeklyFee()) {
-            this.feeInterval = (feeInterval == null) ? chargeDefinition.feeInterval() : feeInterval;
+            this.feeInterval = (feeInterval == null) ? chargeDefinition.getFeeInterval() : feeInterval;
         }
 
         this.dueDate = (dueDate == null) ? null : dueDate.toDate();

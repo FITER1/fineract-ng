@@ -31,6 +31,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.closure.api.GLClosureJsonInputParams;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -38,14 +39,20 @@ import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.useradministration.domain.AppUser;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "acc_gl_closure", uniqueConstraints = { @UniqueConstraint(columnNames = { "office_id", "closing_date" }, name = "office_id_closing_date") })
+@Table(name = "acc_gl_closure", uniqueConstraints = {@UniqueConstraint(columnNames = {"office_id", "closing_date"}, name = "office_id_closing_date")})
 public class GLClosure extends AbstractAuditableCustom<AppUser, Long> {
 
     @ManyToOne
     @JoinColumn(name = "office_id", nullable = false)
     private Office office;
 
+    @Builder.Default
     @Column(name = "is_deleted", nullable = false)
     private boolean deleted = true;
 
@@ -55,10 +62,6 @@ public class GLClosure extends AbstractAuditableCustom<AppUser, Long> {
 
     @Column(name = "comments", nullable = true, length = 500)
     private String comments;
-
-    protected GLClosure() {
-        //
-    }
 
     public GLClosure(final Office office, final Date closingDate, final String comments) {
         this.office = office;
@@ -82,8 +85,7 @@ public class GLClosure extends AbstractAuditableCustom<AppUser, Long> {
         return actualChanges;
     }
 
-    private void handlePropertyUpdate(final JsonCommand command, final Map<String, Object> actualChanges, final String paramName,
-            final String propertyToBeUpdated) {
+    private void handlePropertyUpdate(final JsonCommand command, final Map<String, Object> actualChanges, final String paramName, final String propertyToBeUpdated) {
         if (command.isChangeInStringParameterNamed(paramName, propertyToBeUpdated)) {
             final String newValue = command.stringValueOfParameterNamed(paramName);
             actualChanges.put(paramName, newValue);
@@ -93,13 +95,4 @@ public class GLClosure extends AbstractAuditableCustom<AppUser, Long> {
             }
         }
     }
-
-    public Date getClosingDate() {
-        return this.closingDate;
-    }
-
-    public Office getOffice() {
-        return this.office;
-    }
-
 }

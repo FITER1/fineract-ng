@@ -637,8 +637,9 @@ public class Calendar extends AbstractAuditableCustom<AppUser, Long> {
 
         // validate with history details.
         for (CalendarHistory history : history()) {
-            if (history.isBetweenStartAndEndDate(compareDate)) { return CalendarUtils.isValidRedurringDate(history.getRecurrence(),
-                    history.getStartDateLocalDate(), compareDate, isSkipRepaymentOnFirstMonth, numberOfDays); }
+            if (history.isBetweenStartAndEndDate(compareDate)) {
+                return CalendarUtils.isValidRedurringDate(history.getRecurrence(), history.getStartDateLocalDate(), compareDate, isSkipRepaymentOnFirstMonth, numberOfDays);
+            }
         }
 
         return false;

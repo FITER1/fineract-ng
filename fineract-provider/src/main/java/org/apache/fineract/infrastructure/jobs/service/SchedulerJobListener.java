@@ -102,11 +102,11 @@ public class SchedulerJobListener implements JobListener {
         }
         if (triggerType == SchedulerServiceConstants.TRIGGER_TYPE_CRON && trigger.getNextFireTime() != null
                 && trigger.getNextFireTime().after(scheduledJobDetails.getNextRunTime())) {
-            scheduledJobDetails.updateNextRunTime(trigger.getNextFireTime());
+            scheduledJobDetails.setNextRunTime(trigger.getNextFireTime());
         }
 
-        scheduledJobDetails.updatePreviousRunStartTime(context.getFireTime());
-        scheduledJobDetails.updateCurrentlyRunningStatus(false);
+        scheduledJobDetails.setPreviousRunStartTime(context.getFireTime());
+        scheduledJobDetails.setCurrentlyRunning(false);
 
         final ScheduledJobRunHistory runHistory = new ScheduledJobRunHistory(scheduledJobDetails, version, context.getFireTime(),
                 new Date(), status, errorMessage, triggerType, errorLog);

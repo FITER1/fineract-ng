@@ -18,22 +18,21 @@
  */
 package org.apache.fineract.commands.domain;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.DateTime;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+import javax.persistence.*;
+import java.util.Date;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_portfolio_command_source")
 public class CommandSource extends AbstractPersistableCustom<Long> {
@@ -92,113 +91,47 @@ public class CommandSource extends AbstractPersistableCustom<Long> {
 
     @Column(name = "product_id")
     private Long productId;
-    
+
     @Column(name = "transaction_id", length = 100)
     private String transactionId;
-    
-    @Column(name="creditbureau_id")
+
+    @Column(name = "creditbureau_id")
     private Long creditBureauId;
-    
-    @Column(name="organisation_creditbureau_id")
+
+    @Column(name = "organisation_creditbureau_id")
     private Long organisationCreditBureauId;
 
     public static CommandSource fullEntryFrom(final CommandWrapper wrapper, final JsonCommand command, final AppUser maker) {
-        return new CommandSource(wrapper.actionName(), wrapper.entityName(), wrapper.getHref(), command.entityId(), command.subentityId(),
-                command.json(), maker, DateTime.now());
+        return CommandSource.builder()
+            .actionName(wrapper.actionName())
+            .entityName(wrapper.entityName())
+            .resourceGetUrl(wrapper.getHref())
+            .resourceId(wrapper.getEntityId())
+            .subresourceId(command.subentityId())
+            .commandAsJson(command.json())
+            .maker(maker)
+            .madeOnDate(DateTime.now().toDate())
+            .build();
     }
 
-    protected CommandSource() {
-        //
-    }
-
-    private CommandSource(final String actionName, final String entityName, final String href, final Long resourceId,
-            final Long subresourceId, final String commandSerializedAsJson, final AppUser maker, final DateTime madeOnDateTime) {
-        this.actionName = actionName;
-        this.entityName = entityName;
-        this.resourceGetUrl = href;
-        this.resourceId = resourceId;
-        this.subresourceId = subresourceId;
-        this.commandAsJson = commandSerializedAsJson;
-        this.maker = maker;
-        this.madeOnDate = madeOnDateTime.toDate();
-        this.processingResult = CommandProcessingResultType.PROCESSED.getValue();
-    } public Long getCreditBureauId() {
-        return this.creditBureauId;
-    }
-
-    
-    public void setCreditBureauId(Long creditBureauId) {
-        this.creditBureauId = creditBureauId;
-    }
-
-    
-    public Long getOrganisationCreditBureauId() {
-        return this.organisationCreditBureauId;
-    }
-
-    
-    public void setOrganisationCreditBureauId(Long OrganisationCreditBureauId) {
-        this.organisationCreditBureauId = OrganisationCreditBureauId;
-    }
-    
     public void markAsChecked(final AppUser checker, final DateTime checkedOnDate) {
         this.checker = checker;
         this.checkedOnDate = checkedOnDate.toDate();
         this.processingResult = CommandProcessingResultType.PROCESSED.getValue();
     }
 
-    public void markAsRejected(final AppUser checker, final DateTime checkedOnDate){
+    public void markAsRejected(final AppUser checker, final DateTime checkedOnDate) {
         this.checker = checker;
         this.checkedOnDate = checkedOnDate.toDate();
         this.processingResult = CommandProcessingResultType.REJECTED.getValue();
-    }
-
-    public void updateResourceId(final Long resourceId) {
-        this.resourceId = resourceId;
-    }
-
-    public void updateSubresourceId(final Long subresourceId) {
-        this.subresourceId = subresourceId;
-    }
-
-    public void updateJsonTo(final String json) {
-        this.commandAsJson = json;
-    }
-
-    public Long resourceId() {
-        return this.resourceId;
-    }
-
-    public Long subresourceId() {
-        return this.subresourceId;
     }
 
     public boolean hasJson() {
         return StringUtils.isNotBlank(this.commandAsJson);
     }
 
-    public String json() {
-        return this.commandAsJson;
-    }
-
-    public String getActionName() {
-        return this.actionName;
-    }
-
-    public String getEntityName() {
-        return this.entityName;
-    }
-
     public String getPermissionCode() {
         return this.actionName + "_" + this.entityName;
-    }
-
-    public Long getResourceId() {
-        return this.resourceId;
-    }
-
-    public Long getSubresourceId() {
-        return this.subresourceId;
     }
 
     public void markAsAwaitingApproval() {
@@ -206,13 +139,10 @@ public class CommandSource extends AbstractPersistableCustom<Long> {
     }
 
     public boolean isMarkedAsAwaitingApproval() {
-        if (this.processingResult.equals(CommandProcessingResultType.AWAITING_APPROVAL.getValue())) { return true; }
-
-        return false;
+        return this.processingResult.equals(CommandProcessingResultType.AWAITING_APPROVAL.getValue());
     }
 
-    public void updateForAudit(final Long officeId, final Long groupId, final Long clientId, final Long loanId, final Long savingsId,
-            final Long productId, final String transactionId) {
+    public void updateForAudit(final Long officeId, final Long groupId, final Long clientId, final Long loanId, final Long savingsId, final Long productId, final String transactionId) {
         this.officeId = officeId;
         this.groupId = groupId;
         this.clientId = clientId;
@@ -221,59 +151,4 @@ public class CommandSource extends AbstractPersistableCustom<Long> {
         this.productId = productId;
         this.transactionId = transactionId;
     }
-
-    public String getResourceGetUrl() {
-        return this.resourceGetUrl;
-    }
-
-    public Long getProductId() {
-        return this.productId;
-    }
-
-    /**
-     * @return the clientId
-     */
-    public Long getClientId() {
-        return clientId;
-    }
-
-    /**
-     * @return the groupId
-     */
-    public Long getGroupId() {
-        return groupId;
-    }
-
-    /**
-     * @return the loanId
-     */
-    public Long getLoanId() {
-        return loanId;
-    }
-
-    /**
-     * @return the officeId
-     */
-    public Long getOfficeId() {
-        return officeId;
-    }
-
-    /**
-     * @return the savingsId
-     */
-    public Long getSavingsId() {
-        return savingsId;
-    }
-
-    /**
-     * @return the transactionId
-     */
-    public String getTransactionId() {
-        return this.transactionId;
-    }
-
-    public void updateTransaction(final String transactionId) {
-        this.transactionId = transactionId;
-    }
-
 }

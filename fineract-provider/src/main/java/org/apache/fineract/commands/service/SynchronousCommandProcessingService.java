@@ -93,7 +93,7 @@ public class SynchronousCommandProcessingService implements CommandProcessingSer
         } else {
             commandSourceResult = CommandSource.fullEntryFrom(wrapper, command, maker);
         }
-        commandSourceResult.updateResourceId(result.resourceId());
+        commandSourceResult.setResourceId(result.resourceId());
         commandSourceResult.updateForAudit(result.getOfficeId(), result.getGroupId(), result.getClientId(), result.getLoanId(),
                 result.getSavingsId(), result.getProductId(), result.getTransactionId());
 
@@ -101,11 +101,11 @@ public class SynchronousCommandProcessingService implements CommandProcessingSer
         boolean rollBack = (rollbackTransaction || result.isRollbackTransaction()) && !isApprovedByChecker ;
         if (result.hasChanges() && !rollBack) {
             changesOnlyJson = this.toApiJsonSerializer.serializeResult(result.getChanges());
-            commandSourceResult.updateJsonTo(changesOnlyJson);
+            commandSourceResult.setCommandAsJson(changesOnlyJson);
         }
 
         if (!result.hasChanges() && wrapper.isUpdateOperation() && !wrapper.isUpdateDatatable()) {
-            commandSourceResult.updateJsonTo(null);
+            commandSourceResult.setCommandAsJson(null);
         }
 
         if (commandSourceResult.hasJson()) {
@@ -119,12 +119,12 @@ public class SynchronousCommandProcessingService implements CommandProcessingSer
              * there are no entries are created with new transactionId, will
              * throw an error when checker approves the transaction
              */
-            commandSourceResult.updateTransaction(command.getTransactionId());
+            commandSourceResult.setTransactionId(command.getTransactionId());
             /*
              * Update CommandSource json data with JsonCommand json data, line
              * 77 and 81 may update the json data
              */
-            commandSourceResult.updateJsonTo(command.json());
+            commandSourceResult.setCommandAsJson(command.json());
             throw new RollbackTransactionAsCommandIsNotApprovedByCheckerException(commandSourceResult);
         }
         result.setRollbackTransaction(null);

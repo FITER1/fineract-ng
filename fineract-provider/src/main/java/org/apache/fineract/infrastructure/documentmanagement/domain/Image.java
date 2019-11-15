@@ -18,12 +18,18 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.domain;
 
+import lombok.*;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_image")
 public final class Image extends AbstractPersistableCustom<Long> {
@@ -33,30 +39,4 @@ public final class Image extends AbstractPersistableCustom<Long> {
 
     @Column(name = "storage_type_enum")
     private Integer storageType;
-
-    public Image(final String location, final StorageType storageType) {
-        this.location = location;
-        this.storageType = storageType.getValue();
-    }
-
-    protected Image() {
-
-    }
-
-    public String getLocation() {
-        return this.location;
-    }
-
-    public Integer getStorageType() {
-        return this.storageType;
-    }
-
-    public void setLocation(final String location) {
-        this.location = location;
-    }
-
-    public void setStorageType(final Integer storageType) {
-        this.storageType = storageType;
-    }
-
 }

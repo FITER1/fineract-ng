@@ -18,17 +18,18 @@
  */
 package org.apache.fineract.notification.domain;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import lombok.*;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.useradministration.domain.AppUser;
 
+import javax.persistence.*;
+import java.util.Date;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "topic_subscriber")
 public class TopicSubscriber extends AbstractPersistableCustom<Long> {
@@ -43,38 +44,4 @@ public class TopicSubscriber extends AbstractPersistableCustom<Long> {
 	
 	@Column(name = "subscription_date")
 	private Date subscriptionDate;
-
-	public TopicSubscriber() {
-	}
-
-	public TopicSubscriber(Topic topic, AppUser subscriber, Date subscriptionDate) {
-		this.topic = topic;
-		this.subscriber = subscriber;
-		this.subscriptionDate = subscriptionDate;
-	}
-
-	public Topic getTopic() {
-		return this.topic;
-	}
-
-	public void setTopic(Topic topic) {
-		this.topic = topic;
-	}
-
-	public AppUser getSubscriber() {
-		return this.subscriber;
-	}
-
-	public void setSubscriber(AppUser subscriber) {
-		this.subscriber = subscriber;
-	}
-
-	public Date getSubscriptionDate() {
-		return this.subscriptionDate;
-	}
-
-	public void setSubscriptionDate(Date subscriptionDate) {
-		this.subscriptionDate = subscriptionDate;
-	}
-	
 }

@@ -129,7 +129,7 @@ public class TwilioHookProcessor implements HookProcessor {
                 final Long clientId = new Long(Integer.toString((int) map
                         .get("clientId")));
                 final Client client = this.clientRepositoryWrapper.findOneWithNotFoundDetection(clientId);
-                final String mobileNo = client.mobileNo();
+                final String mobileNo = client.getMobileNo();
                 if (mobileNo != null && !mobileNo.isEmpty()) {
                     this.templateMergeService.setAuthToken(authToken);
                     final String compiledMessage = this.templateMergeService

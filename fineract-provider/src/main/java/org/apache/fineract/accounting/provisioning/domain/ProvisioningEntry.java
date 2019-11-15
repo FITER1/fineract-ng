@@ -34,18 +34,25 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import lombok.*;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_provisioning_history")
 public class ProvisioningEntry extends AbstractPersistableCustom<Long> {
 
     @Column(name = "journal_entry_created")
     private Boolean isJournalEntryCreated;
-    
+
+    @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "entry", orphanRemoval = true, fetch=FetchType.EAGER)
-    private Set<LoanProductProvisioningEntry> provisioningEntries = new HashSet<>();
+    private Collection<LoanProductProvisioningEntry> provisioningEntries = new HashSet<>();
     
     @OneToOne
     @JoinColumn(name = "createdby_id")
@@ -63,10 +70,6 @@ public class ProvisioningEntry extends AbstractPersistableCustom<Long> {
     @Temporal(TemporalType.DATE)
     private Date lastModifiedDate;
 
-    protected ProvisioningEntry() {
-        
-    }
-    
     public ProvisioningEntry(AppUser createdBy, Date createdDate, AppUser lastModifiedBy, Date lastModifiedDate, Set<LoanProductProvisioningEntry> provisioningEntries ) {
         this.provisioningEntries = provisioningEntries ;
         this.createdBy = createdBy ;
@@ -74,22 +77,4 @@ public class ProvisioningEntry extends AbstractPersistableCustom<Long> {
         this.lastModifiedBy = lastModifiedBy ;
         this.lastModifiedDate = lastModifiedDate ;
     }
-    
-    public void setProvisioningEntries(Collection<LoanProductProvisioningEntry> provisioningEntries) {
-        if(this.provisioningEntries == null) this.provisioningEntries = new HashSet<>(); 
-        this.provisioningEntries.addAll(provisioningEntries) ;
-    }
-    
-    public Collection<LoanProductProvisioningEntry> getLoanProductProvisioningEntries() {
-        return this.provisioningEntries ;
-    }
-    
-    public void setJournalEntryCreated(Boolean bool) {
-        this.isJournalEntryCreated = bool ;
-    }
-    
-    public Date getCreatedDate() {
-        return this.createdDate ;
-    }
-    
 }

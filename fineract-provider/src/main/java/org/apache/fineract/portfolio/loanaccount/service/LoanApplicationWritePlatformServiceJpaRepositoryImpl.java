@@ -375,7 +375,7 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
                     final Calendar loanCalendar = Calendar.createRepeatingCalendar(title, calendarStartDate,
                             CalendarType.COLLECTION.getValue(), calendarFrequencyType, frequency, repeatsOnDay, repeatsOnNthDayOfMonth);
                     this.calendarRepository.save(loanCalendar);
-                    final CalendarInstance calendarInstance = CalendarInstance.from(loanCalendar, newLoanApplication.getId(),
+                    final CalendarInstance calendarInstance = new CalendarInstance(loanCalendar, newLoanApplication.getId(),
                             calendarEntityType);
                     this.calendarInstanceRepository.save(calendarInstance);
                 }
@@ -559,7 +559,7 @@ public void checkForProductMixRestrictions(final Loan loan) {
          
         final Calendar calendar = Calendar.createRepeatingCalendar(title, calendarStartDate, CalendarType.COLLECTION.getValue(),
                 calendarFrequencyType, frequency, updatedRepeatsOnDay, recalculationFrequencyNthDay);
-        final CalendarInstance calendarInstance = CalendarInstance.from(calendar, loan.loanInterestRecalculationDetails().getId(),
+        final CalendarInstance calendarInstance = new CalendarInstance(calendar, loan.loanInterestRecalculationDetails().getId(),
                 calendarEntityType.getValue());
         this.calendarInstanceRepository.save(calendarInstance);
     }
@@ -865,7 +865,7 @@ public void checkForProductMixRestrictions(final Loan loan) {
                         this.calendarRepository.delete(calendarInstance.getCalendar());
                     }
                     if (calendarInstance.getCalendar().getId() != calendar.getId()) {
-                        calendarInstance.updateCalendar(calendar);
+                        calendarInstance.setCalendar(calendar);
                         this.calendarInstanceRepository.saveAndFlush(calendarInstance);
                     }
                 } else {
@@ -957,7 +957,7 @@ public void checkForProductMixRestrictions(final Loan loan) {
                 if (accountAssociations == null) {
                     isModified = true;
                 } else {
-                    final SavingsAccount savingsAccount = accountAssociations.linkedSavingsAccount();
+                    final SavingsAccount savingsAccount = accountAssociations.getLinkedSavingsAccount();
                     if (savingsAccount == null || !savingsAccount.getId().equals(savingsAccountId)) {
                         isModified = true;
                     }
@@ -970,7 +970,7 @@ public void checkForProductMixRestrictions(final Loan loan) {
                         accountAssociations = AccountAssociations.associateSavingsAccount(existingLoanApplication, savingsAccount,
                                 AccountAssociationType.LINKED_ACCOUNT_ASSOCIATION.getValue(), isActive);
                     } else {
-                        accountAssociations.updateLinkedSavingsAccount(savingsAccount);
+                        accountAssociations.setLinkedSavingsAccount(savingsAccount);
                     }
                     changes.put(linkAccountIdParamName, savingsAccountId);
                     this.accountAssociationsRepository.save(accountAssociations);

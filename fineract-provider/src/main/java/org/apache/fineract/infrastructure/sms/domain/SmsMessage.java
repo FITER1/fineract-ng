@@ -18,18 +18,7 @@
  */
 package org.apache.fineract.infrastructure.sms.domain;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.campaigns.sms.domain.SmsCampaign;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -40,6 +29,16 @@ import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.group.domain.Group;
 import org.joda.time.LocalDate;
 
+import javax.persistence.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "sms_messages_outbound")
 public class SmsMessage extends AbstractPersistableCustom<Long> {
@@ -72,12 +71,6 @@ public class SmsMessage extends AbstractPersistableCustom<Long> {
     @Column(name = "message", nullable = false)
     private String message;
 
-//    @Column(name = "provider_id", nullable = true)
-//    private Long providerId;
-//
-//    @Column(name = "campaign_name", nullable = true)
-//    private String campaignName;
-
     @Column(name = "submittedon_date", nullable = true)
     @Temporal(TemporalType.DATE)
     private Date submittedOnDate;
@@ -91,22 +84,47 @@ public class SmsMessage extends AbstractPersistableCustom<Long> {
 
     public static SmsMessage pendingSms(final String externalId, final Group group, final Client client, final Staff staff,
             final String message, final String mobileNo, final SmsCampaign smsCampaign, final boolean isNotification) {
-        return new SmsMessage(externalId, group, client, staff, SmsMessageStatusType.PENDING, message, mobileNo, smsCampaign, isNotification);
+        return SmsMessage.builder()
+            .externalId(externalId)
+            .group(group)
+            .client(client)
+            .staff(staff)
+            .statusType(SmsMessageStatusType.PENDING.getValue())
+            .message(message)
+            .mobileNo(mobileNo)
+            .smsCampaign(smsCampaign)
+            .isNotification(isNotification)
+            .build();
     }
 
     public static SmsMessage sentSms(final String externalId, final Group group, final Client client, final Staff staff,
             final String message, final String mobileNo, final SmsCampaign smsCampaign, final boolean isNotification) {
-        return new SmsMessage(externalId, group, client, staff, SmsMessageStatusType.WAITING_FOR_DELIVERY_REPORT, message, mobileNo, smsCampaign, isNotification);
+        return SmsMessage.builder()
+            .externalId(externalId)
+            .group(group)
+            .client(client)
+            .staff(staff)
+            .statusType(SmsMessageStatusType.WAITING_FOR_DELIVERY_REPORT.getValue())
+            .message(message)
+            .mobileNo(mobileNo)
+            .smsCampaign(smsCampaign)
+            .isNotification(isNotification)
+            .build();
     }
 
     public static SmsMessage instance(String externalId, final Group group, final Client client, final Staff staff,
             final SmsMessageStatusType statusType, final String message, final String mobileNo, final SmsCampaign smsCampaign, final boolean isNotification) {
-
-        return new SmsMessage(externalId, group, client, staff, statusType, message, mobileNo, smsCampaign, isNotification);
-    }
-
-    protected SmsMessage() {
-        //
+        return SmsMessage.builder()
+            .externalId(externalId)
+            .group(group)
+            .client(client)
+            .staff(staff)
+            .statusType(statusType.getValue())
+            .message(message)
+            .mobileNo(mobileNo)
+            .smsCampaign(smsCampaign)
+            .isNotification(isNotification)
+            .build();
     }
 
     private SmsMessage(String externalId, final Group group, final Client client, final Staff staff, final SmsMessageStatusType statusType,
@@ -135,66 +153,4 @@ public class SmsMessage extends AbstractPersistableCustom<Long> {
 
         return actualChanges;
     }
-
-    public String getExternalId() {
-        return this.externalId;
-    }
-
-    public SmsCampaign getSmsCampaign() {
-        return this.smsCampaign;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public Staff getStaff() {
-        return staff;
-    }
-
-    public Integer getStatusType() {
-        return statusType;
-    }
-
-    public String getMobileNo() {
-        return mobileNo;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setExternalId(final String externalId) {
-        this.externalId = externalId;
-    }
-
-    public void setStatusType(final Integer statusType) {
-        this.statusType = statusType;
-    }
-
-    public Date getSubmittedOnDate() {
-        return this.submittedOnDate;
-    }
-
-    public Date getDeliveredOnDate() {
-        return this.deliveredOnDate;
-    }
-
-    public void setDeliveredOnDate(final Date deliveredOnDate) {
-        this.deliveredOnDate = deliveredOnDate;
-    }
-
-	public boolean isNotification() {
-		return this.isNotification;
-	}
-
-	public void setNotification(boolean isNotification) {
-		this.isNotification = isNotification;
-	}
-    
-    
 }

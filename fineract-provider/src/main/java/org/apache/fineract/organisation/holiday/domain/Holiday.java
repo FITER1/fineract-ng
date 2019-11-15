@@ -18,46 +18,30 @@
  */
 package org.apache.fineract.organisation.holiday.domain;
 
-import static org.apache.fineract.organisation.holiday.api.HolidayApiConstants.descriptionParamName;
-import static org.apache.fineract.organisation.holiday.api.HolidayApiConstants.fromDateParamName;
-import static org.apache.fineract.organisation.holiday.api.HolidayApiConstants.nameParamName;
-import static org.apache.fineract.organisation.holiday.api.HolidayApiConstants.officesParamName;
-import static org.apache.fineract.organisation.holiday.api.HolidayApiConstants.repaymentsRescheduledToParamName;
-import static org.apache.fineract.organisation.holiday.api.HolidayApiConstants.toDateParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.dateFormatParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.localeParamName;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
-
+import com.google.gson.JsonArray;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.organisation.holiday.api.HolidayApiConstants;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
-import com.google.gson.JsonArray;
+import javax.persistence.*;
+import java.util.*;
 
+import static org.apache.fineract.organisation.holiday.api.HolidayApiConstants.*;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.dateFormatParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.localeParamName;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_holiday", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }, name = "holiday_name") })
 public class Holiday extends AbstractPersistableCustom<Long> {
@@ -258,22 +242,12 @@ public class Holiday extends AbstractPersistableCustom<Long> {
         this.reschedulingType = reschedulingType;
     }
 
-    protected Holiday() {}
-
     public LocalDate getRepaymentsRescheduledToLocalDate() {
         LocalDate repaymentsRescheduledTo = null;
         if (this.repaymentsRescheduledTo != null) {
             repaymentsRescheduledTo = new LocalDate(this.repaymentsRescheduledTo);
         }
         return repaymentsRescheduledTo;
-    }
-
-    public boolean isProcessed() {
-        return this.processed;
-    }
-
-    public Set<Office> getOffices() {
-        return this.offices;
     }
 
     public LocalDate getFromDateLocalDate() {
@@ -290,10 +264,6 @@ public class Holiday extends AbstractPersistableCustom<Long> {
             toDate = new LocalDate(this.toDate);
         }
         return toDate;
-    }
-
-    public void processed() {
-        this.processed = true;
     }
 
     public void activate() {

@@ -34,6 +34,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import lombok.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.campaigns.constants.CampaignType;
@@ -54,6 +55,11 @@ import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "sms_campaign", uniqueConstraints = {@UniqueConstraint(columnNames = { "campaign_name" }, name = "campaign_name_UNIQUE")})
 public class SmsCampaign extends AbstractPersistableCustom<Long> {
@@ -128,9 +134,7 @@ public class SmsCampaign extends AbstractPersistableCustom<Long> {
     @Column(name = "is_notification", nullable = true)
     private boolean isNotification;
 
-    public SmsCampaign() {}
-
-    private SmsCampaign(final String campaignName, final Integer campaignType, 
+    private SmsCampaign(final String campaignName, final Integer campaignType,
             final Integer triggerType, final Report businessRuleId, final Long providerId, final String paramValue,
             final String message, final LocalDate submittedOnDate, final AppUser submittedBy, final String recurrence,
             final LocalDateTime localDateTime, final boolean isNotification) {
@@ -484,65 +488,21 @@ public class SmsCampaign extends AbstractPersistableCustom<Long> {
         return localDate.isAfter(DateUtils.getLocalDateOfTenant());
     }
 
-    public Report getBusinessRuleId() {
-        return this.businessRuleId;
-    }
-
-    public String getCampaignName() {
-        return this.campaignName;
-    }
-
-    public String getMessage() {
-        return this.message;
-    }
-
-    public String getParamValue() {
-        return this.paramValue;
-    }
-
-    public String getRecurrence() {
-        return this.recurrence;
-    }
-
     public LocalDate getRecurrenceStartDate() {
-        return (LocalDate) ObjectUtils.defaultIfNull(new LocalDate(this.recurrenceStartDate), null);
+        return ObjectUtils.defaultIfNull(new LocalDate(this.recurrenceStartDate), null);
     }
 
     public LocalDateTime getRecurrenceStartDateTime() {
-        return (LocalDateTime) ObjectUtils.defaultIfNull(new LocalDateTime(this.recurrenceStartDate), null);
-    }
-
-    public void setLastTriggerDate(Date lastTriggerDate) {
-        this.lastTriggerDate = lastTriggerDate;
-    }
-
-    public void setNextTriggerDate(Date nextTriggerDate) {
-        this.nextTriggerDate = nextTriggerDate;
+        return ObjectUtils.defaultIfNull(new LocalDateTime(this.recurrenceStartDate), null);
     }
 
     public LocalDateTime getNextTriggerDate() {
-        return (LocalDateTime) ObjectUtils.defaultIfNull(new LocalDateTime(this.nextTriggerDate), null);
+        return ObjectUtils.defaultIfNull(new LocalDateTime(this.nextTriggerDate), null);
 
-    }
-
-    public Date getNextTriggerDateInDate() {
-        return this.nextTriggerDate;
-    }
-
-    public LocalDate getLastTriggerDate() {
-        return (LocalDate) ObjectUtils.defaultIfNull(new LocalDate(this.lastTriggerDate), null);
-    }
-
-    public void updateIsVisible(boolean isVisible) {
-        this.isVisible = isVisible;
     }
 
     public void updateBusinessRuleId(final Report report) {
         this.businessRuleId = report;
-    }
-
-    public Long getProviderId() {
-        return this.providerId;
     }
 
     private static String constructRecurrence(final JsonCommand command) {
@@ -576,14 +536,4 @@ public class SmsCampaign extends AbstractPersistableCustom<Long> {
         }
         return recurrenceBuilder.toString();
     }
-
-	public boolean isNotification() {
-		return this.isNotification;
-	}
-
-	public void setNotification(boolean isNotification) {
-		this.isNotification = isNotification;
-	}
-    
-    
 }

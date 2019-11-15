@@ -18,23 +18,20 @@
  */
 package org.apache.fineract.infrastructure.bulkimport.domain;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
+import lombok.*;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.documentmanagement.domain.Document;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
+import javax.persistence.*;
+import java.util.Date;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_import_document")
 public class ImportDocument extends AbstractPersistableCustom<Long>{
@@ -70,36 +67,20 @@ public class ImportDocument extends AbstractPersistableCustom<Long>{
     @Column(name = "failure_count", nullable = true)
     private Integer failureCount;
 
-    protected ImportDocument() {
-
-    }
-
     public static ImportDocument instance(final Document document, final LocalDateTime importTime,
             final Integer entity_type, final AppUser createdBy, final Integer totalRecords) {
 
-        final Boolean completed = Boolean.FALSE;
-        final Integer successCount = 0;
-        final Integer failureCount = 0;
-        final LocalDateTime endTime = LocalDateTime.now();
-
-        return new ImportDocument(document, importTime, endTime, completed, entity_type,
-                createdBy, totalRecords, successCount, failureCount);
-    }
-
-    private ImportDocument(final Document document, final LocalDateTime importTime,
-            final LocalDateTime endTime, Boolean completed, final Integer entity_type,
-            final AppUser createdBy, final Integer totalRecords, final Integer successCount,
-            final Integer failureCount) {
-        this.document = document;
-        this.importTime = importTime.toDate();
-        this.endTime = endTime.toDate();
-        this.completed = completed;
-        this.entity_type = entity_type;
-        this.createdBy = createdBy;
-        this.totalRecords = totalRecords;
-        this.successCount = successCount;
-        this.failureCount = failureCount;
-
+        return ImportDocument.builder()
+            .document(document)
+            .importTime(importTime.toDate())
+            .completed(Boolean.FALSE)
+            .entity_type(entity_type)
+            .createdBy(createdBy)
+            .totalRecords(totalRecords)
+            .successCount(0)
+            .failureCount(0)
+            .endTime(LocalDateTime.now().toDate())
+            .build();
     }
 
     public void update(final LocalDateTime endTime, final Integer successCount,
@@ -109,16 +90,4 @@ public class ImportDocument extends AbstractPersistableCustom<Long>{
         this.successCount = successCount;
         this.failureCount = errorCount;
     }
-
-    public Document getDocument() {
-        return this.document;
-    }
-
-    public Integer getEntityType() {
-        return this.entity_type;
-    }
-
-
-
-
 }

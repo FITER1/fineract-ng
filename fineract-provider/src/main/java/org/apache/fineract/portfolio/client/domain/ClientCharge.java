@@ -18,29 +18,26 @@
  */
 package org.apache.fineract.portfolio.client.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
+import lombok.*;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.organisation.office.domain.OrganisationCurrency;
 import org.apache.fineract.portfolio.charge.domain.Charge;
 import org.apache.fineract.portfolio.charge.domain.ChargeCalculationType;
-import org.apache.fineract.portfolio.charge.domain.ChargeTimeType;
 import org.apache.fineract.portfolio.client.api.ClientApiConstants;
 import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.Date;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_client_charge")
 public class ClientCharge extends AbstractPersistableCustom<Long> {
@@ -96,10 +93,6 @@ public class ClientCharge extends AbstractPersistableCustom<Long> {
 
     @Transient
     private OrganisationCurrency currency;
-
-    protected ClientCharge() {
-        //
-    }
 
     public static ClientCharge createNew(final Client client, final Charge charge, final JsonCommand command) {
         BigDecimal amount = command.bigDecimalValueOfParameterNamed(ClientApiConstants.amountParamName);
@@ -190,12 +183,8 @@ public class ClientCharge extends AbstractPersistableCustom<Long> {
         }
     }
 
-    public boolean isOnSpecifiedDueDate() {
-        return ChargeTimeType.fromInt(this.chargeTime).isOnSpecifiedDueDate();
-    }
-
     private boolean determineIfFullyPaid() {
-        return BigDecimal.ZERO.compareTo(calculateOutstanding()) == 0;
+        return BigDecimal.ZERO.equals(calculateOutstanding());
     }
 
     private BigDecimal calculateOutstanding() {
@@ -227,48 +216,12 @@ public class ClientCharge extends AbstractPersistableCustom<Long> {
         return dueDate;
     }
 
-    public Client getClient() {
-        return this.client;
-    }
-
-    public Charge getCharge() {
-        return this.charge;
-    }
-
-    public Integer getChargeTime() {
-        return this.chargeTime;
-    }
-
-    public Date getDueDate() {
-        return this.dueDate;
-    }
-
-    public Integer getChargeCalculation() {
-        return this.chargeCalculation;
-    }
-
-    public boolean isPenaltyCharge() {
-        return this.penaltyCharge;
-    }
-
-    public boolean isPaid() {
-        return this.paid;
-    }
-
-    public boolean isWaived() {
-        return this.waived;
-    }
-
     public boolean isActive() {
         return this.status;
     }
 
     public boolean isNotActive() {
         return !this.status;
-    }
-
-    public Date getInactivationDate() {
-        return this.inactivationDate;
     }
 
     public Long getClientId() {
@@ -285,11 +238,6 @@ public class ClientCharge extends AbstractPersistableCustom<Long> {
 
     public MonetaryCurrency getCurrency() {
         return this.currency.toMonetaryCurrency();
-    }
-
-    public boolean isPaidOrPartiallyPaid(final MonetaryCurrency currency) {
-        final Money amountWaivedOrWrittenOff = getAmountWaived().plus(getAmountWrittenOff());
-        return Money.of(currency, this.amountPaid).plus(amountWaivedOrWrittenOff).isGreaterThanZero();
     }
 
     public Money getAmount() {
@@ -311,5 +259,4 @@ public class ClientCharge extends AbstractPersistableCustom<Long> {
     public Money getAmountOutstanding() {
         return Money.of(getCurrency(), this.amountOutstanding);
     }
-
 }

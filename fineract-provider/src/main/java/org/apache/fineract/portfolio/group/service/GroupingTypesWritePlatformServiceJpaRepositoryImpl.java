@@ -535,7 +535,7 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
             Set<Client> clients = groupForUpdate.getClientMembers();
             if (clients != null) {
                 for (Client client : clients) {
-                    client.updateStaff(staff);
+                    client.setStaff(staff);
                     if (this.loanRepositoryWrapper.doNonClosedLoanAccountsExistForClient(client.getId())) {
                         for (final Loan loan : this.loanRepositoryWrapper.findLoanByClientId(client.getId())) {
                             if (loan.isDisbursed() && !loan.isClosed()) {

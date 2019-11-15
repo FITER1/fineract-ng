@@ -110,7 +110,7 @@ public class CashierTransactionDataValidator {
 				+ " OR ( c.start_date BETWEEN '" + fromDate + "' AND '"
 				+ endDate + "' OR c.end_date BETWEEN '" + fromDate + "' AND '"
 				+ endDate + "'))";
-		if (!cashier.isFullDay()) {
+		if (!cashier.getIsFullDay()) {
 			String startTime = cashier.getStartTime();
 			String endTime = cashier.getEndTime();
 			sql = sql + " AND ( Time(c.start_time) BETWEEN TIME('" + startTime

@@ -40,6 +40,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 
+import lombok.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
@@ -59,6 +60,11 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormatter;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_client", uniqueConstraints = { @UniqueConstraint(columnNames = { "account_no" }, name = "account_no_UNIQUE"), //
         @UniqueConstraint(columnNames = { "mobile_no" }, name = "mobile_no_UNIQUE") })
@@ -119,7 +125,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private String emailAddress;
 
 	@Column(name = "is_staff", nullable = false)
-    private boolean isStaff;
+    private boolean staffFlag;
 
     @Column(name = "external_id", length = 100, nullable = true, unique = true)
     private String externalId;
@@ -276,20 +282,17 @@ public final class Client extends AbstractPersistableCustom<Long> {
             submittedOnDate = command.localDateValueOfParameterNamed(ClientApiConstants.submittedOnDateParamName);
         }
         final Long savingsAccountId = null;
+
         return new Client(currentUser, status, clientOffice, clientParentGroup, accountNo, firstname, middlename, lastname, fullname,
                 activationDate, officeJoiningDate, externalId, mobileNo, emailAddress, staff, submittedOnDate, savingsProductId, savingsAccountId, dataOfBirth,
                 gender, clientType, clientClassification, legalForm, isStaff);
-    }
-
-    protected Client() {
-    	this.setLegalForm(null);
     }
 
     private Client(final AppUser currentUser, final ClientStatus status, final Office office, final Group clientParentGroup,
             final String accountNo, final String firstname, final String middlename, final String lastname, final String fullname,
             final LocalDate activationDate, final LocalDate officeJoiningDate, final String externalId, final String mobileNo, final String emailAddress,
             final Staff staff, final LocalDate submittedOnDate, final Long savingsProductId, final Long savingsAccountId,
-            final LocalDate dateOfBirth, final CodeValue gender, final CodeValue clientType, final CodeValue clientClassification, final Integer legalForm, final Boolean isStaff) {
+            final LocalDate dateOfBirth, final CodeValue gender, final CodeValue clientType, final CodeValue clientClassification, final Integer legalForm, final Boolean staffFlag) {
 
         if (StringUtils.isBlank(accountNo)) {
             this.accountNumber = new RandomPasswordGenerator(19).generate();
@@ -553,7 +556,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
             actualChanges.put(ClientApiConstants.genderIdParamName, newValue);
         }
 
-        if (command.isChangeInLongParameterNamed(ClientApiConstants.savingsProductIdParamName, savingsProductId())) {
+        if (command.isChangeInLongParameterNamed(ClientApiConstants.savingsProductIdParamName, getSavingsProductId())) {
             final Long newValue = command.longValueOfParameterNamed(ClientApiConstants.savingsProductIdParamName);
             actualChanges.put(ClientApiConstants.savingsProductIdParamName, newValue);
         }
@@ -775,74 +778,6 @@ public final class Client extends AbstractPersistableCustom<Long> {
         return this.office.identifiedBy(officeId);
     }
 
-    public Long officeId() {
-        return this.office.getId();
-    }
-
-    public void setImage(final Image image) {
-        this.image = image;
-    }
-
-    public Image getImage() {
-        return this.image;
-    }
-
-    public String mobileNo() {
-        return this.mobileNo;
-    }
-
-	public String emailAddress() {
-        return this.emailAddress;
-    }
-
-    public void setMobileNo(final String mobileNo) {
-        this.mobileNo = mobileNo;
-    }
-
-	public boolean isNotStaff() {
-        return !isStaff();
-    }
-
-    public boolean isStaff() {
-        return this.isStaff;
-    }
-
-	public String getExternalId() {
-		return this.externalId; 
-	}
-
-	public void setEmailAddress(final String emailAddress) {
-        this.emailAddress = emailAddress;
-    }
-
-    public String getDisplayName() {
-        return this.displayName;
-    }
-
-    public void setDisplayName(final String displayName) {
-        this.displayName = displayName;
-    }
-
-    public Office getOffice() {
-        return this.office;
-    }
-
-    public Office getTransferToOffice() {
-        return this.transferToOffice;
-    }
-
-    public void updateOffice(final Office office) {
-        this.office = office;
-    }
-
-    public void updateTransferToOffice(final Office office) {
-        this.transferToOffice = office;
-    }
-
-    public void updateOfficeJoiningDate(final Date date) {
-        this.officeJoiningDate = date;
-    }
-
     private Long staffId() {
         Long staffId = null;
         if (this.staff != null) {
@@ -851,51 +786,11 @@ public final class Client extends AbstractPersistableCustom<Long> {
         return staffId;
     }
 
-    public void updateStaff(final Staff staff) {
-        this.staff = staff;
-    }
-
-    public Staff getStaff() {
-        return this.staff;
-    }
-
-    public void unassignStaff() {
-        this.staff = null;
-    }
-
-    public void assignStaff(final Staff staff) {
-        this.staff = staff;
-    }
-
-    public Set<Group> getGroups() {
-        return this.groups;
-    }
-
     public void close(final AppUser currentUser, final CodeValue closureReason, final Date closureDate) {
         this.closureReason = closureReason;
         this.closureDate = closureDate;
         this.closedBy = currentUser;
         this.status = ClientStatus.CLOSED.getValue();
-    }
-
-    public Integer getStatus() {
-        return this.status;
-    }
-    
-    public CodeValue subStatus() {
-        return this.subStatus;
-    }
-    
-    public Long subStatusId() {
-        Long subStatusId = null;
-        if (this.subStatus != null) {
-            subStatusId = this.subStatus.getId();
-        }
-        return subStatusId;
-    }
-
-    public void setStatus(final Integer status) {
-        this.status = status;
     }
 
     public boolean isActivatedAfter(final LocalDate submittedOn) {
@@ -909,26 +804,6 @@ public final class Client extends AbstractPersistableCustom<Long> {
             }
         }
         return false;
-    }
-
-    public Long savingsProductId() {
-        return this.savingsProductId;
-    }
-
-    public void updateSavingsProduct(final Long savingsProductId) {
-        this.savingsProductId = savingsProductId;
-    }
-
-    public AppUser activatedBy() {
-        return this.activatedBy;
-    }
-
-    public Long savingsAccountId() {
-        return this.savingsAccountId;
-    }
-
-    public void updateSavingsAccount(Long savingsAccountId) {
-        this.savingsAccountId = savingsAccountId;
     }
 
     public Long genderId() {
@@ -956,46 +831,18 @@ public final class Client extends AbstractPersistableCustom<Long> {
     }
 
     public LocalDate getClosureDate() {
-        return (LocalDate) ObjectUtils.defaultIfNull(new LocalDate(this.closureDate), null);
+        return ObjectUtils.defaultIfNull(new LocalDate(this.closureDate), null);
     }
     public LocalDate getRejectedDate() {
-        return (LocalDate) ObjectUtils.defaultIfNull(new LocalDate(this.rejectionDate), null);
+        return ObjectUtils.defaultIfNull(new LocalDate(this.rejectionDate), null);
     }
     public LocalDate getWithdrawalDate() {
-        return (LocalDate) ObjectUtils.defaultIfNull(new LocalDate(this.withdrawalDate), null);
+        return ObjectUtils.defaultIfNull(new LocalDate(this.withdrawalDate), null);
 	}
 
 	public LocalDate getReopenedDate() {
 		return this.reopenedDate == null ? null : new LocalDate(this.reopenedDate);
 	}
-
-	public CodeValue gender() {
-        return this.gender;
-    }
-
-    public CodeValue clientType() {
-        return this.clientType;
-    }
-
-    public void updateClientType(CodeValue clientType) {
-        this.clientType = clientType;
-    }
-
-    public CodeValue clientClassification() {
-        return this.clientClassification;
-    }
-
-    public void updateClientClassification(CodeValue clientClassification) {
-        this.clientClassification = clientClassification;
-    }
-
-    public void updateGender(CodeValue gender) {
-        this.gender = gender;
-    }
-
-    public Date dateOfBirth() {
-        return this.dateOfBirth;
-    }
 
     public LocalDate dateOfBirthLocalDate() {
         LocalDate dateOfBirth = null;
@@ -1045,32 +892,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
 
     }
 
-    public Integer getLegalForm() {
-        return legalForm;
-    }
-
-    public void setLegalForm(Integer legalForm) {
-        this.legalForm = legalForm;
-    }
-    
     public void loadLazyCollections() {
         this.groups.size() ;
     }
-    
-    public String getFirstname(){return this.firstname;}
-
-    public String getMiddlename(){return this.middlename;}
-
-	public String getLastname() {
-		return this.lastname;
-	}
-
-	public Date getProposedTransferDate() {
-		return proposedTransferDate;
-	}
-
-	public void updateProposedTransferDate(Date proposedTransferDate) {
-		this.proposedTransferDate = proposedTransferDate;
-	}
-
 }

@@ -83,14 +83,14 @@ public class SmsMessageAssembler {
         if (this.fromApiJsonHelper.parameterExists(SmsApiConstants.clientIdParamName, element)) {
             final Long clientId = this.fromApiJsonHelper.extractLongNamed(SmsApiConstants.clientIdParamName, element);
             client = this.clientRepository.findOneWithNotFoundDetection(clientId);
-            mobileNo = client.mobileNo();
+            mobileNo = client.getMobileNo();
         }
 
         Staff staff = null;
         if (this.fromApiJsonHelper.parameterExists(SmsApiConstants.staffIdParamName, element)) {
             final Long staffId = this.fromApiJsonHelper.extractLongNamed(SmsApiConstants.staffIdParamName, element);
             staff = this.staffRepository.findOneWithNotFoundDetection(staffId);
-            mobileNo = staff.mobileNo();
+            mobileNo = staff.getMobileNo();
         }
 
         final String message = this.fromApiJsonHelper.extractStringNamed(SmsApiConstants.messageParamName, element);

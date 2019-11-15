@@ -237,7 +237,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
                     Integer clientId = (Integer) entry.get("id");
                     EmailCampaign emailCampaign = this.emailCampaignRepository.findById(campaignId).orElse(null);
                     Client client = this.clientRepositoryWrapper.findOneWithNotFoundDetection(clientId.longValue());
-                    String emailAddress = client.emailAddress();
+                    String emailAddress = client.getEmailAddress();
 
                     if (emailAddress != null && isValidEmail(emailAddress)) {
                         EmailMessage emailMessage = EmailMessage.pendingEmail(null, client, null, emailCampaign, emailSubject, message,
@@ -763,7 +763,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
                 // most at times the reports are run by picking the office of
                 // the staff Id
                 if (client.getStaff() != null) {
-                    actualParams.put(entry.getKey(), client.getStaff().officeId().toString());
+                    actualParams.put(entry.getKey(), client.getStaff().getOffice().getId().toString());
                 } else {
                     actualParams.put(entry.getKey(), client.getOffice().getId().toString());
                 }

@@ -343,7 +343,7 @@ public class DepositAccountDomainServiceJpa implements DepositAccountDomainServi
         CalendarInstance parentCalendarInstance = this.calendarInstanceRepository.findByEntityIdAndEntityTypeIdAndCalendarTypeId(
                 account.getId(), CalendarEntityType.SAVINGS.getValue(), CalendarType.COLLECTION.getValue());
         if (account.isCalendarInherited()) {
-            calendarInstance = CalendarInstance.from(parentCalendarInstance.getCalendar(), account.getId(),
+            calendarInstance = new CalendarInstance(parentCalendarInstance.getCalendar(), account.getId(),
                     CalendarEntityType.SAVINGS.getValue());
         } else {
             LocalDate calendarStartDate = reinvestedDeposit.depositStartDate();
@@ -352,7 +352,7 @@ public class DepositAccountDomainServiceJpa implements DepositAccountDomainServi
             final String title = "recurring_savings_" + reinvestedDeposit.getId();
             final Calendar calendar = Calendar.createRepeatingCalendar(title, calendarStartDate, CalendarType.COLLECTION.getValue(),
                     recurrence);
-            calendarInstance = CalendarInstance.from(calendar, reinvestedDeposit.getId(), CalendarEntityType.SAVINGS.getValue());
+            calendarInstance = new CalendarInstance(calendar, reinvestedDeposit.getId(), CalendarEntityType.SAVINGS.getValue());
         }
         if (calendarInstance == null) {
             final String defaultUserMessage = "No valid recurring details available for recurring depost account creation.";

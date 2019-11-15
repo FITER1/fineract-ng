@@ -18,25 +18,22 @@
  */
 package org.apache.fineract.portfolio.account.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
+import lombok.*;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_account_transfer_details")
 public class AccountTransferDetails extends AbstractPersistableCustom<Long> {
@@ -86,79 +83,65 @@ public class AccountTransferDetails extends AbstractPersistableCustom<Long> {
             final SavingsAccount fromSavingsAccount, final Office toOffice, final Client toClient, final SavingsAccount toSavingsAccount,
             Integer transferType) {
 
-        return new AccountTransferDetails(fromOffice, fromClient, fromSavingsAccount, null, toOffice, toClient, toSavingsAccount, null,
-                transferType, null);
+        return AccountTransferDetails.builder()
+            .fromOffice(fromOffice)
+            .fromClient(fromClient)
+            .fromSavingsAccount(fromSavingsAccount)
+            .toOffice(toOffice)
+            .toClient(toClient)
+            .toSavingsAccount(toSavingsAccount)
+            .transferType(transferType)
+            .build();
     }
 
     public static AccountTransferDetails savingsToLoanTransfer(final Office fromOffice, final Client fromClient,
             final SavingsAccount fromSavingsAccount, final Office toOffice, final Client toClient, final Loan toLoanAccount,
             Integer transferType) {
-        return new AccountTransferDetails(fromOffice, fromClient, fromSavingsAccount, null, toOffice, toClient, null, toLoanAccount,
-                transferType, null);
+
+        return AccountTransferDetails.builder()
+            .fromOffice(fromOffice)
+            .fromClient(fromClient)
+            .fromSavingsAccount(fromSavingsAccount)
+            .toOffice(toOffice)
+            .toClient(toClient)
+            .toLoanAccount(toLoanAccount)
+            .transferType(transferType)
+            .build();
     }
 
-    public static AccountTransferDetails LoanTosavingsTransfer(final Office fromOffice, final Client fromClient,
-            final Loan fromLoanAccount, final Office toOffice, final Client toClient, final SavingsAccount toSavingsAccount,
-            Integer transferType) {
-        return new AccountTransferDetails(fromOffice, fromClient, null, fromLoanAccount, toOffice, toClient, toSavingsAccount, null,
-                transferType, null);
+    public static AccountTransferDetails loanToSavingsTransfer(final Office fromOffice, final Client fromClient,
+                                                               final Loan fromLoanAccount, final Office toOffice, final Client toClient, final SavingsAccount toSavingsAccount,
+                                                               Integer transferType) {
+        return AccountTransferDetails.builder()
+            .fromOffice(fromOffice)
+            .fromClient(fromClient)
+            .fromLoanAccount(fromLoanAccount)
+            .toOffice(toOffice)
+            .toClient(toClient)
+            .toSavingsAccount(toSavingsAccount)
+            .transferType(transferType)
+            .build();
     }
 
-    protected AccountTransferDetails() {
-        //
-    }
+    public static AccountTransferDetails loanToLoanTransfer(Office fromOffice, Client fromClient, Loan fromLoanAccount, Office toOffice, Client toClient,
+                                                            Loan toLoanAccount, Integer transferType) {
 
-    private AccountTransferDetails(final Office fromOffice, final Client fromClient, final SavingsAccount fromSavingsAccount,
-            final Loan fromLoanAccount, final Office toOffice, final Client toClient, final SavingsAccount toSavingsAccount,
-            final Loan toLoanAccount, final Integer transferType,
-            final AccountTransferStandingInstruction accountTransferStandingInstruction) {
-        this.fromOffice = fromOffice;
-        this.fromClient = fromClient;
-        this.fromSavingsAccount = fromSavingsAccount;
-        this.fromLoanAccount = fromLoanAccount;
-        this.toOffice = toOffice;
-        this.toClient = toClient;
-        this.toSavingsAccount = toSavingsAccount;
-        this.toLoanAccount = toLoanAccount;
-        this.transferType = transferType;
-        this.accountTransferStandingInstruction = accountTransferStandingInstruction;
-    }
-
-    public SavingsAccount toSavingsAccount() {
-        return this.toSavingsAccount;
-    }
-
-    public SavingsAccount fromSavingsAccount() {
-        return this.fromSavingsAccount;
+        return AccountTransferDetails.builder()
+            .fromOffice(fromOffice)
+            .fromClient(fromClient)
+            .fromLoanAccount(fromLoanAccount)
+            .toOffice(toOffice)
+            .toClient(toClient)
+            .toLoanAccount(toLoanAccount)
+            .transferType(transferType)
+            .build();
     }
 
     public void addAccountTransferTransaction(AccountTransferTransaction accountTransferTransaction) {
         this.accountTransferTransactions.add(accountTransferTransaction);
     }
 
-    public void updateAccountTransferStandingInstruction(final AccountTransferStandingInstruction accountTransferStandingInstruction) {
-        this.accountTransferStandingInstruction = accountTransferStandingInstruction;
-    }
-
-    public Loan toLoanAccount() {
-        return this.toLoanAccount;
-    }
-
-    public Loan fromLoanAccount() {
-        return this.fromLoanAccount;
-    }
-
-    public AccountTransferStandingInstruction accountTransferStandingInstruction() {
-        return this.accountTransferStandingInstruction;
-    }
-
     public AccountTransferType transferType() {
         return AccountTransferType.fromInt(this.transferType);
-    }
-
-    public static AccountTransferDetails LoanToLoanTransfer(Office fromOffice, Client fromClient, Loan fromLoanAccount, Office toOffice, Client toClient,
-            Loan toLoanAccount, Integer transferType) {
-        return new AccountTransferDetails(fromOffice, fromClient, null, fromLoanAccount, toOffice, toClient, null, toLoanAccount,
-                transferType, null);
     }
 }

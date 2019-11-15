@@ -18,13 +18,20 @@
  */
 package org.apache.fineract.accounting.closure.domain;
 
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface GLClosureRepository extends JpaRepository<GLClosure, Long>, JpaSpecificationExecutor<GLClosure> {
 
     @Query("select closure from GLClosure closure where closure.closingDate = (select max(closure1.closingDate) from GLClosure closure1 where closure1.office.id=:officeId)  and closure.office.id= :officeId")
     GLClosure getLatestGLClosureByBranch(@Param("officeId") Long officeId);
+
+    List<GLClosure> findAllByDeleted(Boolean deleted, Sort sort);
+
+    List<GLClosure> findAllByOfficeIdAndDeleted(Long officeId, Boolean deleted, Sort sort);
 }

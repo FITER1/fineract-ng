@@ -329,7 +329,7 @@ public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
         smsParams.put("middlename",client.getMiddlename());
         smsParams.put("lastname",client.getLastname());
         smsParams.put("FullName",client.getDisplayName());
-        smsParams.put("mobileNo",client.mobileNo());
+        smsParams.put("mobileNo",client.getMobileNo());
         smsParams.put("LoanAmount",loan.getPrincpal());
         smsParams.put("LoanOutstanding",loanTransaction.getOutstandingLoanBalance());
         smsParams.put("loanId",loan.getId());
@@ -367,7 +367,7 @@ public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
         smsParams.put("middlename",client.getMiddlename());
         smsParams.put("lastname",client.getLastname());
         smsParams.put("FullName",client.getDisplayName());
-        smsParams.put("mobileNo",client.mobileNo());
+        smsParams.put("mobileNo",client.getMobileNo());
         smsParams.put("savingsId", savingsAccount.getId()) ;
         smsParams.put("savingsAccountNo",savingsAccount.getAccountNumber());
         smsParams.put("withdrawAmount",savingsAccountTransaction.getAmount(savingsAccount.getCurrency()));

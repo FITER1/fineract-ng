@@ -258,16 +258,16 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
             if (accountTransfer.getToLoanTransaction() != null) {
                 this.loanAccountDomainService.reverseTransfer(accountTransfer.getToLoanTransaction());
             }
-            if (accountTransfer.getFromTransaction() != null) {
-                this.savingsAccountWritePlatformService.undoTransaction(accountTransfer.accountTransferDetails().fromSavingsAccount()
-                        .getId(), accountTransfer.getFromTransaction().getId(), true);
+            if (accountTransfer.getFromSavingsTransaction() != null) {
+                this.savingsAccountWritePlatformService.undoTransaction(accountTransfer.getAccountTransferDetails().getFromSavingsAccount()
+                        .getId(), accountTransfer.getFromSavingsTransaction().getId(), true);
             }
             if (accountTransfer.getToSavingsTransaction() != null) {
                 this.savingsAccountWritePlatformService.undoTransaction(
-                        accountTransfer.accountTransferDetails().toSavingsAccount().getId(), accountTransfer.getToSavingsTransaction()
+                        accountTransfer.getAccountTransferDetails().getToSavingsAccount().getId(), accountTransfer.getToSavingsTransaction()
                                 .getId(), true);
             }
-            accountTransfer.reverse();
+            accountTransfer.setReversed(true);
             this.accountTransferRepository.save(accountTransfer);
         }
     }
@@ -298,9 +298,9 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
                 }
 
             } else {
-                fromSavingsAccount = accountTransferDetails.fromSavingsAccount();
+                fromSavingsAccount = accountTransferDetails.getFromSavingsAccount();
                 this.savingsAccountAssembler.setHelpers(fromSavingsAccount);
-                toLoanAccount = accountTransferDetails.toLoanAccount();
+                toLoanAccount = accountTransferDetails.getToLoanAccount();
                 this.loanAccountAssembler.setHelpers(toLoanAccount);
             }
 
@@ -351,9 +351,9 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
                     this.savingsAccountAssembler.setHelpers(toSavingsAccount);
                 }
             } else {
-                fromSavingsAccount = accountTransferDetails.fromSavingsAccount();
+                fromSavingsAccount = accountTransferDetails.getFromSavingsAccount();
                 this.savingsAccountAssembler.setHelpers(fromSavingsAccount);
-                toSavingsAccount = accountTransferDetails.toSavingsAccount();
+                toSavingsAccount = accountTransferDetails.getToSavingsAccount();
                 this.savingsAccountAssembler.setHelpers(toSavingsAccount);
             }
 
@@ -387,9 +387,9 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
                 }
                 toSavingsAccount = this.savingsAccountAssembler.assembleFrom(accountTransferDTO.getToAccountId());
             } else {
-                fromLoanAccount = accountTransferDetails.fromLoanAccount();
+                fromLoanAccount = accountTransferDetails.getFromLoanAccount();
                 this.loanAccountAssembler.setHelpers(fromLoanAccount);
-                toSavingsAccount = accountTransferDetails.toSavingsAccount();
+                toSavingsAccount = accountTransferDetails.getToSavingsAccount();
                 this.savingsAccountAssembler.setHelpers(toSavingsAccount);
             }
             LoanTransaction loanTransaction = null;
@@ -457,7 +457,7 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
     public void updateLoanTransaction(final Long loanTransactionId, final LoanTransaction newLoanTransaction) {
         final AccountTransferTransaction transferTransaction = this.accountTransferRepository.findByToLoanTransactionId(loanTransactionId);
         if (transferTransaction != null) {
-            transferTransaction.updateToLoanTransaction(newLoanTransaction);
+            transferTransaction.setToLoanTransaction(newLoanTransaction);
             this.accountTransferRepository.save(transferTransaction);
         }
     }

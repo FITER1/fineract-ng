@@ -90,7 +90,7 @@ public class CreditBureauLoanProductMappingWritePlatformServiceImpl implements C
 		final Long mappingid = command.longValueOfParameterNamed("creditbureauLoanProductMappingId");
 		final boolean is_active = command.booleanPrimitiveValueOfParameterNamed("is_active");
 		final CreditBureauLoanProductMapping cblpmapping = this.creditBureauLoanProductMappingRepository.getOne(mappingid);
-		cblpmapping.setIs_active(is_active);
+		cblpmapping.setActive(is_active);
 		this.creditBureauLoanProductMappingRepository.saveAndFlush(cblpmapping);
 		return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(cblpmapping.getId())
 				.build();

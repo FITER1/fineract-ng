@@ -18,18 +18,19 @@
  */
 package org.apache.fineract.accounting.producttoaccountmapping.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
+import lombok.*;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.portfolio.charge.domain.Charge;
 import org.apache.fineract.portfolio.paymenttype.domain.PaymentType;
 
+import javax.persistence.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "acc_product_mapping", uniqueConstraints = { @UniqueConstraint(columnNames = { "product_id", "product_type",
         "financial_account_type", "payment_type" }, name = "financial_action") })
@@ -61,10 +62,6 @@ public class ProductToGLAccountMapping extends AbstractPersistableCustom<Long> {
         return new ProductToGLAccountMapping(glAccount, productId, productType, financialAccountType);
     }
 
-    protected ProductToGLAccountMapping() {
-        //
-    }
-
     public ProductToGLAccountMapping(final GLAccount glAccount, final Long productId, final int productType, final int financialAccountType) {
         this(glAccount, productId, productType, financialAccountType, null, null);
     }
@@ -88,53 +85,4 @@ public class ProductToGLAccountMapping extends AbstractPersistableCustom<Long> {
         this.paymentType = paymentType;
         this.charge = charge;
     }
-
-    public GLAccount getGlAccount() {
-        return this.glAccount;
-    }
-
-    public void setGlAccount(final GLAccount glAccount) {
-        this.glAccount = glAccount;
-    }
-
-    public Long getProductId() {
-        return this.productId;
-    }
-
-    public void setProductId(final Long productId) {
-        this.productId = productId;
-    }
-
-    public int getProductType() {
-        return this.productType;
-    }
-
-    public void setProductType(final int productType) {
-        this.productType = productType;
-    }
-
-    public int getFinancialAccountType() {
-        return this.financialAccountType;
-    }
-
-    public void setFinancialAccountType(final int financialAccountType) {
-        this.financialAccountType = financialAccountType;
-    }
-
-    public PaymentType getPaymentType() {
-        return this.paymentType;
-    }
-
-    public void setPaymentType(final PaymentType paymentType) {
-        this.paymentType = paymentType;
-    }
-
-    public Charge getCharge() {
-        return this.charge;
-    }
-
-    public void setCharge(final Charge charge) {
-        this.charge = charge;
-    }
-
 }

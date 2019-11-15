@@ -116,16 +116,16 @@ public class StandingInstructionWritePlatformServiceImpl implements StandingInst
                 final AccountTransferDetails standingInstruction = this.standingInstructionAssembler
                         .assembleSavingsToSavingsTransfer(command);
                 this.accountTransferDetailRepository.save(standingInstruction);
-                standingInstructionId = standingInstruction.accountTransferStandingInstruction().getId();
+                standingInstructionId = standingInstruction.getAccountTransferStandingInstruction().getId();
             } else if (isSavingsToLoanAccountTransfer(fromAccountType, toAccountType)) {
                 final AccountTransferDetails standingInstruction = this.standingInstructionAssembler.assembleSavingsToLoanTransfer(command);
                 this.accountTransferDetailRepository.save(standingInstruction);
-                standingInstructionId = standingInstruction.accountTransferStandingInstruction().getId();
+                standingInstructionId = standingInstruction.getAccountTransferStandingInstruction().getId();
             } else if (isLoanToSavingsAccountTransfer(fromAccountType, toAccountType)) {
 
                 final AccountTransferDetails standingInstruction = this.standingInstructionAssembler.assembleLoanToSavingsTransfer(command);
                 this.accountTransferDetailRepository.save(standingInstruction);
-                standingInstructionId = standingInstruction.accountTransferStandingInstruction().getId();
+                standingInstructionId = standingInstruction.getAccountTransferStandingInstruction().getId();
 
             }
         } catch (final DataIntegrityViolationException dve) {

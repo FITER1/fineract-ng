@@ -180,7 +180,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             this.clientRepository.delete(client);
             this.clientRepository.flush();
             return new CommandProcessingResultBuilder() //
-                    .withOfficeId(client.officeId()) //
+                    .withOfficeId(client.getOffice().getId()) //
                     .withClientId(clientId) //
                     .withEntityId(clientId) //
                     .build();
@@ -429,7 +429,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     newStaff = this.staffRepository.findByOfficeHierarchyWithNotFoundDetection(newValue, clientForUpdate.getOffice()
                             .getHierarchy());
                 }
-                clientForUpdate.updateStaff(newStaff);
+                clientForUpdate.setStaff(newStaff);
             }
 
             if (changes.containsKey(ClientApiConstants.genderIdParamName)) {
@@ -439,7 +439,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                 if (newValue != null) {
                     gender = this.codeValueRepository.findOneByCodeNameAndIdWithNotFoundDetection(ClientApiConstants.GENDER, newValue);
                 }
-                clientForUpdate.updateGender(gender);
+                clientForUpdate.setGender(gender);
             }
 
             if (changes.containsKey(ClientApiConstants.savingsProductIdParamName)) {
@@ -451,7 +451,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     savingsProduct = this.savingsProductRepository.findById(savingsProductId).orElse(null);
                     if (savingsProduct == null) { throw new SavingsProductNotFoundException(savingsProductId); }
                 }
-                clientForUpdate.updateSavingsProduct(savingsProductId);
+                clientForUpdate.setSavingsProductId(savingsProductId);
             }
 
             if (changes.containsKey(ClientApiConstants.genderIdParamName)) {
@@ -460,7 +460,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                 if (newValue != null) {
                     newCodeVal = this.codeValueRepository.findOneByCodeNameAndIdWithNotFoundDetection(ClientApiConstants.GENDER, newValue);
                 }
-                clientForUpdate.updateGender(newCodeVal);
+                clientForUpdate.setGender(newCodeVal);
             }
 
             if (changes.containsKey(ClientApiConstants.clientTypeIdParamName)) {
@@ -470,7 +470,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     newCodeVal = this.codeValueRepository.findOneByCodeNameAndIdWithNotFoundDetection(ClientApiConstants.CLIENT_TYPE,
                             newValue);
                 }
-                clientForUpdate.updateClientType(newCodeVal);
+                clientForUpdate.setClientType(newCodeVal);
             }
 
             if (changes.containsKey(ClientApiConstants.clientClassificationIdParamName)) {
@@ -480,7 +480,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     newCodeVal = this.codeValueRepository.findOneByCodeNameAndIdWithNotFoundDetection(
                             ClientApiConstants.CLIENT_CLASSIFICATION, newValue);
                 }
-                clientForUpdate.updateClientClassification(newCodeVal);
+                clientForUpdate.setClientClassification(newCodeVal);
             }
 
             if (!changes.isEmpty()) {
@@ -522,7 +522,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     if (newValue != null) {
                         constitution = this.codeValueRepository.findOneByCodeNameAndIdWithNotFoundDetection(ClientApiConstants.CLIENT_NON_PERSON_CONSTITUTION, newValue);
                     }
-                    clientNonPersonForUpdate.updateConstitution(constitution);
+                    clientNonPersonForUpdate.setConstitution(constitution);
                 }
                 
                 if (clientNonPersonChanges.containsKey(ClientApiConstants.mainBusinessLineIdParamName)) {
@@ -532,7 +532,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     if (newValue != null) {
                         mainBusinessLine = this.codeValueRepository.findOneByCodeNameAndIdWithNotFoundDetection(ClientApiConstants.CLIENT_NON_PERSON_MAIN_BUSINESS_LINE, newValue);
                     }
-                    clientNonPersonForUpdate.updateMainBusinessLine(mainBusinessLine);
+                    clientNonPersonForUpdate.setMainBusinessLine(mainBusinessLine);
                 }
                 
                 if (!clientNonPersonChanges.isEmpty()) {
@@ -555,7 +555,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             }
             return new CommandProcessingResultBuilder() //
                     .withCommandId(command.commandId()) //
-                    .withOfficeId(clientForUpdate.officeId()) //
+                    .withOfficeId(clientForUpdate.getOffice().getId()) //
                     .withClientId(clientId) //
                     .withEntityId(clientId) //
                     .with(changes) //
@@ -592,7 +592,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     constructEntityMap(BUSINESS_ENTITY.CLIENT, client));
             return new CommandProcessingResultBuilder() //
                     .withCommandId(command.commandId()) //
-                    .withOfficeId(client.officeId()) //
+                    .withOfficeId(client.getOffice().getId()) //
                     .withClientId(clientId) //
                     .withEntityId(clientId) //
                     .withSavingsId(result.getSavingsId())//
@@ -606,14 +606,14 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 
     private CommandProcessingResult openSavingsAccount(final Client client, final DateTimeFormatter fmt) {
         CommandProcessingResult commandProcessingResult = CommandProcessingResult.empty();
-        if (client.isActive() && client.savingsProductId() != null) {
-            SavingsAccountDataDTO savingsAccountDataDTO = new SavingsAccountDataDTO(client, null, client.savingsProductId(),
-                    client.getActivationLocalDate(), client.activatedBy(), fmt);
+        if (client.isActive() && client.getSavingsProductId() != null) {
+            SavingsAccountDataDTO savingsAccountDataDTO = new SavingsAccountDataDTO(client, null, client.getSavingsProductId(),
+                    client.getActivationLocalDate(), client.getActivatedBy(), fmt);
             commandProcessingResult = this.savingsApplicationProcessWritePlatformService.createActiveApplication(savingsAccountDataDTO);
             if (commandProcessingResult.getSavingsId() != null) {
                 this.savingsRepositoryWrapper.findOneWithNotFoundDetection(commandProcessingResult.getSavingsId());
-                client.updateSavingsAccount(commandProcessingResult.getSavingsId());
-                client.updateSavingsProduct(null);
+                client.setSavingsAccountId(commandProcessingResult.getSavingsId());
+                client.setSavingsProductId(null);
             }
         }
         return commandProcessingResult;
@@ -641,7 +641,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
         presentStaffId = presentStaff.getId();
         final String staffIdParamName = ClientApiConstants.staffIdParamName;
         if (!command.isChangeInLongParameterNamed(staffIdParamName, presentStaffId)) {
-            clientForUpdate.unassignStaff();
+            clientForUpdate.setStaff(null);
         }
         this.clientRepository.saveAndFlush(clientForUpdate);
 
@@ -649,7 +649,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 
         return new CommandProcessingResultBuilder() //
                 .withCommandId(command.commandId()) //
-                .withOfficeId(clientForUpdate.officeId()) //
+                .withOfficeId(clientForUpdate.getOffice().getId()) //
                 .withEntityId(clientForUpdate.getId()) //
                 .withClientId(clientId) //
                 .with(actualChanges) //
@@ -675,7 +675,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
              * loan in a history table, should we do the same for a client?
              * Especially useful when the change happens due to a transfer etc
              **/
-            clientForUpdate.assignStaff(staff);
+            clientForUpdate.setStaff(staff);
         }
 
         this.clientRepository.saveAndFlush(clientForUpdate);
@@ -683,7 +683,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
         actualChanges.put(ClientApiConstants.staffIdParamName, staffId);
         return new CommandProcessingResultBuilder() //
                 .withCommandId(command.commandId()) //
-                .withOfficeId(clientForUpdate.officeId()) //
+                .withOfficeId(clientForUpdate.getOffice().getId()) //
                 .withEntityId(clientForUpdate.getId()) //
                 .withClientId(clientId) //
                 .with(actualChanges) //
@@ -778,7 +778,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                 throw new InvalidClientSavingProductException("saving.account", "must.belongs.to.client", defaultUserMessage, savingsId,
                         clientForUpdate.getId());
             }
-            clientForUpdate.updateSavingsAccount(savingsId);
+            clientForUpdate.setSavingsAccountId(savingsId);
         }
 
         this.clientRepository.saveAndFlush(clientForUpdate);
@@ -787,7 +787,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 
         return new CommandProcessingResultBuilder() //
                 .withCommandId(command.commandId()) //
-                .withOfficeId(clientForUpdate.officeId()) //
+                .withOfficeId(clientForUpdate.getOffice().getId()) //
                 .withEntityId(clientForUpdate.getId()) //
                 .withClientId(clientId) //
                 .with(actualChanges) //

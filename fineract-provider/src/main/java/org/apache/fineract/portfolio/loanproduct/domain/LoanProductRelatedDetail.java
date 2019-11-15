@@ -289,7 +289,7 @@ public class LoanProductRelatedDetail implements LoanProductMinimumRepaymentSche
 
         String currencyCode = this.currency.getCode();
         Integer digitsAfterDecimal = this.currency.getDigitsAfterDecimal();
-        Integer inMultiplesOf = this.currency.getCurrencyInMultiplesOf();
+        Integer inMultiplesOf = this.currency.getInMultiplesOf();
 
         final String digitsAfterDecimalParamName = "digitsAfterDecimal";
         if (command.isChangeInIntegerParameterNamed(digitsAfterDecimalParamName, digitsAfterDecimal)) {

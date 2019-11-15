@@ -77,11 +77,11 @@ public class OrganisationCreditBureauWritePlatflormServiceImpl
 
 		final long creditbureauID = command.longValueOfParameterNamed("creditBureauId");
 		
-		final boolean is_active = command.booleanPrimitiveValueOfParameterNamed("is_active");
+		final boolean active = command.booleanPrimitiveValueOfParameterNamed("is_active");
 
 		final OrganisationCreditBureau orgcb = organisationCreditBureauRepository.getOne(creditbureauID);
 
-		orgcb.setIsActive(is_active);
+		orgcb.setActive(active);
 
 		organisationCreditBureauRepository.saveAndFlush(orgcb);
 

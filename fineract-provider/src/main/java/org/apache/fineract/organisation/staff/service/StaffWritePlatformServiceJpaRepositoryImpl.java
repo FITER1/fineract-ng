@@ -109,7 +109,7 @@ public class StaffWritePlatformServiceJpaRepositoryImpl implements StaffWritePla
             }
 
             return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(staffId)
-                    .withOfficeId(staffForUpdate.officeId()).with(changesOnly).build();
+                    .withOfficeId(staffForUpdate.getOffice().getId()).with(changesOnly).build();
         } catch (final DataIntegrityViolationException dve) {
             handleStaffDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
             return CommandProcessingResult.empty();

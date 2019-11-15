@@ -66,7 +66,7 @@ public class ClientTransactionWritePlatformServiceJpaRepositoryImpl implements C
         if (clientTransaction.isReversed()) { throw new ClientTransactionCannotBeUndoneException(clientId, transactionId); }
 
         // mark transaction as reversed
-        clientTransaction.reverse();
+        clientTransaction.setReversed(true);
 
         // revert any charges paid back to their original state
         if (clientTransaction.isPayChargeTransaction() || clientTransaction.isWaiveChargeTransaction()) {
@@ -90,7 +90,7 @@ public class ClientTransactionWritePlatformServiceJpaRepositoryImpl implements C
 
         return new CommandProcessingResultBuilder() //
                 .withEntityId(transactionId) //
-                .withOfficeId(client.officeId()) //
+                .withOfficeId(client.getOffice().getId()) //
                 .withClientId(clientId) //
                 .build();
     }

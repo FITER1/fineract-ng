@@ -153,7 +153,7 @@ public class CalendarWritePlatformServiceJpaRepositoryImpl implements CalendarWr
 
         this.calendarRepository.save(newCalendar);
 
-        final CalendarInstance newCalendarInstance = CalendarInstance.from(newCalendar, entityId, entityTypeId);
+        final CalendarInstance newCalendarInstance = new CalendarInstance(newCalendar, entityId, entityTypeId);
         this.calendarInstanceRepository.save(newCalendarInstance);
 
         return new CommandProcessingResultBuilder() //
@@ -292,7 +292,7 @@ public class CalendarWritePlatformServiceJpaRepositoryImpl implements CalendarWr
             }
             if (null != newMeetingDate) {
                 final Date endDate = presentMeetingDate.minusDays(1).toDate();
-                calendarHistory.updateEndDate(endDate);
+                calendarHistory.setEndDate(endDate);
             }
             this.calendarHistoryRepository.save(calendarHistory);
             Set<CalendarHistory> history = calendarForUpdate.getCalendarHistory();

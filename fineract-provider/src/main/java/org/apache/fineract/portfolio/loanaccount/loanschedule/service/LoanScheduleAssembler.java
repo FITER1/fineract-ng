@@ -490,7 +490,7 @@ public class LoanScheduleAssembler {
         final String title = "loan_recalculation_detail";
         final Calendar calendar = Calendar.createRepeatingCalendar(title, calendarStartDate, CalendarType.COLLECTION.getValue(),
                 calendarFrequencyType, frequency, repeatsOnDay, recalculationFrequencyNthDay);
-        return CalendarInstance.from(calendar, null, CalendarEntityType.LOAN_RECALCULATION_REST_DETAIL.getValue());
+        return new CalendarInstance(calendar, null, CalendarEntityType.LOAN_RECALCULATION_REST_DETAIL.getValue());
     }
 
     private Calendar createLoanCalendar(final LocalDate calendarStartDate, final Integer frequency,

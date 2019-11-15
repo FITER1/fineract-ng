@@ -22,10 +22,16 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_document")
 public class Document extends AbstractPersistableCustom<Long> {
@@ -57,24 +63,19 @@ public class Document extends AbstractPersistableCustom<Long> {
     @Column(name = "storage_type_enum")
     private Integer storageType;
 
-    public Document() {}
-
     public static Document createNew(final String parentEntityType, final Long parentEntityId, final String name, final String fileName,
             final Long size, final String type, final String description, final String location, final StorageType storageType) {
-        return new Document(parentEntityType, parentEntityId, name, fileName, size, type, description, location, storageType);
-    }
-
-    private Document(final String parentEntityType, final Long parentEntityId, final String name, final String fileName, final Long size,
-            final String type, final String description, final String location, final StorageType storageType) {
-        this.parentEntityType = StringUtils.defaultIfEmpty(parentEntityType, null);
-        this.parentEntityId = parentEntityId;
-        this.name = StringUtils.defaultIfEmpty(name, null);
-        this.fileName = StringUtils.defaultIfEmpty(fileName, null);
-        this.size = size;
-        this.type = StringUtils.defaultIfEmpty(type, null);
-        this.description = StringUtils.defaultIfEmpty(description, null);
-        this.location = StringUtils.defaultIfEmpty(location, null);
-        this.storageType = storageType.getValue();
+        return Document.builder()
+            .parentEntityId(parentEntityId)
+            .parentEntityType(parentEntityType)
+            .name(name)
+            .fileName(fileName)
+            .size(size)
+            .type(type)
+            .description(description)
+            .location(location)
+            .storageType(storageType.getValue())
+            .build();
     }
 
     public void update(final DocumentCommand command) {
@@ -96,70 +97,6 @@ public class Document extends AbstractPersistableCustom<Long> {
         if (command.isSizeChanged()) {
             this.size = command.getSize();
         }
-    }
-
-    public String getParentEntityType() {
-        return this.parentEntityType;
-    }
-
-    public void setParentEntityType(final String parentEntityType) {
-        this.parentEntityType = parentEntityType;
-    }
-
-    public Long getParentEntityId() {
-        return this.parentEntityId;
-    }
-
-    public void setParentEntityId(final Long parentEntityId) {
-        this.parentEntityId = parentEntityId;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public String getFileName() {
-        return this.fileName;
-    }
-
-    public void setFileName(final String fileName) {
-        this.fileName = fileName;
-    }
-
-    public Long getSize() {
-        return this.size;
-    }
-
-    public void setSize(final Long size) {
-        this.size = size;
-    }
-
-    public String getType() {
-        return this.type;
-    }
-
-    public void setType(final String type) {
-        this.type = type;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(final String description) {
-        this.description = description;
-    }
-
-    public String getLocation() {
-        return this.location;
-    }
-
-    public void setLocation(final String location) {
-        this.location = location;
     }
 
     public StorageType storageType() {

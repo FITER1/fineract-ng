@@ -21,6 +21,7 @@ package org.apache.fineract.infrastructure.cache.domain;
 import java.util.HashMap;
 import java.util.Map;
 
+@Deprecated
 public enum CacheType {
 
     INVALID(0, "cacheType.invalid"), //

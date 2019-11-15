@@ -254,7 +254,7 @@ public class HookWritePlatformServiceJpaRepositoryImpl
             final Map<String, String> hookConfig, final HookTemplate template) {
 
         final Set<HookConfiguration> configuration = new HashSet<>();
-        final Set<Schema> fields = template.getSchema();
+        final Set<Schema> fields = template.getFields();
 
         for (final Entry<String, String> configEntry : hookConfig.entrySet()) {
             for (final Schema field : fields) {
@@ -350,7 +350,7 @@ public class HookWritePlatformServiceJpaRepositoryImpl
                     errorMessage);
         }
 
-        final Set<Schema> fields = template.getSchema();
+        final Set<Schema> fields = template.getFields();
         for (final Schema field : fields) {
             if (!field.isOptional()) {
                 boolean found = false;

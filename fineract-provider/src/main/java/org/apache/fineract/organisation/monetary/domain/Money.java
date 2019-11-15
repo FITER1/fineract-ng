@@ -18,6 +18,8 @@
  */
 package org.apache.fineract.organisation.monetary.domain;
 
+import lombok.*;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Iterator;
@@ -25,6 +27,11 @@ import java.util.Iterator;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Embeddable
 public class Money implements Comparable<Money> {
 
@@ -61,18 +68,11 @@ public class Money implements Comparable<Money> {
 
     public static Money of(final MonetaryCurrency currency, final BigDecimal newAmount) {
         return new Money(currency.getCode(), currency.getDigitsAfterDecimal(), defaultToZeroIfNull(newAmount),
-                currency.getCurrencyInMultiplesOf());
+                currency.getInMultiplesOf());
     }
 
     public static Money zero(final MonetaryCurrency currency) {
-        return new Money(currency.getCode(), currency.getDigitsAfterDecimal(), BigDecimal.ZERO, currency.getCurrencyInMultiplesOf());
-    }
-
-    protected Money() {
-        this.currencyCode = null;
-        this.currencyDigitsAfterDecimal = 0;
-        this.inMultiplesOf = 0;
-        this.amount = null;
+        return new Money(currency.getCode(), currency.getDigitsAfterDecimal(), BigDecimal.ZERO, currency.getInMultiplesOf());
     }
 
     private Money(final String currencyCode, final int digitsAfterDecimal, final BigDecimal amount, final Integer inMultiplesOf) {
@@ -241,11 +241,13 @@ public class Money implements Comparable<Money> {
         final BigDecimal newAmount = (this.amount.multiply(percentage)).divide(BigDecimal.valueOf(100), roundingMode);
         return Money.of(monetaryCurrency(), newAmount);
     }
+
     @Override
     public int compareTo(final Money other) {
         final Money otherMoney = other;
-        if (this.currencyCode
-                .equals(otherMoney.currencyCode) == false) { throw new UnsupportedOperationException("currencies arent different"); }
+        if (this.currencyCode.equals(otherMoney.currencyCode)) {
+            throw new UnsupportedOperationException("currencies arent different");
+        }
         return this.amount.compareTo(otherMoney.amount);
     }
 
@@ -285,16 +287,8 @@ public class Money implements Comparable<Money> {
         return this.currencyCode;
     }
 
-    public int getCurrencyDigitsAfterDecimal() {
-        return this.currencyDigitsAfterDecimal;
-    }
-
     public Integer getCurrencyInMultiplesOf() {
         return this.inMultiplesOf;
-    }
-
-    public BigDecimal getAmount() {
-        return this.amount;
     }
 
     public BigDecimal getAmountDefaultedToNullIfZero() {
@@ -307,11 +301,6 @@ public class Money implements Comparable<Money> {
             result = null;
         }
         return result;
-    }
-
-    @Override
-    public String toString() {
-        return new StringBuilder().append(this.currencyCode).append(' ').append(this.amount.toPlainString()).toString();
     }
 
     public Money negated() {

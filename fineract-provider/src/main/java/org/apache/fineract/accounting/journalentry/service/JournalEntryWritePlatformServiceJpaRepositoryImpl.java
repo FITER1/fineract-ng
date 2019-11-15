@@ -410,7 +410,7 @@ public class JournalEntryWritePlatformServiceJpaRepositoryImpl implements Journa
 
     @Override
     public String createProvisioningJournalEntries(ProvisioningEntry provisioningEntry) {
-        Collection<LoanProductProvisioningEntry> provisioningEntries = provisioningEntry.getLoanProductProvisioningEntries();
+        Collection<LoanProductProvisioningEntry> provisioningEntries = provisioningEntry.getProvisioningEntries();
         Map<OfficeCurrencyKey, List<LoanProductProvisioningEntry>> officeMap = new HashMap<>();
 
         for (LoanProductProvisioningEntry entry : provisioningEntries) {

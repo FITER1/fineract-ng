@@ -18,16 +18,18 @@
  */
 package org.apache.fineract.portfolio.account.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import lombok.*;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+import javax.persistence.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_portfolio_account_associations")
 public class AccountAssociations extends AbstractPersistableCustom<Long> {
@@ -54,33 +56,23 @@ public class AccountAssociations extends AbstractPersistableCustom<Long> {
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 
-    protected AccountAssociations() {}
-
-    private AccountAssociations(final Loan loanAccount, final SavingsAccount savingsAccount, final Loan linkedLoanAccount,
-            final SavingsAccount linkedSavingsAccount, final Integer associationType, boolean active) {
-        this.loanAccount = loanAccount;
-        this.savingsAccount = savingsAccount;
-        this.linkedLoanAccount = linkedLoanAccount;
-        this.linkedSavingsAccount = linkedSavingsAccount;
-        this.associationType = associationType;
-        this.active = active;
-    }
-
     public static AccountAssociations associateSavingsAccount(final Loan loan, final SavingsAccount savingsAccount,
             final Integer associationType, boolean isActive) {
-        return new AccountAssociations(loan, null, null, savingsAccount, associationType, isActive);
+        return AccountAssociations.builder()
+            .loanAccount(loan)
+            .linkedSavingsAccount(savingsAccount)
+            .associationType(associationType)
+            .active(isActive)
+            .build();
     }
 
     public static AccountAssociations associateSavingsAccount(final SavingsAccount savingsAccount,
             final SavingsAccount linkedSavingsAccount, final Integer associationType, boolean isActive) {
-        return new AccountAssociations(null, savingsAccount, null, linkedSavingsAccount, associationType, isActive);
-    }
-
-    public SavingsAccount linkedSavingsAccount() {
-        return this.linkedSavingsAccount;
-    }
-
-    public void updateLinkedSavingsAccount(final SavingsAccount savingsAccount) {
-        this.linkedSavingsAccount = savingsAccount;
+        return AccountAssociations.builder()
+            .savingsAccount(savingsAccount)
+            .linkedSavingsAccount(linkedSavingsAccount)
+            .associationType(associationType)
+            .active(isActive)
+            .build();
     }
 }

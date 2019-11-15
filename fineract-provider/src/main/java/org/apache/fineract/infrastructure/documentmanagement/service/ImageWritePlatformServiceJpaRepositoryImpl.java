@@ -157,7 +157,7 @@ public class ImageWritePlatformServiceJpaRepositoryImpl implements ImageWritePla
 
     private Image createImage(Image image, final String imageLocation, final StorageType storageType) {
         if (image == null) {
-            image = new Image(imageLocation, storageType);
+            image = Image.builder().location(imageLocation).storageType(storageType.getValue()).build();
         } else {
             image.setLocation(imageLocation);
             image.setStorageType(storageType.getValue());

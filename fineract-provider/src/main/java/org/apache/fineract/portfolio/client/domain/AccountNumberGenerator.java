@@ -52,9 +52,9 @@ public class AccountNumberGenerator {
         Map<String, String> propertyMap = new HashMap<>();
         propertyMap.put(ID, client.getId().toString());
         propertyMap.put(OFFICE_NAME, client.getOffice().getName());
-        CodeValue clientType = client.clientType();
+        CodeValue clientType = client.getClientType();
         if (clientType != null) {
-            propertyMap.put(CLIENT_TYPE, clientType.label());
+            propertyMap.put(CLIENT_TYPE, clientType.getLabel());
         }
         return generateAccountNumber(propertyMap, accountNumberFormat);
     }

@@ -615,7 +615,7 @@ public class AppUser extends AbstractPersistableCustom<Long> implements Platform
     public String getStaffDisplayName() {
         String staffDisplayName = null;
         if (this.staff != null) {
-            staffDisplayName = this.staff.displayName();
+            staffDisplayName = this.staff.getDisplayName();
         }
         return staffDisplayName;
     }

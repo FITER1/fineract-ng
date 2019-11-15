@@ -18,14 +18,19 @@
  */
 package org.apache.fineract.mix.domain;
 
+import lombok.*;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "mix_taxonomy_mapping")
 public class MixTaxonomyMapping extends AbstractPersistableCustom<Long> {
@@ -39,29 +44,21 @@ public class MixTaxonomyMapping extends AbstractPersistableCustom<Long> {
     @Column(name = "currency")
     private String currency;
 
-    protected MixTaxonomyMapping() {
-        // default
-    }
-
-    private MixTaxonomyMapping(final String identifier, final String config, final String currency) {
-        this.identifier = StringUtils.defaultIfEmpty(identifier, null);
-        this.config = StringUtils.defaultIfEmpty(config, null);
-        this.currency = StringUtils.defaultIfEmpty(currency, null);
-    }
-
     public static MixTaxonomyMapping fromJson(final JsonCommand command) {
         final String identifier = command.stringValueOfParameterNamed("identifier");
         final String config = command.stringValueOfParameterNamed("config");
         final String currency = command.stringValueOfParameterNamed("currency");
-        return new MixTaxonomyMapping(identifier, config, currency);
+
+        return MixTaxonomyMapping.builder()
+            .identifier(identifier)
+            .config(config)
+            .currency(currency)
+            .build();
     }
 
     public void update(final JsonCommand command) {
-
         this.identifier = command.stringValueOfParameterNamed("identifier");
         this.config = command.stringValueOfParameterNamed("config");
         this.currency = command.stringValueOfParameterNamed("currency");
-
     }
-
 }

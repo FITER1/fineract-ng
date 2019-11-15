@@ -65,7 +65,7 @@ public class BulkImportEventListener implements ApplicationListener<BulkImportEv
 
         ImportHandler importHandler = null;
         final ImportDocument importDocument = this.importRepository.findById(event.getImportId()).orElse(null);
-        final GlobalEntityType entityType = GlobalEntityType.fromInt(importDocument.getEntityType());
+        final GlobalEntityType entityType = GlobalEntityType.fromInt(importDocument.getEntity_type());
 
         switch(entityType) {
             case OFFICES :

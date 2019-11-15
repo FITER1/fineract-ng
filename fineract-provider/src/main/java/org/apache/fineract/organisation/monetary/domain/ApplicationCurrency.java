@@ -18,14 +18,20 @@
  */
 package org.apache.fineract.organisation.monetary.domain;
 
+import lombok.*;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+import org.apache.fineract.organisation.monetary.data.CurrencyData;
+import org.apache.fineract.organisation.office.domain.OrganisationCurrency;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.apache.fineract.organisation.monetary.data.CurrencyData;
-import org.apache.fineract.organisation.office.domain.OrganisationCurrency;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_currency")
 public class ApplicationCurrency extends AbstractPersistableCustom<Long> {
@@ -48,52 +54,12 @@ public class ApplicationCurrency extends AbstractPersistableCustom<Long> {
     @Column(name = "display_symbol", nullable = true, length = 10)
     private String displaySymbol;
 
-    protected ApplicationCurrency() {
-        this.code = null;
-        this.name = null;
-        this.decimalPlaces = null;
-        this.inMultiplesOf = null;
-        this.nameCode = null;
-        this.displaySymbol = null;
-    }
-
     public static ApplicationCurrency from(final ApplicationCurrency currency, final int decimalPlaces, final Integer inMultiplesOf) {
-        return new ApplicationCurrency(currency.code, currency.name, decimalPlaces, inMultiplesOf, currency.nameCode,
-                currency.displaySymbol);
-    }
-
-    private ApplicationCurrency(final String code, final String name, final int decimalPlaces, final Integer inMultiplesOf,
-            final String nameCode, final String displaySymbol) {
-        this.code = code;
-        this.name = name;
-        this.decimalPlaces = decimalPlaces;
-        this.inMultiplesOf = inMultiplesOf;
-        this.nameCode = nameCode;
-        this.displaySymbol = displaySymbol;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public Integer getDecimalPlaces() {
-        return this.decimalPlaces;
-    }
-
-    public Integer getCurrencyInMultiplesOf() {
-        return this.inMultiplesOf;
-    }
-
-    public String getNameCode() {
-        return this.nameCode;
-    }
-
-    public String getDisplaySymbol() {
-        return this.displaySymbol;
+        return ApplicationCurrency.builder()
+            .code(currency.code)
+            .decimalPlaces(decimalPlaces)
+            .inMultiplesOf(inMultiplesOf)
+            .build();
     }
 
     public CurrencyData toData() {

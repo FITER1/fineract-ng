@@ -20,13 +20,18 @@
 package org.apache.fineract.accounting.glaccount.domain;
 
 
+import lombok.*;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_trial_balance")
 public class TrialBalance extends AbstractPersistableCustom<Long> {
@@ -51,58 +56,13 @@ public class TrialBalance extends AbstractPersistableCustom<Long> {
     @Column(name = "closing_balance", nullable = false)
     private BigDecimal closingBalance;
 
-    public static TrialBalance getInstance(final Long officeId, final Long glAccountId,
-                                           final BigDecimal amount, final Date entryDate, final Date transactionDate) {
-        return new TrialBalance(officeId, glAccountId, amount, entryDate, transactionDate);
+    public static TrialBalance getInstance(final Long officeId, final Long glAccountId, final BigDecimal amount, final Date entryDate, final Date transactionDate) {
+        return TrialBalance.builder()
+            .officeId(officeId)
+            .glAccountId(glAccountId)
+            .amount(amount)
+            .entryDate(entryDate)
+            .transactionDate(transactionDate)
+            .build();
     }
-
-    private TrialBalance(final Long officeId, final Long glAccountId,
-                         final BigDecimal amount, final Date entryDate, final Date transactionDate) {
-        this.officeId = officeId;
-        this.glAccountId = glAccountId;
-        this.amount = amount;
-        this.entryDate = entryDate;
-        this.transactionDate = transactionDate;
-    }
-
-    protected TrialBalance() {
-
-    }
-
-    public Long getOfficeId() {
-        return officeId;
-    }
-
-    public Date getTransactionDate() {
-        return transactionDate;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setClosingBalance(final BigDecimal closingBalance) {
-        this.closingBalance = closingBalance;
-    }
-
-    public Date getEntryDate() {
-        return entryDate;
-    }
-
-    public Long getGlAccountId() {
-        return glAccountId;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!obj.getClass().equals(getClass())) return false;
-        TrialBalance trialBalance = (TrialBalance) obj;
-        return trialBalance.getOfficeId().equals(this.getOfficeId())
-                && trialBalance.getGlAccountId().equals(this.getGlAccountId())
-                && trialBalance.getEntryDate().equals(this.getEntryDate())
-                && trialBalance.getTransactionDate().equals(this.getTransactionDate());
-    }
-
-
-
 }

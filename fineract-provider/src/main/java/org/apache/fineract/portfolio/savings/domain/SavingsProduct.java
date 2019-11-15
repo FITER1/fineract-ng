@@ -399,7 +399,7 @@ public class SavingsProduct extends AbstractPersistableCustom<Long> {
             actualChanges.put(digitsAfterDecimalParamName, newValue);
             actualChanges.put(localeParamName, localeAsInput);
             digitsAfterDecimal = newValue;
-            this.currency = new MonetaryCurrency(this.currency.getCode(), digitsAfterDecimal, this.currency.getCurrencyInMultiplesOf());
+            this.currency = new MonetaryCurrency(this.currency.getCode(), digitsAfterDecimal, this.currency.getInMultiplesOf());
         }
 
         String currencyCode = this.currency.getCode();
@@ -408,10 +408,10 @@ public class SavingsProduct extends AbstractPersistableCustom<Long> {
             actualChanges.put(currencyCodeParamName, newValue);
             currencyCode = newValue;
             this.currency = new MonetaryCurrency(currencyCode, this.currency.getDigitsAfterDecimal(),
-                    this.currency.getCurrencyInMultiplesOf());
+                    this.currency.getInMultiplesOf());
         }
 
-        Integer inMultiplesOf = this.currency.getCurrencyInMultiplesOf();
+        Integer inMultiplesOf = this.currency.getInMultiplesOf();
         if (command.isChangeInIntegerParameterNamed(inMultiplesOfParamName, inMultiplesOf)) {
             final Integer newValue = command.integerValueOfParameterNamed(inMultiplesOfParamName);
             actualChanges.put(inMultiplesOfParamName, newValue);

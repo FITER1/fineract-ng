@@ -93,7 +93,7 @@ public class ImageReadPlatformServiceImpl implements ImageReadPlatformService {
                 displayName = ((Client) owner).getDisplayName();
             } else if (ENTITY_TYPE_FOR_IMAGES.STAFF.toString().equalsIgnoreCase(entityType)) {
                 owner = this.staffRepositoryWrapper.findOneWithNotFoundDetection(entityId);
-                displayName = ((Staff) owner).displayName();
+                displayName = ((Staff) owner).getDisplayName();
             }
             final ImageMapper imageMapper = new ImageMapper(displayName);
 

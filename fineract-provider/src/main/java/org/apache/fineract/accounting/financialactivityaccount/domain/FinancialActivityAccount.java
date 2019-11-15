@@ -18,16 +18,17 @@
  */
 package org.apache.fineract.accounting.financialactivityaccount.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import lombok.*;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+import javax.persistence.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "acc_gl_financial_activity_account")
 public class FinancialActivityAccount extends AbstractPersistableCustom<Long> {
@@ -40,24 +41,10 @@ public class FinancialActivityAccount extends AbstractPersistableCustom<Long> {
     private Integer financialActivityType;
 
     public static FinancialActivityAccount createNew(final GLAccount glAccount, final Integer financialAccountType) {
-        return new FinancialActivityAccount(glAccount, financialAccountType);
-    }
-
-    protected FinancialActivityAccount() {
-        //
-    }
-
-    private FinancialActivityAccount(final GLAccount glAccount, final int financialAccountType) {
-        this.glAccount = glAccount;
-        this.financialActivityType = financialAccountType;
-    }
-
-    public GLAccount getGlAccount() {
-        return this.glAccount;
-    }
-
-    public Integer getFinancialActivityType() {
-        return this.financialActivityType;
+        return FinancialActivityAccount.builder()
+            .glAccount(glAccount)
+            .financialActivityType(financialAccountType)
+            .build();
     }
 
     public void updateGlAccount(final GLAccount glAccount) {

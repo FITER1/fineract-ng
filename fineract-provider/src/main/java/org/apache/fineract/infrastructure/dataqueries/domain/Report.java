@@ -18,32 +18,24 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.domain;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
+import com.google.gson.JsonArray;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
-import com.google.gson.JsonArray;
+import javax.persistence.*;
+import java.util.*;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "stretchy_report", uniqueConstraints = { @UniqueConstraint(columnNames = { "report_name" }, name = "unq_report_name") })
 public final class Report extends AbstractPersistableCustom<Long> {
@@ -80,7 +72,6 @@ public final class Report extends AbstractPersistableCustom<Long> {
     private boolean isSelfServiceUserReport;
 
     public static Report fromJson(final JsonCommand command, final Collection<String> reportTypes) {
-
         String reportName = null;
         String reportType = null;
         String reportSubType = null;
@@ -112,10 +103,6 @@ public final class Report extends AbstractPersistableCustom<Long> {
         }
 
         return new Report(reportName, reportType, reportSubType, reportCategory, description, useReport, reportSql, reportTypes);
-    }
-
-    protected Report() {
-        //
     }
 
     public Report(final String reportName, final String reportType, final String reportSubType, final String reportCategory,
@@ -189,7 +176,7 @@ public final class Report extends AbstractPersistableCustom<Long> {
         validate(reportTypes);
 
         if (!actualChanges.isEmpty()) {
-            if (isCoreReport()) {
+            if (this.coreReport) {
                 for (final String key : actualChanges.keySet()) {
                     if (!(key.equals("useReport"))) { throw new PlatformDataIntegrityException(
                             "error.msg.only.use.report.can.be.updated.for.core.report",
@@ -199,21 +186,6 @@ public final class Report extends AbstractPersistableCustom<Long> {
         }
 
         return actualChanges;
-    }
-
-    public boolean isCoreReport() {
-        return this.coreReport;
-    }
-
-    public ReportParameterUsage findReportParameterById(final Long reportParameterId) {
-        ReportParameterUsage reportParameterUsage = null;
-        for (final ReportParameterUsage rpu : this.reportParameterUsages) {
-            if (rpu.hasIdOf(reportParameterId)) {
-                reportParameterUsage = rpu;
-                break;
-            }
-        }
-        return reportParameterUsage;
     }
 
     private void validate(final Collection<String> reportTypes) {
@@ -256,10 +228,6 @@ public final class Report extends AbstractPersistableCustom<Long> {
         if (!dataValidationErrors.isEmpty()) { throw new PlatformApiDataValidationException(dataValidationErrors); }
     }
 
-    public String getReportName() {
-        return this.reportName;
-    }
-
     public boolean update(final Set<ReportParameterUsage> newReportParameterUsages) {
         if (newReportParameterUsages == null) { return false; }
 
@@ -274,14 +242,6 @@ public final class Report extends AbstractPersistableCustom<Long> {
     }
 
     private boolean changeInReportParameters(final Set<ReportParameterUsage> newReportParameterUsages) {
-
-        if (!(this.reportParameterUsages.equals(newReportParameterUsages))) { return true; }
-
-        return false;
+        return !(this.reportParameterUsages.equals(newReportParameterUsages));
     }
-	
-	public Set<ReportParameterUsage> getReportParameterUsages() {
-		return this.reportParameterUsages;
-	}
-
 }

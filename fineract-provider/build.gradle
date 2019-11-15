@@ -21,7 +21,7 @@ apply plugin: "distribution"
 apply plugin: "com.palantir.docker"
 apply plugin: "com.gorylenko.gradle-git-properties"
 apply plugin: "openjpa"
-apply plugin: "com.ewerk.gradle.plugins.querydsl"
+// apply plugin: "com.ewerk.gradle.plugins.querydsl"
 
 description = "Fineract"
 
@@ -59,9 +59,11 @@ querydsl {
     */
 }
 
+/*
 compileQuerydsl {
     options.annotationProcessorPath = configurations.querydsl
 }
+*/
 
 sourceSets {
     main {

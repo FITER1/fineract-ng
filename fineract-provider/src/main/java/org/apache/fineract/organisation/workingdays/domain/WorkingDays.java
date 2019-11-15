@@ -18,17 +18,22 @@
  */
 package org.apache.fineract.organisation.workingdays.domain;
 
+import lombok.*;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.organisation.workingdays.api.WorkingDaysApiConstants;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+import org.apache.fineract.organisation.workingdays.api.WorkingDaysApiConstants;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_working_days")
 public class WorkingDays extends AbstractPersistableCustom<Long> {
@@ -45,41 +50,6 @@ public class WorkingDays extends AbstractPersistableCustom<Long> {
     @Column(name = "extend_term_holiday_repayment", nullable = false)
     private Boolean extendTermForRepaymentsOnHolidays;
     
-    protected WorkingDays() {
-
-    }
-
-    protected WorkingDays(final String recurrence, final Integer repaymentReschedulingType, final Boolean extendTermForDailyRepayments, final Boolean extendTermForRepaymentsOnHolidays) {
-        this.recurrence = recurrence;
-        this.repaymentReschedulingType = repaymentReschedulingType;
-        this.extendTermForDailyRepayments = extendTermForDailyRepayments;
-        this.extendTermForRepaymentsOnHolidays = extendTermForRepaymentsOnHolidays;
-    }
-
-    /**
-     * @return the recurrence
-     */
-    public String getRecurrence() {
-        return this.recurrence;
-    }
-
-    /**
-     * @return the repaymentReschedulingType
-     */
-    public Integer getRepaymentReschedulingType() {
-        return this.repaymentReschedulingType;
-    }
-
-    public void setRepaymentReschedulingType(Integer repaymentReschedulingType) {
-        this.repaymentReschedulingType = repaymentReschedulingType;
-    }
-    
-    public Boolean getExtendTermForDailyRepayments(){
-        return this.extendTermForDailyRepayments;
-    }
-
-    public Boolean getExtendTermForRepaymentsOnHolidays() { return this.extendTermForRepaymentsOnHolidays; }
-
     public Map<String, Object> update(final JsonCommand command) {
         final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
 
@@ -111,5 +81,4 @@ public class WorkingDays extends AbstractPersistableCustom<Long> {
 
         return actualChanges;
     }
-
 }

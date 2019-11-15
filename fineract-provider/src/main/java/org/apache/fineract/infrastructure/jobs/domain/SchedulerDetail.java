@@ -18,12 +18,18 @@
  */
 package org.apache.fineract.infrastructure.jobs.domain;
 
+import lombok.*;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "scheduler_detail")
 public class SchedulerDetail extends AbstractPersistableCustom<Long> {
@@ -36,32 +42,4 @@ public class SchedulerDetail extends AbstractPersistableCustom<Long> {
 
     @Column(name = "reset_scheduler_on_bootup")
     private boolean resetSchedulerOnBootup;
-
-    protected SchedulerDetail() {
-
-    }
-
-    public boolean isExecuteInstructionForMisfiredJobs() {
-        return this.executeInstructionForMisfiredJobs;
-    }
-
-    public void updateExecuteInstructionForMisfiredJobs(final boolean executeInstructionForMisfiredJobs) {
-        this.executeInstructionForMisfiredJobs = executeInstructionForMisfiredJobs;
-    }
-
-    public boolean isSuspended() {
-        return this.suspended;
-    }
-
-    public void updateSuspendedState(final boolean suspended) {
-        this.suspended = suspended;
-    }
-
-    public boolean isResetSchedulerOnBootup() {
-        return this.resetSchedulerOnBootup;
-    }
-
-    public void updateResetSchedulerOnBootup(final boolean resetSchedulerOnBootup) {
-        this.resetSchedulerOnBootup = resetSchedulerOnBootup;
-    }
 }

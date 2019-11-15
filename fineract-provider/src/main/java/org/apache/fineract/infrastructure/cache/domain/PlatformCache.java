@@ -22,18 +22,21 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+import lombok.*;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "c_cache")
+@Deprecated
 public class PlatformCache extends AbstractPersistableCustom<Long> {
 
     @Column(name = "cache_type_enum")
     private Integer cacheType;
-
-    protected PlatformCache() {
-        this.cacheType = null;
-    }
 
     public PlatformCache(final CacheType cacheType) {
         this.cacheType = cacheType.getValue();

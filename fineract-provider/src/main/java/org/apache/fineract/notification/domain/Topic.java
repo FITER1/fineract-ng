@@ -18,12 +18,19 @@
  */
 package org.apache.fineract.notification.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import lombok.*;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "topic")
 public class Topic extends AbstractPersistableCustom<Long> {
@@ -43,17 +50,6 @@ public class Topic extends AbstractPersistableCustom<Long> {
 	@Column(name = "member_type")
 	private String memberType;
 	
-	public Topic() {
-	}
-	
-	public Topic(String title, Boolean enabled, Long entityId, String entityType, String memberType) {
-		this.title = title.trim();
-		this.enabled = enabled;
-		this.entityId = entityId;
-		this.entityType = entityType.trim();
-		this.memberType = memberType.trim();
-	}
-
 	public static Topic fromJson(final JsonCommand command) {
 		String title = "";
 		Boolean enabled = null;
@@ -78,45 +74,4 @@ public class Topic extends AbstractPersistableCustom<Long> {
 		}
 		return new Topic(title, enabled, entityId, entityType, memberType);
 	}
-
-	public String getTitle() {
-		return this.title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public Boolean getEnabled() {
-		return this.enabled;
-	}
-
-	public void setEnabled(Boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public Long getEntityId() {
-		return this.entityId;
-	}
-
-	public void setEntityId(Long entityId) {
-		this.entityId = entityId;
-	}
-
-	public String getEntityType() {
-		return this.entityType;
-	}
-
-	public void setEntityType(String entityType) {
-		this.entityType = entityType;
-	}
-
-	public String getMemberType() {
-		return this.memberType;
-	}
-
-	public void setMemberType(String memberType) {
-		this.memberType = memberType;
-	}
-	
 }

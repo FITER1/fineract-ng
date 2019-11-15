@@ -18,20 +18,25 @@
  */
 package org.apache.fineract.infrastructure.configuration.domain;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import lombok.*;
+import org.apache.fineract.infrastructure.configuration.data.GlobalConfigurationPropertyData;
+import org.apache.fineract.infrastructure.configuration.exception.GlobalConfigurationPropertyCannotBeModfied;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+import org.apache.fineract.infrastructure.security.exception.ForcePasswordResetException;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import org.apache.fineract.infrastructure.configuration.data.GlobalConfigurationPropertyData;
-import org.apache.fineract.infrastructure.configuration.exception.GlobalConfigurationPropertyCannotBeModfied;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.security.exception.ForcePasswordResetException;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "c_configuration")
 public class GlobalConfigurationProperty extends AbstractPersistableCustom<Long> {
@@ -53,38 +58,6 @@ public class GlobalConfigurationProperty extends AbstractPersistableCustom<Long>
 
     @Column(name = "is_trap_door", nullable = false)
     private boolean isTrapDoor;
-
-    protected GlobalConfigurationProperty() {
-        this.name = null;
-        this.enabled = false;
-        this.value = null;
-        this.dateValue = null;
-        this.description = null;
-        this.isTrapDoor = false;
-    }
-
-    public GlobalConfigurationProperty(final String name, final boolean enabled, final Long value, final Date dateValue ,final String description,
-            final boolean isTrapDoor) {
-        this.name = name;
-        this.enabled = enabled;
-        this.value = value;
-        this.dateValue = dateValue;
-        this.description = description;
-        this.isTrapDoor = isTrapDoor;
-    }
-
-    public boolean isEnabled() {
-        return this.enabled;
-    }
-
-    public Long getValue() {
-        return this.value;
-    }
-    
-    public Date getDateValue(){
-        return this.dateValue;
-    }
-
 
     public Map<String, Object> update(final JsonCommand command) {
 
@@ -121,20 +94,18 @@ public class GlobalConfigurationProperty extends AbstractPersistableCustom<Long>
         }
 
         return actualChanges;
-
     }
 
     public static GlobalConfigurationProperty newSurveyConfiguration(final String name) {
-        return new GlobalConfigurationProperty(name, false, null, null, null, false);
+        return GlobalConfigurationProperty.builder()
+            .name(name)
+            .enabled(false)
+            .isTrapDoor(false)
+            .build();
     }
     
     public GlobalConfigurationPropertyData toData() {
         return new GlobalConfigurationPropertyData(getName(), isEnabled(), getValue(), getDateValue(), this.getId(), this.description,
                 this.isTrapDoor);
     }
-    
-    public String getName() {
-        return this.name;
-    }
-
 }

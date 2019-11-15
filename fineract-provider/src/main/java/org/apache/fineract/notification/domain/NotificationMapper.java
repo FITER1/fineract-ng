@@ -19,11 +19,17 @@
 package org.apache.fineract.notification.domain;
 
 
+import lombok.*;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.useradministration.domain.AppUser;
 
 import javax.persistence.*;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "notification_mapper")
 public class NotificationMapper extends AbstractPersistableCustom<Long> {
@@ -41,38 +47,4 @@ public class NotificationMapper extends AbstractPersistableCustom<Long> {
 
     @Column(name = "created_at")
     private String createdAt;
-
-    public NotificationMapper() {}
-
-    public NotificationMapper(Notification notification, AppUser userId, boolean isRead, String createdAt) {
-        this.notification = notification;
-        this.userId = userId;
-        this.isRead = isRead;
-        this.createdAt = createdAt;
-    }
-
-    public Notification getNotification() {
-        return notification;
-    }
-
-    public void setNotification(Notification notification) {
-        this.notification = notification;
-    }
-
-    public AppUser getUserId() {
-        return userId;
-    }
-
-    public void setUserId(AppUser userId) {
-        this.userId = userId;
-    }
-
-    public boolean isRead() {
-        return isRead;
-    }
-
-    public void setRead(boolean read) {
-        isRead = read;
-    }
-
 }

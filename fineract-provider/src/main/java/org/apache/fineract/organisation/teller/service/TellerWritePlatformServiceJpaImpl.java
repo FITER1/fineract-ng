@@ -155,7 +155,7 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
             return new CommandProcessingResultBuilder() //
                     .withCommandId(command.commandId()) //
                     .withEntityId(teller.getId()) //
-                    .withOfficeId(teller.officeId()) //
+                    .withOfficeId(teller.getOffice().getId()) //
                     .with(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
@@ -177,7 +177,7 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
         final Long userOfficeId = currentUser.getOffice().getId();
         final Office userOffice = this.officeRepositoryWrapper.findOfficeHierarchy(userOfficeId);
         final Teller tellerToReturn = this.tellerRepositoryWrapper.findOneWithNotFoundDetection(tellerId);
-        final Long tellerOfficeId = tellerToReturn.officeId();
+        final Long tellerOfficeId = tellerToReturn.getOffice().getId();
         if (userOffice.doesNotHaveAnOfficeInHierarchyWithId(tellerOfficeId)) { throw new NoAuthorizationException(
                     "User does not have sufficient priviledges to act on the provided office."); }
         return tellerToReturn;

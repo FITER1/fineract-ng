@@ -32,6 +32,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
@@ -40,6 +41,11 @@ import org.apache.fineract.infrastructure.documentmanagement.domain.Image;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.joda.time.LocalDate;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_staff", uniqueConstraints = { @UniqueConstraint(columnNames = { "display_name" }, name = "display_name"),
         @UniqueConstraint(columnNames = { "external_id" }, name = "external_id_UNIQUE"),
@@ -116,26 +122,17 @@ public class Staff extends AbstractPersistableCustom<Long> {
             joiningDate = command.localDateValueOfParameterNamed(joiningDateParamName);
         }
 
-        return new Staff(staffOffice, firstname, lastname, externalId, mobileNo, isLoanOfficer, isActive, joiningDate);
-    }
-
-    protected Staff() {
-        //
-    }
-
-    private Staff(final Office staffOffice, final String firstname, final String lastname, final String externalId, final String mobileNo,
-            final boolean isLoanOfficer, final Boolean isActive, final LocalDate joiningDate) {
-        this.office = staffOffice;
-        this.firstname = StringUtils.defaultIfEmpty(firstname, null);
-        this.lastname = StringUtils.defaultIfEmpty(lastname, null);
-        this.externalId = StringUtils.defaultIfEmpty(externalId, null);
-        this.mobileNo = StringUtils.defaultIfEmpty(mobileNo, null);
-        this.loanOfficer = isLoanOfficer;
-        this.active = (isActive == null) ? true : isActive;
-        deriveDisplayName(firstname);
-        if (joiningDate != null) {
-            this.joiningDate = joiningDate.toDateTimeAtStartOfDay().toDate();
-        }
+        return Staff.builder()
+            .office(staffOffice)
+            .firstname(firstname)
+            .lastname(lastname)
+            .externalId(externalId)
+            .mobileNo(mobileNo)
+            .loanOfficer(isLoanOfficer)
+            .active(isActive)
+            .joiningDate(joiningDate==null ? null : joiningDate.toDate())
+            .displayName(deriveDisplayName(firstname, lastname))
+            .build();
     }
 
     public EnumOptionData organisationalRoleData() {
@@ -179,7 +176,7 @@ public class Staff extends AbstractPersistableCustom<Long> {
         }
 
         if (firstnameChanged || lastnameChanged) {
-            deriveDisplayName(this.firstname);
+            this.displayName = deriveDisplayName(this.firstname, this.lastname);
         }
 
         final String externalIdParamName = "externalId";
@@ -221,59 +218,15 @@ public class Staff extends AbstractPersistableCustom<Long> {
         return actualChanges;
     }
 
-    public boolean isNotLoanOfficer() {
-        return !isLoanOfficer();
-    }
-
-    public boolean isLoanOfficer() {
-        return this.loanOfficer;
-    }
-
-    public boolean isNotActive() {
-        return !isActive();
-    }
-
-    public boolean isActive() {
-        return this.active;
-    }
-
-    private void deriveDisplayName(final String firstname) {
-        if (!StringUtils.isBlank(firstname)) {
-            this.displayName = this.lastname + ", " + this.firstname;
-        } else {
-            this.displayName = this.lastname;
-        }
-    }
-
     public boolean identifiedBy(final Staff staff) {
         return getId().equals(staff.getId());
     }
 
-	public String emailAddress() {
-        return emailAddress;
-    }
-
-    public Long officeId() {
-        return this.office.getId();
-    }
-
-    public String displayName() {
-        return this.displayName;
-    }
-
-    public String mobileNo() {
-        return this.mobileNo;
-    }
-
-    public Office office() {
-        return this.office;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-    public Image getImage() {
-        return this.image;
+    private static String deriveDisplayName(String firstname, String lastname) {
+        if (!StringUtils.isBlank(firstname)) {
+            return lastname + ", " + firstname;
+        } else {
+            return lastname;
+        }
     }
 }

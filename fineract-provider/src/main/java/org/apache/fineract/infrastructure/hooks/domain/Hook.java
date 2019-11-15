@@ -20,7 +20,7 @@ package org.apache.fineract.infrastructure.hooks.domain;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
@@ -29,7 +29,6 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
-
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -37,6 +36,11 @@ import java.util.Set;
 
 import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.*;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_hook")
 public class Hook extends AbstractAuditableCustom<AppUser, Long> {
@@ -61,15 +65,12 @@ public class Hook extends AbstractAuditableCustom<AppUser, Long> {
     @JoinColumn(name = "ugd_template_id", referencedColumnName = "id", nullable = true)
     private Template ugdTemplate;
 
-    protected Hook() {
-        //
-    }
-
     public static Hook fromJson(final JsonCommand command, final HookTemplate template, final Set<HookConfiguration> config,
             final Set<HookResource> events, final Template ugdTemplate) {
         final String displayName = command.stringValueOfParameterNamed(displayNameParamName);
         Boolean isActive = command.booleanObjectValueOfParameterNamed(isActiveParamName);
         if (isActive == null) isActive = false;
+
         return new Hook(template, displayName, isActive, config, events, ugdTemplate);
     }
 
@@ -96,24 +97,20 @@ public class Hook extends AbstractAuditableCustom<AppUser, Long> {
 
     private Set<HookConfiguration> associateConfigWithThisHook(final Set<HookConfiguration> config) {
         for (final HookConfiguration hookConfiguration : config) {
-            hookConfiguration.update(this);
+            hookConfiguration.setHook(this);
         }
         return config;
     }
 
     private Set<HookResource> associateEventsWithThisHook(final Set<HookResource> events) {
         for (final HookResource hookResource : events) {
-            hookResource.update(this);
+            hookResource.setHook(this);
         }
         return events;
     }
 
     public HookTemplate getHookTemplate() {
         return this.template;
-    }
-
-    public Template getUgdTemplate() {
-        return this.ugdTemplate;
     }
 
     public Long getUgdTemplateId() {

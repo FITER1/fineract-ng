@@ -18,20 +18,21 @@
  */
 package org.apache.fineract.accounting.provisioning.domain;
 
-import java.math.BigDecimal;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import lombok.*;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.provisioning.domain.ProvisioningCategory;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
 
+import javax.persistence.*;
+import java.math.BigDecimal;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_loanproduct_provisioning_entry")
 public class LoanProductProvisioningEntry extends AbstractPersistableCustom<Long> {
@@ -72,9 +73,6 @@ public class LoanProductProvisioningEntry extends AbstractPersistableCustom<Long
     @JoinColumn(name = "expense_account", nullable = false)
     private GLAccount expenseAccount;
 
-    protected LoanProductProvisioningEntry() {
-        
-    }
     public LoanProductProvisioningEntry(final LoanProduct loanProduct, final Office office, final String currencyCode,
             final ProvisioningCategory provisioningCategory, final Long overdueInDays, final BigDecimal reservedAmount,
             final GLAccount liabilityAccount, final GLAccount expenseAccount, Long criteriaId) {
@@ -89,40 +87,7 @@ public class LoanProductProvisioningEntry extends AbstractPersistableCustom<Long
         this.criteriaId = criteriaId ;
     }
 
-    public void setProvisioningEntry(ProvisioningEntry provisioningEntry) {
-        this.entry = provisioningEntry;
-    }
-
-    public BigDecimal getReservedAmount() {
-        return this.reservedAmount ;
-    }
     public void addReservedAmount(BigDecimal value) {
         this.reservedAmount = this.reservedAmount.add(value) ;
-    }
-    
-    public Office getOffice() {
-        return this.office ;
-    }
-
-    public GLAccount getLiabilityAccount() {
-        return this.liabilityAccount ;
-    }
-    
-    public String getCurrencyCode() {
-        return this.currencyCode ;
-    }
-    
-    public GLAccount getExpenseAccount() {
-        return this.expenseAccount ;
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        if (!obj.getClass().equals(getClass())) return false;
-        LoanProductProvisioningEntry entry = (LoanProductProvisioningEntry) obj;
-        return entry.loanProduct.getId().equals(this.loanProduct.getId())
-                && entry.provisioningCategory.getId().equals(this.provisioningCategory.getId())
-                && entry.office.getId().equals(this.office.getId())
-                && entry.getCurrencyCode().equals(this.getCurrencyCode());
     }
 }

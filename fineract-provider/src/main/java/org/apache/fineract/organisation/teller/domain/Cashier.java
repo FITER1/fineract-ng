@@ -18,11 +18,12 @@
  */
 package org.apache.fineract.organisation.teller.domain;
 
+import lombok.*;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -37,6 +38,11 @@ import java.util.Map;
  * @author Markus Geiss
  * @since 2.0.0
  */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_cashiers", uniqueConstraints = { @UniqueConstraint(name = "ux_cashiers_staff_teller", columnNames = { "staff_id",
         "teller_id" }) })
@@ -75,13 +81,6 @@ public class Cashier extends AbstractPersistableCustom<Long> {
     @Column(name = "end_time", nullable = true, length = 10)
     private String endTime;
 
-    /**
-     * Creates a new cashier.
-     */
-    public Cashier() {
-        super();
-    }
-
     public static Cashier fromJson(final Office cashierOffice, final Teller teller, final Staff staff, final String startTime,
             final String endTime, final JsonCommand command) {
         // final Long tellerId = teller.getId();
@@ -96,20 +95,17 @@ public class Cashier extends AbstractPersistableCustom<Long> {
          * endTime = command.stringValueOfParameterNamed("endTime");
          */
 
-        return new Cashier(cashierOffice, teller, staff, description, startDate, endDate, isFullDay, startTime, endTime);
-    }
-
-    public Cashier(Office office, Teller teller, Staff staff, String description, LocalDate startDate, LocalDate endDate,
-            Boolean isFullDay, String startTime, String endTime) {
-        this.office = office;
-        this.teller = teller;
-        this.staff = staff;
-        this.description = description;
-        this.startDate = startDate.toDate();
-        this.endDate = endDate.toDate();
-        this.isFullDay = isFullDay;
-        this.startTime = startTime;
-        this.endTime = endTime;
+        return Cashier.builder()
+            .office(cashierOffice)
+            .teller(teller)
+            .staff(staff)
+            .description(description)
+            .startDate(startDate.toDate())
+            .endDate(endDate.toDate())
+            .isFullDay(isFullDay)
+            .startTime(startTime)
+            .endTime(endTime)
+            .build();
     }
 
     public Map<String, Object> update(final JsonCommand command) {
@@ -204,17 +200,7 @@ public class Cashier extends AbstractPersistableCustom<Long> {
         return actualChanges;
     }
 
-    /**
-     * Returns the office of this cashier.
-     * 
-     * @return the office of this cashier
-     * @see org.apache.fineract.organisation.office.domain.Office
-     */
-    public Office getOffice() {
-        return office;
-    }
-
-    public Long getHourFromStartTime() {
+    private Long getHourFromStartTime() {
         if (this.startTime != null && !this.startTime.equalsIgnoreCase("")) {
             String[] extractHourFromStartTime = this.startTime.split(":");
             Long hour = Long.parseLong(extractHourFromStartTime[1]);
@@ -223,7 +209,7 @@ public class Cashier extends AbstractPersistableCustom<Long> {
         return null;
     }
 
-    public Long getMinFromStartTime() {
+    private Long getMinFromStartTime() {
         if (this.startTime != null && !this.startTime.equalsIgnoreCase("")) {
             String[] extractMinFromStartTime = this.startTime.split(":");
             Long min = Long.parseLong(extractMinFromStartTime[1]);
@@ -232,7 +218,7 @@ public class Cashier extends AbstractPersistableCustom<Long> {
         return null;
     }
 
-    public Long getHourFromEndTime() {
+    private Long getHourFromEndTime() {
         if (this.endTime != null && !this.endTime.equalsIgnoreCase("")) {
             String[] extractHourFromEndTime = this.endTime.split(":");
             Long hour = Long.parseLong(extractHourFromEndTime[0]);
@@ -241,7 +227,7 @@ public class Cashier extends AbstractPersistableCustom<Long> {
         return null;
     }
 
-    public Long getMinFromEndTime() {
+    private Long getMinFromEndTime() {
         if (this.endTime != null && !this.endTime.equalsIgnoreCase("")) {
             String[] extractMinFromEndTime = this.endTime.split(":");
             Long min = Long.parseLong(extractMinFromEndTime[1]);
@@ -250,93 +236,7 @@ public class Cashier extends AbstractPersistableCustom<Long> {
         return null;
     }
 
-    /**
-     * Sets the office of this cashier.
-     * 
-     * @param office
-     *            the office of this cashier
-     * @see org.apache.fineract.organisation.office.domain.Office
-     */
-    public void setOffice(Office office) {
-        this.office = office;
-    }
-
-    /**
-     * Returns the staff of this cashier.
-     * 
-     * @return the staff of this cashier
-     * @see org.apache.fineract.organisation.staff.domain.Staff
-     */
-    public Staff getStaff() {
-        return staff;
-    }
-
-    /**
-     * Sets the staff of this cashier.
-     * 
-     * @param staff
-     *            the staff of this cashier
-     * @see org.apache.fineract.organisation.staff.domain.Staff
-     */
-    public void setStaff(Staff staff) {
-        this.staff = staff;
-    }
-
-    /**
-     * Returns the teller of this cashier.
-     * 
-     * @return the teller of this cashier
-     * @see org.apache.fineract.organisation.teller.domain.Teller
-     */
-    public Teller getTeller() {
-        return teller;
-    }
-
-    /**
-     * Sets the teller of this cashier.
-     * 
-     * @param teller
-     *            the teller of this cashier
-     * @see org.apache.fineract.organisation.teller.domain.Teller
-     */
-    public void setTeller(Teller teller) {
-        this.teller = teller;
-    }
-
-    /**
-     * Returns the description of this cashier. .
-     * 
-     * @return the description of this cashier or {@code null} if not present.
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets the description of this cashier.
-     * 
-     * @param description
-     *            the description of this cashier
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Returns the valid from date of this cashier.
-     * 
-     * <p>
-     * The valid from/to dates may be used to define a time period in which the
-     * cashier is assignable to a teller.
-     * </p>
-     * 
-     * @return the valid from date of this cashier
-     */
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public LocalDate getStartLocalDate() {
+    private LocalDate getStartLocalDate() {
         LocalDate startLocalDate = null;
         if (this.startDate != null) {
             startLocalDate = LocalDate.fromDateFields(this.startDate);
@@ -344,133 +244,11 @@ public class Cashier extends AbstractPersistableCustom<Long> {
         return startLocalDate;
     }
 
-    /**
-     * Sets the valid from date of this cashier.
-     * 
-     * <p>
-     * The valid from/to dates may be used to define a time period in which the
-     * cashier is assignable to a teller.
-     * </p>
-     * 
-     * @param  startDate validFrom
-     *            the valid from date of this cashier
-     */
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    /**
-     * Returns the valid to date of this cashier.
-     * 
-     * <p>
-     * The valid from/to dates may be used to define a time period in which the
-     * cashier is assignable to a teller.
-     * </p>
-     * 
-     * @return the valid to date of this cashier
-     */
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public LocalDate getEndLocalDate() {
+    private LocalDate getEndLocalDate() {
         LocalDate endLocalDate = null;
         if (this.endDate != null) {
             endLocalDate = LocalDate.fromDateFields(this.endDate);
         }
         return endLocalDate;
-    }
-
-    /**
-     * Sets the valid to date of this cashier.
-     * 
-     * <p>
-     * The valid from/to dates may be used to define a time period in which the
-     * cashier is assignable to a teller.
-     * </p>
-     * 
-     * @param endDate validTo
-     *            the valid to date of this cashier
-     */
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    /**
-     * Returns whether this cashier works part time or not.
-     * 
-     * @return {@code true} if this cashier works part time; {@code false}
-     *         otherwise
-     */
-    public Boolean isFullDay() {
-        return isFullDay;
-    }
-
-    /**
-     * Sets the part time flag of this cashier.
-     * 
-     * @param isFullDay partTime
-     *            the part time flag of this cashier
-     */
-    public void setFullDay(Boolean isFullDay) {
-        this.isFullDay = isFullDay;
-    }
-
-    /**
-     * Returns the start time of this cashier.
-     * 
-     * <p>
-     * The start/end times may be used to define a time period in which the
-     * cashier works part time.
-     * </p>
-     * 
-     * @return the start time of this cashier
-     */
-    public String getStartTime() {
-        return startTime;
-    }
-
-    /**
-     * Set the start time of this cashier.
-     * 
-     * <p>
-     * The start/end times may be used to define a time period in which the
-     * cashier works part time.
-     * </p>
-     * 
-     * @param startTime
-     *            the start time of this cashier
-     */
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    /**
-     * Returns the end time of this cashier.
-     * 
-     * <p>
-     * The start/end times may be used to define a time period in which the
-     * cashier works part time.
-     * </p>
-     * 
-     * @return the end time of this cashier
-     */
-    public String getEndTime() {
-        return endTime;
-    }
-
-    /**
-     * Sets the end time of this cashier.
-     * 
-     * <p>
-     * The start/end times may be used to define a time period in which the
-     * cashier works part time.
-     * </p>
-     * 
-     * @param endTime
-     *            the end time of this cashier
-     */
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
     }
 }

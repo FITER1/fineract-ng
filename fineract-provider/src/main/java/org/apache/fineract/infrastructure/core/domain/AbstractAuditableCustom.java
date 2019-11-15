@@ -18,8 +18,11 @@
  */
 package org.apache.fineract.infrastructure.core.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -44,6 +47,10 @@ import java.util.Date;
  * @param <PK>
  *            the type of the auditing type's identifier
  */
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @MappedSuperclass
 public abstract class AbstractAuditableCustom<U, PK extends Serializable> extends AbstractPersistableCustom<PK> /* implements Auditable<AppUser, Long, Instant> */ {
 
@@ -68,96 +75,4 @@ public abstract class AbstractAuditableCustom<U, PK extends Serializable> extend
     @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     private Date lastModifiedDate;
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.data.domain.Auditable#getCreatedBy()
-     */
-    // @Override
-    public AppUser getCreatedBy() {
-
-        return this.createdBy;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.springframework.data.domain.Auditable#setCreatedBy(java.lang.Object)
-     */
-    // @Override
-    public void setCreatedBy(AppUser createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.data.domain.Auditable#getCreatedDate()
-     */
-    @NotNull
-    // @Override
-    public Date getCreatedDate() {
-        return this.createdDate;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.springframework.data.domain.Auditable#setCreatedDate(org.joda.time
-     * .DateTime)
-     */
-    // @Override
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.data.domain.Auditable#getLastModifiedBy()
-     */
-    // @Override
-    public AppUser getLastModifiedBy() {
-
-        return this.lastModifiedBy;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.springframework.data.domain.Auditable#setLastModifiedBy(java.lang
-     * .Object)
-     */
-    // @Override
-    public void setLastModifiedBy(final AppUser lastModifiedBy) {
-
-        this.lastModifiedBy = lastModifiedBy;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.data.domain.Auditable#getLastModifiedDate()
-     */
-    // @Override
-    public Date getLastModifiedDate() {
-
-        return this.lastModifiedDate;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.springframework.data.domain.Auditable#setLastModifiedDate(org.joda
-     * .time.DateTime)
-     */
-    // @Override
-    public void setLastModifiedDate(Date lastModifiedDate) {
-        this.lastModifiedDate = lastModifiedDate;
-    }
 }

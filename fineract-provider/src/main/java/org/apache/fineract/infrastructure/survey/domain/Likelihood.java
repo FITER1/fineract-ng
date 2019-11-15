@@ -18,18 +18,23 @@
  */
 package org.apache.fineract.infrastructure.survey.domain;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import lombok.*;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+import org.apache.fineract.infrastructure.survey.api.LikelihoodApiConstants;
+import org.apache.fineract.infrastructure.survey.data.LikelihoodStatus;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.survey.api.LikelihoodApiConstants;
-import org.apache.fineract.infrastructure.survey.data.LikelihoodStatus;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "ppi_likelihoods_ppi")
 public final class Likelihood extends AbstractPersistableCustom<Long> {
@@ -66,15 +71,6 @@ public final class Likelihood extends AbstractPersistableCustom<Long> {
 
     public boolean isActivateCommand(final JsonCommand command) {
         return command.booleanPrimitiveValueOfParameterNamed(LikelihoodApiConstants.ACTIVE);
-    }
-
-    public String getPpiName() {
-        return ppiName;
-    }
-
-    @Override
-    public Long getId() {
-        return super.getId();
     }
 
     public void disable() {

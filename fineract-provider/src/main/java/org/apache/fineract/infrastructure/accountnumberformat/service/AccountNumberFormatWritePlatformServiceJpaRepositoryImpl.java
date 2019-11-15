@@ -104,7 +104,7 @@ public class AccountNumberFormatWritePlatformServiceJpaRepositoryImpl implements
                 final Integer newValue = command.integerValueSansLocaleOfParameterNamed(AccountNumberFormatConstants.prefixTypeParamName);
                 final AccountNumberPrefixType accountNumberPrefixType = AccountNumberPrefixType.fromInt(newValue);
                 actualChanges.put(AccountNumberFormatConstants.prefixTypeParamName, accountNumberPrefixType);
-                accountNumberFormatForUpdate.setPrefix(accountNumberPrefixType);
+                accountNumberFormatForUpdate.setPrefixEnum(accountNumberPrefixType.getValue());
             }
 
             if (!actualChanges.isEmpty()) {
