@@ -29,6 +29,12 @@ tasks.withType(Tar){
     compression = Compression.GZIP
 }
 
+repositories {
+    flatDir {
+        dirs 'libs/pentaho-reporting-engine'
+        dirs 'libs/pentaho-library'
+    }
+}
 springBoot {
     buildInfo {
         properties {
@@ -109,6 +115,28 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa"
     implementation "com.querydsl:querydsl-jpa-codegen"
     implementation "com.querydsl:querydsl-apt"
+
+    implementation "net.sf.ehcache:ehcache:2.7.2"
+    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-core:5.4.0.4-149"
+    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-extensions:5.4.0.4-149"
+    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-extensions-scripting:5.4.0.4-149"
+    implementation "pentaho-reporting-engine:pentaho-reporting-engine-wizard-core:5.4.0.4-149"
+    //implementation "pentaho-reporting-engine:pentaho-report-designer:5.4.0.4-149"
+    //implementation "pentaho-report-designer:report-designer-ext-pentaho:5.4.0.4-149"
+    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-core:5.4.0.4-149"
+
+    implementation "pentaho-library:libbase:5.4.0.4-149"
+    implementation "pentaho-library:libbase:5.4.0.4-149"
+    implementation "pentaho-library:libdocbundle:5.4.0.4-149"
+    implementation "pentaho-library:libfonts:5.4.0.4-149"
+    implementation "pentaho-library:libformat:5.4.0.4-149"
+    implementation "pentaho-library:libformula:5.4.0.4-149"
+    implementation "pentaho-library:libloader:5.4.0.4-149"
+    implementation "pentaho-library:librepository:5.4.0.4-149"
+    implementation "pentaho-library:libserializer:5.4.0.4-149"
+    implementation "pentaho-library:libsparkline:5.4.0.4-149"
+    implementation "pentaho-library:libxml:5.4.0.4-149"
+
 
     testCompile "junit:junit"
     testCompile "org.mockito:mockito-core"

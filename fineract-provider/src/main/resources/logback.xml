@@ -32,15 +32,31 @@
 		</encoder>
 	</appender>
 
-	<!--
-	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>logs/fineract-platform.log</file>
-		<append>true</append>
-		<encoder>
-			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-		</encoder>
-	</appender>
-	-->
+	<!--<appender name="FILE" class="ch.qos.logback.core.FileAppender">-->
+		<!--<file>logs/fineract-platform.log</file>-->
+		<!--<append>true</append>-->
+		<!--<encoder>-->
+			<!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
+		<!--</encoder>-->
+	<!--</appender>-->
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+        <file>logs/fineract-platform.log</file>
+
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>
+                /logs/archived/fineract-platform_%d{dd-MM-yyyy}.log
+            </fileNamePattern>
+            <maxHistory>10</maxHistory>
+            <totalSizeCap>100MB</totalSizeCap>
+        </rollingPolicy>
+
+    </appender>
 
 	<!-- NOTE: suppress warnings
 	<logger name="org.glassfish.jersey.internal.inject.Providers" level="ERROR" />

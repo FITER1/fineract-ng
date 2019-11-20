@@ -120,6 +120,10 @@ allprojects  {
         verbose = false
         reportDir = new File(buildDir, "reports/rat")
         excludes = [
+            "**.env",
+            "**/fineract-db/persistance/**",
+            "**/pentahoReports/**",
+            "**/fineract-provider/libs/**",
             "**/licenses/**",
             "**/*.md",
             "**/*.github/*",
