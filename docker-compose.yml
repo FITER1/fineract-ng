@@ -38,21 +38,6 @@ services:
       #- MYSQL_DATABASE=mifostenant-default
     ports:
       - "3306:3306"
-  activemq:
-    image: rmohr/activemq:5.15.9-alpine
-    logging:
-      driver: none
-    volumes:
-      - ./fineract-activemq/conf:/opt/activemq/conf
-    networks:
-      - fineract
-    ports:
-      - "61616:61616"
-      - "8161:8161"
-      - "5672:5672"
-      - "61613:61613"
-      - "1883:1883"
-      - "61614:61614"
   fineract:
     image: fineract:latest
     environment:
@@ -105,9 +90,8 @@ services:
       - fineract
     depends_on:
       - mysql
-      - activemq
     ports:
       - "8080:8080"
       - "8443:8443"
       - "8008:8008"
-    command: sh -c "java -agentlib:jdwp=transport=dt_socket,server=y,address=*:8008,suspend=n -Xmx512m -Djava.security.egd=file:/dev/./urandom -Duser.timezone=UTC -Djava.net.preferIPv4Stack=true -jar fineract-provider.jar --spring.profiles.active=default,basicauth"
+    command: sh -c "java -agentlib:jdwp=transport=dt_socket,server=y,address=8008,suspend=n -Xmx2048m -Djava.security.egd=file:/dev/./urandom -Duser.timezone=UTC -Djava.net.preferIPv4Stack=true -jar fineract-provider.jar --spring.profiles.active=default,basicauth"

@@ -29,12 +29,6 @@ tasks.withType(Tar){
     compression = Compression.GZIP
 }
 
-repositories {
-    flatDir {
-        dirs 'libs/pentaho-reporting-engine'
-        dirs 'libs/pentaho-library'
-    }
-}
 springBoot {
     buildInfo {
         properties {
@@ -116,30 +110,22 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa-codegen"
     implementation "com.querydsl:querydsl-apt"
 
-    implementation "net.sf.ehcache:ehcache:2.7.2"
-    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-core:5.4.0.4-149"
-    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-extensions:5.4.0.4-149"
-    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-extensions-scripting:5.4.0.4-149"
-    implementation "pentaho-reporting-engine:pentaho-reporting-engine-wizard-core:5.4.0.4-149"
-    //implementation "pentaho-reporting-engine:pentaho-report-designer:5.4.0.4-149"
-    //implementation "pentaho-report-designer:report-designer-ext-pentaho:5.4.0.4-149"
-    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-core:5.4.0.4-149"
-
-    implementation "pentaho-library:libbase:5.4.0.4-149"
-    implementation "pentaho-library:libbase:5.4.0.4-149"
-    implementation "pentaho-library:libdocbundle:5.4.0.4-149"
-    implementation "pentaho-library:libfonts:5.4.0.4-149"
-    implementation "pentaho-library:libformat:5.4.0.4-149"
-    implementation "pentaho-library:libformula:5.4.0.4-149"
-    implementation "pentaho-library:libloader:5.4.0.4-149"
-    implementation "pentaho-library:librepository:5.4.0.4-149"
-    implementation "pentaho-library:libserializer:5.4.0.4-149"
-    implementation "pentaho-library:libsparkline:5.4.0.4-149"
-    implementation "pentaho-library:libxml:5.4.0.4-149"
-
-    // https://mvnrepository.com/artifact/bsh/bsh
-    compile group: 'bsh', name: 'bsh', version: '1.3.0'
-
+    implementation "org.pentaho.reporting.engine:classic-core"
+    implementation "org.pentaho.reporting.engine:classic-extensions"
+    implementation "org.pentaho.reporting.engine:classic-extensions-scripting"
+    implementation "org.pentaho.reporting.engine:wizard-core"
+    // implementation "org.pentaho.reporting.designer:pentaho-report-designer"
+    // implementation "org.pentaho.reporting.designer:report-designer-ext-pentaho"
+    implementation "org.pentaho.reporting.library:libbase"
+    implementation "org.pentaho.reporting.library:libdocbundle"
+    implementation "org.pentaho.reporting.library:libfonts"
+    implementation "org.pentaho.reporting.library:libformat"
+    implementation "org.pentaho.reporting.library:libformula"
+    implementation "org.pentaho.reporting.library:libloader"
+    implementation "org.pentaho.reporting.library:librepository"
+    implementation "org.pentaho.reporting.library:libserializer"
+    implementation "org.pentaho.reporting.library:libsparkline"
+    implementation "org.pentaho.reporting.library:libxml"
 
     testCompile "junit:junit"
     testCompile "org.mockito:mockito-core"
