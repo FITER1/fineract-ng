@@ -22,6 +22,8 @@ import org.apache.fineract.accounting.journalentry.data.LoanDTO;
 
 public interface AccountingProcessorForLoan {
 
+    boolean accept(LoanDTO loanDTO);
+
     void createJournalEntriesForLoan(LoanDTO loanDTO);
 
 }

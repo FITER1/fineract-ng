@@ -20,35 +20,28 @@ package org.apache.fineract.accounting.journalentry.service;
 
 import org.apache.fineract.accounting.journalentry.data.LoanDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class AccountingProcessorForLoanFactory {
 
-    private final ApplicationContext applicationContext;
+    private final List<AccountingProcessorForLoan> processors;
 
     @Autowired
-    public AccountingProcessorForLoanFactory(final ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public AccountingProcessorForLoanFactory(final List<AccountingProcessorForLoan> processors) {
+        this.processors = processors;
     }
 
     public AccountingProcessorForLoan determineProcessor(final LoanDTO loanDTO) {
 
-        AccountingProcessorForLoan accountingProcessorForLoan = null;
+        // TODO: what happens if multiple processors are found?
 
-        if (loanDTO.isCashBasedAccountingEnabled()) {
-            accountingProcessorForLoan = this.applicationContext.getBean("cashBasedAccountingProcessorForLoan",
-                    AccountingProcessorForLoan.class);
-        } else if (loanDTO.isUpfrontAccrualBasedAccountingEnabled()) {
-            accountingProcessorForLoan = this.applicationContext.getBean("accrualBasedAccountingProcessorForLoan",
-                    AccountingProcessorForLoan.class);
-        } else if (loanDTO.isPeriodicAccrualBasedAccountingEnabled()) {
-            accountingProcessorForLoan = this.applicationContext.getBean("accrualBasedAccountingProcessorForLoan",
-                    AccountingProcessorForLoan.class);
-        }
-
-        return accountingProcessorForLoan;
+        return processors
+            .stream()
+            .filter(p -> p.accept(loanDTO))
+            .findFirst()
+            .orElse(null);
     }
-
 }

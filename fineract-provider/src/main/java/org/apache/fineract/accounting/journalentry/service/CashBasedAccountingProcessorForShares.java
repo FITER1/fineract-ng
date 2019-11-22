@@ -42,6 +42,11 @@ public class CashBasedAccountingProcessorForShares implements AccountingProcesso
     }
 
     @Override
+    public boolean accept(SharesDTO sharesDTO) {
+        return sharesDTO.isCashBasedAccountingEnabled();
+    }
+
+    @Override
     public void createJournalEntriesForShares(SharesDTO sharesDTO) {
         final GLClosure latestGLClosure = this.helper.getLatestClosureByBranch(sharesDTO.getOfficeId());
         final Long shareAccountId = sharesDTO.getShareAccountId();

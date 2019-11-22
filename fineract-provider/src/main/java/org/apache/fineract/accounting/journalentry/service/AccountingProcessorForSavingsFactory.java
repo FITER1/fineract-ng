@@ -20,17 +20,18 @@ package org.apache.fineract.accounting.journalentry.service;
 
 import org.apache.fineract.accounting.journalentry.data.SavingsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class AccountingProcessorForSavingsFactory {
 
-    private final ApplicationContext applicationContext;
+    private final List<AccountingProcessorForSavings> processors;
 
     @Autowired
-    public AccountingProcessorForSavingsFactory(final ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public AccountingProcessorForSavingsFactory(final List<AccountingProcessorForSavings> processors) {
+        this.processors = processors;
     }
 
     /***
@@ -40,14 +41,12 @@ public class AccountingProcessorForSavingsFactory {
      ***/
     public AccountingProcessorForSavings determineProcessor(final SavingsDTO savingsDTO) {
 
-        AccountingProcessorForSavings accountingProcessorForSavings = null;
+        // TODO: what happens if multiple processors are found?
 
-        if (savingsDTO.isCashBasedAccountingEnabled()) {
-            accountingProcessorForSavings = this.applicationContext.getBean("cashBasedAccountingProcessorForSavings",
-                    AccountingProcessorForSavings.class);
-        }
-
-        return accountingProcessorForSavings;
+        return processors
+            .stream()
+            .filter(p -> p.accept(savingsDTO))
+            .findFirst()
+            .orElse(null);
     }
-
 }

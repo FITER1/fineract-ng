@@ -49,6 +49,11 @@ public class AccrualBasedAccountingProcessorForLoan implements AccountingProcess
     }
 
     @Override
+    public boolean accept(LoanDTO loanDTO) {
+        return loanDTO.isUpfrontAccrualBasedAccountingEnabled() || loanDTO.isPeriodicAccrualBasedAccountingEnabled();
+    }
+
+    @Override
     public void createJournalEntriesForLoan(final LoanDTO loanDTO) {
         final GLClosure latestGLClosure = this.helper.getLatestClosureByBranch(loanDTO.getOfficeId());
         final Office office = this.helper.getOfficeById(loanDTO.getOfficeId());

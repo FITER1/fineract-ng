@@ -20,29 +20,28 @@ package org.apache.fineract.accounting.journalentry.service;
 
 import org.apache.fineract.accounting.journalentry.data.SharesDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class AccountingProcessorForSharesFactory {
 
-    private final ApplicationContext applicationContext;
+    private final List<AccountingProcessorForShares> processors;
 
     @Autowired
-    public AccountingProcessorForSharesFactory(final ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public AccountingProcessorForSharesFactory(final List<AccountingProcessorForShares> processors) {
+        this.processors = processors;
     }
 
     public AccountingProcessorForShares determineProcessor(final SharesDTO sharesDTO) {
 
-        AccountingProcessorForShares accountingProcessorForShares = null;
+        // TODO: what happens if multiple processors are found?
 
-        if (sharesDTO.isCashBasedAccountingEnabled()) {
-            accountingProcessorForShares = this.applicationContext.getBean("cashBasedAccountingProcessorForShares",
-                    AccountingProcessorForShares.class);
-        }
-
-        return accountingProcessorForShares;
+        return processors
+            .stream()
+            .filter(p -> p.accept(sharesDTO))
+            .findFirst()
+            .orElse(null);
     }
-
 }

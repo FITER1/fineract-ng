@@ -44,6 +44,11 @@ public class CashBasedAccountingProcessorForLoan implements AccountingProcessorF
     }
 
     @Override
+    public boolean accept(LoanDTO loanDTO) {
+        return loanDTO.isCashBasedAccountingEnabled();
+    }
+
+    @Override
     public void createJournalEntriesForLoan(final LoanDTO loanDTO) {
         final GLClosure latestGLClosure = this.helper.getLatestClosureByBranch(loanDTO.getOfficeId());
         // final Office office =

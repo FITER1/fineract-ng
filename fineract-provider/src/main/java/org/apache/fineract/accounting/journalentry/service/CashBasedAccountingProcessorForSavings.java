@@ -18,10 +18,6 @@
  */
 package org.apache.fineract.accounting.journalentry.service;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.fineract.accounting.closure.domain.GLClosure;
 import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_SAVINGS;
 import org.apache.fineract.accounting.common.AccountingConstants.FINANCIAL_ACTIVITY;
@@ -32,6 +28,10 @@ import org.apache.fineract.organisation.office.domain.Office;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
 @Component
 public class CashBasedAccountingProcessorForSavings implements AccountingProcessorForSavings {
 
@@ -40,6 +40,11 @@ public class CashBasedAccountingProcessorForSavings implements AccountingProcess
     @Autowired
     public CashBasedAccountingProcessorForSavings(final AccountingProcessorHelper accountingProcessorHelper) {
         this.helper = accountingProcessorHelper;
+    }
+
+    @Override
+    public boolean accept(SavingsDTO savingsDTO) {
+        return savingsDTO.isCashBasedAccountingEnabled();
     }
 
     @Override
