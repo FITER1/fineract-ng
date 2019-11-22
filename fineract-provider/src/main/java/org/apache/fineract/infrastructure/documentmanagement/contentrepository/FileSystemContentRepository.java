@@ -29,18 +29,25 @@ import org.apache.fineract.infrastructure.documentmanagement.domain.StorageType;
 import org.apache.fineract.infrastructure.documentmanagement.exception.ContentManagementException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 
+@Component
 public class FileSystemContentRepository implements ContentRepository {
 
     private final static Logger logger = LoggerFactory.getLogger(FileSystemContentRepository.class);
 
-    public static final String FINERACT_BASE_DIR = System.getProperty("user.home") + File.separator + ".fineract";
+    public final FineractProperties properties;
 
-    @Autowired
-    public FineractProperties fineractProperties;
+    public FileSystemContentRepository(final FineractProperties properties) {
+        this.properties = properties;
+    }
+
+    @Override
+    public boolean accept(StorageType documentStoreType) {
+        return getStorageType().equals(documentStoreType);
+    }
 
     @Override
     public String saveFile(final InputStream uploadedInputStream, final DocumentCommand documentCommand) {
@@ -135,8 +142,8 @@ public class FileSystemContentRepository implements ContentRepository {
      * @return
      */
     private String generateFileParentDirectory(final String entityType, final Long entityId) {
-        return FileSystemContentRepository.FINERACT_BASE_DIR + File.separator
-                + fineractProperties.getTenantId() + File.separator + "documents" + File.separator
+        return properties.getFileSystemContentRepository().getBaseDir() + File.separator
+                + properties.getTenantId() + File.separator + "documents" + File.separator
                 + entityType + File.separator + entityId + File.separator + ContentRepositoryUtils.generateRandomString();
     }
 
@@ -144,8 +151,8 @@ public class FileSystemContentRepository implements ContentRepository {
      * Generate directory path for storing new Image
      */
     private String generateClientImageParentDirectory(final Long resourceId) {
-        return FileSystemContentRepository.FINERACT_BASE_DIR + File.separator
-                + fineractProperties.getTenantId() + File.separator + "images" + File.separator
+        return properties.getFileSystemContentRepository().getBaseDir() + File.separator
+                + properties.getTenantId() + File.separator + "images" + File.separator
                 + "clients" + File.separator + resourceId;
     }
 

@@ -18,10 +18,12 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.contentrepository;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.*;
+import com.lowagie.text.pdf.codec.Base64;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.domain.Base64EncodedImage;
 import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCommand;
 import org.apache.fineract.infrastructure.documentmanagement.data.DocumentData;
@@ -32,33 +34,28 @@ import org.apache.fineract.infrastructure.documentmanagement.exception.ContentMa
 import org.apache.fineract.infrastructure.documentmanagement.exception.DocumentNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.SDKGlobalConfiguration;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.lowagie.text.pdf.codec.Base64;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
 
+@Component
 public class S3ContentRepository implements ContentRepository {
 
     private final static Logger logger = LoggerFactory.getLogger(S3ContentRepository.class);
 
-    private final String s3BucketName;
+    private final FineractProperties properties;
     private final AmazonS3 s3Client;
 
-    public S3ContentRepository(final String bucketName, final String secretKey, final String accessKey) {
-        this.s3BucketName = bucketName;
-        //On some AWS regions by default V4 signature is enabled. Setting this property. 
-        System.setProperty(SDKGlobalConfiguration.ENABLE_S3_SIGV4_SYSTEM_PROPERTY, "true");
-        this.s3Client = new AmazonS3Client(new BasicAWSCredentials(accessKey, secretKey));
+    public S3ContentRepository(final FineractProperties properties, final AmazonS3 s3Client) {
+        this.properties = properties;
+        this.s3Client = s3Client;
+    }
+
+    @Override
+    public boolean accept(StorageType documentStoreType) {
+        return getStorageType().equals(documentStoreType);
     }
 
     @Override
@@ -127,7 +124,7 @@ public class S3ContentRepository implements ContentRepository {
         final String fileName = documentData.fileName();
         try {
             logger.info("Downloading an object");
-            final S3Object s3object = this.s3Client.getObject(new GetObjectRequest(this.s3BucketName, documentData.fileLocation()));
+            final S3Object s3object = this.s3Client.getObject(new GetObjectRequest(properties.getS3ContentRepository().getBucket(), documentData.fileLocation()));
             fileData = new FileData(s3object.getObjectContent(), fileName, documentData.contentType());
         } catch (final AmazonClientException ace) {
             logger.error(ace.getMessage());
@@ -139,7 +136,7 @@ public class S3ContentRepository implements ContentRepository {
     @Override
     public ImageData fetchImage(final ImageData imageData) {
     	try {
-    		final S3Object s3object = this.s3Client.getObject(new GetObjectRequest(this.s3BucketName, imageData.location()));
+    		final S3Object s3object = this.s3Client.getObject(new GetObjectRequest(properties.getS3ContentRepository().getBucket(), imageData.location()));
             imageData.updateContent(s3object.getObjectContent());	
     	}catch(AmazonS3Exception e) {
     		logger.error(e.getMessage());
@@ -169,14 +166,14 @@ public class S3ContentRepository implements ContentRepository {
     }
 
     private void deleteObjectFromS3(final String location) {
-        this.s3Client.deleteObject(new DeleteObjectRequest(this.s3BucketName, location));
+        this.s3Client.deleteObject(new DeleteObjectRequest(properties.getS3ContentRepository().getBucket(), location));
     }
 
     private void uploadDocument(final String filename, final InputStream inputStream, final String s3UploadLocation)
             throws ContentManagementException {
         try {
             logger.info("Uploading a new object to S3 from a file to " + s3UploadLocation);
-            this.s3Client.putObject(new PutObjectRequest(this.s3BucketName, s3UploadLocation, inputStream, new ObjectMetadata()));
+            this.s3Client.putObject(new PutObjectRequest(properties.getS3ContentRepository().getBucket(), s3UploadLocation, inputStream, new ObjectMetadata()));
         } catch (final AmazonClientException ace) {
             final String message = ace.getMessage();
             throw new ContentManagementException(filename, message);

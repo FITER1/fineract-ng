@@ -38,7 +38,13 @@ public class FineractProperties {
 
     private String timezoneId;
 
+    private String storageType;
+
     private FineractPropertiesConnection connection;
+
+    private FineractPropertiesS3 s3ContentRepository;
+
+    private FineractPropertiesFileSystemContentRepository fileSystemContentRepository;
 
     @Builder
     @Data
@@ -57,5 +63,29 @@ public class FineractProperties {
         private Integer minEvictableIdleTimeMillis;
         private Integer maxRetriesOnDeadlock;
         private Integer maxIntervalBetweenRetries;
+    }
+
+    @Builder
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FineractPropertiesS3 {
+        private String endpoint;
+        private String region;
+        private String key;
+        private String secret;
+        private String bucket;
+        private Integer maxFileUploadSizeInMb;
+        private Integer maxImageUploadSizeInMb;
+    }
+
+    @Builder
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FineractPropertiesFileSystemContentRepository {
+        private String baseDir;
+        private Integer maxFileUploadSizeInMb;
+        private Integer maxImageUploadSizeInMb;
     }
 }
