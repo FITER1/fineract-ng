@@ -25,9 +25,15 @@ import java.util.TreeMap;
 
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTermVariationsData;
+import org.apache.fineract.portfolio.loanproduct.domain.InterestMethod;
 import org.joda.time.LocalDate;
 
 public class FlatInterestLoanScheduleGenerator extends AbstractLoanScheduleGenerator {
+
+    @Override
+    public boolean accept(InterestMethod interestMethod) {
+        return InterestMethod.FLAT.equals(interestMethod);
+    }
 
     @Override
     public PrincipalInterest calculatePrincipalInterestComponentsForPeriod(final PaymentPeriodsInOneYearCalculator calculator,

@@ -28,6 +28,7 @@ import java.util.TreeMap;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTermVariationsData;
 import org.apache.fineract.portfolio.loanproduct.domain.AmortizationMethod;
+import org.apache.fineract.portfolio.loanproduct.domain.InterestMethod;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
@@ -57,6 +58,11 @@ import org.joda.time.LocalDate;
  * </p>
  */
 public class DecliningBalanceInterestLoanScheduleGenerator extends AbstractLoanScheduleGenerator {
+
+    @Override
+    public boolean accept(InterestMethod interestMethod) {
+        return InterestMethod.DECLINING_BALANCE.equals(interestMethod);
+    }
 
     @Override
     public PrincipalInterest calculatePrincipalInterestComponentsForPeriod(final PaymentPeriodsInOneYearCalculator calculator,

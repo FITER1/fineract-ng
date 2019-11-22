@@ -21,26 +21,23 @@ package org.apache.fineract.portfolio.loanaccount.loanschedule.domain;
 import org.apache.fineract.portfolio.loanproduct.domain.InterestMethod;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class DefaultLoanScheduleGeneratorFactory implements LoanScheduleGeneratorFactory {
 
-    @Override
-    public LoanScheduleGenerator create(final InterestMethod interestMethod) {
+    private final List<LoanScheduleGenerator> generators;
 
-        LoanScheduleGenerator loanScheduleGenerator = null;
-
-        switch (interestMethod) {
-            case FLAT:
-                loanScheduleGenerator = new FlatInterestLoanScheduleGenerator();
-            break;
-            case DECLINING_BALANCE:
-                loanScheduleGenerator = new DecliningBalanceInterestLoanScheduleGenerator();
-            break;
-            case INVALID:
-            break;
-        }
-
-        return loanScheduleGenerator;
+    public DefaultLoanScheduleGeneratorFactory(final List<LoanScheduleGenerator> generators) {
+        this.generators = generators;
     }
 
+    @Override
+    public LoanScheduleGenerator create(final InterestMethod interestMethod) {
+        return generators
+            .stream()
+            .filter(g -> g.accept(interestMethod))
+            .findFirst()
+            .orElse(null);
+    }
 }
