@@ -25,7 +25,6 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.domain.Base64EncodedImage;
 import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSerializer;
 import org.apache.fineract.infrastructure.documentmanagement.contentrepository.ContentRepositoryUtils;
-import org.apache.fineract.infrastructure.documentmanagement.contentrepository.ContentRepositoryUtils.IMAGE_FILE_EXTENSION;
 import org.apache.fineract.infrastructure.documentmanagement.data.ImageData;
 import org.apache.fineract.infrastructure.documentmanagement.exception.InvalidEntityTypeForImageManagementException;
 import org.apache.fineract.infrastructure.documentmanagement.service.ImageReadPlatformService;
@@ -54,14 +53,16 @@ public class ImagesApiResource {
     private final ImageReadPlatformService imageReadPlatformService;
     private final ImageWritePlatformService imageWritePlatformService;
     private final DefaultToApiJsonSerializer<ClientData> toApiJsonSerializer;
+    private final ContentRepositoryUtils contentRepositoryUtils;
 
     @Autowired
     public ImagesApiResource(final PlatformSecurityContext context, final ImageReadPlatformService readPlatformService,
-            final ImageWritePlatformService imageWritePlatformService, final DefaultToApiJsonSerializer<ClientData> toApiJsonSerializer) {
+            final ImageWritePlatformService imageWritePlatformService, final DefaultToApiJsonSerializer<ClientData> toApiJsonSerializer, final ContentRepositoryUtils contentRepositoryUtils) {
         this.context = context;
         this.imageReadPlatformService = readPlatformService;
         this.imageWritePlatformService = imageWritePlatformService;
         this.toApiJsonSerializer = toApiJsonSerializer;
+        this.contentRepositoryUtils = contentRepositoryUtils;
     }
 
     /**
@@ -77,8 +78,8 @@ public class ImagesApiResource {
         // TODO: vishwas might need more advances validation (like reading magic
         // number) for handling malicious clients
         // and clients not setting mime type
-        ContentRepositoryUtils.validateClientImageNotEmpty(fileDetails.getFileName());
-        ContentRepositoryUtils.validateImageMimeType(fileDetails.getType()); // TODO: @aleks check this
+        contentRepositoryUtils.validateClientImageNotEmpty(fileDetails.getFileName());
+        contentRepositoryUtils.validateImageMimeType(fileDetails.getType()); // TODO: @aleks check this
 
         final CommandProcessingResult result = this.imageWritePlatformService.saveOrUpdateImage(entityName, entityId,
                 fileDetails.getFileName(), inputStream, fileDetails.getSize());
@@ -95,7 +96,7 @@ public class ImagesApiResource {
     public String addNewClientImage(@PathParam("entity") final String entityName, @PathParam("entityId") final Long entityId,
             final String jsonRequestBody) {
         validateEntityTypeforImage(entityName);
-        final Base64EncodedImage base64EncodedImage = ContentRepositoryUtils.extractImageFromDataURL(jsonRequestBody);
+        final Base64EncodedImage base64EncodedImage = contentRepositoryUtils.extractImageFromDataURL(jsonRequestBody);
 
         final CommandProcessingResult result = this.imageWritePlatformService.saveOrUpdateImage(entityName, entityId, base64EncodedImage);
 
@@ -153,7 +154,7 @@ public class ImagesApiResource {
         final ResponseBuilder response = Response.ok(imageData.getContentOfSize(maxWidth, maxHeight));
         String dispositionType = "inline_octet".equals(output) ? "inline" : "attachment";
         response.header("Content-Disposition", dispositionType + "; filename=\"" + imageData.getEntityDisplayName()
-                + IMAGE_FILE_EXTENSION.JPEG + "\"");
+                + ContentRepositoryUtils.IMAGE_FILE_EXTENSION.JPEG + "\"");
 
         // TODO: Need a better way of determining image type
 

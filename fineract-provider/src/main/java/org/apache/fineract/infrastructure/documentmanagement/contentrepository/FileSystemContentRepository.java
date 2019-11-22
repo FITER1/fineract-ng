@@ -38,10 +38,13 @@ public class FileSystemContentRepository implements ContentRepository {
 
     private final static Logger logger = LoggerFactory.getLogger(FileSystemContentRepository.class);
 
-    public final FineractProperties properties;
+    private final FineractProperties properties;
 
-    public FileSystemContentRepository(final FineractProperties properties) {
+    private final ContentRepositoryUtils contentRepositoryUtils;
+
+    public FileSystemContentRepository(final FineractProperties properties, final ContentRepositoryUtils contentRepositoryUtils) {
         this.properties = properties;
+        this.contentRepositoryUtils = contentRepositoryUtils;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class FileSystemContentRepository implements ContentRepository {
         final String uploadDocumentLocation = generateFileParentDirectory(documentCommand.getParentEntityType(),
                 documentCommand.getParentEntityId());
 
-        ContentRepositoryUtils.validateFileSizeWithinPermissibleRange(documentCommand.getSize(), fileName);
+        contentRepositoryUtils.validateFileSizeWithinPermissibleRange(documentCommand.getSize(), fileName);
         makeDirectories(uploadDocumentLocation);
 
         final String fileLocation = uploadDocumentLocation + File.separator + fileName;
@@ -68,7 +71,7 @@ public class FileSystemContentRepository implements ContentRepository {
     public String saveImage(final InputStream uploadedInputStream, final Long resourceId, final String imageName, final Long fileSize) {
         final String uploadImageLocation = generateClientImageParentDirectory(resourceId);
 
-        ContentRepositoryUtils.validateFileSizeWithinPermissibleRange(fileSize, imageName);
+        contentRepositoryUtils.validateFileSizeWithinPermissibleRange(fileSize, imageName);
         makeDirectories(uploadImageLocation);
 
         final String fileLocation = uploadImageLocation + File.separator + imageName;
@@ -144,7 +147,7 @@ public class FileSystemContentRepository implements ContentRepository {
     private String generateFileParentDirectory(final String entityType, final Long entityId) {
         return properties.getFileSystemContentRepository().getBaseDir() + File.separator
                 + properties.getTenantId() + File.separator + "documents" + File.separator
-                + entityType + File.separator + entityId + File.separator + ContentRepositoryUtils.generateRandomString();
+                + entityType + File.separator + entityId + File.separator + contentRepositoryUtils.generateRandomString();
     }
 
     /**

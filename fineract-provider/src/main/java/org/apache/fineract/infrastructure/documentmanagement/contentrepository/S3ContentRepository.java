@@ -47,10 +47,12 @@ public class S3ContentRepository implements ContentRepository {
 
     private final FineractProperties properties;
     private final AmazonS3 s3Client;
+    private final ContentRepositoryUtils contentRepositoryUtils;
 
-    public S3ContentRepository(final FineractProperties properties, final AmazonS3 s3Client) {
+    public S3ContentRepository(final FineractProperties properties, final AmazonS3 s3Client, final ContentRepositoryUtils contentRepositoryUtils) {
         this.properties = properties;
         this.s3Client = s3Client;
+        this.contentRepositoryUtils = contentRepositoryUtils;
     }
 
     @Override
@@ -61,7 +63,7 @@ public class S3ContentRepository implements ContentRepository {
     @Override
     public String saveFile(final InputStream toUpload, final DocumentCommand documentCommand) {
         final String fileName = documentCommand.getFileName();
-        ContentRepositoryUtils.validateFileSizeWithinPermissibleRange(documentCommand.getSize(), fileName);
+        contentRepositoryUtils.validateFileSizeWithinPermissibleRange(documentCommand.getSize(), fileName);
 
         final String uploadDocFolder = generateFileParentDirectory(documentCommand.getParentEntityType(),
                 documentCommand.getParentEntityId());
@@ -82,7 +84,7 @@ public class S3ContentRepository implements ContentRepository {
 
     @Override
     public String saveImage(final InputStream toUploadInputStream, final Long resourceId, final String imageName, final Long fileSize) {
-        ContentRepositoryUtils.validateFileSizeWithinPermissibleRange(fileSize, imageName);
+        contentRepositoryUtils.validateFileSizeWithinPermissibleRange(fileSize, imageName);
         final String uploadImageLocation = generateClientImageParentDirectory(resourceId);
         final String fileLocation = uploadImageLocation + File.separator + imageName;
 
@@ -158,7 +160,7 @@ public class S3ContentRepository implements ContentRepository {
 
     private String generateFileParentDirectory(final String entityType, final Long entityId) {
         return "documents" + File.separator + entityType + File.separator + entityId + File.separator
-                + ContentRepositoryUtils.generateRandomString();
+                + contentRepositoryUtils.generateRandomString();
     }
 
     private String generateClientImageParentDirectory(final Long resourceId) {

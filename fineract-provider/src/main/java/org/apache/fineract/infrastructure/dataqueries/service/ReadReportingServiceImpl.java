@@ -37,6 +37,7 @@ import javax.sql.DataSource;
 import javax.ws.rs.core.StreamingOutput;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import javax.sql.DataSource;
@@ -78,11 +79,12 @@ public class ReadReportingServiceImpl implements ReadReportingService {
     private final GenericDataService genericDataService;
     private final ReportingProcessServiceProvider reportingProcessServiceProvider;
     private final ColumnValidator columnValidator;
+    private final FineractProperties properties;
 
     @Autowired
     public ReadReportingServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
             final GenericDataService genericDataService, final ReportingProcessServiceProvider reportingProcessServiceProvider,
-            final ColumnValidator columnValidator) {
+            final ColumnValidator columnValidator, final FineractProperties properties) {
 
         this.context = context;
         this.dataSource = dataSource;
@@ -90,6 +92,7 @@ public class ReadReportingServiceImpl implements ReadReportingService {
         this.genericDataService = genericDataService;
         this.reportingProcessServiceProvider = reportingProcessServiceProvider;
         this.columnValidator = columnValidator;
+        this.properties = properties;
     }
 
     @Override
@@ -252,7 +255,7 @@ public class ReadReportingServiceImpl implements ReadReportingService {
 	public String retrieveReportPDF(final String reportName, final String type, final Map<String, String> queryParams,
 			final boolean isSelfServiceUserReport) {
 
-        final String fileLocation = FileSystemContentRepository.FINERACT_BASE_DIR + File.separator + "";
+        final String fileLocation = properties.getFileSystemContentRepository().getBaseDir() + File.separator + "";
         if (!new File(fileLocation).isDirectory()) {
             new File(fileLocation).mkdirs();
         }
@@ -554,7 +557,7 @@ public class ReadReportingServiceImpl implements ReadReportingService {
         if (this.noPentaho) { throw new PlatformDataIntegrityException("error.msg.no.pentaho", "Pentaho is not enabled",
                 "Pentaho is not enabled"); }
 
-        final String reportPath = FileSystemContentRepository.FINERACT_BASE_DIR + File.separator + "pentahoReports" + File.separator
+        final String reportPath = properties.getFileSystemContentRepository().getBaseDir() + File.separator + "pentahoReports" + File.separator
                 + reportName + ".prpt";
         logger.info("Report path: " + reportPath);
 
