@@ -27,7 +27,9 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionToRepaymentScheduleMapping;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.AbstractLoanRepaymentScheduleTransactionProcessor;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.LoanRepaymentScheduleTransactionProcessor;
+import org.apache.fineract.portfolio.loanproduct.domain.LoanTransactionProcessingStrategy;
 import org.joda.time.LocalDate;
+import org.springframework.stereotype.Component;
 
 /**
  * Creocore style {@link LoanRepaymentScheduleTransactionProcessor}.
@@ -42,7 +44,13 @@ import org.joda.time.LocalDate;
  * If the entire principal of an installment is paid in advance then the
  * interest component is waived.
  */
+@Component
 public class CreocoreLoanRepaymentScheduleTransactionProcessor extends AbstractLoanRepaymentScheduleTransactionProcessor {
+
+    @Override
+    public boolean accept(LoanTransactionProcessingStrategy transactionProcessingStrategy) {
+        return transactionProcessingStrategy!=null && transactionProcessingStrategy.isCreocoreStrategy();
+    }
 
     /**
      * For creocore, early is defined as any date before the installment due

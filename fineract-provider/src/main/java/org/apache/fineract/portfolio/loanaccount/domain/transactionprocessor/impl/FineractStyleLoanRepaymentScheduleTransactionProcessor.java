@@ -27,7 +27,9 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionToRepaymentScheduleMapping;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.AbstractLoanRepaymentScheduleTransactionProcessor;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.LoanRepaymentScheduleTransactionProcessor;
+import org.apache.fineract.portfolio.loanproduct.domain.LoanTransactionProcessingStrategy;
 import org.joda.time.LocalDate;
+import org.springframework.stereotype.Component;
 
 /**
  * Old style {@link LoanRepaymentScheduleTransactionProcessor}.
@@ -41,7 +43,13 @@ import org.joda.time.LocalDate;
  * but this isnt trying to model that option only the basic one for now.
  */
 @SuppressWarnings("unused")
+@Component
 public class FineractStyleLoanRepaymentScheduleTransactionProcessor extends AbstractLoanRepaymentScheduleTransactionProcessor {
+
+    @Override
+    public boolean accept(LoanTransactionProcessingStrategy transactionProcessingStrategy) {
+        return transactionProcessingStrategy!=null && transactionProcessingStrategy.isStandardStrategy();
+    }
 
     @Override
     protected boolean isTransactionInAdvanceOfInstallment(final int currentInstallmentIndex,

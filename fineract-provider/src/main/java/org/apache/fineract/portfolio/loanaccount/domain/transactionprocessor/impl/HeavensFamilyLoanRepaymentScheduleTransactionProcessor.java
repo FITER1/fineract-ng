@@ -27,7 +27,9 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionToRepaymentScheduleMapping;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.AbstractLoanRepaymentScheduleTransactionProcessor;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.LoanRepaymentScheduleTransactionProcessor;
+import org.apache.fineract.portfolio.loanproduct.domain.LoanTransactionProcessingStrategy;
 import org.joda.time.LocalDate;
+import org.springframework.stereotype.Component;
 
 /**
  * Heavensfamily style {@link LoanRepaymentScheduleTransactionProcessor}.
@@ -43,7 +45,13 @@ import org.joda.time.LocalDate;
  * interest component is waived.
  */
 @SuppressWarnings("unused")
+@Component
 public class HeavensFamilyLoanRepaymentScheduleTransactionProcessor extends AbstractLoanRepaymentScheduleTransactionProcessor {
+
+    @Override
+    public boolean accept(LoanTransactionProcessingStrategy transactionProcessingStrategy) {
+        return transactionProcessingStrategy!=null && transactionProcessingStrategy.isHeavensfamilyStrategy();
+    }
 
     /**
      * For late repayments, pay off in the same way as on-time payments,

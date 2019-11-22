@@ -27,6 +27,7 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionToRepaymentScheduleMapping;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.AbstractLoanRepaymentScheduleTransactionProcessor;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.LoanRepaymentScheduleTransactionProcessor;
+import org.apache.fineract.portfolio.loanproduct.domain.LoanTransactionProcessingStrategy;
 import org.joda.time.LocalDate;
 
 /**
@@ -35,6 +36,11 @@ import org.joda.time.LocalDate;
  */
 public class InterestPrincipalPenaltyFeesOrderLoanRepaymentScheduleTransactionProcessor extends
         AbstractLoanRepaymentScheduleTransactionProcessor {
+
+    @Override
+    public boolean accept(LoanTransactionProcessingStrategy transactionProcessingStrategy) {
+        return transactionProcessingStrategy!=null && transactionProcessingStrategy.isInterestPrincipalPenaltiesFeesOrderStrategy();
+    }
 
     /**
      * For early/'in advance' repayments, pay off in the same way as on-time

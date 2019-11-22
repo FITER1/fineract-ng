@@ -27,7 +27,9 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionToRepaymentScheduleMapping;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.AbstractLoanRepaymentScheduleTransactionProcessor;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.LoanRepaymentScheduleTransactionProcessor;
+import org.apache.fineract.portfolio.loanproduct.domain.LoanTransactionProcessingStrategy;
 import org.joda.time.LocalDate;
+import org.springframework.stereotype.Component;
 
 /**
  * Adhikar/RBI style {@link LoanRepaymentScheduleTransactionProcessor}.
@@ -43,7 +45,13 @@ import org.joda.time.LocalDate;
  * Partial Payment of 40 20 Payment to interest on Installment #1 (200 principal
  * remaining) 20 Payment to interest on Installment #2 (200 principal remaining)
  */
+@Component
 public class RBILoanRepaymentScheduleTransactionProcessor extends AbstractLoanRepaymentScheduleTransactionProcessor {
+
+    @Override
+    public boolean accept(LoanTransactionProcessingStrategy transactionProcessingStrategy) {
+        return transactionProcessingStrategy!=null && transactionProcessingStrategy.isIndianRBIStrategy();
+    }
 
     /**
      * For creocore, early is defined as any date before the installment due
