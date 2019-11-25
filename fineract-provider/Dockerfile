@@ -23,6 +23,8 @@ ENV PATH /opt/fineract:$PATH
 WORKDIR /opt/fineract
 
 ADD fineract-provider-*.tgz /opt/
+COPY *.properties /root/.mifosx/pentahoReports/
+COPY *.prpt /root/.mifosx/pentahoReports/
 
 EXPOSE 8443
 

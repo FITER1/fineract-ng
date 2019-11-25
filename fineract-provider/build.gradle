@@ -170,5 +170,6 @@ docker {
     name "fineract:latest"
     tag "build", "fineract:${project.version}"
     dependsOn fatJarTar
-    files tasks.fatJarTar.outputs
+    def reportFiles = fileTree(dir: '/pentahoReports').getFiles()
+    files tasks.fatJarTar.outputs, reportFiles
 }
