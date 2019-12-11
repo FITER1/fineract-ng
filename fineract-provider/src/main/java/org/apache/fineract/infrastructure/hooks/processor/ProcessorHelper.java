@@ -18,44 +18,49 @@
  */
 package org.apache.fineract.infrastructure.hooks.processor;
 
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.jackson.JacksonConverterFactory;
 
-import javax.net.ssl.*;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
-@SuppressWarnings("unused")
+@Slf4j
 public class ProcessorHelper {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(ProcessorHelper.class);
+	private final static Logger logger = LoggerFactory.getLogger(ProcessorHelper.class);
 
 	@SuppressWarnings("null")
 	public static OkHttpClient configureClient(final OkHttpClient client) {
-		final TrustManager[] certs = new TrustManager[] { new X509TrustManager() {
+		final TrustManager[] certs = new TrustManager[] {
+			new X509TrustManager() {
+				@Override
+				public X509Certificate[] getAcceptedIssuers() {
+					return null;
+				}
 
-			@Override
-			public X509Certificate[] getAcceptedIssuers() {
-				return null;
-			}
+				@Override
+				public void checkServerTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
+				}
 
-			@Override
-			public void checkServerTrusted(final X509Certificate[] chain,
-					final String authType) throws CertificateException {
+				@Override
+				public void checkClientTrusted(final X509Certificate[] chain, final String authType) throws CertificateException {
+				}
 			}
-
-			@Override
-			public void checkClientTrusted(final X509Certificate[] chain,
-					final String authType) throws CertificateException {
-			}
-		} };
+		};
 
 		SSLContext ctx = null;
 		try {
@@ -65,13 +70,7 @@ public class ProcessorHelper {
 		}
 
 		try {
-			final HostnameVerifier hostnameVerifier = new HostnameVerifier() {
-				@Override
-				public boolean verify(final String hostname,
-						final SSLSession session) {
-					return true;
-				}
-			};
+			final HostnameVerifier hostnameVerifier = (hostname, session) -> true;
 			// TODO: fix this
 			// client.hostnameVerifier(hostnameVerifier);
 			// client.sslSocketFactory(ctx.getSocketFactory());
@@ -82,8 +81,14 @@ public class ProcessorHelper {
 	}
 
 	public static OkHttpClient createClient() {
-		final OkHttpClient client = new OkHttpClient();
-		return configureClient(client);
+		// TODO: @aleks remove extensive request logging
+		HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(log::debug);
+		interceptor.level(HttpLoggingInterceptor.Level.BODY);
+
+		OkHttpClient.Builder okClient = new OkHttpClient.Builder();
+		okClient.addInterceptor(interceptor);
+
+		return configureClient(okClient.build());
 	}
 
 	@SuppressWarnings("rawtypes")
@@ -92,13 +97,16 @@ public class ProcessorHelper {
 		return new Callback() {
 			@Override
 			public void onResponse(Call call, Response response) {
-				logger.info("URL : " + url + "\tStatus : "
-					+ response.code());
+				if(response.code() < 400) {
+					logger.info("URL : " + url + "\tStatus : " + response.code());
+				} else {
+					logger.error("URL : " + url + "\tStatus : " + response.code());
+				}
 			}
 
 			@Override
 			public void onFailure(Call call, Throwable t) {
-				logger.warn(t.getMessage());
+				logger.error("URL : " + call.request().url() + "\tMessage : " + t.getMessage());
 			}
 		};
 	}
@@ -110,7 +118,8 @@ public class ProcessorHelper {
 		Retrofit.Builder builder = new Retrofit.Builder()
 			.baseUrl(url)
 			.client(client)
-			// .addConverterFactory(JacksonConverterFactory.create())
+			.addConverterFactory(GsonConverterFactory.create())
+			.addConverterFactory(JacksonConverterFactory.create())
 		;
 
 		Retrofit retrofit = builder.build();

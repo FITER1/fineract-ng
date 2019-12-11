@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.apache.fineract.infrastructure.hooks.processor.data.SmsProviderData;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.Body;
@@ -42,34 +43,34 @@ public interface WebHookService {
 	final static String API_KEY_HEADER = "X-Fineract-API-Key";
 
 	// Ping
-	@GET("/")
+	@GET("./")
 	Response sendEmptyRequest();
 
 	// Template - Web
-	@POST("/")
-	void sendJsonRequest(@Header(ENTITY_HEADER) String entityHeader,
-			@Header(ACTION_HEADER) String actionHeader,
-			@Header(TENANT_HEADER) String tenantHeader,
-			@Header(ENDPOINT_HEADER) String endpointHeader,
-			@Body JsonObject result, Callback<Response> callBack);
+	@POST("./")
+	Call<Map<String, Object>> sendJsonRequest(@Header(ENTITY_HEADER) String entityHeader,
+		   @Header(ACTION_HEADER) String actionHeader,
+		   @Header(TENANT_HEADER) String tenantHeader,
+		   @Header(ENDPOINT_HEADER) String endpointHeader,
+		   @Body JsonObject result);
 
 	@FormUrlEncoded
-	@POST("/")
-	void sendFormRequest(@Header(ENTITY_HEADER) String entityHeader,
+	@POST("./")
+	Call<Map<String, Object>> sendFormRequest(@Header(ENTITY_HEADER) String entityHeader,
 			@Header(ACTION_HEADER) String actionHeader,
 			@Header(TENANT_HEADER) String tenantHeader,
 			@Header(ENDPOINT_HEADER) String endpointHeader,
-			@FieldMap Map<String, String> params, Callback<Response> callBack);
+			@FieldMap Map<String, String> params);
 
+	// TODO: @aleks not sure yet if these have to be adapted
 	// Template - SMS Bridge
 	@POST("/")
-	void sendSmsBridgeRequest(@Header(ENTITY_HEADER) String entityHeader,
+	Call<Map<String, Object>> sendSmsBridgeRequest(@Header(ENTITY_HEADER) String entityHeader,
 			@Header(ACTION_HEADER) String actionHeader,
 			@Header(TENANT_HEADER) String tenantHeader,
 			@Header(API_KEY_HEADER) String apiKeyHeader,
-			@Body JsonObject result, Callback<Response> callBack);
+			@Body JsonObject result);
 
 	@POST("/configuration")
-	String sendSmsBridgeConfigRequest(@Body SmsProviderData config);
-
+	Call<String>  sendSmsBridgeConfigRequest(@Body SmsProviderData config);
 }

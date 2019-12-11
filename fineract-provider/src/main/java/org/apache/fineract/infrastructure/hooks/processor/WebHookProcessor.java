@@ -18,24 +18,25 @@
  */
 package org.apache.fineract.infrastructure.hooks.processor;
 
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.contentTypeName;
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.payloadURLName;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.fineract.infrastructure.hooks.domain.Hook;
+import org.apache.fineract.infrastructure.hooks.domain.HookConfiguration;
+import org.apache.fineract.useradministration.domain.AppUser;
+import org.springframework.stereotype.Service;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.fineract.infrastructure.hooks.domain.Hook;
-import org.apache.fineract.infrastructure.hooks.domain.HookConfiguration;
-import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.stereotype.Service;
+import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.contentTypeName;
+import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.payloadURLName;
 
-import retrofit2.Callback;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
+@Slf4j
 @Service
 public class WebHookProcessor implements HookProcessor {
 
@@ -72,26 +73,23 @@ public class WebHookProcessor implements HookProcessor {
 			final String actionName, final String tenantIdentifier,
 			@SuppressWarnings("unused") final String authToken) {
 
-		final String fineractEndpointUrl = System.getProperty("baseUrl");
-		final WebHookService service = ProcessorHelper
-				.createWebHookService(url);
+		final String fineractEndpointUrl = System.getProperty("baseUrl"); // TODO: @aleks take this from injectable settings
+		final WebHookService service = ProcessorHelper.createWebHookService(url);
 
 		@SuppressWarnings("rawtypes")
 		final Callback callback = ProcessorHelper.createCallback(url);
+		Call<Map<String, Object>> res = null;
 
-		if (contentType.equalsIgnoreCase("json")
-				|| contentType.contains("json")) {
-			final JsonObject json = new JsonParser().parse(payload)
-					.getAsJsonObject();
-			service.sendJsonRequest(entityName, actionName, tenantIdentifier,
-					fineractEndpointUrl, json, callback);
+		if (contentType.equalsIgnoreCase("json") || contentType.contains("json")) {
+			final JsonObject json = new JsonParser().parse(payload).getAsJsonObject();
+			res = service.sendJsonRequest(entityName, actionName, tenantIdentifier, fineractEndpointUrl, json);
 		} else {
 			Map<String, String> map = new HashMap<>();
 			map = new Gson().fromJson(payload, map.getClass());
-			service.sendFormRequest(entityName, actionName, tenantIdentifier,
-					fineractEndpointUrl, map, callback);
+			res = service.sendFormRequest(entityName, actionName, tenantIdentifier, fineractEndpointUrl, map);
 		}
 
+		res.enqueue(callback);
 	}
 
 }
