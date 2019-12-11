@@ -62,8 +62,7 @@ public class WebHookProcessor implements HookProcessor {
 			}
 		}
 
-		sendRequest(url, contentType, payload, entityName, actionName,
-				tenantIdentifier, authToken);
+		sendRequest(url, contentType, payload, entityName, actionName, tenantIdentifier, authToken);
 
 	}
 
