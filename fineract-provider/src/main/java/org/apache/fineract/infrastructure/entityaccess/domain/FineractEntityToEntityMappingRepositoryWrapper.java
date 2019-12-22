@@ -33,9 +33,8 @@ public class FineractEntityToEntityMappingRepositoryWrapper {
     }
 
     public FineractEntityToEntityMapping findOneWithNotFoundDetection(final Long id) {
-        final FineractEntityToEntityMapping fineractEntityToEntityMapping = this.fineractEntityToEntityMappingRepository.findById(id).orElse(null);
-        if (fineractEntityToEntityMapping == null) { throw new FineractEntityAccessNotFoundException(id); }
-        return fineractEntityToEntityMapping;
+        return this.fineractEntityToEntityMappingRepository.findById(id)
+                .orElseThrow(() -> new FineractEntityAccessNotFoundException(id));
     }
 
     public void delete(final FineractEntityToEntityMapping mapId) {

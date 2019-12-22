@@ -275,7 +275,6 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
                                 && (deliveryStatus != 100)) {
                             SmsMessage smsMessage = this.smsMessageRepository.findById(smsMessageDeliveryReportData.getId()).orElse(null);
                             Integer statusType = smsMessage.getStatusType();
-                            boolean statusChanged = false;
 
                             switch (deliveryStatus) {
                                 case 0:
@@ -300,7 +299,7 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
                                 break;
                             }
 
-                            statusChanged = !statusType.equals(smsMessage.getStatusType());
+                            boolean statusChanged = !statusType.equals(smsMessage.getStatusType());
 
                             // update the status Type enum
                             smsMessage.setStatusType(statusType);

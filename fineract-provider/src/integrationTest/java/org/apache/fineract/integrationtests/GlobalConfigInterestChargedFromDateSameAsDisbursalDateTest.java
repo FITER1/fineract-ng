@@ -27,9 +27,9 @@ import java.util.HashMap;
 
 
 public class GlobalConfigInterestChargedFromDateSameAsDisbursalDateTest extends BaseIntegrationTest {
-    
+
     private GlobalConfigurationHelper globalConfigurationHelper;
-    
+
     @SuppressWarnings( {"static-access", "rawtypes", "unchecked"})
     @Test
     public void testInterestChargedFromDateSameAsDisbursalDate(){

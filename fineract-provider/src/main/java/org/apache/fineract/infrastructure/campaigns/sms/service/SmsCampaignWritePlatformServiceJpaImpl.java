@@ -104,7 +104,7 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
     private final DeviceRegistrationRepositoryWrapper deviceRegistrationRepository;
     private final SmsMessageScheduledJobService smsMessageScheduledJobService;
     private final FineractProperties fineractProperties;
-    
+
     @Autowired
     public SmsCampaignWritePlatformServiceJpaImpl(final PlatformSecurityContext context, final SmsCampaignRepository smsCampaignRepository,
             final SmsCampaignValidator smsCampaignValidator, final ReportRepository reportRepository,
@@ -135,8 +135,8 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
         final AppUser currentUser = this.context.authenticatedUser();
         this.smsCampaignValidator.validateCreate(command.json());
         final Long runReportId = command.longValueOfParameterNamed(SmsCampaignValidator.runReportId);
-        Report report = this.reportRepository.findById(runReportId).orElse(null);
-        if (report == null) { throw new ReportNotFoundException(runReportId); }
+        Report report = this.reportRepository.findById(runReportId)
+                .orElseThrow(() -> new ReportNotFoundException(runReportId));
         SmsCampaign smsCampaign = SmsCampaign.instance(currentUser, report, command);
         if (smsCampaign.getRecurrenceStartDate() != null && smsCampaign.getRecurrenceStartDate().isBefore(DateUtils.getLocalDateOfTenant())) { throw new GeneralPlatformDomainRuleException(
                 "error.msg.campaign.recurrenceStartDate.in.the.past", "Recurrence start date cannot be the past date.",
@@ -156,17 +156,16 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
             this.context.authenticatedUser();
 
             this.smsCampaignValidator.validateForUpdate(command.json());
-            final SmsCampaign smsCampaign = this.smsCampaignRepository.findById(resourceId).orElse(null);
+            final SmsCampaign smsCampaign = this.smsCampaignRepository.findById(resourceId)
+                    .orElseThrow(() -> new SmsCampaignNotFound(resourceId));
 
-            if (smsCampaign == null) { throw new SmsCampaignNotFound(resourceId); }
             if (smsCampaign.isActive()) { throw new SmsCampaignMustBeClosedToEditException(smsCampaign.getId()); }
             final Map<String, Object> changes = smsCampaign.update(command);
 
             if (changes.containsKey(SmsCampaignValidator.runReportId)) {
                 final Long newValue = command.longValueOfParameterNamed(SmsCampaignValidator.runReportId);
-                final Report reportId = this.reportRepository.findById(newValue).orElse(null);
-                if (reportId == null) { throw new ReportNotFoundException(newValue); }
-                ;
+                final Report reportId = this.reportRepository.findById(newValue)
+                        .orElseThrow(() -> new ReportNotFoundException(newValue));
                 smsCampaign.updateBusinessRuleId(reportId);
             }
 
@@ -189,9 +188,9 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
     @Override
     public CommandProcessingResult delete(final Long resourceId) {
         this.context.authenticatedUser();
-        final SmsCampaign smsCampaign = this.smsCampaignRepository.findById(resourceId).orElse(null);
+        final SmsCampaign smsCampaign = this.smsCampaignRepository.findById(resourceId)
+                .orElseThrow(() -> new SmsCampaignNotFound(resourceId));
 
-        if (smsCampaign == null) { throw new SmsCampaignNotFound(resourceId); }
         if (smsCampaign.isActive()) { throw new SmsCampaignMustBeClosedToBeDeletedException(smsCampaign.getId()); }
 
         /*
@@ -395,8 +394,8 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
     }
     
     private void updateTriggerDates(Long campaignId) {
-        final SmsCampaign smsCampaign = this.smsCampaignRepository.findById(campaignId).orElse(null);
-        if (smsCampaign == null) { throw new SmsCampaignNotFound(campaignId); }
+        final SmsCampaign smsCampaign = this.smsCampaignRepository.findById(campaignId)
+                .orElseThrow(() -> new SmsCampaignNotFound(campaignId));
         LocalDateTime nextTriggerDate = smsCampaign.getNextTriggerDate();
         smsCampaign.setLastTriggerDate(nextTriggerDate.toDate());
         // calculate new trigger date and insert into next trigger date
@@ -437,9 +436,8 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
 
         this.smsCampaignValidator.validateActivation(command.json());
 
-        final SmsCampaign smsCampaign = this.smsCampaignRepository.findById(campaignId).orElse(null);
-
-        if (smsCampaign == null) { throw new SmsCampaignNotFound(campaignId); }
+        final SmsCampaign smsCampaign = this.smsCampaignRepository.findById(campaignId)
+                .orElseThrow(() -> new SmsCampaignNotFound(campaignId));
 
         final Locale locale = command.extractLocale();
         final DateTimeFormatter fmt = DateTimeFormat.forPattern(command.dateFormat()).withLocale(locale);
@@ -494,8 +492,8 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
         final AppUser currentUser = this.context.authenticatedUser();
         this.smsCampaignValidator.validateClosedDate(command.json());
 
-        final SmsCampaign smsCampaign = this.smsCampaignRepository.findById(campaignId).orElse(null);
-        if (smsCampaign == null) { throw new SmsCampaignNotFound(campaignId); }
+        final SmsCampaign smsCampaign = this.smsCampaignRepository.findById(campaignId)
+                .orElseThrow(() -> new SmsCampaignNotFound(campaignId));
 
         final Locale locale = command.extractLocale();
         final DateTimeFormatter fmt = DateTimeFormat.forPattern(command.dateFormat()).withLocale(locale);
@@ -603,9 +601,8 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
 
         final AppUser currentUser = this.context.authenticatedUser();
 
-        final SmsCampaign smsCampaign = this.smsCampaignRepository.findById(campaignId).orElse(null);
-
-        if (smsCampaign == null) { throw new SmsCampaignNotFound(campaignId); }
+        final SmsCampaign smsCampaign = this.smsCampaignRepository.findById(campaignId)
+                .orElseThrow(() -> new SmsCampaignNotFound(campaignId));
 
         final Locale locale = command.extractLocale();
         final DateTimeFormatter fmt = DateTimeFormat.forPattern(command.dateFormat()).withLocale(locale);

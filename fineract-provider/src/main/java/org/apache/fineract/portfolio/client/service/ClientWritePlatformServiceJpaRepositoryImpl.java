@@ -226,12 +226,12 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             final AppUser currentUser = this.context.authenticatedUser();
 
             this.fromApiJsonDeserializer.validateForCreate(command.json());
-            
+
 			final GlobalConfigurationPropertyData configuration = this.configurationReadPlatformService
 					.retrieveGlobalConfiguration("Enable-Address");
 
 			final Boolean isAddressEnabled = configuration.isEnabled();
-			
+
 			final Boolean isStaff = command.booleanObjectValueOfParameterNamed(ClientApiConstants.isStaffParamName);
 
             final Long officeId = command.longValueOfParameterNamed(ClientApiConstants.officeIdParamName);
@@ -242,8 +242,8 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 
             Group clientParentGroup = null;
             if (groupId != null) {
-                clientParentGroup = this.groupRepository.findById(groupId).orElse(null);
-                if (clientParentGroup == null) { throw new GroupNotFoundException(groupId); }
+                clientParentGroup = this.groupRepository.findById(groupId)
+                        .orElseThrow(() -> new GroupNotFoundException(groupId));
             }
 
             Staff staff = null;
@@ -275,8 +275,8 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
            
             final Long savingsProductId = command.longValueOfParameterNamed(ClientApiConstants.savingsProductIdParamName);
             if (savingsProductId != null) {
-                SavingsProduct savingsProduct = this.savingsProductRepository.findById(savingsProductId).orElse(null);
-                if (savingsProduct == null) { throw new SavingsProductNotFoundException(savingsProductId); }
+                this.savingsProductRepository.findById(savingsProductId)
+                        .orElseThrow(() -> new SavingsProductNotFoundException(savingsProductId));
             }
             
             final Integer legalFormParamValue = command.integerValueOfParameterNamed(ClientApiConstants.legalFormIdParamName);
@@ -319,18 +319,16 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             CommandProcessingResult result = openSavingsAccount(newClient, fmt);
             if (result.getSavingsId() != null) {
                 this.clientRepository.save(newClient);
-                
             }
-            
+
             if(isEntity) {
                 extractAndCreateClientNonPerson(newClient, command);
             }
-            	
+
             if (isAddressEnabled) {
                 this.addressWritePlatformService.addNewClientAddress(newClient, command);
             }
-            
-            
+
             if(command.arrayOfParameterNamed("familyMembers")!=null)
             {
             	this.clientFamilyMembersWritePlatformService.addClientFamilyMember(newClient, command);
@@ -366,22 +364,20 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
          	return CommandProcessingResult.empty();
         }
     }
-    
+
     /**
      * This method extracts ClientNonPerson details from Client command and creates a new ClientNonPerson record
      * @param client
      * @param command
      */
-    public void extractAndCreateClientNonPerson(Client client, JsonCommand command)
-    {    	
+    public void extractAndCreateClientNonPerson(Client client, JsonCommand command) {
     	final JsonElement clientNonPersonElement = this.fromApiJsonHelper.parse(command.jsonFragment(ClientApiConstants.clientNonPersonDetailsParamName));
 
-		if(clientNonPersonElement != null && !isEmpty(clientNonPersonElement))
-		{
+		if(clientNonPersonElement != null && !isEmpty(clientNonPersonElement)) {
 			final String incorpNumber = this.fromApiJsonHelper.extractStringNamed(ClientApiConstants.incorpNumberParamName, clientNonPersonElement);
-	        final String remarks = this.fromApiJsonHelper.extractStringNamed(ClientApiConstants.remarksParamName, clientNonPersonElement);                
+	        final String remarks = this.fromApiJsonHelper.extractStringNamed(ClientApiConstants.remarksParamName, clientNonPersonElement);
 	        final LocalDate incorpValidityTill = this.fromApiJsonHelper.extractLocalDateNamed(ClientApiConstants.incorpValidityTillParamName, clientNonPersonElement);
-	        
+
 	    	//JsonCommand clientNonPersonCommand = JsonCommand.fromExistingCommand(command, command.arrayOfParameterNamed(ClientApiConstants.clientNonPersonDetailsParamName).getAsJsonObject());
 	    	CodeValue clientNonPersonConstitution = null;
 	        final Long clientNonPersonConstitutionId = this.fromApiJsonHelper.extractLongNamed(ClientApiConstants.constitutionIdParamName, clientNonPersonElement);
@@ -389,21 +385,21 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 	        	clientNonPersonConstitution = this.codeValueRepository.findOneByCodeNameAndIdWithNotFoundDetection(ClientApiConstants.CLIENT_NON_PERSON_CONSTITUTION,
 	        			clientNonPersonConstitutionId);
 	        }
-	        
+
 	        CodeValue clientNonPersonMainBusinessLine = null;
 	        final Long clientNonPersonMainBusinessLineId = this.fromApiJsonHelper.extractLongNamed(ClientApiConstants.mainBusinessLineIdParamName, clientNonPersonElement);
 	        if (clientNonPersonMainBusinessLineId != null) {
 	        	clientNonPersonMainBusinessLine = this.codeValueRepository.findOneByCodeNameAndIdWithNotFoundDetection(ClientApiConstants.CLIENT_NON_PERSON_MAIN_BUSINESS_LINE,
 	        			clientNonPersonMainBusinessLineId);
 	        }
-	        
+
 	    	final ClientNonPerson newClientNonPerson = ClientNonPerson.createNew(client, clientNonPersonConstitution, clientNonPersonMainBusinessLine, incorpNumber, incorpValidityTill, remarks);
-	    	
+
 	    	this.clientNonPersonRepository.save(newClientNonPerson);
 		}
     }
-    
-    public boolean isEmpty(final JsonElement element){
+
+    public boolean isEmpty(final JsonElement element) {
     	return element.toString().trim().length()<4;
     }
 
@@ -445,11 +441,10 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             if (changes.containsKey(ClientApiConstants.savingsProductIdParamName)) {
                 if (clientForUpdate.isActive()) { throw new ClientActiveForUpdateException(clientId,
                         ClientApiConstants.savingsProductIdParamName); }
-                SavingsProduct savingsProduct = null;
                 final Long savingsProductId = command.longValueOfParameterNamed(ClientApiConstants.savingsProductIdParamName);
                 if (savingsProductId != null) {
-                    savingsProduct = this.savingsProductRepository.findById(savingsProductId).orElse(null);
-                    if (savingsProduct == null) { throw new SavingsProductNotFoundException(savingsProductId); }
+                    this.savingsProductRepository.findById(savingsProductId)
+                            .orElseThrow(() -> new SavingsProductNotFoundException(savingsProductId));
                 }
                 clientForUpdate.updateSavingsProduct(savingsProductId);
             }
@@ -486,7 +481,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             if (!changes.isEmpty()) {
                 this.clientRepository.saveAndFlush(clientForUpdate);
             }
-            
+
             if (changes.containsKey(ClientApiConstants.legalFormIdParamName)) {
             	Integer legalFormValue = clientForUpdate.getLegalForm();
             	boolean isChangedToEntity = false;
@@ -496,7 +491,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             		if(legalForm != null)
             			isChangedToEntity = legalForm.isEntity();
             	}
-                
+
                 if(isChangedToEntity)
                 {
                 	extractAndCreateClientNonPerson(clientForUpdate, command);
@@ -508,13 +503,13 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                 		this.clientNonPersonRepository.delete(clientNonPerson);
                 }
             }
-            
+
             final ClientNonPerson clientNonPersonForUpdate = this.clientNonPersonRepository.findOneByClientId(clientId);
             if(clientNonPersonForUpdate != null)
             {
             	final JsonElement clientNonPersonElement = command.jsonElement(ClientApiConstants.clientNonPersonDetailsParamName);
             	final Map<String, Object> clientNonPersonChanges = clientNonPersonForUpdate.update(JsonCommand.fromExistingCommand(command, clientNonPersonElement));
-                
+
                 if (clientNonPersonChanges.containsKey(ClientApiConstants.constitutionIdParamName)) {
 
                     final Long newValue = this.fromApiJsonHelper.extractLongNamed(ClientApiConstants.constitutionIdParamName, clientNonPersonElement);
@@ -524,7 +519,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     }
                     clientNonPersonForUpdate.updateConstitution(constitution);
                 }
-                
+
                 if (clientNonPersonChanges.containsKey(ClientApiConstants.mainBusinessLineIdParamName)) {
 
                     final Long newValue = this.fromApiJsonHelper.extractLongNamed(ClientApiConstants.mainBusinessLineIdParamName, clientNonPersonElement);
@@ -534,11 +529,11 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     }
                     clientNonPersonForUpdate.updateMainBusinessLine(mainBusinessLine);
                 }
-                
+
                 if (!clientNonPersonChanges.isEmpty()) {
                     this.clientNonPersonRepository.saveAndFlush(clientNonPersonForUpdate);
                 }
-                
+
                 changes.putAll(clientNonPersonChanges);
             } else {
                 final Integer legalFormParamValue = command.integerValueOfParameterNamed(ClientApiConstants.legalFormIdParamName);

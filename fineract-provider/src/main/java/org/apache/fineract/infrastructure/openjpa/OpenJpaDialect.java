@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.infrastructure.core.boot;
+package org.apache.fineract.infrastructure.openjpa;
 
 import java.sql.Connection;
 import java.sql.SQLException;

@@ -60,7 +60,7 @@ public class NotificationEventListener implements SessionAwareMessageListener {
             if (notificationData.getOfficeId() != null) {
                 List<Long> tempUserIds = new ArrayList<>(userIds);
                 for (Long userId : tempUserIds) {
-                    AppUser appUser = appUserRepository.findById(userId).orElse(null);
+                    AppUser appUser = appUserRepository.findById(userId).get();
                     if (!Objects.equals(appUser.getOffice().getId(), notificationData.getOfficeId())) {
                         userIds.remove(userId);
                     }

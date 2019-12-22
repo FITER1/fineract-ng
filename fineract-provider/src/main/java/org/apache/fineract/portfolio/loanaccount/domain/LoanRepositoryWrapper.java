@@ -52,8 +52,8 @@ public class LoanRepositoryWrapper {
 
     @Transactional(readOnly=true)
     public Loan findOneWithNotFoundDetection(final Long id, boolean loadLazyCollections) {
-        final Loan loan = this.repository.findById(id).orElse(null);
-        if (loan == null) { throw new LoanNotFoundException(id); }
+        final Loan loan = this.repository.findById(id)
+                .orElseThrow(() -> new LoanNotFoundException(id));
         if(loadLazyCollections) {
             loan.initializeLazyCollections();
         }

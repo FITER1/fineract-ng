@@ -44,9 +44,8 @@ public class HolidayRepositoryWrapper {
     }
 
     public Holiday findOneWithNotFoundDetection(final Long id) {
-        final Holiday holiday = this.repository.findById(id).orElse(null);
-        if (holiday == null) { throw new HolidayNotFoundException(id); }
-        return holiday;
+        return this.repository.findById(id)
+                .orElseThrow(() -> new HolidayNotFoundException(id));
     }
 
     public void save(final Holiday holiday) {

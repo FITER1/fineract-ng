@@ -136,8 +136,8 @@ public class ChargeWritePlatformServiceJpaRepositoryImpl implements ChargeWriteP
         try {
             this.fromApiJsonDeserializer.validateForUpdate(command.json());
 
-            final Charge chargeForUpdate = this.chargeRepository.findById(chargeId).orElse(null);
-            if (chargeForUpdate == null) { throw new ChargeNotFoundException(chargeId); }
+            final Charge chargeForUpdate = this.chargeRepository.findById(chargeId)
+                    .orElseThrow(() -> new ChargeNotFoundException(chargeId));
 
             final Map<String, Object> changes = chargeForUpdate.update(command);
 
@@ -203,8 +203,9 @@ public class ChargeWritePlatformServiceJpaRepositoryImpl implements ChargeWriteP
     @CacheEvict(value = "charges", key = "@fineractProperties.getTenantId().concat('ch')")
     public CommandProcessingResult deleteCharge(final Long chargeId) {
 
-        final Charge chargeForDelete = this.chargeRepository.findById(chargeId).orElse(null);
-        if (chargeForDelete == null || chargeForDelete.isDeleted()) { throw new ChargeNotFoundException(chargeId); }
+        final Charge chargeForDelete = this.chargeRepository.findById(chargeId)
+                .orElseThrow(() -> new ChargeNotFoundException(chargeId));
+        if (chargeForDelete.isDeleted()) { throw new ChargeNotFoundException(chargeId); }
 
         final Collection<LoanProduct> loanProducts = this.loanProductRepository.retrieveLoanProductsByChargeId(chargeId);
         final Boolean isChargeExistWithLoans = isAnyLoansAssociateWithThisCharge(chargeId);

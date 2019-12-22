@@ -42,9 +42,8 @@ public class SavingsAccountChargeRepositoryWrapper {
     }
 
     public SavingsAccountCharge findOneWithNotFoundDetection(final Long id) {
-        final SavingsAccountCharge savingsAccountCharge = this.repository.findById(id).orElse(null);
-        if (savingsAccountCharge == null) { throw new SavingsAccountChargeNotFoundException(id); }
-        return savingsAccountCharge;
+        return this.repository.findById(id)
+                .orElseThrow(() -> new SavingsAccountChargeNotFoundException(id));
     }
 
     public SavingsAccountCharge findOneWithNotFoundDetection(final Long id, final Long savingsAccountId) {

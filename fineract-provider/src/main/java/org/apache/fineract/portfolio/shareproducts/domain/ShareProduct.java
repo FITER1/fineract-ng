@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.portfolio.shareproducts.domain;
 
+import com.google.common.base.Optional;
 import org.apache.fineract.accounting.common.AccountingRuleType;
 import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -146,9 +147,9 @@ public class ShareProduct extends AbstractAuditableCustom<AppUser, Long> {
         this.minimumActivePeriod = minimumActivePeriod;
         this.minimumActivePeriodType = minimumActivePeriodForDividendsType;
         setCreatedBy(createdBy);
-        setCreatedDate(createdDate.toDate());
+        setCreatedDate(Instant.ofEpochMilli(createdDate.getMillis()));
         setLastModifiedBy(lastModifiedBy);
-        setLastModifiedDate(lastModifiedDate.toDate());
+        setLastModifiedDate(Instant.ofEpochMilli(lastModifiedDate.getMillis()));
         startDate = DateUtils.getDateOfTenant();
         endDate = DateUtils.getDateOfTenant();
         if (accountingRuleType != null) {

@@ -438,7 +438,7 @@ public class InteropServiceImpl implements InteropService {
     }
 
     public InteropIdentifier findIdentifier(@NotNull InteropIdentifierType idType, @NotNull String idValue, String subIdOrType) {
-        return identifierRepository.findOne(where(idTypeEqual(idType)).and(idValueEqual(idValue)).and(subIdOrTypeEqual(subIdOrType))).orElse(null);
+        return identifierRepository.findOne(Specifications.where(idTypeEqual(idType)).and(idValueEqual(idValue)).and(subIdOrTypeEqual(subIdOrType))).get();
     }
 
     public static Specification<InteropIdentifier> idTypeEqual(@NotNull InteropIdentifierType idType) {

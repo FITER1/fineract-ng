@@ -52,8 +52,8 @@ public class ClientRepositoryWrapper {
 
     @Transactional(readOnly=true)
     public Client findOneWithNotFoundDetection(final Long clientId, final boolean loadLazyCollections) {
-        final Client client = this.repository.findById(clientId).orElse(null);
-        if (client == null) { throw new ClientNotFoundException(clientId); }
+        final Client client = this.repository.findById(clientId)
+                .orElseThrow(() -> new ClientNotFoundException(clientId));
         if(loadLazyCollections) {
             client.loadLazyCollections();
         }
