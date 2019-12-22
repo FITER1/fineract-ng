@@ -18,9 +18,7 @@
  */
 package org.apache.fineract.portfolio.loanaccount.service;
 
-import java.util.*;
-import java.util.concurrent.*;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -32,20 +30,19 @@ import org.apache.fineract.infrastructure.jobs.service.JobName;
 import org.apache.fineract.organisation.office.data.OfficeData;
 import org.apache.fineract.organisation.office.exception.OfficeNotFoundException;
 import org.apache.fineract.organisation.office.service.OfficeReadPlatformService;
-import org.apache.fineract.organisation.office.service.OfficeReadPlatformService;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.OverdueLoanScheduleData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 @Service
+@RequiredArgsConstructor
 public class LoanSchedularServiceImpl implements LoanSchedularService {
 
     private final static Logger logger = LoggerFactory.getLogger(LoanSchedularServiceImpl.class);
@@ -53,22 +50,8 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
     private final LoanReadPlatformService loanReadPlatformService;
     private final LoanWritePlatformService loanWritePlatformService;
 	private final OfficeReadPlatformService officeReadPlatformService;
-	private final ApplicationContext applicationContext;
+	private final RecalculateInterestPoster poster;
 	private final FineractProperties fineractProperties;
-
-    @Autowired
-    public LoanSchedularServiceImpl(final ConfigurationDomainService configurationDomainService,
-            final LoanReadPlatformService loanReadPlatformService, final LoanWritePlatformService loanWritePlatformService,
-			final OfficeReadPlatformService officeReadPlatformService,
-			final ApplicationContext applicationContext,
-			final FineractProperties fineractProperties) {
-        this.configurationDomainService = configurationDomainService;
-        this.loanReadPlatformService = loanReadPlatformService;
-        this.loanWritePlatformService = loanWritePlatformService;
-		this.officeReadPlatformService = officeReadPlatformService;
-		this.applicationContext=applicationContext;
-        this.fineractProperties = fineractProperties;
-    }
 
 	@Override
 	@CronTarget(jobName = JobName.APPLY_CHARGE_TO_OVERDUE_LOAN_INSTALLMENT)
@@ -244,8 +227,7 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 		executorService.shutdownNow();
 	}
 
-	private void recalculateInterest(List<Long> loanIds,
-									 int threadPoolSize, int batchSize, final ExecutorService executorService) {
+	private void recalculateInterest(List<Long> loanIds, int threadPoolSize, int batchSize, final ExecutorService executorService) {
 		StringBuilder sb = new StringBuilder();
 
 		List<Callable<Object>> posters = new ArrayList<Callable<Object>>();
@@ -267,9 +249,10 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 
 		for (long i=0; i < loopCount; i++) {
 			List<Long> subList = safeSubList(loanIds, fromIndex, toIndex);
-			RecalculateInterestPoster poster = (RecalculateInterestPoster) this.applicationContext.getBean("recalculateInterestPoster");
+			// TODO: @Aleks (verify that this is working as before); why would you have to get this from the application context, is there a reason why this can't be just simply injected?
+			// RecalculateInterestPoster poster = (RecalculateInterestPoster) this.applicationContext.getBean("recalculateInterestPoster");
 			poster.setLoanIds(subList);
-			poster.setLoanWritePlatformService(loanWritePlatformService);
+			// poster.setLoanWritePlatformService(loanWritePlatformService);
 			posters.add(Executors.callable(poster));
 			if(lastBatch)
 				break;
@@ -289,6 +272,7 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 			logger.error("Interrupted while recalculateInterest", e1);
 		}
 	}
+
 	//break the lists into sub lists
 	public <T> List<T> safeSubList(List<T> list, int fromIndex, int toIndex) {
 		int size = list.size();
@@ -323,8 +307,4 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 			logger.error("Execution exception while posting IR entries", e2);
 		}
 	}
-
-
-
-
 }

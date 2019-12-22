@@ -18,16 +18,9 @@
  */
 package org.apache.fineract.portfolio.loanaccount.service;
 
-import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
-import org.apache.fineract.infrastructure.configuration.domain.GlobalConfigurationRepository;
-import org.apache.fineract.infrastructure.core.domain.FineractPlatformTenant;
-import org.apache.fineract.infrastructure.core.exception.AbstractPlatformDomainRuleException;
-import org.apache.fineract.infrastructure.core.exception.AbstractPlatformResourceNotFoundException;
-import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
-import org.apache.fineract.portfolio.loanaccount.data.LoanScheduleAccrualData;
-import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
@@ -35,48 +28,31 @@ import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.Collection;
+import java.util.Random;
 
 
 @Component
-
+@RequiredArgsConstructor
 @Scope("prototype")
-
 public class RecalculateInterestPoster implements Runnable {
-
-
-
     private final static Logger logger = LoggerFactory.getLogger(" recalculate interest poster");
 
     private Collection<Long> loanIds;
 
-    private LoanWritePlatformService loanWritePlatformService;
+    private final LoanWritePlatformService loanWritePlatformService;
 
+    private final FineractProperties properties;
 
     public void setLoanIds(final Collection<Long> loanIds) {
-
         this.loanIds = loanIds;
-
     }
-
-
-
-    public void setLoanWritePlatformService(final LoanWritePlatformService loanWritePlatformService) {
-
-        this.loanWritePlatformService = loanWritePlatformService;
-
-    }
-
-
 
     @Override
     public void run() {
 
-        Integer maxNumberOfRetries = ThreadLocalContextUtil.getTenant()
-                .getConnection().getMaxRetriesOnDeadlock();
-        Integer maxIntervalBetweenRetries = ThreadLocalContextUtil.getTenant()
-                .getConnection().getMaxIntervalBetweenRetries();
+        Integer maxNumberOfRetries = properties.getConnection().getMaxRetriesOnDeadlock();
+        Integer maxIntervalBetweenRetries = properties.getConnection().getMaxIntervalBetweenRetries();
 
         int i = 0;
         if (!loanIds.isEmpty()) {
@@ -86,8 +62,7 @@ public class RecalculateInterestPoster implements Runnable {
                 Integer numberOfRetries = 0;
                 while (numberOfRetries <= maxNumberOfRetries) {
                     try {
-                        this.loanWritePlatformService
-                                .recalculateInterest(loanId);
+                        this.loanWritePlatformService.recalculateInterest(loanId);
                         numberOfRetries = maxNumberOfRetries + 1;
                     } catch (CannotAcquireLockException
                             | ObjectOptimisticLockingFailureException exception) {
@@ -145,7 +120,4 @@ public class RecalculateInterestPoster implements Runnable {
 
 
     }
-
-
-
 }

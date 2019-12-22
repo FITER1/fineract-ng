@@ -158,6 +158,7 @@ allprojects  {
             "**/wrapper/**",
             "**/build/**",
             "**/.gradletasknamecache",
+            "**/.theia",
 
             //Api Docs
             "**/api-docs/*.*",
