@@ -172,10 +172,8 @@ public class ProductMixWritePlatformServiceJpaRepositoryImpl implements ProductM
     }
 
     private LoanProduct findByProductIdIfProvided(final Long productId) {
-
-        final LoanProduct product = this.productRepository.findById(productId).orElse(null);
-        if (product == null) { throw new LoanProductNotFoundException(productId); }
-        return product;
+        return this.productRepository.findById(productId)
+                .orElseThrow(() -> new LoanProductNotFoundException(productId));
     }
 
     private Map<Long, LoanProduct> getRestrictedProducts(final Set<String> restrictedIds) {

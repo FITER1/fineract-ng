@@ -18,6 +18,11 @@
  */
 package org.apache.fineract.infrastructure.core.boot;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointProperties;
+import org.springframework.boot.autoconfigure.jersey.JerseyProperties;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,17 +30,41 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Profile("basicauth")
 @EnableWebSecurity
 @Configuration
 public class SecurityBasicConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private ServerProperties serverProperties;
+
+    @Autowired
+    private JerseyProperties jerseyProperties;
+
+    @Bean
+    public CorsFilter corsFilter(CorsEndpointProperties corsEndpointProperties) {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(corsEndpointProperties.getAllowCredentials());
+        corsEndpointProperties.getAllowedOrigins().forEach(config::addAllowedOrigin);
+        corsEndpointProperties.getAllowedHeaders().forEach(config::addAllowedHeader);
+        corsEndpointProperties.getAllowedMethods().forEach(config::addAllowedMethod);
+        source.registerCorsConfiguration("/**", config);
+
+        return new CorsFilter(source);
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .cors()
             .and()
-            .requiresChannel().anyRequest().requiresSecure()
+            .requiresChannel().anyRequest().requires(serverProperties.getSsl().isEnabled() ? "REQUIRES_SECURE_CHANNEL" : "REQUIRES_INSECURE_CHANNEL")
             .and()
             .csrf().disable()
             .headers().cacheControl().disable()
@@ -50,17 +79,18 @@ public class SecurityBasicConfiguration extends WebSecurityConfigurerAdapter {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-                // .antMatchers("/api/**/authentication").permitAll()
-                // .antMatchers("/api/**/self/authentication").permitAll()
-                // .antMatchers("/api/**/self/registration").permitAll()
-                // .antMatchers("/api/**/self/user").permitAll()
-                .antMatchers("/api/**").fullyAuthenticated()
-                // .antMatchers("/api/**").hasAuthority("TWOFACTOR_AUTHENTICATED")
+            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+            .antMatchers(jerseyProperties.getApplicationPath() + "/authentication").permitAll()
+            .antMatchers(jerseyProperties.getApplicationPath() + "/self/authentication").permitAll()
+            .antMatchers(jerseyProperties.getApplicationPath() + "/self/registration").permitAll()
+            .antMatchers(jerseyProperties.getApplicationPath() + "/self/user").permitAll()
+            .antMatchers(jerseyProperties.getApplicationPath() + "/**").fullyAuthenticated()
+            // .antMatchers(appPath + "/**").hasAuthority("TWOFACTOR_AUTHENTICATED")
         ;
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring()
             .antMatchers("/", "/index.html")
             .antMatchers("/static/**")

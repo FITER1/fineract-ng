@@ -103,7 +103,7 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
         Integer page = 0;
         int totalRecords = 0;
         do {
-            PageRequest pageRequest = new PageRequest(0, pageLimit);
+            PageRequest pageRequest = PageRequest.of(0, pageLimit);
             org.springframework.data.domain.Page<SmsMessage> pendingMessages = this.smsMessageRepository.findByStatusType(
                     SmsMessageStatusType.PENDING.getValue(), pageRequest);
             List<SmsMessage> toSaveMessages = new ArrayList<>() ;
@@ -275,7 +275,6 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
                                 && (deliveryStatus != 100)) {
                             SmsMessage smsMessage = this.smsMessageRepository.findById(smsMessageDeliveryReportData.getId()).orElse(null);
                             Integer statusType = smsMessage.getStatusType();
-                            boolean statusChanged = false;
 
                             switch (deliveryStatus) {
                                 case 0:
@@ -300,7 +299,7 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
                                 break;
                             }
 
-                            statusChanged = !statusType.equals(smsMessage.getStatusType());
+                            boolean statusChanged = !statusType.equals(smsMessage.getStatusType());
 
                             // update the status Type enum
                             smsMessage.setStatusType(statusType);

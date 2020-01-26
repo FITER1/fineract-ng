@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.organisation.office.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;

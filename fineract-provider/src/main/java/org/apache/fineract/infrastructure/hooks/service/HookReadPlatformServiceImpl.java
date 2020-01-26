@@ -79,7 +79,8 @@ public class HookReadPlatformServiceImpl implements HookReadPlatformService {
     }
 
     @Override
-    @Cacheable(value = "hooks", key = "@fineractProperties.getTenantId().concat('HK')")
+    // TODO: @aleks fix this
+    // @Cacheable(value = "hooks", key = "@fineractProperties.getTenantId().concat('HK')")
     public List<Hook> retrieveHooksByEvent(final String actionName,
             final String entityName) {
 

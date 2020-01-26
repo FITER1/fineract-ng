@@ -32,28 +32,15 @@
 		</encoder>
 	</appender>
 
-	<appender name="FILE" class="ch.qos.logback.core.FileAppender">
-		<file>logs/fineract-platform.log</file>
-		<append>true</append>
-		<encoder>
-			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
-		</encoder>
-	</appender>
-
-	<!-- NOTE: suppress warnings
-	<logger name="org.glassfish.jersey.internal.inject.Providers" level="ERROR" />
-	-->
-
 	<!--
 	<logger name="org.springframework.web" level="DEBUG" />
 	<logger name="org.apache.fineract" level="DEBUG" />
 	<logger name="org.springframework.jdbc.datasource" level="DEBUG" />
-	<logger name="org.springframework.boot.actuate.audit.listener" level="DEBUG" />
 	-->
+	<logger name="org.apache.fineract.infrastructure.hooks.processor" level="DEBUG" />
 	<logger name="org.ehcache" level="ERROR" />
 
-	<root level="INFO">
+	<root level="WARN">
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="FILE" />
 	</root>
 </configuration>

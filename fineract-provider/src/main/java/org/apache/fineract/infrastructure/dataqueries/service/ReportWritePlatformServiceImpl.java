@@ -121,8 +121,8 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
 
             this.fromApiJsonDeserializer.validate(command.json());
 
-            final Report report = this.reportRepository.findById(reportId).orElse(null);
-            if (report == null) { throw new ReportNotFoundException(reportId); }
+            final Report report = this.reportRepository.findById(reportId)
+                    .orElseThrow(() -> new ReportNotFoundException(reportId));
 
             final Map<String, Object> changes = report.update(command, this.readReportingService.getAllowedReportTypes());
 
@@ -157,8 +157,8 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
     @Override
     public CommandProcessingResult deleteReport(final Long reportId) {
 
-        final Report report = this.reportRepository.findById(reportId).orElse(null);
-        if (report == null) { throw new ReportNotFoundException(reportId); }
+        final Report report = this.reportRepository.findById(reportId)
+                .orElseThrow(() -> new ReportNotFoundException(reportId));
 
         if (report.isCoreReport()) {
             //
@@ -227,8 +227,9 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
                         // check parameter
                         if (jsonObject.has("parameterId")) {
                             final Long parameterId = jsonObject.get("parameterId").getAsLong();
-                            reportParameter = this.reportParameterRepository.findById(parameterId).orElse(null);
-                            if (reportParameter == null || !reportParameterUsageItem.hasParameterIdOf(parameterId)) {
+                            reportParameter = this.reportParameterRepository.findById(parameterId)
+                                    .orElseThrow(() -> new ReportParameterNotFoundException(parameterId));
+                            if (!reportParameterUsageItem.hasParameterIdOf(parameterId)) {
                                 //
                                 throw new ReportParameterNotFoundException(parameterId);
                             }
@@ -242,8 +243,8 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
                         // new report parameter usage
                         if (jsonObject.has("parameterId")) {
                             final Long parameterId = jsonObject.get("parameterId").getAsLong();
-                            reportParameter = this.reportParameterRepository.findById(parameterId).orElse(null);
-                            if (reportParameter == null) { throw new ReportParameterNotFoundException(parameterId); }
+                            reportParameter = this.reportParameterRepository.findById(parameterId)
+                                    .orElseThrow(() -> new ReportParameterNotFoundException(parameterId));
                         } else {
                             throw new PlatformDataIntegrityException("error.msg.parameter.id.mandatory.in.report.parameter",
                                     "parameterId column is mandatory in Report Parameter Entry");

@@ -61,7 +61,7 @@ public class SavingsSchedularServiceImpl implements SavingsSchedularService {
         Integer totalPageSize = 0;
         StringBuffer sb = new StringBuffer();
         do {
-            PageRequest pageRequest = new PageRequest(page, initialSize);
+            PageRequest pageRequest = PageRequest.of(page, initialSize);
             Page<SavingsAccount> savingsAccounts = this.savingsAccountRepository.findByStatus(SavingsAccountStatusType.ACTIVE.getValue(),
                     pageRequest);
             for (SavingsAccount savingsAccount : savingsAccounts.getContent()) {

@@ -36,12 +36,10 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 import javax.annotation.PostConstruct;
-import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.Path;
 import java.util.Arrays;
 
 @Slf4j
-@ApplicationPath("/api/v1")
 @Configuration
 public class JerseyConfiguration extends ResourceConfig {
 
@@ -81,8 +79,6 @@ public class JerseyConfiguration extends ResourceConfig {
         Arrays.stream(resourceBeans).forEach(resourceBean -> {
             final Object resource = this.applicationContext.getBean(resourceBean);
 
-            // log.warn("Register resource: {} - {}", resourceBean, resource.getClass().getName());
-
             register(resource.getClass());
         });
     }
@@ -94,6 +90,7 @@ public class JerseyConfiguration extends ResourceConfig {
         objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
         objectMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, true);
         objectMapper.configure(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS, false);
+        objectMapper.configure(SerializationFeature.INDENT_OUTPUT, false);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         return objectMapper;

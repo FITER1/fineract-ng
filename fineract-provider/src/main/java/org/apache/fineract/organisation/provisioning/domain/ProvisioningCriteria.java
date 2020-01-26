@@ -28,6 +28,7 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
+import java.time.Instant;
 import java.util.*;
 
 @Entity
@@ -58,9 +59,9 @@ public class ProvisioningCriteria extends AbstractAuditableCustom<AppUser, Long>
     public ProvisioningCriteria(String criteriaName, AppUser createdBy, DateTime createdDate, AppUser lastModifiedBy, DateTime lastModifiedDate) {
         this.criteriaName = criteriaName;
         setCreatedBy(createdBy) ;
-        setCreatedDate(createdDate==null ? DateTime.now().toDate() : createdDate.toDate()) ;
+        setCreatedDate(Instant.ofEpochMilli(createdDate.getMillis()));
         setLastModifiedBy(lastModifiedBy) ;
-        setLastModifiedDate(lastModifiedDate==null ? DateTime.now().toDate() : lastModifiedDate.toDate()) ;
+        setLastModifiedDate(lastModifiedDate  == null ? null : Instant.ofEpochMilli(lastModifiedDate.getMillis()));
     }
 
     public void setProvisioningCriteriaDefinitions(Set<ProvisioningCriteriaDefinition> provisioningCriteriaDefinition) {

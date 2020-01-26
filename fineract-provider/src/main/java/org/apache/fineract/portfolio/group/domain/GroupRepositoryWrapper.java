@@ -43,9 +43,8 @@ public class GroupRepositoryWrapper {
     }
 
     public Group findOneWithNotFoundDetection(final Long id) {
-        final Group entity = this.repository.findById(id).orElse(null);
-        if (entity == null) { throw new GroupNotFoundException(id); }
-        return entity;
+        return this.repository.findById(id)
+                .orElseThrow(() -> new GroupNotFoundException(id));
     }
 
     public Group findByOfficeWithNotFoundDetection(final Long id, final Office office) {

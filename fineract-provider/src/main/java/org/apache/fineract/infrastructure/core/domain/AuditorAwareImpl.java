@@ -35,23 +35,22 @@ public class AuditorAwareImpl implements AuditorAware<AppUser> {
 
     @Override
     public Optional<AppUser> getCurrentAuditor() {
-
-        AppUser currentUser = null;
+        Optional<AppUser> currentUser;
         final SecurityContext securityContext = SecurityContextHolder.getContext();
         if (securityContext != null) {
             final Authentication authentication = securityContext.getAuthentication();
             if (authentication != null) {
-                currentUser = (AppUser) authentication.getPrincipal();
+                currentUser = Optional.ofNullable((AppUser) authentication.getPrincipal());
             } else {
                 currentUser = retrieveSuperUser();
             }
         } else {
             currentUser = retrieveSuperUser();
         }
-        return Optional.of(currentUser);
+        return currentUser;
     }
 
-    private AppUser retrieveSuperUser() {
-        return this.userRepository.findById(1L).orElse(null);
+    private Optional<AppUser> retrieveSuperUser() {
+        return this.userRepository.findById(Long.valueOf("1"));
     }
 }

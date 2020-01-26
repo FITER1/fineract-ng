@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -60,9 +61,8 @@ public class LoanScheduleHistoryReadPlatformServiceImpl implements LoanScheduleH
     @Override
     public Integer fetchCurrentVersionNumber(Long loanId) {
         final String sql = "select MAX(lrs.version) from m_loan_repayment_schedule_history lrs where lrs.loan_id = ?";
-        Integer version = this.jdbcTemplate.queryForObject(sql, Integer.class, loanId);
-
-        return version==null ? 0 : version;
+        Integer max = this.jdbcTemplate.queryForObject(sql, new Object[]{loanId}, Integer.class);
+        return ObjectUtils.defaultIfNull(max, 0);
     }
 
     @Override

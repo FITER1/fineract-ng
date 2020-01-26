@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.hooks.domain.Hook;
 import org.apache.fineract.infrastructure.hooks.domain.HookConfiguration;
 import org.apache.fineract.infrastructure.hooks.domain.HookConfigurationRepository;
@@ -36,12 +37,14 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+@Slf4j
 @Service
 public class TwilioHookProcessor implements HookProcessor {
 
@@ -93,7 +96,12 @@ public class TwilioHookProcessor implements HookProcessor {
             smsProviderData.setEndpoint(System.getProperty("baseUrl"));
             smsProviderData.setTenantId(tenantIdentifier);
             smsProviderData.setMifosToken(authToken);
-            apiKey = service.sendSmsBridgeConfigRequest(smsProviderData);
+            Call<String> call = service.sendSmsBridgeConfigRequest(smsProviderData);
+            try {
+                apiKey = call.execute().body();
+            } catch (Exception e) {
+                log.error(e.toString(), e);
+            }
             final HookConfiguration apiKeyEntry = HookConfiguration.createNew(
                     hook, "string", apiKeyName, apiKey);
             this.hookConfigurationRepository.save(apiKeyEntry);
@@ -111,8 +119,8 @@ public class TwilioHookProcessor implements HookProcessor {
             } else {
                 json = new JsonParser().parse(payload).getAsJsonObject();
             }
-            service.sendSmsBridgeRequest(entityName, actionName,
-                    tenantIdentifier, apiKey, json, callback);
+            Call<Map<String, Object>> call = service.sendSmsBridgeRequest(entityName, actionName, tenantIdentifier, apiKey, json);
+            call.enqueue(callback);
         }
 
     }

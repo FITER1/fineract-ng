@@ -18,19 +18,19 @@
  */
 buildscript {
     ext {
-        springBootVersion = "2.1.7.RELEASE"
-        camelVersion = "2.24.1"
-        jacksonVersion = "2.9.9"
+        springBootVersion = "2.2.1.RELEASE"
+        camelVersion = "3.0.0"
+        jacksonVersion = "2.10.1"
         codehausJacksonVersion = "1.9.13"
-        springVersion = "5.1.9.RELEASE"
-        springSecurityVersion = "5.1.6.RELEASE"
-        springDataVersion = "2.1.10.RELEASE"
+        springVersion = "5.2.1.RELEASE"
+        springSecurityVersion = "5.2.1.RELEASE"
+        springDataVersion = "2.2.1.RELEASE"
         jerseyVersion = "2.29"
-        slf4jVersion = "1.7.28"
-        nettyVersion = "4.1.39.Final"
-        lombokVersion = "1.18.8"
-        microMeterVersion = "1.2.0"
-        awsSdkVersion = "1.11.602"
+        slf4jVersion = "1.7.29"
+        nettyVersion = "4.1.43.Final"
+        lombokVersion = "1.18.10"
+        microMeterVersion = "1.3.1"
+        awsSdkVersion = "1.11.673"
     }
     repositories {
         mavenCentral()
@@ -56,8 +56,8 @@ plugins {
     id "com.github.jk1.dependency-license-report" version "1.9"
     id "fr.brouillard.oss.gradle.jgitver" version "0.9.1"
     id "maven-publish"
-    id "org.openapi.generator" version "4.1.0"
-    id "org.nosphere.apache.rat" version "0.5.0"
+    id "org.openapi.generator" version "4.2.2"
+    id "org.nosphere.apache.rat" version "0.5.2"
     id "com.ewerk.gradle.plugins.querydsl" version "1.0.10"
 }
 
@@ -87,7 +87,8 @@ allprojects  {
     version = "1.3.1-SNAPSHOT"
 
     jgitver {
-        strategy "MAVEN"
+        strategy "PATTERN"
+        versionPattern '${M}.${m}.${p}-${meta.GIT_SHA1_8}'
     }
 
     task sourcesJar(type: Jar) {
@@ -103,13 +104,12 @@ allprojects  {
     repositories {
         mavenLocal()
 
-        // maven { url "https://nexus.pelotoninnovations.com/repository/maven-public" }
-        maven { url "http://jcenter.bintray.com" }
+        maven { url "https://jcenter.bintray.com" }
         maven { url "https://dl.bintray.com/palantir/releases" }
         maven { url "https://jitpack.io" }
-        maven { url "http://maven.wso2.org/nexus/content/repositories/releases/" }
-        maven { url "http://repo.maven.apache.org/maven2" }
-        maven { url "http://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts" }
+        maven { url "https://maven.wso2.org/nexus/content/repositories/releases/" }
+        maven { url "https://repo.maven.apache.org/maven2" }
+        maven { url "https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts" }
         maven { url "https://s3.amazonaws.com/redshift-maven-repository/release/" }
     }
 
@@ -157,6 +157,7 @@ allprojects  {
             "**/wrapper/**",
             "**/build/**",
             "**/.gradletasknamecache",
+            "**/.theia",
 
             //Api Docs
             "**/api-docs/*.*",
@@ -292,19 +293,19 @@ allprojects  {
             dependency "org.apache.openjpa:openjpa-kernel:3.1.0"
             dependency "org.apache.openjpa:openjpa-lib:3.1.0"
             dependency "org.apache.openjpa:openjpa-integration-jmx:3.1.0"
-            dependency "org.eclipse.persistence:eclipselink:2.7.4"
+            dependency "org.eclipse.persistence:eclipselink:2.7.5-RC3"
             dependency "org.apache.bval:org.apache.bval.bundle:2.0.2"
             dependency "org.apache.tika:tika-core:1.22"
-            dependency "com.google.guava:guava:19.0"
+            dependency "com.google.guava:guava:20.0"
             dependency "org.aspectj:aspectjrt:1.9.4"
             dependency "org.aspectj:aspectjweaver:1.9.4"
-            dependency "org.hibernate:hibernate-validator:6.0.14.Final"
-            dependency "org.hibernate:hibernate-validator-annotation-processor:6.0.14.Final"
-            dependency "io.cucumber:cucumber-java:4.7.1"
-            dependency "io.cucumber:cucumber-junit:4.7.1"
-            dependency "io.cucumber:cucumber-spring:4.7.1"
-            dependency "mysql:mysql-connector-java:8.0.17"
-            dependency "org.mariadb.jdbc:mariadb-java-client:2.4.3"
+            dependency "org.hibernate:hibernate-validator:6.1.0.Final"
+            dependency "org.hibernate:hibernate-validator-annotation-processor:6.1.0.Final"
+            dependency "io.cucumber:cucumber-java:5.0.0-RC1"
+            dependency "io.cucumber:cucumber-junit:5.0.0-RC1"
+            dependency "io.cucumber:cucumber-spring:5.0.0-RC1"
+            dependency "mysql:mysql-connector-java:8.0.18"
+            dependency "org.mariadb.jdbc:mariadb-java-client:2.5.1"
             dependency "javax.cache:cache-api:1.1.1"
             dependency "com.github.ben-manes.caffeine:caffeine:2.8.0"
             dependency "com.github.ben-manes.caffeine:jcache:2.8.0"
@@ -336,13 +337,14 @@ allprojects  {
             dependency "org.ow2.asm:asm-tree:5.2"
             dependency "org.ow2.asm:asm-analysis:5.2"
             dependency "org.ow2.asm:asm-commons:5.2"
-            dependency "org.jolokia:jolokia-core:1.6.0"
-            dependency "org.jolokia:jolokia-war:1.6.0"
+            dependency "org.ow2.asm:asm:5.2"
+            dependency "org.jolokia:jolokia-core:1.6.2"
+            dependency "org.jolokia:jolokia-war:1.6.2"
             // dependency "org.glassfish.hk2.external:javax.inject:2.5.0-b62"
             dependency "org.glassfish.jersey.ext:jersey-spring5:${jerseyVersion}"
             dependency "javax.ws.rs:javax.ws.rs-api:2.1-m09"
-            dependency "org.springframework.security.oauth:spring-security-oauth2:2.3.6.RELEASE"
-            dependency "org.springframework.security:spring-security-jwt:1.0.10.RELEASE"
+            dependency "org.springframework.security.oauth:spring-security-oauth2:2.3.7.RELEASE"
+            dependency "org.springframework.security:spring-security-jwt:1.0.11.RELEASE"
             dependency "com.lowagie:itext:2.1.7"
             dependency "org.json:json:20180813"
             dependency "io.jsonwebtoken:jjwt:0.9.1"
@@ -362,17 +364,17 @@ allprojects  {
             dependency "org.apache.thrift:libthrift:0.9.3"
             dependency "joda-time:joda-time:2.10.3"
             dependency "org.joda:joda-convert:2.0.1"
-            dependency "com.squareup.retrofit2:retrofit:2.6.1"
-            dependency "com.squareup.retrofit2:retrofit-mock:2.6.1"
-            dependency "com.squareup.retrofit2:retrofit-adapters:2.6.1"
-            dependency "com.squareup.retrofit2:retrofit-converters:2.6.1"
-            dependency "com.squareup.retrofit2:converter-jackson:2.6.1"
-            dependency "com.squareup.retrofit2:adapter-java8:2.6.1"
-            dependency "com.squareup.retrofit2:converter-simplexml:2.6.1"
-            dependency "com.squareup.retrofit2:converter-jaxb:2.6.1"
-            dependency "com.squareup.retrofit2:converter-scalars:2.6.1"
-            dependency "com.squareup.retrofit2:converter-gson:2.6.1"
-            dependency "com.squareup.retrofit2:adapter-rxjava2:2.6.1"
+            dependency "com.squareup.retrofit2:retrofit:2.6.2"
+            dependency "com.squareup.retrofit2:retrofit-mock:2.6.2"
+            dependency "com.squareup.retrofit2:retrofit-adapters:2.6.2"
+            dependency "com.squareup.retrofit2:retrofit-converters:2.6.2"
+            dependency "com.squareup.retrofit2:converter-jackson:2.6.2"
+            dependency "com.squareup.retrofit2:adapter-java8:2.6.2"
+            dependency "com.squareup.retrofit2:converter-simplexml:2.6.2"
+            dependency "com.squareup.retrofit2:converter-jaxb:2.6.2"
+            dependency "com.squareup.retrofit2:converter-scalars:2.6.2"
+            dependency "com.squareup.retrofit2:converter-gson:2.6.2"
+            dependency "com.squareup.retrofit2:adapter-rxjava2:2.6.2"
             dependency "org.apache.oltu.oauth2:org.apache.oltu.oauth2.common:1.0.1"
             dependency "org.apache.oltu.oauth2:org.apache.oltu.oauth2.client:1.0.1"
             dependency "org.apache.oltu.oauth2:org.apache.oltu.oauth2.httpclient4:1.0.1"
@@ -385,21 +387,21 @@ allprojects  {
             dependency "org.threeten:threetenbp:1.4.0"
             dependency "com.github.spullara.mustache.java:compiler:0.9.6"
             dependency "io.reactivex.rxjava2:rxjava:2.2.2"
-            dependency "com.squareup.okhttp3:okhttp:4.1.0"
-            dependency "com.squareup.okhttp3:okcurl:4.1.0"
-            dependency "com.squareup.okhttp3:logging-interceptor:4.1.0"
-            dependency "com.squareup.okhttp3:okhttp-apache:4.1.0"
-            dependency "com.squareup.okhttp3:okhttp-android-support:4.1.0"
-            dependency "com.squareup.okhttp3:okhttp-urlconnection:4.1.0"
-            dependency "com.squareup.okhttp3:okhttp-sse:3.14.2"
+            dependency "com.squareup.okhttp3:okhttp:4.2.2"
+            dependency "com.squareup.okhttp3:okcurl:4.2.2"
+            dependency "com.squareup.okhttp3:logging-interceptor:4.2.2"
+            dependency "com.squareup.okhttp3:okhttp-apache:4.2.2"
+            dependency "com.squareup.okhttp3:okhttp-android-support:4.2.2"
+            dependency "com.squareup.okhttp3:okhttp-urlconnection:4.2.2"
+            dependency "com.squareup.okhttp3:okhttp-sse:4.2.2"
             dependency "org.apache.httpcomponents:httpclient:4.5.9"
             dependency "org.apache.httpcomponents:httpmime:4.5.9"
-            dependency "com.netflix.ribbon:ribbon-core:2.3.0"
-            dependency "com.netflix.ribbon:ribbon-eureka:2.3.0"
-            dependency "com.netflix.ribbon:ribbon-httpclient:2.3.0"
-            dependency "com.netflix.ribbon:ribbon-loadbalancer:2.3.0"
-            dependency "com.googlecode.libphonenumber:libphonenumber:8.10.17"
-            dependency "com.googlecode.libphonenumber:prefixmapper:2.123"
+            dependency "com.netflix.ribbon:ribbon-core:2.7.17"
+            dependency "com.netflix.ribbon:ribbon-eureka:2.7.17"
+            dependency "com.netflix.ribbon:ribbon-httpclient:2.7.17"
+            dependency "com.netflix.ribbon:ribbon-loadbalancer:2.7.17"
+            dependency "com.googlecode.libphonenumber:libphonenumber:8.10.21"
+            dependency "com.googlecode.libphonenumber:prefixmapper:2.127"
             dependency "javax.xml.bind:jaxb-api:2.3.1"
             dependency "com.sun.xml.bind:jaxb-core:2.3.0.1"
             dependency "com.sun.xml.bind:jaxb-impl:2.3.2"
@@ -432,7 +434,6 @@ allprojects  {
             dependency "org.apache.commons:commons-email:1.5"
             dependency "org.apache.commons:commons-lang3:3.9"
             dependency "org.javassist:javassist:3.19.0-GA"
-            dependency "org.ow2.asm:asm:5.0.4"
             dependency "javax.servlet:javax.servlet-api:4.0.1"
             dependency "org.openjdk.jmh:jmh-core:1.21"
             dependency "org.openjdk.jmh:jmh-generator-annprocess:1.21"
@@ -445,13 +446,13 @@ allprojects  {
             dependency "com.mockrunner:mockrunner-jms:2.0.1"
             dependency "com.mockrunner:mockrunner-jdbc:2.0.1"
             dependency "com.jayway.restassured:rest-assured:2.9.0"
-            dependency "net.bytebuddy:byte-buddy:1.10.1"
+            dependency "net.bytebuddy:byte-buddy:1.10.2"
             dependency "org.hamcrest:hamcrest-all:1.3"
             dependency "org.exparity:hamcrest-date:2.0.4"
             dependency "org.assertj:assertj-core:3.11.1"
             dependency "com.google.code.findbugs:jsr305:3.0.2"
             dependency "com.nimbusds:nimbus-jose-jwt:7.7"
-            dependency "com.amazon.redshift:redshift-jdbc42-no-awssdk:1.2.32.1056"
+            dependency "com.amazon.redshift:redshift-jdbc42-no-awssdk:1.2.36.1060"
             dependency "com.avides.springboot.testcontainer:springboot-testcontainer-activemq:0.1.0-RC5"
             dependency "com.avides.springboot.testcontainer:springboot-testcontainer-mysql:0.1.0-RC11"
         }
@@ -462,8 +463,8 @@ allprojects  {
             mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:Greenwich.RELEASE"
             mavenBom "org.springframework:spring-framework-bom:${springVersion}"
-            mavenBom "org.testcontainers:testcontainers-bom:1.12.0"
-            mavenBom "org.glassfish.hk2:hk2-bom:2.6.0"
+            mavenBom "org.testcontainers:testcontainers-bom:1.12.3"
+            mavenBom "org.glassfish.hk2:hk2-bom:2.6.1"
             mavenBom "org.glassfish.jersey:jersey-bom:${jerseyVersion}"
             mavenBom "io.netty:netty-bom:${nettyVersion}"
             mavenBom "org.glassfish.jaxb:jaxb-bom:2.3.2"

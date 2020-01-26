@@ -135,13 +135,14 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
 
         final Long businessRuleId = command.longValueOfParameterNamed(EmailCampaignValidator.businessRuleId);
 
-        final Report businessRule = this.reportRepository.findById(businessRuleId).orElse(null);
-        if (businessRule == null) { throw new ReportNotFoundException(businessRuleId); }
+        final Report businessRule = this.reportRepository.findById(businessRuleId)
+                .orElseThrow(() -> new ReportNotFoundException(businessRuleId));
 
         final Long reportId = command.longValueOfParameterNamed(EmailCampaignValidator.stretchyReportId);
 
-        final Report report = this.reportRepository.findById(reportId).orElse(null);
-        if (report == null) { throw new ReportNotFoundException(reportId); }
+        final Report report = this.reportRepository.findById(reportId)
+                .orElseThrow(() -> new ReportNotFoundException(reportId));
+
         // find all report parameters and store them as json string
         final Set<ReportParameterUsage> reportParameterUsages = report.getReportParameterUsages();
         final Map<String, String> stretchyReportParams = new HashMap<>();
@@ -169,16 +170,16 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
         try {
             this.context.authenticatedUser();
             this.emailCampaignValidator.validateForUpdate(command.json());
-            final EmailCampaign emailCampaign = this.emailCampaignRepository.findById(resourceId).orElse(null);
+            final EmailCampaign emailCampaign = this.emailCampaignRepository.findById(resourceId)
+                    .orElseThrow(() -> new EmailCampaignNotFound(resourceId));
 
-            if (emailCampaign == null) { throw new EmailCampaignNotFound(resourceId); }
             if (emailCampaign.isActive()) { throw new EmailCampaignMustBeClosedToEditException(emailCampaign.getId()); }
             final Map<String, Object> changes = emailCampaign.update(command);
 
             if (changes.containsKey(EmailCampaignValidator.businessRuleId)) {
                 final Long newValue = command.longValueOfParameterNamed(EmailCampaignValidator.businessRuleId);
-                final Report reportId = this.reportRepository.findById(newValue).orElse(null);
-                if (reportId == null) { throw new ReportNotFoundException(newValue); }
+                final Report reportId = this.reportRepository.findById(newValue)
+                        .orElseThrow(() -> new ReportNotFoundException(newValue));
                 emailCampaign.updateBusinessRuleId(reportId);
 
             }
@@ -202,9 +203,9 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
     @Override
     public CommandProcessingResult delete(final Long resourceId) {
         this.context.authenticatedUser();
-        final EmailCampaign emailCampaign = this.emailCampaignRepository.findById(resourceId).orElse(null);
+        final EmailCampaign emailCampaign = this.emailCampaignRepository.findById(resourceId)
+                .orElseThrow(() -> new EmailCampaignNotFound(resourceId));
 
-        if (emailCampaign == null) { throw new EmailCampaignNotFound(resourceId); }
         if (emailCampaign.isActive()) { throw new EmailCampaignMustBeClosedToBeDeletedException(emailCampaign.getId()); }
 
         /*
@@ -289,8 +290,8 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
     }
 
     private void updateTriggerDates(Long campaignId) {
-        final EmailCampaign emailCampaign = this.emailCampaignRepository.findById(campaignId).orElse(null);
-        if (emailCampaign == null) { throw new EmailCampaignNotFound(campaignId); }
+        final EmailCampaign emailCampaign = this.emailCampaignRepository.findById(campaignId)
+                .orElseThrow(() -> new EmailCampaignNotFound(campaignId));
         LocalDateTime nextTriggerDate = emailCampaign.getNextTriggerDate();
         emailCampaign.setLastTriggerDate(nextTriggerDate.toDate());
         // calculate new trigger date and insert into next trigger date
@@ -331,9 +332,8 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
 
         this.emailCampaignValidator.validateActivation(command.json());
 
-        final EmailCampaign emailCampaign = this.emailCampaignRepository.findById(campaignId).orElse(null);
-
-        if (emailCampaign == null) { throw new EmailCampaignNotFound(campaignId); }
+        final EmailCampaign emailCampaign = this.emailCampaignRepository.findById(campaignId)
+                .orElseThrow(() -> new EmailCampaignNotFound(campaignId));
 
         final Locale locale = command.extractLocale();
         final DateTimeFormatter fmt = DateTimeFormat.forPattern(command.dateFormat()).withLocale(locale);
@@ -391,8 +391,8 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
         final AppUser currentUser = this.context.authenticatedUser();
         this.emailCampaignValidator.validateClosedDate(command.json());
 
-        final EmailCampaign emailCampaign = this.emailCampaignRepository.findById(campaignId).orElse(null);
-        if (emailCampaign == null) { throw new EmailCampaignNotFound(campaignId); }
+        final EmailCampaign emailCampaign = this.emailCampaignRepository.findById(campaignId)
+                .orElseThrow(() -> new EmailCampaignNotFound(campaignId));
 
         final Locale locale = command.extractLocale();
         final DateTimeFormatter fmt = DateTimeFormat.forPattern(command.dateFormat()).withLocale(locale);
@@ -489,9 +489,8 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
 
         final AppUser currentUser = this.context.authenticatedUser();
 
-        final EmailCampaign emailCampaign = this.emailCampaignRepository.findById(campaignId).orElse(null);
-
-        if (emailCampaign == null) { throw new EmailCampaignNotFound(campaignId); }
+        final EmailCampaign emailCampaign = this.emailCampaignRepository.findById(campaignId)
+                .orElseThrow(() -> new EmailCampaignNotFound(campaignId));
 
         final Locale locale = command.extractLocale();
         final DateTimeFormatter fmt = DateTimeFormat.forPattern(command.dateFormat()).withLocale(locale);

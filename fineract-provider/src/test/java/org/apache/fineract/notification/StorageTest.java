@@ -19,6 +19,7 @@
 
 package org.apache.fineract.notification;
 
+import java.util.Collections;
 import org.apache.fineract.notification.domain.Notification;
 import org.apache.fineract.notification.domain.NotificationMapper;
 import org.apache.fineract.notification.service.NotificationGeneratorReadRepositoryWrapper;
@@ -32,9 +33,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.core.userdetails.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -86,8 +89,10 @@ public class StorageTest {
                 getCurrentDateTime()
         );
 
-
-        AppUser appUser = this.appUserRepository.findById(1L).orElse(null);
+        AppUser appUser = new AppUser(null, new User("J.J.", "", true, true,
+                true, true, Collections.emptyList()),
+                null, "user@com", "John", "", null, false,
+                 false, null);
 
         NotificationMapper notificationMapper = new NotificationMapper(
                 notification,
@@ -96,12 +101,9 @@ public class StorageTest {
                 getCurrentDateTime()
         );
 
-
-        // TODO: @aleks fix this
-        /*
         when(this.notificationGeneratorWritePlatformService.create(refEq(notification))).thenReturn(1L);
 
-        when(this.appUserRepository.findById(userId).orElse(null)).thenReturn(appUser);
+        when(this.appUserRepository.findById(userId)).thenReturn(Optional.of(appUser));
 
         when(this.notificationGeneratorReadRepositoryWrapper.findById(1L)).thenReturn(notification);
 
@@ -122,7 +124,6 @@ public class StorageTest {
         verify(this.notificationMapperWritePlatformService, times(1)).create(refEq(notificationMapper));
         verify(this.notificationGeneratorReadRepositoryWrapper, times(1)).findById(1L);
         assertEquals(actualGeneratedNotificationId, new Long(1));
-        */
     }
 
     private String getCurrentDateTime() {

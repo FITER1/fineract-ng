@@ -32,7 +32,7 @@ import java.util.Objects;
 
 @Component
 public class SpringEventListener implements ApplicationListener<SpringEvent> {
-	
+
     private final NotificationWritePlatformService notificationWritePlatformService;
 
     private final AppUserRepository appUserRepository;
@@ -47,7 +47,7 @@ public class SpringEventListener implements ApplicationListener<SpringEvent> {
 	@Override
 	public void onApplicationEvent(SpringEvent event) {
 		NotificationData notificationData = event.getNotificationData();
-		
+
         Long appUserId = notificationData.getActor();
 
         List<Long> userIds = notificationData.getUserIds();
@@ -55,7 +55,7 @@ public class SpringEventListener implements ApplicationListener<SpringEvent> {
         if (notificationData.getOfficeId() != null) {
             List<Long> tempUserIds = new ArrayList<>(userIds);
             for (Long userId : tempUserIds) {
-                AppUser appUser = appUserRepository.findById(userId).orElse(null);
+                AppUser appUser = appUserRepository.findById(userId).get();
                 if (!Objects.equals(appUser.getOffice().getId(), notificationData.getOfficeId())) {
                     userIds.remove(userId);
                 }

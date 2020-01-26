@@ -34,9 +34,8 @@ public class FineractEntityRelationRepositoryWrapper {
     }
     
     public FineractEntityRelation findOneWithNotFoundDetection(final Long id) {
-        final FineractEntityRelation fineractEntityRelation = this.fineractEntityRelationRepository.findById(id).orElse(null);
-        if (fineractEntityRelation == null) { throw new FineractEntityAccessNotFoundException(id); }
-        return fineractEntityRelation;
+        return this.fineractEntityRelationRepository.findById(id)
+                .orElseThrow(() -> new FineractEntityAccessNotFoundException(id));
     }
     
     public FineractEntityRelation findOneByCodeName(final String codeName) {

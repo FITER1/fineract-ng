@@ -22,6 +22,8 @@ import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.exception.PlatformInternalServerException;
 import org.apache.fineract.infrastructure.jobs.annotation.CronMethodParser;
 import org.apache.fineract.infrastructure.jobs.annotation.CronMethodParser.ClassMethodNamesPair;
+import org.apache.fineract.infrastructure.jobs.domain.JobParameter;
+import org.apache.fineract.infrastructure.jobs.domain.JobParameterRepository;
 import org.apache.fineract.infrastructure.jobs.domain.ScheduledJobDetail;
 import org.apache.fineract.infrastructure.jobs.domain.SchedulerDetail;
 import org.apache.fineract.infrastructure.jobs.exception.JobNotFoundException;
@@ -62,6 +64,7 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
     private SchedulerJobListener schedulerJobListener;
     private SchedulerStopListener schedulerStopListener;
     private SchedulerTriggerListener globalSchedulerTriggerListener;
+    private JobParameterRepository jobParameterRepository;
 
     @Autowired
     private FineractProperties fineractProperties;
@@ -91,6 +94,11 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
     @Autowired
     public void setGlobalTriggerListener(SchedulerTriggerListener globalTriggerListener) {
         this.globalSchedulerTriggerListener = globalTriggerListener;
+    }
+
+    @Autowired
+    public  void setJobParameterRepository(JobParameterRepository jobParameterRepository){
+        this.jobParameterRepository=jobParameterRepository;
     }
 
     @PostConstruct
@@ -328,6 +336,15 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
         jobDetailFactoryBean.setConcurrent(false);
         jobDetailFactoryBean.afterPropertiesSet();
         return jobDetailFactoryBean.getObject();
+    }
+
+    public Map<String,String> getJobParameter(ScheduledJobDetail scheduledJobDetail){
+        List<JobParameter> jobParameterList= jobParameterRepository.findJobParametersByJobId(scheduledJobDetail.getId());
+        Map<String,String> jobParameterMap=new HashMap<>();
+        for (JobParameter jobparameter:jobParameterList) {
+            jobParameterMap.put(jobparameter.getParameterName(),jobparameter.getParameterValue());
+        }
+        return  jobParameterMap;
     }
 
     private Object getBeanObject(final Class<?> classType) throws ClassNotFoundException {

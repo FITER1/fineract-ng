@@ -20,6 +20,7 @@ package org.apache.fineract.mix.report.service;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 import java.io.ByteArrayInputStream;
@@ -57,11 +58,11 @@ public class XBRLBuilderTest {
     private final XBRLBuilder xbrlBuilder = new XBRLBuilder();
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
 
         this.readNamespaceService = Mockito.mock(NamespaceReadPlatformServiceImpl.class);
-        // TODO: @aleks fix this; this is throwing an UnnecessaryStubbingException (aka we are not using this stub)
-        // when(this.readNamespaceService.retrieveNamespaceByPrefix(Matchers.anyString())).thenReturn(new NamespaceData(1l, "mockedprefix", "mockedurl"));
+        lenient().when(this.readNamespaceService.retrieveNamespaceByPrefix(Matchers.anyString())).thenReturn(
+                new NamespaceData(1l, "mockedprefix", "mockedurl"));
 
     }
 
@@ -80,13 +81,10 @@ public class XBRLBuilderTest {
             nodes = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(result.getBytes()))
                     .getElementsByTagName("Assets");
         } catch (final SAXException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (final IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (final ParserConfigurationException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         assertNotNull(nodes);

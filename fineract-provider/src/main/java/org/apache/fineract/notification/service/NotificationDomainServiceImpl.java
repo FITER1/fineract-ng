@@ -62,7 +62,7 @@ public class NotificationDomainServiceImpl implements NotificationDomainService 
 	private final NotificationEventService notificationEvent;
 	private final SpringEventPublisher springEventPublisher;
 	private final FineractProperties fineractProperties;
-	
+
 	@Autowired
 	public NotificationDomainServiceImpl(final BusinessEventNotifierService businessEventNotifierService,
 			final PlatformSecurityContext context, final RoleRepository roleRepository,
@@ -557,7 +557,7 @@ public class NotificationDomainServiceImpl implements NotificationDomainService 
 	
 	private void buildNotification(String permission, String objectType, Long objectIdentifier, 
 			String notificationContent, String eventType,  Long appUserId, Long officeId) {
-		
+
 		Queue queue = new ActiveMQQueue("NotificationQueue");
 		List<Long> userIds = retrieveSubscribers(officeId, permission);
 		NotificationData notificationData = new NotificationData(
@@ -585,8 +585,7 @@ public class NotificationDomainServiceImpl implements NotificationDomainService 
 		List<Long> subscriberIds = new ArrayList<>();
 		Long entityId = officeId;
 		String entityType= "";
-		Optional<Office> office = officeRepository.findById(entityId);
-		if (office.isPresent() && office.get().getParent() == null) {
+		if (officeRepository.findById(entityId).get().getParent() == null) {
 			entityType = "OFFICE";
 		} else {
 			entityType = "BRANCH";
