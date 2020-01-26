@@ -171,4 +171,9 @@ public class Teller extends AbstractPersistableCustom<Long> {
         }
         return endLocalDate;
     }
+
+    public void initializeLazyCollections() {
+        this.office.getId();
+        this.cashiers.size();
+    }
 }

@@ -18,12 +18,7 @@
  */
 package org.apache.fineract.accounting.provisioning.service;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonObject;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepository;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
@@ -63,7 +58,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonObject;
+import java.util.*;
 
 @Service
 public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements ProvisioningEntriesWritePlatformService {
@@ -207,7 +202,7 @@ public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements
     public CommandProcessingResult reCreateProvisioningEntries(Long provisioningEntryId, JsonCommand command) {
         ProvisioningEntry requestedEntry = this.provisioningEntryRepository.findById(provisioningEntryId)
                 .orElseThrow(() -> new ProvisioningEntryNotfoundException(provisioningEntryId));
-        requestedEntry.getLoanProductProvisioningEntries().clear();
+        requestedEntry.getProvisioningEntries().clear();
         this.provisioningEntryRepository.save(requestedEntry);
         Collection<LoanProductProvisioningEntry> entries = generateLoanProvisioningEntry(requestedEntry, requestedEntry.getCreatedDate());
         requestedEntry.setProvisioningEntries(entries);

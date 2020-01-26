@@ -42,9 +42,9 @@ public class GLClosureReadPlatformServiceImpl implements GLClosureReadPlatformSe
         List<GLClosure> glClosures;
 
         if(officeId!=null && officeId>0) {
-            glClosures = glClosureRepository.findAllByOfficeIdAndDeleted(officeId, false, new Sort(Sort.Direction.ASC, "closingDate"));
+            glClosures = glClosureRepository.findAllByOfficeIdAndDeleted(officeId, false, Sort.by(Sort.Direction.ASC, "closingDate"));
         } else {
-            glClosures = glClosureRepository.findAllByDeleted(false, new Sort(Sort.Direction.ASC, "closingDate"));
+            glClosures = glClosureRepository.findAllByDeleted(false, Sort.by(Sort.Direction.ASC, "closingDate"));
         }
 
         return glClosures.stream().map(glClosure -> new GLClosureData(
@@ -53,12 +53,12 @@ public class GLClosureReadPlatformServiceImpl implements GLClosureReadPlatformSe
             glClosure.getOffice().getName(),
             new LocalDate(glClosure.getClosingDate().getTime()),
             glClosure.isDeleted(),
-            new LocalDate(glClosure.getCreatedDate().getTime()),
-            new LocalDate(glClosure.getLastModifiedDate().getTime()),
-            glClosure.getCreatedBy().getId(),
-            glClosure.getCreatedBy().getUsername(),
-            glClosure.getLastModifiedBy().getId(),
-            glClosure.getLastModifiedBy().getUsername(),
+            glClosure.getCreatedDate().isPresent() ? new LocalDate(glClosure.getCreatedDate().get().toEpochMilli()) : null,
+            glClosure.getLastModifiedDate().isPresent() ? new LocalDate(glClosure.getLastModifiedDate().get().toEpochMilli()) : null,
+            glClosure.getCreatedBy().isPresent() ? glClosure.getCreatedBy().get().getId() : null,
+            glClosure.getCreatedBy().isPresent() ? glClosure.getCreatedBy().get().getUsername() : null,
+            glClosure.getLastModifiedBy().isPresent() ? glClosure.getLastModifiedBy().get().getId() : null,
+            glClosure.getLastModifiedBy().get().getUsername(),
             glClosure.getComments())).collect(Collectors.toList());
     }
 
@@ -71,12 +71,12 @@ public class GLClosureReadPlatformServiceImpl implements GLClosureReadPlatformSe
                 glClosure.getOffice().getName(),
                 new LocalDate(glClosure.getClosingDate().getTime()),
                 glClosure.isDeleted(),
-                new LocalDate(glClosure.getCreatedDate().getTime()),
-                new LocalDate(glClosure.getLastModifiedDate().getTime()),
-                glClosure.getCreatedBy().getId(),
-                glClosure.getCreatedBy().getUsername(),
-                glClosure.getLastModifiedBy().getId(),
-                glClosure.getLastModifiedBy().getUsername(),
+                glClosure.getCreatedDate().isPresent() ? new LocalDate(glClosure.getCreatedDate().get().toEpochMilli()) : null,
+                glClosure.getLastModifiedDate().isPresent() ? new LocalDate(glClosure.getLastModifiedDate().get().toEpochMilli()) : null,
+                glClosure.getCreatedBy().isPresent() ? glClosure.getCreatedBy().get().getId() : null,
+                glClosure.getCreatedBy().isPresent() ? glClosure.getCreatedBy().get().getUsername() : null,
+                glClosure.getLastModifiedBy().isPresent() ? glClosure.getLastModifiedBy().get().getId() : null,
+                glClosure.getLastModifiedBy().isPresent() ? glClosure.getLastModifiedBy().get().getUsername() : null,
                 glClosure.getComments())).orElse(null);
         } catch (final EmptyResultDataAccessException e) {
             throw new GLClosureNotFoundException(glClosureId);

@@ -245,7 +245,7 @@ public class Money implements Comparable<Money> {
     @Override
     public int compareTo(final Money other) {
         final Money otherMoney = other;
-        if (this.currencyCode.equals(otherMoney.currencyCode)) {
+        if (!this.currencyCode.equals(otherMoney.currencyCode)) {
             throw new UnsupportedOperationException("currencies arent different");
         }
         return this.amount.compareTo(otherMoney.amount);

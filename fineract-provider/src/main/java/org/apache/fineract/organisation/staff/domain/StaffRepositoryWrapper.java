@@ -52,8 +52,8 @@ public class StaffRepositoryWrapper {
     public Staff findByOfficeHierarchyWithNotFoundDetection(final Long staffId, final String hierarchy) {
         final Staff staff = this.repository.findById(staffId)
                 .orElseThrow(() -> new StaffNotFoundException(staffId));
-        final String staffhierarchy = staff.office().getHierarchy();
-        if (!hierarchy.startsWith(staffhierarchy)) { throw new StaffNotFoundException(staffId); }
+        final String staffHierarchy = staff.getOffice().getHierarchy();
+        if (!hierarchy.startsWith(staffHierarchy)) { throw new StaffNotFoundException(staffId); }
         return staff;
     }
     public void save(final Staff staff){
