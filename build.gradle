@@ -104,13 +104,12 @@ allprojects  {
     repositories {
         mavenLocal()
 
-        // maven { url "https://nexus.pelotoninnovations.com/repository/maven-public" }
-        maven { url "http://jcenter.bintray.com" }
+        maven { url "https://jcenter.bintray.com" }
         maven { url "https://dl.bintray.com/palantir/releases" }
         maven { url "https://jitpack.io" }
-        maven { url "http://maven.wso2.org/nexus/content/repositories/releases/" }
-        maven { url "http://repo.maven.apache.org/maven2" }
-        maven { url "http://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts" }
+        maven { url "https://maven.wso2.org/nexus/content/repositories/releases/" }
+        maven { url "https://repo.maven.apache.org/maven2" }
+        maven { url "https://jaspersoft.jfrog.io/jaspersoft/third-party-ce-artifacts" }
         maven { url "https://s3.amazonaws.com/redshift-maven-repository/release/" }
     }
 
