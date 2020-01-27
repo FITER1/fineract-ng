@@ -394,7 +394,7 @@ public class JournalEntryReadPlatformServiceImpl implements JournalEntryReadPlat
 
         final JournalEntryAssociationParametersData associationParametersData = new JournalEntryAssociationParametersData();
         final GLAccountData contraAccount = this.glAccountReadPlatformService.retrieveGLAccountById(contraId, associationParametersData);
-        if (!GLAccountType.fromInt(contraAccount.getTypeId()).isEquityType()) { throw new GeneralPlatformDomainRuleException(
+        if (!GLAccountType.fromInt(contraAccount.getType().getId().intValue()).isEquityType()) { throw new GeneralPlatformDomainRuleException(
                 "error.msg.configuration.opening.balance.contra.account.value.is.invalid.account.type",
                 "Global configuration 'office-opening-balances-contra-account' value is not an equity type account", contraId); }
 

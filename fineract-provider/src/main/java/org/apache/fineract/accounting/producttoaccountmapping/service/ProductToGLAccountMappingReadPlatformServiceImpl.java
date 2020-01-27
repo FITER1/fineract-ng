@@ -235,18 +235,12 @@ public class ProductToGLAccountMappingReadPlatformServiceImpl implements Product
         return fetchPaymentTypeToFundSourceMappings(PortfolioProductType.SAVING, savingsProductId);
     }
 
-    /**
-     * @param loanProductId
-     * @param paymentTypeToGLAccountMappers
-     * @return
-     */
     private List<PaymentTypeToGLAccountMapper> fetchPaymentTypeToFundSourceMappings(final PortfolioProductType portfolioProductType,
             final Long loanProductId) {
         final ProductToGLAccountMappingMapper rm = new ProductToGLAccountMappingMapper();
         final String sql = "select " + rm.schema() + " and product_id = ? and payment_type is not null";
 
-        final List<Map<String, Object>> paymentTypeToFundSourceMappingsList = this.jdbcTemplate.query(sql, rm, new Object[] {
-                portfolioProductType.getValue(), loanProductId });
+        final List<Map<String, Object>> paymentTypeToFundSourceMappingsList = this.jdbcTemplate.query(sql, rm, portfolioProductType.getValue(), loanProductId);
 
         List<PaymentTypeToGLAccountMapper> paymentTypeToGLAccountMappers = null;
         for (final Map<String, Object> productToGLAccountMap : paymentTypeToFundSourceMappingsList) {

@@ -96,8 +96,34 @@ public class ChartOfAccountsImportHandler implements ImportHandler {
             tagId=Long.parseLong(ImportHandlerUtils.readAsString(ChartOfAcountsConstants.TAG_ID_COL,row));
         CodeValueData tagIdCodeValueData=new CodeValueData(tagId);
         String description=ImportHandlerUtils.readAsString(ChartOfAcountsConstants.DESCRIPTION_COL,row);
-        return GLAccountData.importInstance(accountName,parentId,glCode,manualEntriesAllowed,accountTypeEnum,
-                usageEnum,description,tagIdCodeValueData,row.getRowNum());
+
+        return new GLAccountData(
+            null,
+            accountName,
+            parentId,
+            glCode,
+            false,
+            manualEntriesAllowed,
+            accountTypeEnum,
+            usageEnum,
+            description,
+            null,
+            tagIdCodeValueData,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            row.getRowNum()
+        );
     }
 
     public Count importEntity() {

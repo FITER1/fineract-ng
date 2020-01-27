@@ -57,8 +57,7 @@ public class FinancialActivityAccountReadPlatformServiceImpl implements Financia
             sqlBuilder.append("select ");
             sqlBuilder.append(this.financialActivityAccountMapper.schema());
             sqlBuilder.append(" where faa.id=?");
-            return this.jdbcTemplate.queryForObject(sqlBuilder.toString(), this.financialActivityAccountMapper,
-                    new Object[] { financialActivityAccountId });
+            return this.jdbcTemplate.queryForObject(sqlBuilder.toString(), this.financialActivityAccountMapper, financialActivityAccountId);
         } catch (final EmptyResultDataAccessException e) {
             throw new FinancialActivityAccountNotFoundException(financialActivityAccountId);
         }
@@ -67,14 +66,14 @@ public class FinancialActivityAccountReadPlatformServiceImpl implements Financia
     @Override
     public FinancialActivityAccountData addTemplateDetails(FinancialActivityAccountData financialActivityAccountData) {
         final Map<String, List<GLAccountData>> accountOptions = this.accountingDropdownReadPlatformService.retrieveAccountMappingOptions();
-        financialActivityAccountData.setAccountingMappingOptions(accountOptions);
+        financialActivityAccountData.setGlAccountOptions(accountOptions);
         financialActivityAccountData.setFinancialActivityOptions(FINANCIAL_ACTIVITY.getAllFinancialActivities());
         return financialActivityAccountData;
     }
 
     @Override
     public FinancialActivityAccountData getFinancialActivityAccountTemplate() {
-        FinancialActivityAccountData financialActivityAccountData = new FinancialActivityAccountData();
+        FinancialActivityAccountData financialActivityAccountData = new FinancialActivityAccountData(null, null, null);
         return addTemplateDetails(financialActivityAccountData);
     }
 
@@ -105,8 +104,7 @@ public class FinancialActivityAccountReadPlatformServiceImpl implements Financia
             final GLAccountData glAccountData = new GLAccountData(glAccountId, glAccountName, glCode);
             final FinancialActivityData financialActivityData = FINANCIAL_ACTIVITY.toFinancialActivityData(financialActivityId);
 
-            final FinancialActivityAccountData financialActivityAccountData = new FinancialActivityAccountData(id, financialActivityData,
-                    glAccountData);
+            final FinancialActivityAccountData financialActivityAccountData = new FinancialActivityAccountData(id, financialActivityData, glAccountData);
             return financialActivityAccountData;
         }
     }

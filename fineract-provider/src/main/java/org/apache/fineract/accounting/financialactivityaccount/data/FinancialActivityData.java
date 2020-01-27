@@ -18,31 +18,16 @@
  */
 package org.apache.fineract.accounting.financialactivityaccount.data;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
 
+@Data
+@RequiredArgsConstructor
+@EqualsAndHashCode
 public class FinancialActivityData {
-
     private final Integer id;
     private final String name;
     private final GLAccountType mappedGLAccountType;
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public GLAccountType getMappedGLAccountType() {
-        return this.mappedGLAccountType;
-    }
-
-    public FinancialActivityData(Integer id, String name, GLAccountType mappedGLAccountType) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.mappedGLAccountType = mappedGLAccountType;
-    }
-
 }
