@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.portfolio.interestratechart.service;
 
-import java.util.LinkedHashMap;
-import java.util.Locale;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -33,11 +30,15 @@ import org.apache.fineract.portfolio.interestratechart.domain.InterestRateChartS
 import org.apache.fineract.portfolio.savings.domain.SavingsProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class InterestRateChartSlabWritePlatformServiceJpaRepositoryImpl implements InterestRateChartSlabWritePlatformService {
 
     @SuppressWarnings("unused")
@@ -53,22 +54,6 @@ public class InterestRateChartSlabWritePlatformServiceJpaRepositoryImpl implemen
     private final InterestRateChartSlabRepository chartSlabRepository;
     @SuppressWarnings("unused")
     private final SavingsProductRepository savingsProductRepository;
-
-    @Autowired
-    public InterestRateChartSlabWritePlatformServiceJpaRepositoryImpl(PlatformSecurityContext context,
-            final InterestRateChartSlabDataValidator interestRateChartSlabDataValidator,
-            final InterestRateChartAssembler interestRateChartAssembler,
-            final InterestRateChartRepositoryWrapper interestRateChartRepository, final SavingsProductRepository savingsProductRepository,
-            final InterestRateChartSlabRepository chartSlabRepository,
-            final InterestRateChartSlabAssembler interestRateChartSlabAssembler) {
-        this.context = context;
-        this.interestRateChartSlabDataValidator = interestRateChartSlabDataValidator;
-        this.interestRateChartAssembler = interestRateChartAssembler;
-        this.interestRateChartRepository = interestRateChartRepository;
-        this.savingsProductRepository = savingsProductRepository;
-        this.chartSlabRepository = chartSlabRepository;
-        this.interestRateChartSlabAssembler = interestRateChartSlabAssembler;
-    }
 
     @Override
     @Transactional

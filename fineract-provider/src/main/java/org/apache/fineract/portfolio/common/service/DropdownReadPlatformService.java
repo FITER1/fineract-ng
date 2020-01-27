@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.common.service;
 
-import java.util.List;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+
+import java.util.List;
 
 public interface DropdownReadPlatformService {
 

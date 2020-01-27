@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.savings.PreClosurePenalInterestOnType;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service
 public class DepositsDropdownReadPlatformServiceImpl implements DepositsDropdownReadPlatformService {

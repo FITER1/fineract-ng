@@ -18,13 +18,12 @@
  */
 package org.apache.fineract.infrastructure.security.data;
 
+import org.apache.commons.lang3.time.StopWatch;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.time.StopWatch;
 
 /**
  * Immutable data object representing platform API request used for

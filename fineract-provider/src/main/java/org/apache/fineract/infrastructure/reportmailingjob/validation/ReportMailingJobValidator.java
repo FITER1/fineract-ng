@@ -18,16 +18,9 @@
  */
 package org.apache.fineract.infrastructure.reportmailingjob.validation;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -42,24 +35,21 @@ import org.codehaus.jackson.type.TypeReference;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
+@RequiredArgsConstructor
 public class ReportMailingJobValidator {
     private final FromJsonHelper fromJsonHelper;
     private static final String EMAIL_REGEX = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     private static final Pattern EMAIL_PATTERN = Pattern.compile(EMAIL_REGEX);
     
-    @Autowired
-    public ReportMailingJobValidator(final FromJsonHelper fromJsonHelper) {
-        this.fromJsonHelper = fromJsonHelper;
-    }
-    
-    /** 
+    /**
      * validate the request to create a new report mailing job 
      * 
      * @param jsonCommand -- the JSON command object (instance of the JsonCommand class)

@@ -21,7 +21,6 @@ package org.apache.fineract.infrastructure.bulkimport.populator.loan;
 import org.apache.fineract.infrastructure.bulkimport.constants.LoanConstants;
 import org.apache.fineract.infrastructure.bulkimport.constants.TemplatePopulateImportConstants;
 import org.apache.fineract.infrastructure.bulkimport.populator.*;
-import org.apache.fineract.portfolio.client.data.ClientData;
 import org.apache.fineract.portfolio.loanproduct.data.LoanProductData;
 import org.apache.poi.hssf.usermodel.HSSFDataValidationHelper;
 import org.apache.poi.hssf.usermodel.HSSFSheet;

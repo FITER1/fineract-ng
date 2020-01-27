@@ -18,16 +18,11 @@
  */
 package org.apache.fineract.organisation.provisioning.serialization;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -35,15 +30,14 @@ import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidati
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.organisation.provisioning.constants.ProvisioningCriteriaConstants;
 import org.apache.fineract.organisation.provisioning.exception.ProvisioningCriteriaCannotBeCreatedException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class ProvisioningCriteriaDefinitionJsonDeserializer implements ProvisioningCriteriaConstants {
 
 	private final FromJsonHelper fromApiJsonHelper;
@@ -61,11 +55,6 @@ public class ProvisioningCriteriaDefinitionJsonDeserializer implements Provision
 			Arrays.asList(JSON_CATEOGRYID_PARAM, JSON_CATEOGRYNAME_PARAM, JSON_MINIMUM_AGE_PARAM,
 					JSON_MAXIMUM_AGE_PARAM, JSON_MINIMUM_AGE_PARAM, JSON_PROVISIONING_PERCENTAGE_PARAM,
 					JSON_EXPENSE_ACCOUNT_PARAM, JSON_LIABILITY_ACCOUNT_PARAM));
-
-    @Autowired
-    public ProvisioningCriteriaDefinitionJsonDeserializer(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validateForCreate(final String json) {
         if (StringUtils.isBlank(json)) { throw new ProvisioningCriteriaCannotBeCreatedException(

@@ -18,8 +18,6 @@
  */
 package org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.impl;
 
-import java.util.List;
-
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleInstallment;
@@ -28,6 +26,8 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionToRepayme
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.AbstractLoanRepaymentScheduleTransactionProcessor;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.LoanRepaymentScheduleTransactionProcessor;
 import org.joda.time.LocalDate;
+
+import java.util.List;
 
 /**
  * Adhikar/RBI style {@link LoanRepaymentScheduleTransactionProcessor}.

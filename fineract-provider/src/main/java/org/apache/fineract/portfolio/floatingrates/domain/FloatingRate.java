@@ -18,11 +18,9 @@
  */
 package org.apache.fineract.portfolio.floatingrates.domain;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import javax.persistence.*;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.serialization.JsonParserHelper;
@@ -32,9 +30,9 @@ import org.apache.fineract.portfolio.floatingrates.data.FloatingRatePeriodData;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Entity
 @Table(name = "m_floating_rates", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }, name = "unq_name") })

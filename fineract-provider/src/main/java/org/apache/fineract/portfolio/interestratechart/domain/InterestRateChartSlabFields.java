@@ -18,29 +18,18 @@
  */
 package org.apache.fineract.portfolio.interestratechart.domain;
 
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.amountRangeFromParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.amountRangeToParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.annualInterestRateParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.descriptionParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.fromPeriodParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.periodTypeParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.toPeriodParamName;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
+import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
+import org.joda.time.*;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
-import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
-import org.joda.time.Months;
-import org.joda.time.Weeks;
-import org.joda.time.Years;
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.*;
 
 @Embeddable
 public class InterestRateChartSlabFields {

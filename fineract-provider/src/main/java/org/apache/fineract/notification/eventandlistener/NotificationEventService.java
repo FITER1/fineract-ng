@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.notification.eventandlistener;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.notification.data.NotificationData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 import org.springframework.stereotype.Service;
@@ -30,14 +30,10 @@ import javax.jms.Message;
 import javax.jms.Session;
 
 @Service
+@RequiredArgsConstructor
 public class NotificationEventService {
 
     private final JmsTemplate jmsTemplate;
-
-    @Autowired
-    public NotificationEventService(JmsTemplate jmsTemplate) {
-        this.jmsTemplate = jmsTemplate;
-    }
 
     public void broadcastNotification(final Destination destination, final NotificationData notificationData) {
         this.jmsTemplate.send(destination, new MessageCreator() {

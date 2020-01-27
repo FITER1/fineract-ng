@@ -18,11 +18,14 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.domain;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import lombok.*;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 @Builder
 @Data

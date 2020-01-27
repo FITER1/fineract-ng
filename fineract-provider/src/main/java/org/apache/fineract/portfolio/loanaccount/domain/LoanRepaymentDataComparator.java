@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.loanaccount.domain;
 
-import java.util.Comparator;
-
 import org.apache.fineract.portfolio.loanaccount.data.LoanTransactionData;
+
+import java.util.Comparator;
 
 public class LoanRepaymentDataComparator implements Comparator<LoanTransactionData> {
 

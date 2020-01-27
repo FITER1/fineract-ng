@@ -18,25 +18,9 @@
  */
 package org.apache.fineract.portfolio.interestratechart.data;
 
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.INCENTIVE_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.amountParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.attributeNameParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.attributeValueParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.conditionTypeParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.entityTypeParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.incentiveTypeparamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.descriptionParamName;
-
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -51,9 +35,12 @@ import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncenti
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.*;
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.descriptionParamName;
 
 @Component
 public class InterestIncentiveDataValidator {

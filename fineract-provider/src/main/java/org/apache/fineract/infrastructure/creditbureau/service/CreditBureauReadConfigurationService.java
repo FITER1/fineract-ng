@@ -19,10 +19,10 @@
 
 package org.apache.fineract.infrastructure.creditbureau.service;
 
+import org.apache.fineract.infrastructure.creditbureau.data.CreditBureauConfigurationData;
+
 import java.util.Collection;
 import java.util.Map;
-
-import org.apache.fineract.infrastructure.creditbureau.data.CreditBureauConfigurationData;
 
 public interface CreditBureauReadConfigurationService {
 

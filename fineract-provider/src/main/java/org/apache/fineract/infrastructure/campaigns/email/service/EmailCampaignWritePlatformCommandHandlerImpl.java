@@ -22,6 +22,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.gson.Gson;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.campaigns.email.data.EmailCampaignData;
 import org.apache.fineract.infrastructure.campaigns.email.data.EmailCampaignValidator;
@@ -69,7 +70,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,6 +80,7 @@ import java.io.*;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampaignWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(EmailCampaignWritePlatformCommandHandlerImpl.class);
@@ -99,31 +100,6 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
     private final SavingsAccountRepository savingsAccountRepository;
     private final EmailMessageJobEmailService emailMessageJobEmailService;
     private final FineractProperties fineractProperties;
-
-    @Autowired
-    public EmailCampaignWritePlatformCommandHandlerImpl(final PlatformSecurityContext context,
-            final EmailCampaignRepository emailCampaignRepository, final EmailCampaignValidator emailCampaignValidator,
-            final EmailCampaignReadPlatformService emailCampaignReadPlatformService, final ReportRepository reportRepository,
-            final EmailMessageRepository emailMessageRepository, final ClientRepositoryWrapper clientRepositoryWrapper,
-            final ReadReportingService readReportingService, final GenericDataService genericDataService,
-            final FromJsonHelper fromJsonHelper, final LoanRepository loanRepository,
-            final SavingsAccountRepository savingsAccountRepository, final EmailMessageJobEmailService emailMessageJobEmailService,
-            final FineractProperties fineractProperties) {
-        this.context = context;
-        this.emailCampaignRepository = emailCampaignRepository;
-        this.emailCampaignValidator = emailCampaignValidator;
-        this.emailCampaignReadPlatformService = emailCampaignReadPlatformService;
-        this.reportRepository = reportRepository;
-        this.emailMessageRepository = emailMessageRepository;
-        this.clientRepositoryWrapper = clientRepositoryWrapper;
-        this.readReportingService = readReportingService;
-        this.genericDataService = genericDataService;
-        this.fromJsonHelper = fromJsonHelper;
-        this.loanRepository = loanRepository;
-        this.savingsAccountRepository = savingsAccountRepository;
-        this.emailMessageJobEmailService = emailMessageJobEmailService;
-        this.fineractProperties = fineractProperties;
-    }
 
     @Transactional
     @Override

@@ -18,17 +18,11 @@
  */
 package org.apache.fineract.portfolio.shareproducts.serialization;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.common.AccountingConstants;
 import org.apache.fineract.accounting.common.AccountingRuleType;
@@ -52,15 +46,14 @@ import org.apache.fineract.portfolio.shareproducts.domain.ShareProductMarketPric
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ShareProductDataSerializer {
 
     private final FromJsonHelper fromApiJsonHelper;
@@ -93,14 +86,6 @@ public class ShareProductDataSerializer {
 			ShareProductApiConstants.locale_paramname, ShareProductApiConstants.dateFormatParamName,
 			ShareProductApiConstants.dividendPeriodStartDateParamName,
 			ShareProductApiConstants.dividendPeriodEndDateParamName, ShareProductApiConstants.dividendAmountParamName));
-
-    @Autowired
-    public ShareProductDataSerializer(final FromJsonHelper fromApiJsonHelper, final ChargeRepositoryWrapper chargeRepository,
-            final PlatformSecurityContext platformSecurityContext) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.chargeRepository = chargeRepository;
-        this.platformSecurityContext = platformSecurityContext;
-    }
 
     public ShareProduct validateAndCreate(JsonCommand jsonCommand) {
         if (StringUtils.isBlank(jsonCommand.json())) { throw new InvalidJsonException(); }

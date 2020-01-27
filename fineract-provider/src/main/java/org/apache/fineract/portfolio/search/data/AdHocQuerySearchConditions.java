@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.portfolio.search.data;
 
+import org.apache.fineract.portfolio.loanaccount.domain.LoanStatus;
+import org.joda.time.LocalDate;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.fineract.portfolio.loanaccount.domain.LoanStatus;
-import org.joda.time.LocalDate;
 
 public class AdHocQuerySearchConditions {
 

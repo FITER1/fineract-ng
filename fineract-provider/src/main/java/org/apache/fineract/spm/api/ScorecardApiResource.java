@@ -18,17 +18,8 @@
  */
 package org.apache.fineract.spm.api;
 
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
@@ -40,15 +31,19 @@ import org.apache.fineract.spm.service.ScorecardService;
 import org.apache.fineract.spm.service.SpmService;
 import org.apache.fineract.spm.util.ScorecardMapper;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @Path("surveys/scorecards")
 @Component
 @Scope("singleton")
 @Api(value = "SPM - Scorecards", description = " ")
+@RequiredArgsConstructor
 public class ScorecardApiResource {
 
     private final PlatformSecurityContext securityContext;
@@ -56,17 +51,6 @@ public class ScorecardApiResource {
     private final ScorecardService scorecardService;
     private final ClientRepositoryWrapper clientRepositoryWrapper;
     private final ScorecardReadPlatformService scorecardReadPlatformService;
-
-    @Autowired
-    public ScorecardApiResource(final PlatformSecurityContext securityContext, final SpmService spmService,
-            final ScorecardService scorecardService, final ClientRepositoryWrapper clientRepositoryWrapper,
-            final ScorecardReadPlatformService scorecardReadPlatformService) {
-        this.securityContext = securityContext;
-        this.spmService = spmService;
-        this.scorecardService = scorecardService;
-        this.clientRepositoryWrapper = clientRepositoryWrapper;
-        this.scorecardReadPlatformService = scorecardReadPlatformService;
-    }
 
     @GET
     @Path("{surveyId}")

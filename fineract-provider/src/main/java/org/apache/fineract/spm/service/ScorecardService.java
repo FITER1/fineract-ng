@@ -18,30 +18,22 @@
  */
 package org.apache.fineract.spm.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.spm.domain.Scorecard;
 import org.apache.fineract.spm.domain.Survey;
 import org.apache.fineract.spm.repository.ScorecardRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ScorecardService {
 
     private final PlatformSecurityContext securityContext;
     private final ScorecardRepository scorecardRepository;
-
-    @Autowired
-    public ScorecardService(final PlatformSecurityContext securityContext,
-                            final ScorecardRepository scorecardRepository) {
-        super();
-        this.securityContext = securityContext;
-        this.scorecardRepository = scorecardRepository;
-    }
 
     public List<Scorecard> createScorecard(final List<Scorecard> scorecards) {
         this.securityContext.authenticatedUser();

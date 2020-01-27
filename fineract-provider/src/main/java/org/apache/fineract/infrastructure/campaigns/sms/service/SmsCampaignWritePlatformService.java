@@ -18,8 +18,6 @@
  */
 package org.apache.fineract.infrastructure.campaigns.sms.service;
 
-import java.util.Map;
-
 import org.apache.fineract.infrastructure.campaigns.sms.data.CampaignPreviewData;
 import org.apache.fineract.infrastructure.campaigns.sms.domain.SmsCampaign;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -29,6 +27,8 @@ import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
+
+import java.util.Map;
 
 public interface SmsCampaignWritePlatformService {
 

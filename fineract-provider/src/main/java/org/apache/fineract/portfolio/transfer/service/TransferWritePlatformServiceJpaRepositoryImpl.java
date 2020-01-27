@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.transfer.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.google.common.collect.Iterables;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -32,17 +32,9 @@ import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.organisation.staff.domain.StaffRepositoryWrapper;
-import org.apache.fineract.portfolio.calendar.domain.Calendar;
-import org.apache.fineract.portfolio.calendar.domain.CalendarEntityType;
-import org.apache.fineract.portfolio.calendar.domain.CalendarInstance;
-import org.apache.fineract.portfolio.calendar.domain.CalendarInstanceRepository;
-import org.apache.fineract.portfolio.calendar.domain.CalendarType;
+import org.apache.fineract.portfolio.calendar.domain.*;
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
-import org.apache.fineract.portfolio.client.domain.Client;
-import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
-import org.apache.fineract.portfolio.client.domain.ClientStatus;
-import org.apache.fineract.portfolio.client.domain.ClientTransferDetails;
-import org.apache.fineract.portfolio.client.domain.ClientTransferDetailsRepositoryWrapper;
+import org.apache.fineract.portfolio.client.domain.*;
 import org.apache.fineract.portfolio.client.exception.ClientHasBeenClosedException;
 import org.apache.fineract.portfolio.group.domain.Group;
 import org.apache.fineract.portfolio.group.domain.GroupRepositoryWrapper;
@@ -62,15 +54,15 @@ import org.apache.fineract.portfolio.transfer.exception.ClientNotAwaitingTransfe
 import org.apache.fineract.portfolio.transfer.exception.TransferNotSupportedException;
 import org.apache.fineract.portfolio.transfer.exception.TransferNotSupportedException.TRANSFER_NOT_SUPPORTED_REASON;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Iterables;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TransferWritePlatformServiceJpaRepositoryImpl implements TransferWritePlatformService {
 
     private final ClientRepositoryWrapper clientRepositoryWrapper;
@@ -86,32 +78,6 @@ public class TransferWritePlatformServiceJpaRepositoryImpl implements TransferWr
     private final StaffRepositoryWrapper staffRepositoryWrapper;
     private final ClientTransferDetailsRepositoryWrapper clientTransferDetailsRepositoryWrapper;
  	private final PlatformSecurityContext context;
-
-    @Autowired
-    public TransferWritePlatformServiceJpaRepositoryImpl(final ClientRepositoryWrapper clientRepositoryWrapper,
-            final OfficeRepositoryWrapper officeRepository, final CalendarInstanceRepository calendarInstanceRepository,
-            final LoanWritePlatformService loanWritePlatformService, final GroupRepositoryWrapper groupRepository,
-            final LoanRepositoryWrapper loanRepositoryWrapper, final TransfersDataValidator transfersDataValidator,
-            final NoteWritePlatformService noteWritePlatformService, final StaffRepositoryWrapper staffRepositoryWrapper,
-            final SavingsAccountRepositoryWrapper savingsAccountRepositoryWrapper,
-			final SavingsAccountWritePlatformService savingsAccountWritePlatformService,
-			final ClientTransferDetailsRepositoryWrapper clientTransferDetailsRepositoryWrapper,
-			final PlatformSecurityContext context) {
-        this.clientRepositoryWrapper = clientRepositoryWrapper;
-        this.officeRepository = officeRepository;
-        this.calendarInstanceRepository = calendarInstanceRepository;
-        this.loanWritePlatformService = loanWritePlatformService;
-        this.groupRepository = groupRepository;
-        this.loanRepositoryWrapper = loanRepositoryWrapper;
-        this.transfersDataValidator = transfersDataValidator;
-        this.noteWritePlatformService = noteWritePlatformService;
-        this.staffRepositoryWrapper = staffRepositoryWrapper;
-        this.savingsAccountRepositoryWrapper = savingsAccountRepositoryWrapper;
-        this.savingsAccountWritePlatformService = savingsAccountWritePlatformService;
-        this.clientTransferDetailsRepositoryWrapper = clientTransferDetailsRepositoryWrapper;
-    	this.context = context;
-        
-    }
 
     @Override
     @Transactional

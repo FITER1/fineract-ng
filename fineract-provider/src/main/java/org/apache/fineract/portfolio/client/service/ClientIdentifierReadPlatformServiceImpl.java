@@ -18,35 +18,29 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.data.ClientIdentifierData;
 import org.apache.fineract.portfolio.client.domain.ClientIdentifierStatus;
 import org.apache.fineract.portfolio.client.exception.ClientIdentifierNotFoundException;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+
 @Service
+@RequiredArgsConstructor
 public class ClientIdentifierReadPlatformServiceImpl implements ClientIdentifierReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final PlatformSecurityContext context;
-
-    @Autowired
-    public ClientIdentifierReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     @Override
     public Collection<ClientIdentifierData> retrieveClientIdentifiers(final Long clientId) {

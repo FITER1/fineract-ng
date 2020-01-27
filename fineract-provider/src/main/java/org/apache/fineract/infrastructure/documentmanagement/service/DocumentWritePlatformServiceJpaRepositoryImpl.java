@@ -18,8 +18,7 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.service;
 
-import java.io.InputStream;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCommand;
@@ -35,12 +34,14 @@ import org.apache.fineract.infrastructure.documentmanagement.exception.InvalidEn
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
+
 @Service
+@RequiredArgsConstructor
 public class DocumentWritePlatformServiceJpaRepositoryImpl implements DocumentWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(DocumentWritePlatformServiceJpaRepositoryImpl.class);
@@ -48,14 +49,6 @@ public class DocumentWritePlatformServiceJpaRepositoryImpl implements DocumentWr
     private final PlatformSecurityContext context;
     private final DocumentRepository documentRepository;
     private final ContentRepositoryFactory contentRepositoryFactory;
-
-    @Autowired
-    public DocumentWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final DocumentRepository documentRepository, final ContentRepositoryFactory documentStoreFactory) {
-        this.context = context;
-        this.documentRepository = documentRepository;
-        this.contentRepositoryFactory = documentStoreFactory;
-    }
 
     @Transactional
     @Override

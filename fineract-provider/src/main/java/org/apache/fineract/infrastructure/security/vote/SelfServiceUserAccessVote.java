@@ -18,13 +18,13 @@
  */
 package org.apache.fineract.infrastructure.security.vote;
 
-import java.util.Collection;
-
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
+
+import java.util.Collection;
 
 public class SelfServiceUserAccessVote implements AccessDecisionVoter<FilterInvocation> {
 

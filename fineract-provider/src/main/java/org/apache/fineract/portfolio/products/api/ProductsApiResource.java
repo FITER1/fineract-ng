@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.products.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -33,7 +34,6 @@ import org.apache.fineract.portfolio.products.data.ProductData;
 import org.apache.fineract.portfolio.products.exception.ResourceNotFoundException;
 import org.apache.fineract.portfolio.products.service.ProductReadPlatformService;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -47,6 +47,7 @@ import javax.ws.rs.core.UriInfo;
 @Component
 @Scope("singleton")
 @Api(value = "Products", description = "")
+@RequiredArgsConstructor
 public class ProductsApiResource {
 
     private final ApplicationContext applicationContext;
@@ -54,17 +55,6 @@ public class ProductsApiResource {
     private final DefaultToApiJsonSerializer<ProductData> toApiJsonSerializer;
     private final PlatformSecurityContext platformSecurityContext;
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-
-    @Autowired
-    public ProductsApiResource(final ApplicationContext applicationContext, final ApiRequestParameterHelper apiRequestParameterHelper,
-            final DefaultToApiJsonSerializer<ProductData> toApiJsonSerializer, final PlatformSecurityContext platformSecurityContext,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService) {
-        this.applicationContext = applicationContext;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.platformSecurityContext = platformSecurityContext;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-    }
 
     @GET
     @Path("template")

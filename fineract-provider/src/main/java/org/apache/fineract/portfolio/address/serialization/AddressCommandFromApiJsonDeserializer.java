@@ -18,16 +18,9 @@
  */
 package org.apache.fineract.portfolio.address.serialization;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -36,23 +29,17 @@ import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidati
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.address.data.FieldConfigurationData;
 import org.apache.fineract.portfolio.address.service.FieldConfigurationReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class AddressCommandFromApiJsonDeserializer {
 	private final FromJsonHelper fromApiJsonHelper;
 	private final FieldConfigurationReadPlatformService readservice;
-
-	@Autowired
-	public AddressCommandFromApiJsonDeserializer(final FromJsonHelper fromApiJsonHelper,
-			final FieldConfigurationReadPlatformService readservice) {
-		this.fromApiJsonHelper = fromApiJsonHelper;
-		this.readservice = readservice;
-	}
 
 	public void validateForUpdate(final String json) {
 		validate(json, false);

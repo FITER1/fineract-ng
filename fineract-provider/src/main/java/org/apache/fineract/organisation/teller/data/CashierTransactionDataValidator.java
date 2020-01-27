@@ -18,12 +18,8 @@
  */
 package org.apache.fineract.organisation.teller.data;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.organisation.teller.domain.Cashier;
 import org.apache.fineract.organisation.teller.domain.Teller;
@@ -38,6 +34,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.util.Date;
 
 @Component
 public class CashierTransactionDataValidator {

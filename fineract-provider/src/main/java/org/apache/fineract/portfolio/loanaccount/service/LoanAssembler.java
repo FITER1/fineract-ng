@@ -18,13 +18,8 @@
  */
 package org.apache.fineract.portfolio.loanaccount.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
+import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
@@ -55,16 +50,7 @@ import org.apache.fineract.portfolio.group.exception.ClientNotInGroupException;
 import org.apache.fineract.portfolio.group.exception.GroupNotActiveException;
 import org.apache.fineract.portfolio.group.exception.GroupNotFoundException;
 import org.apache.fineract.portfolio.loanaccount.api.LoanApiConstants;
-import org.apache.fineract.portfolio.loanaccount.domain.DefaultLoanLifecycleStateMachine;
-import org.apache.fineract.portfolio.loanaccount.domain.Loan;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanCharge;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanDisbursementDetails;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanLifecycleStateMachine;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleTransactionProcessorFactory;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanStatus;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanSummaryWrapper;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionProcessingStrategyRepository;
+import org.apache.fineract.portfolio.loanaccount.domain.*;
 import org.apache.fineract.portfolio.loanaccount.exception.ExceedingTrancheCountException;
 import org.apache.fineract.portfolio.loanaccount.exception.LoanTransactionProcessingStrategyNotFoundException;
 import org.apache.fineract.portfolio.loanaccount.exception.MultiDisbursementDataRequiredException;
@@ -80,12 +66,13 @@ import org.apache.fineract.portfolio.loanproduct.exception.LinkedAccountRequired
 import org.apache.fineract.portfolio.loanproduct.exception.LoanProductNotFoundException;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonElement;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class LoanAssembler {
 
     private final FromJsonHelper fromApiJsonHelper;
@@ -106,37 +93,6 @@ public class LoanAssembler {
     private final ConfigurationDomainService configurationDomainService;
     private final WorkingDaysRepositoryWrapper workingDaysRepository;
     private final LoanUtilService loanUtilService;
-
-    @Autowired
-    public LoanAssembler(final FromJsonHelper fromApiJsonHelper, final LoanRepositoryWrapper loanRepository,
-            final LoanProductRepository loanProductRepository, final ClientRepositoryWrapper clientRepository,
-            final GroupRepository groupRepository, final FundRepository fundRepository,
-            final LoanTransactionProcessingStrategyRepository loanTransactionProcessingStrategyRepository,
-            final StaffRepository staffRepository, final CodeValueRepositoryWrapper codeValueRepository,
-            final LoanScheduleAssembler loanScheduleAssembler, final LoanChargeAssembler loanChargeAssembler,
-            final CollateralAssembler loanCollateralAssembler, final LoanSummaryWrapper loanSummaryWrapper,
-            final LoanRepaymentScheduleTransactionProcessorFactory loanRepaymentScheduleTransactionProcessorFactory,
-            final HolidayRepository holidayRepository, final ConfigurationDomainService configurationDomainService,
-            final WorkingDaysRepositoryWrapper workingDaysRepository, final LoanUtilService loanUtilService) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.loanRepository = loanRepository;
-        this.loanProductRepository = loanProductRepository;
-        this.clientRepository = clientRepository;
-        this.groupRepository = groupRepository;
-        this.fundRepository = fundRepository;
-        this.loanTransactionProcessingStrategyRepository = loanTransactionProcessingStrategyRepository;
-        this.staffRepository = staffRepository;
-        this.codeValueRepository = codeValueRepository;
-        this.loanScheduleAssembler = loanScheduleAssembler;
-        this.loanChargeAssembler = loanChargeAssembler;
-        this.loanCollateralAssembler = loanCollateralAssembler;
-        this.loanSummaryWrapper = loanSummaryWrapper;
-        this.loanRepaymentScheduleTransactionProcessorFactory = loanRepaymentScheduleTransactionProcessorFactory;
-        this.holidayRepository = holidayRepository;
-        this.configurationDomainService = configurationDomainService;
-        this.workingDaysRepository = workingDaysRepository;
-        this.loanUtilService = loanUtilService;
-    }
 
     public Loan assembleFrom(final Long accountId) {
         final Loan loanAccount = this.loanRepository.findOneWithNotFoundDetection(accountId, true);

@@ -18,22 +18,9 @@
  */
 package org.apache.fineract.infrastructure.campaigns.sms.api;
 
-import java.util.HashSet;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
+import com.google.gson.JsonElement;
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -53,16 +40,20 @@ import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.HashSet;
 
 @Path("smscampaigns")
 @Component
 @Scope("singleton")
 @Api(value = "SMS Campaigns")
+@RequiredArgsConstructor
 public class SmsCampaignApiResource {
 
     private final PlatformSecurityContext platformSecurityContext;
@@ -76,25 +67,6 @@ public class SmsCampaignApiResource {
 
     private final String resourceNameForPermissions = "SMS_CAMPAIGN";
     private final PlatformSecurityContext context;
-
-    @Autowired
-    public SmsCampaignApiResource(final PlatformSecurityContext platformSecurityContext,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final DefaultToApiJsonSerializer<SmsCampaignData> toApiJsonSerializer,
-            final SmsCampaignReadPlatformService smsCampaignReadPlatformService, final ApiRequestParameterHelper apiRequestParameterHelper,
-            final FromJsonHelper fromJsonHelper,
-            final DefaultToApiJsonSerializer<CampaignPreviewData> previewCampaignMessageDefaultToApiJsonSerializer,
-            final PlatformSecurityContext context, final SmsCampaignWritePlatformService smsCampaignWritePlatformService) {
-        this.platformSecurityContext = platformSecurityContext;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.smsCampaignReadPlatformService = smsCampaignReadPlatformService;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.fromJsonHelper = fromJsonHelper;
-        this.previewCampaignMessageDefaultToApiJsonSerializer = previewCampaignMessageDefaultToApiJsonSerializer;
-        this.context = context;
-        this.smsCampaignWritePlatformService = smsCampaignWritePlatformService;
-    }
 
     @GET
     @Path("template")

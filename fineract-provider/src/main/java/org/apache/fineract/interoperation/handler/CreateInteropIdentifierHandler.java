@@ -31,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import static org.apache.fineract.interoperation.util.InteropUtil.ENTITY_NAME_IDENTIFIER;
-import static org.apache.fineract.interoperation.util.InteropUtil.ENTITY_NAME_REQUEST;
 
 @Service
 @CommandType(entity = ENTITY_NAME_IDENTIFIER, action = "CREATE")

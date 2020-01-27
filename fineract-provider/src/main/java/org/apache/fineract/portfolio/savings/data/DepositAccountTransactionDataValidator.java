@@ -18,28 +18,8 @@
  */
 package org.apache.fineract.portfolio.savings.data;
 
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.activatedOnDateParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.bankNumberParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.checkNumberParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.closedOnDateParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.onAccountClosureIdParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.paymentTypeIdParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.receiptNumberParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.routingCodeParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.toSavingsAccountIdParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.transactionAccountNumberParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.transactionAmountParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.transactionDateParamName;
-
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -55,8 +35,11 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.savings.DepositsApiConstants.*;
 
 @Component
 public class DepositAccountTransactionDataValidator {

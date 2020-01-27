@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.interestratechart.data;
 
-import java.math.BigDecimal;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+
+import java.math.BigDecimal;
 
 public class InterestIncentiveData {
 

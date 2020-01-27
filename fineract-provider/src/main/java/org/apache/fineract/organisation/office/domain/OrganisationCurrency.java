@@ -18,13 +18,13 @@
  */
 package org.apache.fineract.organisation.office.domain;
 
+import lombok.*;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import lombok.*;
-import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 /**
  * Represents currencies allowed for this MFI/organisation.

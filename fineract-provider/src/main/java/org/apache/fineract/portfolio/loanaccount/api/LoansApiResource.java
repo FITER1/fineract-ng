@@ -20,27 +20,7 @@ package org.apache.fineract.portfolio.loanaccount.api;
 
 import com.google.gson.JsonElement;
 import io.swagger.annotations.*;
-
-import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.interestType;
-
-import java.io.InputStream;
-import java.util.*;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -114,16 +94,26 @@ import org.apache.fineract.portfolio.savings.DepositAccountType;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.io.InputStream;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations.interestType;
 
 
 @Path("loans")
 @Component
 @Scope("singleton")
 @Api(value = "Loans", description = "The API concept of loans models the loan application process and the loan contract/monitoring process.")
+@RequiredArgsConstructor
 public class LoansApiResource {
 
     private final Set<String> LOAN_DATA_PARAMETERS = new HashSet<>(Arrays.asList("id", "accountNo", "status", "externalId", "clientId",
@@ -174,58 +164,6 @@ public class LoansApiResource {
     private final EntityDatatableChecksReadService entityDatatableChecksReadService;
     private final BulkImportWorkbookService bulkImportWorkbookService;
     private final BulkImportWorkbookPopulatorService bulkImportWorkbookPopulatorService;
-
-
-    @Autowired
-    public LoansApiResource(final PlatformSecurityContext context, final LoanReadPlatformService loanReadPlatformService,
-            final LoanProductReadPlatformService loanProductReadPlatformService,
-            final LoanDropdownReadPlatformService dropdownReadPlatformService, final FundReadPlatformService fundReadPlatformService,
-            final ChargeReadPlatformService chargeReadPlatformService, final LoanChargeReadPlatformService loanChargeReadPlatformService,
-            final CollateralReadPlatformService loanCollateralReadPlatformService,
-            final LoanScheduleCalculationPlatformService calculationPlatformService,
-            final GuarantorReadPlatformService guarantorReadPlatformService,
-            final CodeValueReadPlatformService codeValueReadPlatformService, final GroupReadPlatformService groupReadPlatformService,
-            final DefaultToApiJsonSerializer<LoanAccountData> toApiJsonSerializer,
-            final DefaultToApiJsonSerializer<LoanApprovalData> loanApprovalDataToApiJsonSerializer,
-            final DefaultToApiJsonSerializer<LoanScheduleData> loanScheduleToApiJsonSerializer,
-            final ApiRequestParameterHelper apiRequestParameterHelper, final FromJsonHelper fromJsonHelper,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final CalendarReadPlatformService calendarReadPlatformService, final NoteReadPlatformServiceImpl noteReadPlatformService,
-            final PortfolioAccountReadPlatformService portfolioAccountReadPlatformServiceImpl,
-            final AccountAssociationsReadPlatformService accountAssociationsReadPlatformService,
-            final LoanScheduleHistoryReadPlatformService loanScheduleHistoryReadPlatformService,
-            final AccountDetailsReadPlatformService accountDetailsReadPlatformService,
-            final EntityDatatableChecksReadService entityDatatableChecksReadService,
-            final BulkImportWorkbookService bulkImportWorkbookService,
-            final BulkImportWorkbookPopulatorService bulkImportWorkbookPopulatorService) {
-        this.context = context;
-        this.loanReadPlatformService = loanReadPlatformService;
-        this.loanProductReadPlatformService = loanProductReadPlatformService;
-        this.dropdownReadPlatformService = dropdownReadPlatformService;
-        this.fundReadPlatformService = fundReadPlatformService;
-        this.chargeReadPlatformService = chargeReadPlatformService;
-        this.loanChargeReadPlatformService = loanChargeReadPlatformService;
-        this.loanCollateralReadPlatformService = loanCollateralReadPlatformService;
-        this.calculationPlatformService = calculationPlatformService;
-        this.guarantorReadPlatformService = guarantorReadPlatformService;
-        this.codeValueReadPlatformService = codeValueReadPlatformService;
-        this.groupReadPlatformService = groupReadPlatformService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.loanApprovalDataToApiJsonSerializer = loanApprovalDataToApiJsonSerializer;
-        this.loanScheduleToApiJsonSerializer = loanScheduleToApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.fromJsonHelper = fromJsonHelper;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.calendarReadPlatformService = calendarReadPlatformService;
-        this.noteReadPlatformService = noteReadPlatformService;
-        this.portfolioAccountReadPlatformService = portfolioAccountReadPlatformServiceImpl;
-        this.accountAssociationsReadPlatformService = accountAssociationsReadPlatformService;
-        this.loanScheduleHistoryReadPlatformService = loanScheduleHistoryReadPlatformService;
-        this.accountDetailsReadPlatformService = accountDetailsReadPlatformService;
-        this.entityDatatableChecksReadService = entityDatatableChecksReadService;
-        this.bulkImportWorkbookService=bulkImportWorkbookService;
-        this.bulkImportWorkbookPopulatorService=bulkImportWorkbookPopulatorService;
-    }
 
     /*
      * This template API is used for loan approval, ideally this should be

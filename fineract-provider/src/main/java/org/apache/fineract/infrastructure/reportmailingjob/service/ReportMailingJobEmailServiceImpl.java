@@ -18,35 +18,26 @@
  */
 package org.apache.fineract.infrastructure.reportmailingjob.service;
 
-import java.util.Collection;
-import java.util.Properties;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.reportmailingjob.ReportMailingJobConstants;
 import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobConfigurationData;
 import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobEmailData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import java.util.Collection;
+import java.util.Properties;
+
 @Service
+@RequiredArgsConstructor
 public class ReportMailingJobEmailServiceImpl implements ReportMailingJobEmailService {
     private final ReportMailingJobConfigurationReadPlatformService reportMailingJobConfigurationReadPlatformService;
     private Collection<ReportMailingJobConfigurationData> reportMailingJobConfigurationDataCollection;
     
-    /** 
-     * ReportMailingJobEmailServiceImpl constructor
-     **/
-    @Autowired
-    public ReportMailingJobEmailServiceImpl(final ReportMailingJobConfigurationReadPlatformService reportMailingJobConfigurationReadPlatformService) {
-        this.reportMailingJobConfigurationReadPlatformService = reportMailingJobConfigurationReadPlatformService;
-        
-    }
-
     @Override
     public void sendEmailWithAttachment(ReportMailingJobEmailData reportMailingJobEmailData) {
         try {

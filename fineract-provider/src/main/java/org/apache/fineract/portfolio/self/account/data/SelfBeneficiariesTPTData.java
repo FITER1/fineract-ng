@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.self.account.data;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+
+import java.util.Collection;
 
 public class SelfBeneficiariesTPTData {
 	@SuppressWarnings("unused")

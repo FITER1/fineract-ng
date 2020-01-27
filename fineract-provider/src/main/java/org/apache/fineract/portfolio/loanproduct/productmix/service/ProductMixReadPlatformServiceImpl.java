@@ -18,39 +18,31 @@
  */
 package org.apache.fineract.portfolio.loanproduct.productmix.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.sql.DataSource;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.loanproduct.data.LoanProductData;
 import org.apache.fineract.portfolio.loanproduct.productmix.data.ProductMixData;
 import org.apache.fineract.portfolio.loanproduct.productmix.exception.ProductMixNotFoundException;
 import org.apache.fineract.portfolio.loanproduct.service.LoanProductReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class ProductMixReadPlatformServiceImpl implements ProductMixReadPlatformService {
 
     private final PlatformSecurityContext context;
     private final JdbcTemplate jdbcTemplate;
     private final LoanProductReadPlatformService loanProductReadPlatformService;
-
-    @Autowired
-    public ProductMixReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final LoanProductReadPlatformService loanProductReadPlatformService) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.loanProductReadPlatformService = loanProductReadPlatformService;
-    }
 
     @Override
     public ProductMixData retrieveLoanProductMixDetails(final Long productId) {

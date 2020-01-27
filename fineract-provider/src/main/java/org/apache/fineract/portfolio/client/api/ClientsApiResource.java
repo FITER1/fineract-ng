@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.client.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -44,7 +45,6 @@ import org.apache.fineract.portfolio.savings.service.SavingsAccountReadPlatformS
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -60,6 +60,7 @@ import java.util.*;
 @Component
 @Scope("singleton")
 @Api(value = "Client", description = "Clients are people and businesses that have applied (or may apply) to an MFI for loans.\n" + "\n" + "Clients can be created in Pending or straight into Active state.")
+@RequiredArgsConstructor
 public class ClientsApiResource {
 
     private final PlatformSecurityContext context;
@@ -73,30 +74,6 @@ public class ClientsApiResource {
     private final BulkImportWorkbookService bulkImportWorkbookService;
     private final BulkImportWorkbookPopulatorService bulkImportWorkbookPopulatorService;
     private final GuarantorReadPlatformService guarantorReadPlatformService;
-
-    @Autowired
-    public ClientsApiResource(final PlatformSecurityContext context, final ClientReadPlatformService readPlatformService,
-            final ToApiJsonSerializer<ClientData> toApiJsonSerializer,
-            final ToApiJsonSerializer<AccountSummaryCollectionData> clientAccountSummaryToApiJsonSerializer,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final AccountDetailsReadPlatformService accountDetailsReadPlatformService,
-            final SavingsAccountReadPlatformService savingsAccountReadPlatformService,
-            final BulkImportWorkbookPopulatorService bulkImportWorkbookPopulatorService,
-			final BulkImportWorkbookService bulkImportWorkbookService,
-			final GuarantorReadPlatformService guarantorReadPlatformService) {
-		this.context = context;
-		this.clientReadPlatformService = readPlatformService;
-		this.toApiJsonSerializer = toApiJsonSerializer;
-        this.clientAccountSummaryToApiJsonSerializer = clientAccountSummaryToApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.accountDetailsReadPlatformService = accountDetailsReadPlatformService;
-        this.savingsAccountReadPlatformService = savingsAccountReadPlatformService;
-        this.bulkImportWorkbookPopulatorService=bulkImportWorkbookPopulatorService;
-        this.bulkImportWorkbookService=bulkImportWorkbookService;
-        this.guarantorReadPlatformService = guarantorReadPlatformService;
-    }
 
     @GET
     @Path("template")

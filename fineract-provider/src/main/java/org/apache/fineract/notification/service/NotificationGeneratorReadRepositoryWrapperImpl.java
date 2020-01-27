@@ -18,22 +18,18 @@
  */
 package org.apache.fineract.notification.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.notification.domain.Notification;
 import org.apache.fineract.notification.domain.NotificationRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class NotificationGeneratorReadRepositoryWrapperImpl implements NotificationGeneratorReadRepositoryWrapper {
 
     private final NotificationRepository notificationRepository;
-
-    @Autowired
-    public NotificationGeneratorReadRepositoryWrapperImpl(NotificationRepository notificationRepository) {
-        this.notificationRepository = notificationRepository;
-    }
 
     @Override
     public Notification findById(Long id) {

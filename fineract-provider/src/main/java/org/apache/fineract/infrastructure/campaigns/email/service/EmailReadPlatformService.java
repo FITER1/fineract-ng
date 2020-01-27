@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.infrastructure.campaigns.email.service;
 
+import org.apache.fineract.infrastructure.campaigns.email.data.EmailData;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
-import org.apache.fineract.infrastructure.campaigns.email.data.EmailData;
 
 import java.util.Collection;
 import java.util.Date;

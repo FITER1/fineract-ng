@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.bulkimport.importhandler.office;
 
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -29,27 +30,20 @@ import org.apache.fineract.infrastructure.bulkimport.importhandler.ImportHandler
 import org.apache.fineract.infrastructure.bulkimport.importhandler.ImportHandlerUtils;
 import org.apache.fineract.infrastructure.bulkimport.importhandler.helper.DateSerializer;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.exception.*;
 import org.apache.fineract.organisation.office.data.OfficeData;
 import org.apache.poi.ss.usermodel.*;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OfficeImportHandler implements ImportHandler {
     private List<OfficeData> offices;
     private Workbook workbook;
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-
-    @Autowired
-    public OfficeImportHandler(final PortfolioCommandSourceWritePlatformService
-            commandsSourceWritePlatformService) {
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-    }
 
     @Override
     public Count process(final Workbook workbook, final String locale, final String dateFormat) {

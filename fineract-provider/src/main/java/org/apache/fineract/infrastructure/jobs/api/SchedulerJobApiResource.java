@@ -18,22 +18,8 @@
  */
 package org.apache.fineract.infrastructure.jobs.api;
 
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -51,14 +37,21 @@ import org.apache.fineract.infrastructure.jobs.service.JobRegisterService;
 import org.apache.fineract.infrastructure.jobs.service.SchedulerJobRunnerReadService;
 import org.apache.fineract.infrastructure.security.exception.NoAuthorizationException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
 
 @Path("jobs")
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
 @Component
 @Api(value = "MIFOSX-BATCH JOBS", description = "Batch jobs (also known as cron jobs on Unix-based systems) are a series of back-end jobs executed on a computer at a particular time defined in job's cron expression.\n" + "\n" + "At any point, you can view the list of batch jobs scheduled to run along with other details specific to each job. Manually you can execute the jobs at any point of time.\n" + "\n" + "The scheduler status can be either \"Active\" or \"Standby\". If the scheduler status is Active, it indicates that all batch jobs are running/ will run as per the specified schedule.If the scheduler status is Standby, it will ensure all scheduled batch runs are suspended.")
+@RequiredArgsConstructor
 public class SchedulerJobApiResource {
 
     private final SchedulerJobRunnerReadService schedulerJobRunnerReadService;
@@ -68,22 +61,6 @@ public class SchedulerJobApiResource {
     private final ToApiJsonSerializer<JobDetailHistoryData> jobHistoryToApiJsonSerializer;
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
     private final PlatformSecurityContext context;
-
-    @Autowired
-    public SchedulerJobApiResource(final SchedulerJobRunnerReadService schedulerJobRunnerReadService,
-            final JobRegisterService jobRegisterService, final ToApiJsonSerializer<JobDetailData> toApiJsonSerializer,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final ToApiJsonSerializer<JobDetailHistoryData> jobHistoryToApiJsonSerializer,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final PlatformSecurityContext context) {
-        this.schedulerJobRunnerReadService = schedulerJobRunnerReadService;
-        this.jobRegisterService = jobRegisterService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.jobHistoryToApiJsonSerializer = jobHistoryToApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.context = context;
-    }
 
     @GET
     @ApiOperation(value = "Retrieve Scheduler Jobs", notes = "Returns the list of jobs.\n" + "\n" + "Example Requests:\n" + "\n" + "jobs")

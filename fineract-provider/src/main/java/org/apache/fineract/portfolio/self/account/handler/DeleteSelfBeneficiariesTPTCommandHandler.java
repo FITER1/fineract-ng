@@ -18,25 +18,19 @@
  */
 package org.apache.fineract.portfolio.self.account.handler;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.annotation.CommandType;
 import org.apache.fineract.commands.handler.NewCommandSourceHandler;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.portfolio.self.account.service.SelfBeneficiariesTPTWritePlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 @CommandType(entity = "SSBENEFICIARYTPT", action = "DELETE")
-public class DeleteSelfBeneficiariesTPTCommandHandler implements
-		NewCommandSourceHandler {
+@RequiredArgsConstructor
+public class DeleteSelfBeneficiariesTPTCommandHandler implements NewCommandSourceHandler {
 	private final SelfBeneficiariesTPTWritePlatformService writePlatformService;
-
-	@Autowired
-	public DeleteSelfBeneficiariesTPTCommandHandler(
-			final SelfBeneficiariesTPTWritePlatformService writePlatformService) {
-		this.writePlatformService = writePlatformService;
-	}
 
 	@Override
 	public CommandProcessingResult processCommand(final JsonCommand command) {

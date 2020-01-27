@@ -18,9 +18,6 @@
  */
 package org.apache.fineract.portfolio.client.data;
 
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -35,6 +32,9 @@ import org.apache.fineract.portfolio.group.data.GroupGeneralData;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountData;
 import org.apache.fineract.portfolio.savings.data.SavingsProductData;
 import org.joda.time.LocalDate;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Immutable data object representing client data.

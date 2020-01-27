@@ -19,38 +19,26 @@
 
 package org.apache.fineract.portfolio.self.products.api;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.portfolio.loanaccount.api.LoanApiConstants;
+import org.apache.fineract.portfolio.loanproduct.api.LoanProductsApiResource;
+import org.apache.fineract.portfolio.self.client.service.AppuserClientMapperReadService;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-import org.apache.fineract.portfolio.loanaccount.api.LoanApiConstants;
-import org.apache.fineract.portfolio.loanproduct.api.LoanProductsApiResource;
-import org.apache.fineract.portfolio.self.client.service.AppuserClientMapperReadService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
 @Path("self/loanproducts")
 @Component
 @Scope("singleton")
+@RequiredArgsConstructor
 public class SelfLoanProductsApiResource {
 
 	private final LoanProductsApiResource loanProductsApiResource;
 	private final AppuserClientMapperReadService appUserClientMapperReadService;
-
-	@Autowired
-	public SelfLoanProductsApiResource(final LoanProductsApiResource loanProductsApiResource,
-			final AppuserClientMapperReadService appUserClientMapperReadService) {
-		this.loanProductsApiResource = loanProductsApiResource;
-		this.appUserClientMapperReadService = appUserClientMapperReadService;
-
-	}
 
 	@GET
 	@Consumes({ MediaType.APPLICATION_JSON })

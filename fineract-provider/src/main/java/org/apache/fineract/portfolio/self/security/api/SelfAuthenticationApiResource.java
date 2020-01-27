@@ -19,8 +19,8 @@
 package org.apache.fineract.portfolio.self.security.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.security.api.AuthenticationApiResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -36,15 +36,10 @@ import javax.ws.rs.core.MediaType;
 @Profile("basicauth")
 @Scope("singleton")
 @Api(value = "Self Authentication", description = "")
+@RequiredArgsConstructor
 public class SelfAuthenticationApiResource {
 
 	private final AuthenticationApiResource authenticationApiResource;
-
-	@Autowired
-	public SelfAuthenticationApiResource(
-			final AuthenticationApiResource authenticationApiResource) {
-		this.authenticationApiResource = authenticationApiResource;
-	}
 
 	@POST
 	@Produces({ MediaType.APPLICATION_JSON })

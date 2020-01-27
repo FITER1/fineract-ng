@@ -18,13 +18,7 @@
  */
 package org.apache.fineract.portfolio.loanaccount.loanschedule.service;
 
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleInstallment;
@@ -32,22 +26,19 @@ import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanRepayme
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanRepaymentScheduleHistoryRepository;
 import org.apache.fineract.portfolio.loanaccount.rescheduleloan.domain.LoanRescheduleRequest;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class LoanScheduleHistoryWritePlatformServiceImpl implements LoanScheduleHistoryWritePlatformService {
 
     private final LoanScheduleHistoryReadPlatformService loanScheduleHistoryReadPlatformService;
     private final LoanRepaymentScheduleHistoryRepository loanRepaymentScheduleHistoryRepository;
-
-    @Autowired
-    public LoanScheduleHistoryWritePlatformServiceImpl(final LoanScheduleHistoryReadPlatformService loanScheduleHistoryReadPlatformService,
-            final LoanRepaymentScheduleHistoryRepository loanRepaymentScheduleHistoryRepository) {
-        this.loanScheduleHistoryReadPlatformService = loanScheduleHistoryReadPlatformService;
-        this.loanRepaymentScheduleHistoryRepository = loanRepaymentScheduleHistoryRepository;
-
-    }
 
     @Override
     public List<LoanRepaymentScheduleHistory> createLoanScheduleArchive(

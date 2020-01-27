@@ -18,6 +18,19 @@
  */
 package org.apache.fineract.portfolio.note.service;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.portfolio.note.data.NoteData;
+import org.apache.fineract.portfolio.note.domain.NoteType;
+import org.apache.fineract.portfolio.note.exception.NoteNotFoundException;
+import org.joda.time.DateTime;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -25,29 +38,11 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
-import org.apache.fineract.portfolio.note.data.NoteData;
-import org.apache.fineract.portfolio.note.domain.NoteType;
-import org.apache.fineract.portfolio.note.exception.NoteNotFoundException;
-import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Service;
-
 @Service
+@RequiredArgsConstructor
 public class NoteReadPlatformServiceImpl implements NoteReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public NoteReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     private static final class NoteMapper implements RowMapper<NoteData> {
 

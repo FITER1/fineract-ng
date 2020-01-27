@@ -18,8 +18,7 @@
  */
 package org.apache.fineract.portfolio.collateral.service;
 
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -44,12 +43,14 @@ import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class CollateralWritePlatformServiceJpaRepositoryImpl implements CollateralWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(CollateralWritePlatformServiceJpaRepositoryImpl.class);
@@ -59,17 +60,6 @@ public class CollateralWritePlatformServiceJpaRepositoryImpl implements Collater
     private final LoanCollateralRepository collateralRepository;
     private final CodeValueRepositoryWrapper codeValueRepository;
     private final CollateralCommandFromApiJsonDeserializer collateralCommandFromApiJsonDeserializer;
-
-    @Autowired
-    public CollateralWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context, final LoanRepositoryWrapper loanRepositoryWrapper,
-            final LoanCollateralRepository collateralRepository, final CodeValueRepositoryWrapper codeValueRepository,
-            final CollateralCommandFromApiJsonDeserializer collateralCommandFromApiJsonDeserializer) {
-        this.context = context;
-        this.loanRepositoryWrapper = loanRepositoryWrapper;
-        this.collateralRepository = collateralRepository;
-        this.codeValueRepository = codeValueRepository;
-        this.collateralCommandFromApiJsonDeserializer = collateralCommandFromApiJsonDeserializer;
-    }
 
     @Transactional
     @Override

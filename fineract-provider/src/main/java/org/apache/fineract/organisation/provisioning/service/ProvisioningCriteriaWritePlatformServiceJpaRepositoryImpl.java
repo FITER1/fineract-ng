@@ -18,13 +18,10 @@
  */
 package org.apache.fineract.organisation.provisioning.service;
 
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepository;
@@ -45,15 +42,17 @@ import org.apache.fineract.organisation.provisioning.serialization.ProvisioningC
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import javax.persistence.PersistenceException;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class ProvisioningCriteriaWritePlatformServiceJpaRepositoryImpl implements ProvisioningCriteriaWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(ProvisioningCriteriaWritePlatformServiceJpaRepositoryImpl.class);
@@ -64,20 +63,6 @@ public class ProvisioningCriteriaWritePlatformServiceJpaRepositoryImpl implement
     private final FromJsonHelper fromApiJsonHelper;
     private final GLAccountRepository glAccountRepository;
     private final ProvisioningEntriesReadPlatformService provisioningEntriesReadPlatformService ;
-    
-    @Autowired
-    public ProvisioningCriteriaWritePlatformServiceJpaRepositoryImpl(final ProvisioningCriteriaDefinitionJsonDeserializer fromApiJsonDeserializer,
-            final ProvisioningCriteriaAssembler provisioningCriteriaAssembler, final ProvisioningCriteriaRepository provisioningCriteriaRepository,
-            final FromJsonHelper fromApiJsonHelper,
-            final GLAccountRepository glAccountRepository,
-            final ProvisioningEntriesReadPlatformService provisioningEntriesReadPlatformService) {
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.provisioningCriteriaAssembler = provisioningCriteriaAssembler;
-        this.provisioningCriteriaRepository = provisioningCriteriaRepository;
-        this.fromApiJsonHelper = fromApiJsonHelper ;
-        this.glAccountRepository = glAccountRepository ; 
-        this.provisioningEntriesReadPlatformService = provisioningEntriesReadPlatformService ;
-    }
 
     @Override
     public CommandProcessingResult createProvisioningCriteria(JsonCommand command) {

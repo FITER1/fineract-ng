@@ -18,8 +18,6 @@
  */
 package org.apache.fineract.portfolio.interestratechart.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.common.domain.ConditionType;
 import org.apache.fineract.portfolio.common.service.CommonEnumerations;
@@ -27,6 +25,8 @@ import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncenti
 import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncentiveEntityType;
 import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncentiveType;
 import org.springframework.stereotype.Service;
+
+import java.util.Collection;
 
 @Service
 public class InterestIncentivesDropdownReadPlatformServiceImpl implements InterestIncentiveDropdownReadPlatformService {

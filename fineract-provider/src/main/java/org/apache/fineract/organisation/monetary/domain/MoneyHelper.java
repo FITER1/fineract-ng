@@ -18,14 +18,13 @@
  */
 package org.apache.fineract.organisation.monetary.domain;
 
-import java.math.MathContext;
-import java.math.RoundingMode;
-
-import javax.annotation.PostConstruct;
-
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.math.MathContext;
+import java.math.RoundingMode;
 
 @Component
 public class MoneyHelper {

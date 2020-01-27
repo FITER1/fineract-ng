@@ -18,10 +18,6 @@
  */
 package org.apache.fineract.portfolio.group.data;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.apache.fineract.infrastructure.bulkimport.constants.TemplatePopulateImportConstants;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.dataqueries.data.DatatableData;
@@ -30,6 +26,9 @@ import org.apache.fineract.organisation.staff.data.StaffData;
 import org.apache.fineract.portfolio.calendar.data.CalendarData;
 import org.apache.fineract.portfolio.client.data.ClientData;
 import org.joda.time.LocalDate;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Immutable data object representing a general group (so may or may not have a

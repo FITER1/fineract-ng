@@ -19,9 +19,10 @@
 
 package org.apache.fineract.portfolio.self.pockets.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.EntityAccountType;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -34,15 +35,14 @@ import org.apache.fineract.portfolio.self.pockets.domain.Pocket;
 import org.apache.fineract.portfolio.self.pockets.domain.PocketAccountMapping;
 import org.apache.fineract.portfolio.self.pockets.domain.PocketAccountMappingRepositoryWrapper;
 import org.apache.fineract.portfolio.self.pockets.domain.PocketRepositoryWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PocketWritePlatformServiceImpl implements PocketWritePlatformService {
 
 	private final PlatformSecurityContext context;
@@ -51,20 +51,6 @@ public class PocketWritePlatformServiceImpl implements PocketWritePlatformServic
 	private final PocketRepositoryWrapper pocketRepositoryWrapper;
 	private final PocketAccountMappingRepositoryWrapper pocketAccountMappingRepositoryWrapper;
 	private final PocketAccountMappingReadPlatformService pocketAccountMappingReadPlatformService;
-
-	@Autowired
-	public PocketWritePlatformServiceImpl(final PlatformSecurityContext context,
-			PocketDataValidator pocketDataValidator, final AccountEntityServiceFactory accountEntityServiceFactory,
-			final PocketRepositoryWrapper pocketRepositoryWrapper,
-			final PocketAccountMappingRepositoryWrapper pocketAccountMappingRepositoryWrapper,
-			final PocketAccountMappingReadPlatformService pocketAccountMappingReadPlatformService) {
-		this.context = context;
-		this.pocketDataValidator = pocketDataValidator;
-		this.accountEntityServiceFactory = accountEntityServiceFactory;
-		this.pocketRepositoryWrapper = pocketRepositoryWrapper;
-		this.pocketAccountMappingRepositoryWrapper = pocketAccountMappingRepositoryWrapper;
-		this.pocketAccountMappingReadPlatformService = pocketAccountMappingReadPlatformService;
-	}
 
 	@Transactional
 	@Override

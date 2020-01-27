@@ -18,33 +18,22 @@
  */
 package org.apache.fineract.infrastructure.security.utils;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.stereotype.Component;
 
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
 @Component
+@RequiredArgsConstructor
 public class ColumnValidator {
 
 	private final JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public ColumnValidator(final DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
 
 	private void validateColumn(Map<String, Set<String>> tableColumnMap) {
 		Connection connection = null ;

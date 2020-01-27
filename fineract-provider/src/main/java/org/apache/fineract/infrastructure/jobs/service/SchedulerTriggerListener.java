@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.jobs.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
@@ -26,12 +27,12 @@ import org.quartz.Trigger.CompletedExecutionInstruction;
 import org.quartz.TriggerListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
 @Component
+@RequiredArgsConstructor
 public class SchedulerTriggerListener implements TriggerListener {
 
     private final static Logger logger = LoggerFactory.getLogger(SchedulerTriggerListener.class);
@@ -41,13 +42,6 @@ public class SchedulerTriggerListener implements TriggerListener {
     private final SchedularWritePlatformService schedularService;
 
     private final FineractProperties fineractProperties;
-
-    @Autowired
-    public SchedulerTriggerListener(final SchedularWritePlatformService schedularService, final FineractProperties fineractProperties) {
-        this.schedularService = schedularService;
-        this.fineractProperties = fineractProperties;
-
-    }
 
     @Override
     public String getName() {

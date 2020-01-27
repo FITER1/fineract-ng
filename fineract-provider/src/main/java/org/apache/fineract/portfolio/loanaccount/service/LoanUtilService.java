@@ -18,14 +18,9 @@
  */
 package org.apache.fineract.portfolio.loanaccount.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
@@ -39,10 +34,7 @@ import org.apache.fineract.organisation.workingdays.domain.WorkingDays;
 import org.apache.fineract.organisation.workingdays.domain.WorkingDaysRepositoryWrapper;
 import org.apache.fineract.portfolio.calendar.data.CalendarHistoryDataWrapper;
 import org.apache.fineract.portfolio.calendar.domain.Calendar;
-import org.apache.fineract.portfolio.calendar.domain.CalendarEntityType;
-import org.apache.fineract.portfolio.calendar.domain.CalendarHistory;
-import org.apache.fineract.portfolio.calendar.domain.CalendarInstance;
-import org.apache.fineract.portfolio.calendar.domain.CalendarInstanceRepository;
+import org.apache.fineract.portfolio.calendar.domain.*;
 import org.apache.fineract.portfolio.calendar.service.CalendarReadPlatformService;
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
 import org.apache.fineract.portfolio.floatingrates.data.FloatingRateDTO;
@@ -58,13 +50,13 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanDisbursementDetails;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanScheduleGeneratorFactory;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductRelatedDetail;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class LoanUtilService {
 
     private final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository;
@@ -76,23 +68,6 @@ public class LoanUtilService {
     private final FloatingRatesReadPlatformService floatingRatesReadPlatformService;
     private final FromJsonHelper fromApiJsonHelper;
     private final CalendarReadPlatformService calendarReadPlatformService;
-
-    @Autowired
-    public LoanUtilService(final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository,
-            final CalendarInstanceRepository calendarInstanceRepository, final ConfigurationDomainService configurationDomainService,
-            final HolidayRepository holidayRepository, final WorkingDaysRepositoryWrapper workingDaysRepository,
-            final LoanScheduleGeneratorFactory loanScheduleFactory, final FloatingRatesReadPlatformService floatingRatesReadPlatformService,
-            final FromJsonHelper fromApiJsonHelper, final CalendarReadPlatformService calendarReadPlatformService) {
-        this.applicationCurrencyRepository = applicationCurrencyRepository;
-        this.calendarInstanceRepository = calendarInstanceRepository;
-        this.configurationDomainService = configurationDomainService;
-        this.holidayRepository = holidayRepository;
-        this.workingDaysRepository = workingDaysRepository;
-        this.loanScheduleFactory = loanScheduleFactory;
-        this.floatingRatesReadPlatformService = floatingRatesReadPlatformService;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.calendarReadPlatformService = calendarReadPlatformService;
-    }
 
     public ScheduleGeneratorDTO buildScheduleGeneratorDTO(final Loan loan, final LocalDate recalculateFrom) {
         final HolidayDetailDTO holidayDetailDTO = null;

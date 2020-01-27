@@ -18,15 +18,15 @@
  */
 package org.apache.fineract.notification.eventandlistener;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.notification.data.NotificationData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class SpringEventPublisher {
-	@Autowired
-	private ApplicationEventPublisher applicationEventPublisher;
+	private final ApplicationEventPublisher applicationEventPublisher;
 	
 	public void broadcastNotification(final NotificationData notificationData) {
         SpringEvent event = new SpringEvent(this, notificationData);

@@ -18,8 +18,7 @@
  */
 package org.apache.fineract.infrastructure.gcm.service;
 
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -29,28 +28,20 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
 import org.apache.openjpa.persistence.EntityExistsException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+
 @Service
+@RequiredArgsConstructor
 public class DeviceRegistrationWritePlatformServiceImpl implements
 		DeviceRegistrationWritePlatformService {
 
 	private final DeviceRegistrationRepositoryWrapper deviceRegistrationRepository;
 	private final ClientRepositoryWrapper clientRepositoryWrapper;
 	private final PlatformSecurityContext context;
-
-	@Autowired
-	public DeviceRegistrationWritePlatformServiceImpl(
-			final DeviceRegistrationRepositoryWrapper deviceRegistrationRepository,
-			final ClientRepositoryWrapper clientRepositoryWrapper,
-			final PlatformSecurityContext context) {
-		this.deviceRegistrationRepository = deviceRegistrationRepository;
-		this.clientRepositoryWrapper = clientRepositoryWrapper;
-		this.context = context;
-	}
 
 	@Transactional
 	@Override

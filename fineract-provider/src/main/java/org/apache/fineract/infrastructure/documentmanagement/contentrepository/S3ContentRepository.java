@@ -18,10 +18,14 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.contentrepository;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-
+import com.amazonaws.AmazonClientException;
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SDKGlobalConfiguration;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.*;
+import com.lowagie.text.pdf.codec.Base64;
 import org.apache.fineract.infrastructure.core.domain.Base64EncodedImage;
 import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCommand;
 import org.apache.fineract.infrastructure.documentmanagement.data.DocumentData;
@@ -33,19 +37,9 @@ import org.apache.fineract.infrastructure.documentmanagement.exception.DocumentN
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.amazonaws.AmazonClientException;
-import com.amazonaws.AmazonServiceException;
-import com.amazonaws.SDKGlobalConfiguration;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.model.AmazonS3Exception;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
-import com.amazonaws.services.s3.model.GetObjectRequest;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.amazonaws.services.s3.model.S3Object;
-import com.lowagie.text.pdf.codec.Base64;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
 
 public class S3ContentRepository implements ContentRepository {
 

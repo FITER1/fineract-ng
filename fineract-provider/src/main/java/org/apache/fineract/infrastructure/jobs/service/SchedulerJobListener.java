@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.infrastructure.jobs.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.jobs.domain.ScheduledJobDetail;
 import org.apache.fineract.infrastructure.jobs.domain.ScheduledJobRunHistory;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.useradministration.domain.AppUserRepositoryWrapper;
 import org.quartz.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.core.authority.mapping.NullAuthoritiesMapper;
@@ -33,6 +33,7 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 public class SchedulerJobListener implements JobListener {
 
     private int stackTraceLevel = 0;
@@ -44,13 +45,6 @@ public class SchedulerJobListener implements JobListener {
     private final AppUserRepositoryWrapper userRepository ;
     
     private final GrantedAuthoritiesMapper authoritiesMapper = new NullAuthoritiesMapper();
-    
-    @Autowired
-    public SchedulerJobListener(final SchedularWritePlatformService schedularService,
-            final AppUserRepositoryWrapper userRepository) {
-        this.schedularService = schedularService;
-        this.userRepository = userRepository ;
-    }
 
     @Override
     public String getName() {

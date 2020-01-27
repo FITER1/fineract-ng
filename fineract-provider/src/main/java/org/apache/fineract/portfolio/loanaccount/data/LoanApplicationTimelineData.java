@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.loanaccount.data;
 
-import java.math.BigDecimal;
-
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.joda.time.LocalDate;
+
+import java.math.BigDecimal;
 
 /**
  * Immutable data object represent the important time-line events of a loan

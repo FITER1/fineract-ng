@@ -18,15 +18,7 @@
  */
 package org.apache.fineract.portfolio.group.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
@@ -36,7 +28,6 @@ import org.apache.fineract.infrastructure.core.data.PaginationParametersDataVali
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
@@ -52,14 +43,18 @@ import org.apache.fineract.portfolio.group.data.GroupGeneralData;
 import org.apache.fineract.portfolio.group.domain.GroupTypes;
 import org.apache.fineract.portfolio.group.exception.GroupNotFoundException;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class GroupReadPlatformServiceImpl implements GroupReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
@@ -75,23 +70,6 @@ public class GroupReadPlatformServiceImpl implements GroupReadPlatformService {
     private final ColumnValidator columnValidator;
 
     private final static Set<String> supportedOrderByValues = new HashSet<>(Arrays.asList("id", "name", "officeId", "officeName"));
-
-    @Autowired
-    public GroupReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final CenterReadPlatformService centerReadPlatformService,
-            final OfficeReadPlatformService officeReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
-            final CodeValueReadPlatformService codeValueReadPlatformService,
-            final PaginationParametersDataValidator paginationParametersDataValidator,
-            final ColumnValidator columnValidator) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.centerReadPlatformService = centerReadPlatformService;
-        this.officeReadPlatformService = officeReadPlatformService;
-        this.staffReadPlatformService = staffReadPlatformService;
-        this.codeValueReadPlatformService = codeValueReadPlatformService;
-        this.paginationParametersDataValidator = paginationParametersDataValidator;
-        this.columnValidator = columnValidator;
-    }
 
     @Override
     public GroupGeneralData retrieveTemplate(final Long officeId, final boolean isCenterGroup, final boolean staffInSelectedOfficeOnly) {

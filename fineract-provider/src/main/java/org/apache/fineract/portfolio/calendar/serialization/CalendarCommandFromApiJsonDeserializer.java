@@ -18,12 +18,9 @@
  */
 package org.apache.fineract.portfolio.calendar.serialization;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -40,13 +37,16 @@ import org.apache.fineract.portfolio.calendar.domain.CalendarWeekDaysType;
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
+@RequiredArgsConstructor
 public class CalendarCommandFromApiJsonDeserializer extends AbstractFromApiJsonDeserializer<CalendarCommand> {
 
     /**
@@ -55,11 +55,6 @@ public class CalendarCommandFromApiJsonDeserializer extends AbstractFromApiJsonD
     private final Set<String> supportedParameters = CALENDAR_SUPPORTED_PARAMETERS.getAllValues();
 
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public CalendarCommandFromApiJsonDeserializer(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     @Override
     public CalendarCommand commandFromApiJson(final String json) {

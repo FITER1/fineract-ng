@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.organisation.office.service;
 
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -43,14 +40,17 @@ import org.apache.fineract.organisation.office.serialization.OfficeTransactionCo
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class OfficeWritePlatformServiceJpaRepositoryImpl implements OfficeWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(OfficeWritePlatformServiceJpaRepositoryImpl.class);
@@ -62,21 +62,6 @@ public class OfficeWritePlatformServiceJpaRepositoryImpl implements OfficeWriteP
     private final OfficeTransactionRepository officeTransactionRepository;
     private final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository;
     private final TopicDomainService topicDomainService;
-
-    @Autowired
-    public OfficeWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final OfficeCommandFromApiJsonDeserializer fromApiJsonDeserializer,
-            final OfficeTransactionCommandFromApiJsonDeserializer moneyTransferCommandFromApiJsonDeserializer,
-            final OfficeRepositoryWrapper officeRepositoryWrapper, final OfficeTransactionRepository officeMonetaryTransferRepository,
-            final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository, final TopicDomainService topicDomainService) {
-        this.context = context;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.moneyTransferCommandFromApiJsonDeserializer = moneyTransferCommandFromApiJsonDeserializer;
-        this.officeRepositoryWrapper = officeRepositoryWrapper;
-        this.officeTransactionRepository = officeMonetaryTransferRepository;
-        this.applicationCurrencyRepository = applicationCurrencyRepository;
-        this.topicDomainService = topicDomainService;
-    }
 
     @Transactional
     @Override

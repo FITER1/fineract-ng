@@ -18,14 +18,13 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.domain;
 
+import lombok.*;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCommand;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import lombok.*;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCommand;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 @Builder
 @Data

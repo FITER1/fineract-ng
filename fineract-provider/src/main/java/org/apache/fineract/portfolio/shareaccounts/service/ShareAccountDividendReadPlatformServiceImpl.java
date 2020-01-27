@@ -18,6 +18,21 @@
  */
 package org.apache.fineract.portfolio.shareaccounts.service;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.infrastructure.core.service.Page;
+import org.apache.fineract.infrastructure.core.service.PaginationHelper;
+import org.apache.fineract.infrastructure.core.service.SearchParameters;
+import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
+import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountData;
+import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountDividendData;
+import org.apache.fineract.portfolio.shareaccounts.domain.ShareAccountDividendStatusType;
+import org.apache.fineract.portfolio.shareproducts.domain.ShareProductDividendStatusType;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,35 +40,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.Page;
-import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
-import org.apache.fineract.infrastructure.core.service.SearchParameters;
-import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
-import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountData;
-import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountDividendData;
-import org.apache.fineract.portfolio.shareaccounts.domain.ShareAccountDividendStatusType;
-import org.apache.fineract.portfolio.shareproducts.domain.ShareProductDividendStatusType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Service;
-
 @Service
+@RequiredArgsConstructor
 public class ShareAccountDividendReadPlatformServiceImpl implements ShareAccountDividendReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final ColumnValidator columnValidator;
     private final PaginationHelper<ShareAccountDividendData> paginationHelper = new PaginationHelper<>();
-
-    @Autowired
-    public ShareAccountDividendReadPlatformServiceImpl(final DataSource dataSource,
-    		final ColumnValidator columnValidator) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.columnValidator = columnValidator;
-    }
 
     @Override
     public List<Map<String, Object>> retriveDividendDetailsForPostDividents() {

@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.search.data;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-
 import org.apache.fineract.organisation.office.data.OfficeData;
 import org.apache.fineract.portfolio.loanproduct.data.LoanProductData;
+
+import java.math.BigDecimal;
+import java.util.Collection;
 
 public class AdHocSearchQueryData {
 

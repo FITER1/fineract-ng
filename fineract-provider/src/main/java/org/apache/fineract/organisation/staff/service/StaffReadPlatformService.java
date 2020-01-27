@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.organisation.staff.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.organisation.staff.data.StaffData;
+
+import java.util.Collection;
 
 public interface StaffReadPlatformService {
 

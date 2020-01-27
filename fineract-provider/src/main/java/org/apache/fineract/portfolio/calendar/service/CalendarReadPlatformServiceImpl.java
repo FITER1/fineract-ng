@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.portfolio.calendar.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -30,7 +30,6 @@ import org.apache.fineract.portfolio.calendar.exception.CalendarNotFoundExceptio
 import org.apache.fineract.portfolio.meeting.data.MeetingData;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -44,16 +43,11 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CalendarReadPlatformServiceImpl implements CalendarReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final ConfigurationDomainService configurationDomainService;
-
-    @Autowired
-    public CalendarReadPlatformServiceImpl(final DataSource dataSource, final ConfigurationDomainService configurationDomainService) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.configurationDomainService = configurationDomainService;
-    }
 
     private static final class CalendarDataMapper implements RowMapper<CalendarData> {
 

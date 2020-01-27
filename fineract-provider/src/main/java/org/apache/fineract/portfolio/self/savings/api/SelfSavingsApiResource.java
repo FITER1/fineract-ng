@@ -19,21 +19,7 @@
 package org.apache.fineract.portfolio.self.savings.api;
 
 import io.swagger.annotations.*;
-import java.util.HashMap;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.exception.ClientNotFoundException;
 import org.apache.fineract.portfolio.savings.api.SavingsAccountChargesApiResource;
@@ -45,14 +31,20 @@ import org.apache.fineract.portfolio.self.savings.data.SelfSavingsAccountConstan
 import org.apache.fineract.portfolio.self.savings.data.SelfSavingsDataValidator;
 import org.apache.fineract.portfolio.self.savings.service.AppuserSavingsMapperReadService;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.HashMap;
 
 @Path("self/savingsaccounts")
 @Component
 @Scope("singleton")
 @Api(value = "Self Savings Account", description = "")
+@RequiredArgsConstructor
 public class SelfSavingsApiResource {
 
 	private final PlatformSecurityContext context;
@@ -62,24 +54,6 @@ public class SelfSavingsApiResource {
 	private final AppuserSavingsMapperReadService appuserSavingsMapperReadService;
 	private final SelfSavingsDataValidator dataValidator;
 	private final AppuserClientMapperReadService appUserClientMapperReadService;
-
-	@Autowired
-	public SelfSavingsApiResource(
-			final PlatformSecurityContext context,
-			final SavingsAccountsApiResource savingsAccountsApiResource,
-			final SavingsAccountChargesApiResource savingsAccountChargesApiResource,
-			final SavingsAccountTransactionsApiResource savingsAccountTransactionsApiResource,
-			final AppuserSavingsMapperReadService appuserSavingsMapperReadService,
-			final SelfSavingsDataValidator dataValidator,
-			final AppuserClientMapperReadService appUserClientMapperReadService) {
-		this.context = context;
-		this.savingsAccountsApiResource = savingsAccountsApiResource;
-		this.savingsAccountChargesApiResource = savingsAccountChargesApiResource;
-		this.savingsAccountTransactionsApiResource = savingsAccountTransactionsApiResource;
-		this.appuserSavingsMapperReadService = appuserSavingsMapperReadService;
-		this.dataValidator = dataValidator;
-		this.appUserClientMapperReadService = appUserClientMapperReadService;
-	}
 
 	@GET
 	@Path("{accountId}")

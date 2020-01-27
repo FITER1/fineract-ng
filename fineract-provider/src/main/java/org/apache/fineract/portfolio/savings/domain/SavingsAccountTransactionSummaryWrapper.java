@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * A wrapper for dealing with side-effect free functionality related to a

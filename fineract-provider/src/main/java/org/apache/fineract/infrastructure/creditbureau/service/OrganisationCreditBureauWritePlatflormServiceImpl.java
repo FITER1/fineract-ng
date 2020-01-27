@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.creditbureau.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -27,11 +28,11 @@ import org.apache.fineract.infrastructure.creditbureau.domain.OrganisationCredit
 import org.apache.fineract.infrastructure.creditbureau.domain.OrganisationCreditBureauRepository;
 import org.apache.fineract.infrastructure.creditbureau.serialization.CreditBureauCommandFromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class OrganisationCreditBureauWritePlatflormServiceImpl
 		implements OrganisationCreditBureauWritePlatflormService {
 
@@ -42,17 +43,6 @@ public class OrganisationCreditBureauWritePlatflormServiceImpl
 	private final CreditBureauRepository creditBureauRepository;
 
 	private final CreditBureauCommandFromApiJsonDeserializer fromApiJsonDeserializer;
-
-	@Autowired
-	public OrganisationCreditBureauWritePlatflormServiceImpl(final PlatformSecurityContext context,
-			final OrganisationCreditBureauRepository organisationCreditBureauRepository, final CreditBureauRepository creditBureauRepository,
-			final CreditBureauCommandFromApiJsonDeserializer fromApiJsonDeserializer) {
-		this.context = context;
-		this.organisationCreditBureauRepository = organisationCreditBureauRepository;
-		this.creditBureauRepository = creditBureauRepository;
-		this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-
-	}
 
 	@Override
 	public CommandProcessingResult addOrganisationCreditBureau(Long creditBureauId, JsonCommand command) {

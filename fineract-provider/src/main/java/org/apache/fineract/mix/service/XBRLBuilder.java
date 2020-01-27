@@ -18,13 +18,7 @@
  */
 package org.apache.fineract.mix.service;
 
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.mix.data.ContextData;
 import org.apache.fineract.mix.data.MixTaxonomyData;
 import org.apache.fineract.mix.data.NamespaceData;
@@ -33,10 +27,17 @@ import org.apache.fineract.mix.exception.XBRLMappingInvalidException;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 @Component
+@RequiredArgsConstructor
 public class XBRLBuilder {
 
     private static final String SCHEME_URL = "http://www.themix.org";
@@ -51,8 +52,7 @@ public class XBRLBuilder {
     private Integer instantScenarioCounter = 1;
     private Integer durationScenarioCounter = 1;
 
-    @Autowired
-    private NamespaceReadPlatformService readNamespaceService;
+    private final NamespaceReadPlatformService readNamespaceService;
 
     public String build(final XBRLData xbrlData) {
         return this.build(xbrlData.getResultMap(), xbrlData.getStartDate(), xbrlData.getEndDate(), xbrlData.getCurrency());

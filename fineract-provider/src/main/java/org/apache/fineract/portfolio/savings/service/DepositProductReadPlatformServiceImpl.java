@@ -18,15 +18,10 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingEnumerations;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartData;
@@ -37,13 +32,18 @@ import org.apache.fineract.portfolio.savings.data.FixedDepositProductData;
 import org.apache.fineract.portfolio.savings.data.RecurringDepositProductData;
 import org.apache.fineract.portfolio.savings.exception.FixedDepositProductNotFoundException;
 import org.apache.fineract.portfolio.tax.data.TaxGroupData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+
 @Service
+@RequiredArgsConstructor
 public class DepositProductReadPlatformServiceImpl implements DepositProductReadPlatformService {
 
     private final PlatformSecurityContext context;
@@ -52,14 +52,6 @@ public class DepositProductReadPlatformServiceImpl implements DepositProductRead
     private final FixedDepositProductMapper fixedDepositProductRowMapper = new FixedDepositProductMapper();
     private final RecurringDepositProductMapper recurringDepositProductRowMapper = new RecurringDepositProductMapper();
     private final DepositProductLookupMapper depositProductLookupsRowMapper = new DepositProductLookupMapper();
-
-    @Autowired
-    public DepositProductReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final InterestRateChartReadPlatformService chartReadPlatformService) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.chartReadPlatformService = chartReadPlatformService;
-    }
 
     @Override
     public Collection<DepositProductData> retrieveAll(final DepositAccountType depositAccountType) {

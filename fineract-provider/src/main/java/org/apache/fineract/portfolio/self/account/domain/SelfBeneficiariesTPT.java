@@ -18,17 +18,17 @@
  */
 package org.apache.fineract.portfolio.self.account.domain;
 
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.NAME_PARAM_NAME;
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.TRANSFER_LIMIT_PARAM_NAME;
-import java.util.HashMap;
-import java.util.Map;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.NAME_PARAM_NAME;
+import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.TRANSFER_LIMIT_PARAM_NAME;
 
 @Entity
 @Table(name = "m_selfservice_beneficiaries_tpt", uniqueConstraints = { @UniqueConstraint(columnNames = {

@@ -19,25 +19,23 @@
 package org.apache.fineract.infrastructure.campaigns.email.api;
 
 import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
+import org.apache.fineract.infrastructure.campaigns.email.data.EmailBusinessRulesData;
+import org.apache.fineract.infrastructure.campaigns.email.data.EmailCampaignData;
+import org.apache.fineract.infrastructure.campaigns.email.data.PreviewCampaignMessage;
+import org.apache.fineract.infrastructure.campaigns.email.service.EmailCampaignReadPlatformService;
+import org.apache.fineract.infrastructure.campaigns.email.service.EmailCampaignWritePlatformService;
 import org.apache.fineract.infrastructure.core.api.ApiRequestParameterHelper;
 import org.apache.fineract.infrastructure.core.api.JsonQuery;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.serialization.ApiRequestJsonSerializationSettings;
 import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSerializer;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.apache.fineract.infrastructure.core.service.Page;
-import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.apache.fineract.infrastructure.campaigns.email.data.PreviewCampaignMessage;
-import org.apache.fineract.infrastructure.campaigns.email.data.EmailBusinessRulesData;
-import org.apache.fineract.infrastructure.campaigns.email.data.EmailCampaignData;
-import org.apache.fineract.infrastructure.campaigns.email.service.EmailCampaignReadPlatformService;
-import org.apache.fineract.infrastructure.campaigns.email.service.EmailCampaignWritePlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -60,8 +58,8 @@ import java.util.HashSet;
 @Produces({ MediaType.APPLICATION_JSON })
 @Component
 @Scope("singleton")
+@RequiredArgsConstructor
 public class EmailCampaignApiResource {
-
 
     //change name to email campaign
     private final String resourceNameForPermissions = "EMAIL_CAMPAIGN";
@@ -75,31 +73,11 @@ public class EmailCampaignApiResource {
     private final EmailCampaignReadPlatformService emailCampaignReadPlatformService;
     private final FromJsonHelper fromJsonHelper;
 
-
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
     private final DefaultToApiJsonSerializer<EmailCampaignData> emailCampaignDataDefaultToApiJsonSerializer;
     private final EmailCampaignWritePlatformService emailCampaignWritePlatformService;
 
     private final DefaultToApiJsonSerializer<PreviewCampaignMessage> previewCampaignMessageDefaultToApiJsonSerializer;
-
-
-    @Autowired
-    public EmailCampaignApiResource(final PlatformSecurityContext context,final DefaultToApiJsonSerializer<EmailBusinessRulesData> toApiJsonSerializer, final ApiRequestParameterHelper apiRequestParameterHelper,
-                                  final EmailCampaignReadPlatformService emailCampaignReadPlatformService, final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-                                  final DefaultToApiJsonSerializer<EmailCampaignData> emailCampaignDataDefaultToApiJsonSerializer,
-                                  final FromJsonHelper fromJsonHelper, final EmailCampaignWritePlatformService emailCampaignWritePlatformService,
-                                  final DefaultToApiJsonSerializer<PreviewCampaignMessage> previewCampaignMessageDefaultToApiJsonSerializer) {
-        this.context = context;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.emailCampaignReadPlatformService = emailCampaignReadPlatformService;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.emailCampaignDataDefaultToApiJsonSerializer = emailCampaignDataDefaultToApiJsonSerializer;
-        this.fromJsonHelper = fromJsonHelper;
-        this.emailCampaignWritePlatformService = emailCampaignWritePlatformService;
-        this.previewCampaignMessageDefaultToApiJsonSerializer = previewCampaignMessageDefaultToApiJsonSerializer;
-    }
-
 
     @GET
     @Path("{resourceId}")

@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.meeting.service;
 
+import org.apache.fineract.portfolio.meeting.data.MeetingData;
+
 import java.util.Collection;
 import java.util.List;
-
-import org.apache.fineract.portfolio.meeting.data.MeetingData;
 
 public interface MeetingReadPlatformService {
 

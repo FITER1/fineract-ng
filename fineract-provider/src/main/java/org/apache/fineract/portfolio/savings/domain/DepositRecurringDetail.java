@@ -18,17 +18,14 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.adjustAdvanceTowardsFuturePaymentsParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.allowWithdrawalParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.isMandatoryDepositParamName;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import static org.apache.fineract.portfolio.savings.DepositsApiConstants.*;
 
 /**
  * DepositRecurringDetail encapsulates all the details of a

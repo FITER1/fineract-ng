@@ -18,29 +18,23 @@
  */
 package org.apache.fineract.portfolio.paymenttype.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-
-import javax.sql.DataSource;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+
 @Service
+@RequiredArgsConstructor
 public class PaymentTypeReadPlatformServiceImpl implements PaymentTypeReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final PlatformSecurityContext context;
-
-    @Autowired
-    public PaymentTypeReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     @Override
     public Collection<PaymentTypeData> retrieveAllPaymentTypes() {

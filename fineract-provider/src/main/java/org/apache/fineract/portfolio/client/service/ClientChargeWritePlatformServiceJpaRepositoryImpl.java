@@ -18,13 +18,7 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -44,13 +38,7 @@ import org.apache.fineract.portfolio.charge.domain.ChargeRepositoryWrapper;
 import org.apache.fineract.portfolio.charge.exception.ChargeCannotBeAppliedToException;
 import org.apache.fineract.portfolio.client.api.ClientApiConstants;
 import org.apache.fineract.portfolio.client.data.ClientChargeDataValidator;
-import org.apache.fineract.portfolio.client.domain.Client;
-import org.apache.fineract.portfolio.client.domain.ClientCharge;
-import org.apache.fineract.portfolio.client.domain.ClientChargePaidBy;
-import org.apache.fineract.portfolio.client.domain.ClientChargeRepositoryWrapper;
-import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
-import org.apache.fineract.portfolio.client.domain.ClientTransaction;
-import org.apache.fineract.portfolio.client.domain.ClientTransactionRepository;
+import org.apache.fineract.portfolio.client.domain.*;
 import org.apache.fineract.portfolio.paymentdetail.domain.PaymentDetail;
 import org.apache.fineract.portfolio.paymentdetail.service.PaymentDetailWritePlatformService;
 import org.apache.fineract.useradministration.domain.AppUser;
@@ -59,11 +47,14 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class ClientChargeWritePlatformServiceJpaRepositoryImpl implements ClientChargeWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(ClientChargeWritePlatformServiceJpaRepositoryImpl.class);
@@ -79,27 +70,6 @@ public class ClientChargeWritePlatformServiceJpaRepositoryImpl implements Client
     private final ClientTransactionRepository clientTransactionRepository;
     private final PaymentDetailWritePlatformService paymentDetailWritePlatformService;
     private final JournalEntryWritePlatformService journalEntryWritePlatformService;
-
-    @Autowired
-    public ClientChargeWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final ChargeRepositoryWrapper chargeRepository, final ClientChargeDataValidator clientChargeDataValidator,
-            final ClientRepositoryWrapper clientRepository, final HolidayRepositoryWrapper holidayRepositoryWrapper,
-            final ConfigurationDomainService configurationDomainService, final ClientChargeRepositoryWrapper clientChargeRepository,
-            final WorkingDaysRepositoryWrapper workingDaysRepository, final ClientTransactionRepository clientTransactionRepository,
-            final PaymentDetailWritePlatformService paymentDetailWritePlatformService,
-            final JournalEntryWritePlatformService journalEntryWritePlatformService) {
-        this.context = context;
-        this.chargeRepository = chargeRepository;
-        this.clientChargeDataValidator = clientChargeDataValidator;
-        this.clientRepository = clientRepository;
-        this.holidayRepository = holidayRepositoryWrapper;
-        this.configurationDomainService = configurationDomainService;
-        this.clientChargeRepository = clientChargeRepository;
-        this.workingDaysRepository = workingDaysRepository;
-        this.clientTransactionRepository = clientTransactionRepository;
-        this.paymentDetailWritePlatformService = paymentDetailWritePlatformService;
-        this.journalEntryWritePlatformService = journalEntryWritePlatformService;
-    }
 
     @Override
     public CommandProcessingResult addCharge(Long clientId, JsonCommand command) {

@@ -18,27 +18,20 @@
  */
 package org.apache.fineract.portfolio.interestratechart.domain;
 
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.dateFormatParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.descriptionParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.endDateParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.fromDateParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.localeParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.nameParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.isPrimaryGroupingByAmountParamName;
-
-import java.util.Date;
-import java.util.Map;
-
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.domain.LocalDateInterval;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.joda.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import java.util.Date;
+import java.util.Map;
+
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.*;
 
 @Embeddable
 public class InterestRateChartFields {

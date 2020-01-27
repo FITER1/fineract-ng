@@ -20,7 +20,6 @@ package org.apache.fineract.organisation.office.api;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.fineract.organisation.office.data.OfficeData;
 import org.joda.time.LocalDate;
 
 import java.util.Collection;

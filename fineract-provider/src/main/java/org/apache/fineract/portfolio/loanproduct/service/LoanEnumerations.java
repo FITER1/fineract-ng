@@ -29,15 +29,7 @@ import org.apache.fineract.portfolio.loanaccount.data.LoanTransactionEnumData;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanStatus;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTermVariationType;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionType;
-import org.apache.fineract.portfolio.loanproduct.domain.AmortizationMethod;
-import org.apache.fineract.portfolio.loanproduct.domain.InterestCalculationPeriodMethod;
-import org.apache.fineract.portfolio.loanproduct.domain.InterestMethod;
-import org.apache.fineract.portfolio.loanproduct.domain.InterestRecalculationCompoundingMethod;
-import org.apache.fineract.portfolio.loanproduct.domain.LoanPreClosureInterestCalculationStrategy;
-import org.apache.fineract.portfolio.loanproduct.domain.LoanProductParamType;
-import org.apache.fineract.portfolio.loanproduct.domain.LoanProductValueConditionType;
-import org.apache.fineract.portfolio.loanproduct.domain.LoanRescheduleStrategyMethod;
-import org.apache.fineract.portfolio.loanproduct.domain.RecalculationFrequencyType;
+import org.apache.fineract.portfolio.loanproduct.domain.*;
 
 public class LoanEnumerations {
 

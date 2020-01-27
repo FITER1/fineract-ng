@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.portfolio.fund.service;
 
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -34,13 +31,16 @@ import org.apache.fineract.portfolio.fund.exception.FundNotFoundException;
 import org.apache.fineract.portfolio.fund.serialization.FundCommandFromApiJsonDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class FundWritePlatformServiceJpaRepositoryImpl implements FundWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(FundWritePlatformServiceJpaRepositoryImpl.class);
@@ -48,14 +48,6 @@ public class FundWritePlatformServiceJpaRepositoryImpl implements FundWritePlatf
     private final PlatformSecurityContext context;
     private final FundCommandFromApiJsonDeserializer fromApiJsonDeserializer;
     private final FundRepository fundRepository;
-
-    @Autowired
-    public FundWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final FundCommandFromApiJsonDeserializer fromApiJsonDeserializer, final FundRepository fundRepository) {
-        this.context = context;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.fundRepository = fundRepository;
-    }
 
     @Transactional
     @Override

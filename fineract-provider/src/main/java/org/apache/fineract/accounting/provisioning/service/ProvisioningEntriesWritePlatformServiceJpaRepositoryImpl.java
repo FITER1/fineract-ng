@@ -19,6 +19,7 @@
 package org.apache.fineract.accounting.provisioning.service;
 
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepository;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
@@ -54,13 +55,13 @@ import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductRepository;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements ProvisioningEntriesWritePlatformService {
 
     private final ProvisioningEntriesReadPlatformService provisioningEntriesReadPlatformService;
@@ -75,28 +76,6 @@ public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements
     private final ProvisioningEntriesDefinitionJsonDeserializer fromApiJsonDeserializer;
     private final FromJsonHelper fromApiJsonHelper;
     
-    @Autowired
-    public ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl(
-            final ProvisioningEntriesReadPlatformService provisioningEntriesReadPlatformService,
-            final ProvisioningCriteriaReadPlatformService provisioningCriteriaReadPlatformService,
-            final LoanProductRepository loanProductRepository, final GLAccountRepository glAccountRepository,
-            final OfficeRepositoryWrapper officeRepositoryWrapper, final ProvisioningCategoryRepository provisioningCategoryRepository,
-            final PlatformSecurityContext platformSecurityContext, final ProvisioningEntryRepository provisioningEntryRepository,
-            final JournalEntryWritePlatformService journalEntryWritePlatformService,
-            final ProvisioningEntriesDefinitionJsonDeserializer fromApiJsonDeserializer, final FromJsonHelper fromApiJsonHelper) {
-        this.provisioningEntriesReadPlatformService = provisioningEntriesReadPlatformService;
-        this.provisioningCriteriaReadPlatformService = provisioningCriteriaReadPlatformService ;
-        this.loanProductRepository = loanProductRepository;
-        this.glAccountRepository = glAccountRepository;
-        this.officeRepositoryWrapper = officeRepositoryWrapper;
-        this.provisioningCategoryRepository = provisioningCategoryRepository;
-        this.platformSecurityContext = platformSecurityContext;
-        this.provisioningEntryRepository = provisioningEntryRepository;
-        this.journalEntryWritePlatformService = journalEntryWritePlatformService;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
-
     @Override
     public CommandProcessingResult createProvisioningJournalEntries(Long provisioningEntryId, JsonCommand command) {
         ProvisioningEntry requestedEntry = this.provisioningEntryRepository.findById(provisioningEntryId)

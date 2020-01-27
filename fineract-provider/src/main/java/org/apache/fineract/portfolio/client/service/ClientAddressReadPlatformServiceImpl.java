@@ -18,10 +18,9 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
-import javax.sql.DataSource;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.address.data.ClientAddressData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -31,17 +30,11 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 @Service
+@RequiredArgsConstructor
 public class ClientAddressReadPlatformServiceImpl implements ClientAddressReadPlatformService {
 
 	private final JdbcTemplate jdbcTemplate;
 	private final PlatformSecurityContext context;
-
-	@Autowired
-	public ClientAddressReadPlatformServiceImpl(final PlatformSecurityContext context,
-			final DataSource dataSource) {
-		this.context = context;
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
 
 	private static final class ClientAddrMapper implements RowMapper<ClientAddressData> {
 		public String schema() {

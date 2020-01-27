@@ -19,21 +19,7 @@
 
 package org.apache.fineract.portfolio.self.shareaccounts.api;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.ApiRequestParameterHelper;
 import org.apache.fineract.infrastructure.core.serialization.ApiRequestJsonSerializationSettings;
 import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSerializer;
@@ -53,13 +39,21 @@ import org.apache.fineract.portfolio.self.shareaccounts.service.AppUserShareAcco
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountData;
 import org.apache.fineract.portfolio.shareaccounts.service.ShareAccountReadPlatformService;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 
 @Path("self/shareaccounts")
 @Component
 @Scope("singleton")
+@RequiredArgsConstructor
 public class SelfShareAccountsApiResource {
 
 	private final PlatformSecurityContext context;
@@ -73,29 +67,6 @@ public class SelfShareAccountsApiResource {
 	private final ProductReadPlatformService productReadPlatformService;
 	private final ChargeReadPlatformService chargeReadPlatformService;
 	private final AppUserShareAccountsMapperReadPlatformService appUserShareAccountsMapperReadPlatformService;
-
-	@Autowired
-	public SelfShareAccountsApiResource(final PlatformSecurityContext context,
-			final AccountsApiResource accountsApiResource, final ShareAccountReadPlatformService readPlatformService,
-			final DefaultToApiJsonSerializer<AccountData> toApiJsonSerializer,
-			final ApiRequestParameterHelper apiRequestParameterHelper,
-			final AppuserClientMapperReadService appuserClientMapperReadService,
-			final SelfShareAccountsDataValidator selfShareAccountsDataValidator,
-			final ProductReadPlatformService productReadPlatformService,
-			final ChargeReadPlatformService chargeReadPlatformService,
-			final AppUserShareAccountsMapperReadPlatformService appUserShareAccountsMapperReadPlatformService) {
-		this.context = context;
-		this.accountsApiResource = accountsApiResource;
-		this.readPlatformService = readPlatformService;
-		this.toApiJsonSerializer = toApiJsonSerializer;
-		this.apiRequestParameterHelper = apiRequestParameterHelper;
-		this.selfShareAccountsDataValidator = selfShareAccountsDataValidator;
-		this.appuserClientMapperReadService = appuserClientMapperReadService;
-		this.productReadPlatformService = productReadPlatformService;
-		this.chargeReadPlatformService = chargeReadPlatformService;
-		this.appUserShareAccountsMapperReadPlatformService = appUserShareAccountsMapperReadPlatformService;
-
-	}
 
 	@GET
 	@Path("template")

@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.tax.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.tax.data.TaxComponentData;
 import org.apache.fineract.portfolio.tax.data.TaxGroupData;
+
+import java.util.Collection;
 
 public interface TaxReadPlatformService {
 

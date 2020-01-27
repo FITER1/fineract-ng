@@ -18,46 +18,34 @@
  */
 package org.apache.fineract.infrastructure.entityaccess.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Date;
-
-import javax.sql.DataSource;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.dataqueries.service.GenericDataServiceImpl;
 import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityAccessData;
 import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityRelationData;
 import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityToEntityMappingData;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntity;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityAccessType;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityRelation;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityRelationRepositoryWrapper;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityType;
+import org.apache.fineract.infrastructure.entityaccess.domain.*;
 import org.apache.fineract.infrastructure.entityaccess.exception.FineractEntityMappingConfigurationException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Date;
+
 @Service
+@RequiredArgsConstructor
 public class FineractEntityAccessReadServiceImpl implements FineractEntityAccessReadService {
 
     private final PlatformSecurityContext context;
     private final JdbcTemplate jdbcTemplate;
     private final static Logger logger = LoggerFactory.getLogger(GenericDataServiceImpl.class);
     private final FineractEntityRelationRepositoryWrapper fineractEntityRelationRepository;
-
-    @Autowired
-    public FineractEntityAccessReadServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-    		final FineractEntityRelationRepositoryWrapper fineractEntityRelationRepository) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.fineractEntityRelationRepository = fineractEntityRelationRepository;
-    }
 
     /*
      * (non-Javadoc)

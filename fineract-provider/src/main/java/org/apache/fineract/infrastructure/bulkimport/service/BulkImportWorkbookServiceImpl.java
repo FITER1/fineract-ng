@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.bulkimport.service;
 
 import com.google.common.io.Files;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.bulkimport.data.BulkImportEvent;
 import org.apache.fineract.infrastructure.bulkimport.data.GlobalEntityType;
 import org.apache.fineract.infrastructure.bulkimport.data.ImportData;
@@ -44,14 +45,12 @@ import org.apache.tika.io.IOUtils;
 import org.apache.tika.io.TikaInputStream;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import javax.ws.rs.core.Response;
 import java.io.*;
 import java.net.URLConnection;
@@ -60,6 +59,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 @Service
+@RequiredArgsConstructor
 public class BulkImportWorkbookServiceImpl implements BulkImportWorkbookService {
     private final ApplicationContext applicationContext;
     private final PlatformSecurityContext securityContext;
@@ -68,21 +68,6 @@ public class BulkImportWorkbookServiceImpl implements BulkImportWorkbookService 
     private final ImportDocumentRepository importDocumentRepository;
     private final JdbcTemplate jdbcTemplate;
     private final FineractProperties fineractProperties;
-
-    @Autowired
-    public BulkImportWorkbookServiceImpl(final ApplicationContext applicationContext,
-            final PlatformSecurityContext securityContext,
-            final DocumentWritePlatformService documentWritePlatformService,
-            final DocumentRepository documentRepository,
-            final ImportDocumentRepository importDocumentRepository, final DataSource dataSource, final FineractProperties fineractProperties) {
-        this.applicationContext = applicationContext;
-        this.securityContext = securityContext;
-        this.documentWritePlatformService = documentWritePlatformService;
-        this.documentRepository = documentRepository;
-        this.importDocumentRepository = importDocumentRepository;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.fineractProperties = fineractProperties;
-    }
 
     @Override
     public Long importWorkbook(String entity, InputStream inputStream, FormDataContentDisposition fileDetail,

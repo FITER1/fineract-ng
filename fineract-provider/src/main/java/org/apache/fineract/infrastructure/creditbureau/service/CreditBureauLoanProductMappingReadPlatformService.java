@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.infrastructure.creditbureau.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.creditbureau.data.CreditBureauLoanProductMappingData;
+
+import java.util.Collection;
 
 public interface CreditBureauLoanProductMappingReadPlatformService {
 

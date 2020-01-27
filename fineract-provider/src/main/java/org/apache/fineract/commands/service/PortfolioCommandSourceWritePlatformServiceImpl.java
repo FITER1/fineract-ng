@@ -19,6 +19,7 @@
 package org.apache.fineract.commands.service;
 
 import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandSource;
 import org.apache.fineract.commands.domain.CommandSourceRepository;
 import org.apache.fineract.commands.domain.CommandWrapper;
@@ -35,7 +36,6 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
@@ -44,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Random;
 
 @Service
+@RequiredArgsConstructor
 public class PortfolioCommandSourceWritePlatformServiceImpl implements PortfolioCommandSourceWritePlatformService {
 
     private final PlatformSecurityContext context;
@@ -53,19 +54,6 @@ public class PortfolioCommandSourceWritePlatformServiceImpl implements Portfolio
     private final SchedulerJobRunnerReadService schedulerJobRunnerReadService;
     private final FineractProperties fineractProperties;
     private final static Logger logger = LoggerFactory.getLogger(PortfolioCommandSourceWritePlatformServiceImpl.class);
-
-    @Autowired
-    public PortfolioCommandSourceWritePlatformServiceImpl(final PlatformSecurityContext context,
-            final CommandSourceRepository commandSourceRepository, final FromJsonHelper fromApiJsonHelper,
-            final CommandProcessingService processAndLogCommandService, final SchedulerJobRunnerReadService schedulerJobRunnerReadService,
-            final FineractProperties fineractProperties) {
-        this.context = context;
-        this.commandSourceRepository = commandSourceRepository;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.processAndLogCommandService = processAndLogCommandService;
-        this.schedulerJobRunnerReadService = schedulerJobRunnerReadService;
-        this.fineractProperties = fineractProperties;
-    }
 
     @Override
     public CommandProcessingResult logCommandSource(final CommandWrapper wrapper) {

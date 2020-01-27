@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.portfolio.group.service;
 
-import java.util.*;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandProcessingService;
@@ -46,13 +43,15 @@ import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
 import org.apache.fineract.organisation.office.exception.InvalidOfficeException;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.organisation.staff.domain.StaffRepositoryWrapper;
-import org.apache.fineract.portfolio.calendar.domain.*;
 import org.apache.fineract.portfolio.calendar.domain.Calendar;
+import org.apache.fineract.portfolio.calendar.domain.*;
 import org.apache.fineract.portfolio.client.domain.AccountNumberGenerator;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
 import org.apache.fineract.portfolio.client.service.LoanStatusMapper;
 import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants;
+import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_ENTITY;
+import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_EVENTS;
 import org.apache.fineract.portfolio.common.service.BusinessEventNotifierService;
 import org.apache.fineract.portfolio.group.api.GroupingTypesApiConstants;
 import org.apache.fineract.portfolio.group.domain.*;
@@ -68,16 +67,17 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_ENTITY;
-import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_EVENTS;
+
+import javax.persistence.PersistenceException;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements GroupingTypesWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(GroupingTypesWritePlatformServiceJpaRepositoryImpl.class);
@@ -100,38 +100,6 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
     private final AccountNumberGenerator accountNumberGenerator;
     private final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService;
     private final BusinessEventNotifierService businessEventNotifierService;
-
-    @Autowired
-    public GroupingTypesWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final GroupRepositoryWrapper groupRepository, final ClientRepositoryWrapper clientRepositoryWrapper,
-            final OfficeRepositoryWrapper officeRepositoryWrapper, final StaffRepositoryWrapper staffRepository, final NoteRepository noteRepository,
-            final GroupLevelRepository groupLevelRepository, final GroupingTypesDataValidator fromApiJsonDeserializer,
-            final SavingsAccountRepositoryWrapper savingsAccountRepositoryWrapper,
-            final CodeValueRepositoryWrapper codeValueRepository, final CommandProcessingService commandProcessingService,
-            final CalendarInstanceRepository calendarInstanceRepository, final ConfigurationDomainService configurationDomainService,
-            final LoanRepositoryWrapper loanRepositoryWrapper, 
-            final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository, final AccountNumberGenerator accountNumberGenerator,
-            final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService,
-            final BusinessEventNotifierService businessEventNotifierService) {
-        this.context = context;
-        this.groupRepository = groupRepository;
-        this.clientRepositoryWrapper = clientRepositoryWrapper;
-        this.officeRepositoryWrapper = officeRepositoryWrapper;
-        this.staffRepository = staffRepository;
-        this.noteRepository = noteRepository;
-        this.groupLevelRepository = groupLevelRepository;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.savingsAccountRepositoryWrapper = savingsAccountRepositoryWrapper;
-        this.codeValueRepository = codeValueRepository;
-        this.commandProcessingService = commandProcessingService;
-        this.calendarInstanceRepository = calendarInstanceRepository;
-        this.configurationDomainService = configurationDomainService;
-        this.loanRepositoryWrapper = loanRepositoryWrapper;
-        this.accountNumberFormatRepository = accountNumberFormatRepository;
-        this.accountNumberGenerator = accountNumberGenerator;
-        this.entityDatatableChecksWritePlatformService = entityDatatableChecksWritePlatformService;
-        this.businessEventNotifierService = businessEventNotifierService;
-    }
 
     private CommandProcessingResult createGroupingType(final JsonCommand command, final GroupTypes groupingType, final Long centerId) {
         try {

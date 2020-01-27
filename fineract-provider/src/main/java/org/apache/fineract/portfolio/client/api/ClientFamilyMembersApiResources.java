@@ -19,23 +19,7 @@
 
 package org.apache.fineract.portfolio.client.api;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -46,14 +30,23 @@ import org.apache.fineract.infrastructure.core.serialization.ToApiJsonSerializer
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.data.ClientFamilyMembersData;
 import org.apache.fineract.portfolio.client.service.ClientFamilyMembersReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Path("clients/{clientId}/familymembers")
 @Component
 @Scope("singleton")
-public class ClientFamilyMembersApiResources 
+@RequiredArgsConstructor
+public class ClientFamilyMembersApiResources
 {
 	private final Set<String> RESPONSE_DATA_PARAMETERS = new HashSet<>(Arrays.asList("id","clientId","firstName","middleName","lastName","qualification",
 			"relationship","maritalStatus","gender","dateOfBirth","profession","clientFamilyMemberId"));
@@ -63,19 +56,6 @@ public class ClientFamilyMembersApiResources
 	private final ToApiJsonSerializer<ClientFamilyMembersData> toApiJsonSerializer;
 	private final ApiRequestParameterHelper apiRequestParameterHelper;
 	private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-	
-	@Autowired
-	public ClientFamilyMembersApiResources(final PlatformSecurityContext context,final ClientFamilyMembersReadPlatformService readPlatformService,
-			final ToApiJsonSerializer<ClientFamilyMembersData> toApiJsonSerializer,final ApiRequestParameterHelper apiRequestParameterHelper,
-			final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService)
-	{
-		this.context=context;
-		this.readPlatformService=readPlatformService;
-		this.toApiJsonSerializer=toApiJsonSerializer;
-		this.apiRequestParameterHelper=apiRequestParameterHelper;
-		this.commandsSourceWritePlatformService=commandsSourceWritePlatformService; 
-		
-	}
 	
 	@GET
 	@Path("{familyMemberId}")

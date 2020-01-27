@@ -18,37 +18,31 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
-import org.apache.fineract.infrastructure.dataqueries.data.DatatableCheckStatusData;
-import org.apache.fineract.infrastructure.dataqueries.data.DatatableChecksData;
-import org.apache.fineract.infrastructure.dataqueries.data.DatatableData;
-import org.apache.fineract.infrastructure.dataqueries.data.EntityDataTableChecksData;
-import org.apache.fineract.infrastructure.dataqueries.data.EntityDataTableChecksTemplateData;
-import org.apache.fineract.infrastructure.dataqueries.data.EntityTables;
-import org.apache.fineract.infrastructure.dataqueries.data.StatusEnum;
+import org.apache.fineract.infrastructure.dataqueries.data.*;
 import org.apache.fineract.infrastructure.dataqueries.domain.EntityDatatableChecks;
 import org.apache.fineract.infrastructure.dataqueries.domain.EntityDatatableChecksRepository;
 import org.apache.fineract.portfolio.loanproduct.data.LoanProductData;
 import org.apache.fineract.portfolio.loanproduct.service.LoanProductReadPlatformService;
 import org.apache.fineract.portfolio.savings.data.SavingsProductData;
 import org.apache.fineract.portfolio.savings.service.SavingsProductReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatatableChecksReadService {
 
     private final JdbcTemplate jdbcTemplate;
@@ -59,22 +53,6 @@ public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatat
     private final LoanProductReadPlatformService loanProductReadPlatformService;
     private final SavingsProductReadPlatformService savingsProductReadPlatformService;
     private final PaginationHelper<EntityDataTableChecksData> paginationHelper = new PaginationHelper<>();
-
-    @Autowired
-    public EntityDatatableChecksReadPlatformServiceImpl(final DataSource dataSource,
-            final LoanProductReadPlatformService loanProductReadPlatformService,
-            final SavingsProductReadPlatformService savingsProductReadPlatformService,
-            final EntityDatatableChecksRepository entityDatatableChecksRepository,
-            final ReadWriteNonCoreDataService readWriteNonCoreDataService) {
-
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.registerDataTableMapper = new RegisterDataTableMapper();
-        this.entityDataTableChecksMapper = new EntityDataTableChecksMapper();
-        this.loanProductReadPlatformService = loanProductReadPlatformService;
-        this.savingsProductReadPlatformService = savingsProductReadPlatformService;
-        this.entityDatatableChecksRepository = entityDatatableChecksRepository;
-        this.readWriteNonCoreDataService = readWriteNonCoreDataService;
-    }
 
     @Override
     public Page<EntityDataTableChecksData> retrieveAll(SearchParameters searchParameters, final Long status, final String entity,

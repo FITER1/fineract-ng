@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.loanproduct.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingDropdownReadPlatformService;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.accounting.producttoaccountmapping.data.ChargeToGLAccountMapper;
@@ -52,7 +53,6 @@ import org.apache.fineract.portfolio.loanproduct.service.LoanDropdownReadPlatfor
 import org.apache.fineract.portfolio.loanproduct.service.LoanProductReadPlatformService;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 import org.apache.fineract.portfolio.paymenttype.service.PaymentTypeReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -66,6 +66,7 @@ import java.util.*;
 @Component
 @Scope("singleton")
 @Api(value = "Loan Products", description = "A Loan product is a template that is used when creating a loan. Much of the template definition can be overridden during loan creation.")
+@RequiredArgsConstructor
 public class LoanProductsApiResource {
 
     private final Set<String> LOAN_PRODUCT_DATA_PARAMETERS = new HashSet<>(Arrays.asList("id", "name", "shortName", "description",
@@ -103,38 +104,6 @@ public class LoanProductsApiResource {
     private final DropdownReadPlatformService commonDropdownReadPlatformService;
     private final PaymentTypeReadPlatformService paymentTypeReadPlatformService;
     private final FloatingRatesReadPlatformService floatingRateReadPlatformService;
-
-    @Autowired
-    public LoanProductsApiResource(final PlatformSecurityContext context, final LoanProductReadPlatformService readPlatformService,
-            final ChargeReadPlatformService chargeReadPlatformService, final CurrencyReadPlatformService currencyReadPlatformService,
-            final FundReadPlatformService fundReadPlatformService, final LoanDropdownReadPlatformService dropdownReadPlatformService,
-            final DefaultToApiJsonSerializer<LoanProductData> toApiJsonSerializer,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final ProductToGLAccountMappingReadPlatformService accountMappingReadPlatformService,
-            final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService,
-            final DefaultToApiJsonSerializer<ProductMixData> productMixDataApiJsonSerializer,
-            final ProductMixReadPlatformService productMixReadPlatformService,
-            final DropdownReadPlatformService commonDropdownReadPlatformService,
-            PaymentTypeReadPlatformService paymentTypeReadPlatformService,
-            final FloatingRatesReadPlatformService floatingRateReadPlatformService) {
-        this.context = context;
-        this.loanProductReadPlatformService = readPlatformService;
-        this.chargeReadPlatformService = chargeReadPlatformService;
-        this.currencyReadPlatformService = currencyReadPlatformService;
-        this.fundReadPlatformService = fundReadPlatformService;
-        this.dropdownReadPlatformService = dropdownReadPlatformService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.accountMappingReadPlatformService = accountMappingReadPlatformService;
-        this.accountingDropdownReadPlatformService = accountingDropdownReadPlatformService;
-        this.productMixDataApiJsonSerializer = productMixDataApiJsonSerializer;
-        this.productMixReadPlatformService = productMixReadPlatformService;
-        this.commonDropdownReadPlatformService = commonDropdownReadPlatformService;
-        this.paymentTypeReadPlatformService = paymentTypeReadPlatformService;
-        this.floatingRateReadPlatformService = floatingRateReadPlatformService;
-    }
 
     @POST
     @Consumes({ MediaType.APPLICATION_JSON })

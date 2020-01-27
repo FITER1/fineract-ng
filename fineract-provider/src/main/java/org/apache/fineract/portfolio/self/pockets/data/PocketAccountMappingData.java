@@ -19,9 +19,9 @@
 
 package org.apache.fineract.portfolio.self.pockets.data;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.self.pockets.domain.PocketAccountMapping;
+
+import java.util.Collection;
 
 @SuppressWarnings("unused")
 public class PocketAccountMappingData {

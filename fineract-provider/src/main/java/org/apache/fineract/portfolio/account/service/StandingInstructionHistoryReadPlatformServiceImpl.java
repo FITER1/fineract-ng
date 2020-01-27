@@ -18,21 +18,11 @@
  */
 package org.apache.fineract.portfolio.account.service;
 
-import static org.apache.fineract.portfolio.account.service.AccountTransferEnumerations.accountType;
-
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.organisation.office.data.OfficeData;
@@ -42,30 +32,32 @@ import org.apache.fineract.portfolio.account.data.StandingInstructionDTO;
 import org.apache.fineract.portfolio.account.data.StandingInstructionHistoryData;
 import org.apache.fineract.portfolio.client.data.ClientData;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.apache.fineract.portfolio.account.service.AccountTransferEnumerations.accountType;
+
 @Service
+@RequiredArgsConstructor
 public class StandingInstructionHistoryReadPlatformServiceImpl implements StandingInstructionHistoryReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final ColumnValidator columnValidator;
 
     // mapper
-    private final StandingInstructionHistoryMapper standingInstructionHistoryMapper;
+    private final StandingInstructionHistoryMapper standingInstructionHistoryMapper = new StandingInstructionHistoryMapper();
 
     // pagination
     private final PaginationHelper<StandingInstructionHistoryData> paginationHelper = new PaginationHelper<>();
-
-    @Autowired
-    public StandingInstructionHistoryReadPlatformServiceImpl(final DataSource dataSource,
-    		final ColumnValidator columnValidator) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.standingInstructionHistoryMapper = new StandingInstructionHistoryMapper();
-        this.columnValidator = columnValidator;
-    }
 
     @Override
     public Page<StandingInstructionHistoryData> retrieveAll(StandingInstructionDTO standingInstructionDTO) {

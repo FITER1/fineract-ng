@@ -18,9 +18,6 @@
  */
 package org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor;
 
-import java.util.List;
-import java.util.Set;
-
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.loanaccount.domain.ChangedTransactionDetail;
@@ -28,6 +25,9 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanCharge;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleInstallment;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.joda.time.LocalDate;
+
+import java.util.List;
+import java.util.Set;
 
 public interface LoanRepaymentScheduleTransactionProcessor {
 

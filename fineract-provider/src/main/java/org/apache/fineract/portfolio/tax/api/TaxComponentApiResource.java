@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.tax.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -29,7 +30,6 @@ import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSer
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.tax.data.TaxComponentData;
 import org.apache.fineract.portfolio.tax.service.TaxReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -43,6 +43,7 @@ import java.util.Collection;
 @Component
 @Scope("singleton")
 @Api(value = "Tax Components", description = "This defines the Tax Components")
+@RequiredArgsConstructor
 public class TaxComponentApiResource {
 
     private final String resourceNameForPermissions = "TAXCOMPONENT";
@@ -52,18 +53,6 @@ public class TaxComponentApiResource {
     private final DefaultToApiJsonSerializer<TaxComponentData> toApiJsonSerializer;
     private final ApiRequestParameterHelper apiRequestParameterHelper;
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-
-    @Autowired
-    public TaxComponentApiResource(final PlatformSecurityContext context, final TaxReadPlatformService readPlatformService,
-            final DefaultToApiJsonSerializer<TaxComponentData> toApiJsonSerializer,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService) {
-        this.context = context;
-        this.readPlatformService = readPlatformService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-    }
 
     @GET
     @Consumes({ MediaType.APPLICATION_JSON })

@@ -18,44 +18,31 @@
  */
 package org.apache.fineract.organisation.teller.api;
 
-import java.util.Collection;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
 import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSerializer;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.teller.data.TellerData;
 import org.apache.fineract.organisation.teller.data.TellerJournalData;
 import org.apache.fineract.organisation.teller.service.TellerManagementReadPlatformService;
 import org.apache.fineract.organisation.teller.util.DateRange;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.Collection;
 
 @Path("cashiersjournal")
 @Component
 @Scope("singleton")
 @Api(value = "cashiersjournal", description = "")
+@RequiredArgsConstructor
 public class TellerJournalApiResource {
 
     private final PlatformSecurityContext securityContext;
     private final DefaultToApiJsonSerializer<TellerData> jsonSerializer;
     private final TellerManagementReadPlatformService readPlatformService;
-
-    @Autowired
-    public TellerJournalApiResource(final PlatformSecurityContext securityContext,
-            final DefaultToApiJsonSerializer<TellerData> jsonSerializer, final TellerManagementReadPlatformService readPlatformService) {
-        super();
-        this.securityContext = securityContext;
-        this.jsonSerializer = jsonSerializer;
-        this.readPlatformService = readPlatformService;
-    }
 
     @GET
     @Consumes({ MediaType.TEXT_HTML, MediaType.APPLICATION_JSON })

@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.common.service;
 
-import java.util.Map;
-
 import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_ENTITY;
+
+import java.util.Map;
 
 /**
  * The interface to be implemented by classes that want to be informed when a

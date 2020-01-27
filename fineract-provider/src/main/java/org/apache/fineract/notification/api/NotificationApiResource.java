@@ -19,6 +19,7 @@
 package org.apache.fineract.notification.api;
 
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.ApiRequestParameterHelper;
 import org.apache.fineract.infrastructure.core.serialization.ApiRequestJsonSerializationSettings;
 import org.apache.fineract.infrastructure.core.serialization.ToApiJsonSerializer;
@@ -27,7 +28,6 @@ import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.notification.data.NotificationData;
 import org.apache.fineract.notification.service.NotificationReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -39,23 +39,13 @@ import javax.ws.rs.core.UriInfo;
 @Path("notifications")
 @Component
 @Scope("singleton")
+@RequiredArgsConstructor
 public class NotificationApiResource {
 
     private final PlatformSecurityContext context;
     private final NotificationReadPlatformService notificationReadPlatformService;
     private final ApiRequestParameterHelper apiRequestParameterHelper;
     private final ToApiJsonSerializer<NotificationData> toApiJsonSerializer;
-
-    @Autowired
-    public NotificationApiResource(PlatformSecurityContext context,
-                                   NotificationReadPlatformService notificationReadPlatformService,
-                                   ApiRequestParameterHelper apiRequestParameterHelper,
-                                   ToApiJsonSerializer<NotificationData> toApiJsonSerializer) {
-        this.context = context;
-        this.notificationReadPlatformService = notificationReadPlatformService;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-    }
 
     @GET
     @Consumes({MediaType.APPLICATION_JSON})

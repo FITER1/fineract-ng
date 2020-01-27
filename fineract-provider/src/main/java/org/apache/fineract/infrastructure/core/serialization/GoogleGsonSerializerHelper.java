@@ -18,24 +18,19 @@
  */
 package org.apache.fineract.infrastructure.core.serialization;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.apache.fineract.infrastructure.core.api.JodaDateTimeAdapter;
-import org.apache.fineract.infrastructure.core.api.JodaLocalDateAdapter;
-import org.apache.fineract.infrastructure.core.api.JodaMonthDayAdapter;
-import org.apache.fineract.infrastructure.core.api.ParameterListExclusionStrategy;
-import org.apache.fineract.infrastructure.core.api.ParameterListInclusionStrategy;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import org.apache.fineract.infrastructure.core.api.*;
 import org.apache.fineract.infrastructure.core.exception.UnsupportedParameterException;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.MonthDay;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.ExclusionStrategy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Helper class for serialization of java objects into JSON using google-gson.

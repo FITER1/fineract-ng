@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.jobs.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.exception.PlatformInternalServerException;
 import org.apache.fineract.infrastructure.jobs.annotation.CronMethodParser;
@@ -30,7 +31,6 @@ import org.apache.fineract.infrastructure.jobs.exception.JobNotFoundException;
 import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
@@ -49,6 +49,7 @@ import java.util.*;
  * {@link CronTriggerFactoryBean}
  */
 @Service
+@RequiredArgsConstructor
 public class JobRegisterServiceImpl implements JobRegisterService, ApplicationListener<ContextClosedEvent> {
 
     private final static Logger logger = LoggerFactory.getLogger(JobRegisterServiceImpl.class);
@@ -59,47 +60,15 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
     // code base, the following fields are not final, and there is no
     // constructor, but setters.
 
-    private ApplicationContext applicationContext;
-    private SchedularWritePlatformService schedularWritePlatformService;
-    private SchedulerJobListener schedulerJobListener;
-    private SchedulerStopListener schedulerStopListener;
-    private SchedulerTriggerListener globalSchedulerTriggerListener;
-    private JobParameterRepository jobParameterRepository;
-
-    @Autowired
-    private FineractProperties fineractProperties;
+    private final ApplicationContext applicationContext;
+    private final SchedularWritePlatformService schedularWritePlatformService;
+    private final SchedulerJobListener schedulerJobListener;
+    private final SchedulerStopListener schedulerStopListener;
+    private final SchedulerTriggerListener globalSchedulerTriggerListener;
+    private final JobParameterRepository jobParameterRepository;
+    private final FineractProperties fineractProperties;
 
     private final HashMap<String, Scheduler> schedulers = new HashMap<>(4);
-
-    @Autowired
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
-
-    @Autowired
-    public void setSchedularWritePlatformService(SchedularWritePlatformService schedularWritePlatformService) {
-        this.schedularWritePlatformService = schedularWritePlatformService;
-    }
-
-    @Autowired
-    public void setSchedulerJobListener(SchedulerJobListener schedulerJobListener) {
-        this.schedulerJobListener = schedulerJobListener;
-    }
-
-    @Autowired
-    public void setSchedulerStopListener(SchedulerStopListener schedulerStopListener) {
-        this.schedulerStopListener = schedulerStopListener;
-    }
-
-    @Autowired
-    public void setGlobalTriggerListener(SchedulerTriggerListener globalTriggerListener) {
-        this.globalSchedulerTriggerListener = globalTriggerListener;
-    }
-
-    @Autowired
-    public  void setJobParameterRepository(JobParameterRepository jobParameterRepository){
-        this.jobParameterRepository=jobParameterRepository;
-    }
 
     @PostConstruct
     public void loadAllJobs() {

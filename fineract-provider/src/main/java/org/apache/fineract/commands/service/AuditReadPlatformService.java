@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.commands.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.commands.data.AuditData;
 import org.apache.fineract.commands.data.AuditSearchData;
 import org.apache.fineract.infrastructure.core.data.PaginationParameters;
 import org.apache.fineract.infrastructure.core.service.Page;
+
+import java.util.Collection;
 
 public interface AuditReadPlatformService {
 

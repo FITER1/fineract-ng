@@ -21,11 +21,11 @@ package org.apache.fineract.commands.service;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.data.AuditData;
 import org.apache.fineract.commands.data.AuditSearchData;
 import org.apache.fineract.commands.data.ProcessingResultLookup;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.PaginationParameters;
 import org.apache.fineract.infrastructure.core.data.PaginationParametersDataValidator;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
@@ -56,7 +56,6 @@ import org.apache.fineract.useradministration.service.AppUserReadPlatformService
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -67,6 +66,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(AuditReadPlatformServiceImpl.class);
@@ -87,29 +87,6 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
     private final SavingsProductReadPlatformService savingsProductReadPlatformService;
     private final DepositProductReadPlatformService depositProductReadPlatformService;
     private final ColumnValidator columnValidator;
-
-    @Autowired
-    public AuditReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final FromJsonHelper fromApiJsonHelper, final AppUserReadPlatformService appUserReadPlatformService,
-            final OfficeReadPlatformService officeReadPlatformService, final ClientReadPlatformService clientReadPlatformService,
-            final LoanProductReadPlatformService loanProductReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
-            final PaginationParametersDataValidator paginationParametersDataValidator,
-            final SavingsProductReadPlatformService savingsProductReadPlatformService,
-            final DepositProductReadPlatformService depositProductReadPlatformService,
-            final ColumnValidator columnValidator) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.appUserReadPlatformService = appUserReadPlatformService;
-        this.officeReadPlatformService = officeReadPlatformService;
-        this.clientReadPlatformService = clientReadPlatformService;
-        this.loanProductReadPlatformService = loanProductReadPlatformService;
-        this.staffReadPlatformService = staffReadPlatformService;
-        this.paginationParametersDataValidator = paginationParametersDataValidator;
-        this.savingsProductReadPlatformService = savingsProductReadPlatformService;
-        this.depositProductReadPlatformService = depositProductReadPlatformService;
-        this.columnValidator = columnValidator;
-    }
 
     private static final class AuditMapper implements RowMapper<AuditData> {
 

@@ -18,20 +18,8 @@
  */
 package org.apache.fineract.infrastructure.reportmailingjob.api;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -45,14 +33,19 @@ import org.apache.fineract.infrastructure.reportmailingjob.ReportMailingJobConst
 import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobData;
 import org.apache.fineract.infrastructure.reportmailingjob.service.ReportMailingJobReadPlatformService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 
 @Path(ReportMailingJobConstants.REPORT_MAILING_JOB_RESOURCE_NAME)
 @Component
 @Scope("singleton")
 @Api(value = "Report Mailing Jobs", description = "This resource allows you to create a scheduled job that runs a report and sents it by email to specified email addresses.\n" + "\n" + "The scheduled job can be configured to run once or on a regular basis (once a day, twice a week, etc).")
+@RequiredArgsConstructor
 public class ReportMailingJobApiResource {
 
     private final PlatformSecurityContext platformSecurityContext;
@@ -60,20 +53,7 @@ public class ReportMailingJobApiResource {
     private final ApiRequestParameterHelper apiRequestParameterHelper;
     private final DefaultToApiJsonSerializer<ReportMailingJobData> reportMailingToApiJsonSerializer;
     private final ReportMailingJobReadPlatformService reportMailingJobReadPlatformService;
-    
-    @Autowired
-    public ReportMailingJobApiResource(final PlatformSecurityContext platformSecurityContext, 
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService, 
-            final ApiRequestParameterHelper apiRequestParameterHelper, 
-            final DefaultToApiJsonSerializer<ReportMailingJobData> reportMailingToApiJsonSerializer, 
-            final ReportMailingJobReadPlatformService reportMailingJobReadPlatformService) {
-        this.platformSecurityContext = platformSecurityContext;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.reportMailingToApiJsonSerializer = reportMailingToApiJsonSerializer;
-        this.reportMailingJobReadPlatformService = reportMailingJobReadPlatformService;
-    }
-    
+
     @POST
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })

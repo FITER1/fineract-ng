@@ -18,11 +18,10 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.PersistenceException;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -43,16 +42,16 @@ import org.apache.fineract.portfolio.savings.service.SavingsProductReadPlatformS
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import javax.persistence.PersistenceException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class EntityDatatableChecksWritePlatformServiceImpl implements EntityDatatableChecksWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(EntityDatatableChecksWritePlatformServiceImpl.class);
@@ -65,24 +64,6 @@ public class EntityDatatableChecksWritePlatformServiceImpl implements EntityData
     private final SavingsProductReadPlatformService savingsProductReadPlatformService;
     private final FromJsonHelper fromApiJsonHelper;
     private final ConfigurationDomainService configurationDomainService;
-
-    @Autowired
-    public EntityDatatableChecksWritePlatformServiceImpl(final PlatformSecurityContext context,
-            final EntityDatatableChecksDataValidator fromApiJsonDeserializer,
-            final EntityDatatableChecksRepository entityDatatableChecksRepository,
-            final ReadWriteNonCoreDataService readWriteNonCoreDataService,
-            final LoanProductReadPlatformService loanProductReadPlatformService,
-            final SavingsProductReadPlatformService savingsProductReadPlatformService, final FromJsonHelper fromApiJsonHelper,
-            final ConfigurationDomainService configurationDomainService) {
-        this.context = context;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.entityDatatableChecksRepository = entityDatatableChecksRepository;
-        this.readWriteNonCoreDataService = readWriteNonCoreDataService;
-        this.loanProductReadPlatformService = loanProductReadPlatformService;
-        this.savingsProductReadPlatformService = savingsProductReadPlatformService;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.configurationDomainService = configurationDomainService;
-    }
 
     @Transactional
     @Override

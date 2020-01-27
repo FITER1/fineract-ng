@@ -19,24 +19,16 @@
 
 package org.apache.fineract.portfolio.self.shareaccounts.service;
 
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AppUserShareAccountsMapperReadPlatformServiceImpl
-		implements AppUserShareAccountsMapperReadPlatformService {
-
+@RequiredArgsConstructor
+public class AppUserShareAccountsMapperReadPlatformServiceImpl implements AppUserShareAccountsMapperReadPlatformService {
 
 	private final JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	public AppUserShareAccountsMapperReadPlatformServiceImpl(
-			final DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
-	
 	@Override
 	public Boolean isShareAccountsMappedToUser(Long accountId, Long appUserId) {
 		return this.jdbcTemplate

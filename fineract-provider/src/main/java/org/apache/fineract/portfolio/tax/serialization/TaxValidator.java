@@ -18,17 +18,11 @@
  */
 package org.apache.fineract.portfolio.tax.serialization;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -43,15 +37,14 @@ import org.apache.fineract.portfolio.tax.domain.TaxComponent;
 import org.apache.fineract.portfolio.tax.domain.TaxGroup;
 import org.apache.fineract.portfolio.tax.domain.TaxGroupMappings;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class TaxValidator {
 
     final Set<String> supportedTaxComponentCreateParameters = new HashSet<>(Arrays.asList("dateFormat", "locale",
@@ -72,11 +65,6 @@ public class TaxValidator {
             TaxApiConstants.taxComponentIdParamName, TaxApiConstants.startDateParamName, TaxApiConstants.endDateParamName));
 
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public TaxValidator(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validateForTaxComponentCreate(final String json) {
         if (StringUtils.isBlank(json)) { throw new InvalidJsonException(); }

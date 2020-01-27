@@ -18,22 +18,15 @@
  */
 package org.apache.fineract.portfolio.self.savings.service;
 
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AppuserSavingsMapperReadServiceImpl implements
-		AppuserSavingsMapperReadService {
+@RequiredArgsConstructor
+public class AppuserSavingsMapperReadServiceImpl implements AppuserSavingsMapperReadService {
 
 	private final JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public AppuserSavingsMapperReadServiceImpl(
-			final DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
 
 	@Override
 	public Boolean isSavingsMappedToUser(Long savingsId, Long appUserId) {

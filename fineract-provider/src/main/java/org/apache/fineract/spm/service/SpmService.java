@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.spm.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -28,33 +29,22 @@ import org.apache.fineract.spm.repository.SurveyRepository;
 import org.apache.openjpa.persistence.EntityExistsException;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PersistenceException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-
 @Service
+@RequiredArgsConstructor
 public class SpmService {
 
     private final PlatformSecurityContext securityContext;
     private final SurveyRepository surveyRepository;
     private final SurveyValidator surveyValidator;
-
-    @Autowired
-    public SpmService(final PlatformSecurityContext securityContext,
-                      final SurveyRepository surveyRepository,
-                      final SurveyValidator surveyValidator) {
-        super();
-        this.securityContext = securityContext;
-        this.surveyRepository = surveyRepository;
-        this.surveyValidator = surveyValidator;
-    }
 
     public List<Survey> fetchValidSurveys() {
         this.securityContext.authenticatedUser();

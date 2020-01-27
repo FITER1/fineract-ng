@@ -18,12 +18,7 @@
  */
 package org.apache.fineract.infrastructure.survey.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.sql.DataSource;
-
-import javax.sql.DataSource;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.dataqueries.api.DataTableApiConstant;
 import org.apache.fineract.infrastructure.dataqueries.data.DatatableData;
 import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
@@ -36,30 +31,21 @@ import org.apache.fineract.infrastructure.survey.data.ClientScoresOverview;
 import org.apache.fineract.infrastructure.survey.data.LikelihoodStatus;
 import org.apache.fineract.infrastructure.survey.data.SurveyDataTableData;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class ReadSurveyServiceImpl implements ReadSurveyService {
 
     private final PlatformSecurityContext context;
     private final JdbcTemplate jdbcTemplate;
-    private final DataSource dataSource;
     private final GenericDataService genericDataService;
     private final ReadWriteNonCoreDataService readWriteNonCoreDataService;
-
-    @Autowired
-    public ReadSurveyServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final GenericDataService genericDataService, final ReadWriteNonCoreDataService readWriteNonCoreDataService) {
-
-        this.context = context;
-        this.dataSource = dataSource;
-        this.jdbcTemplate = new JdbcTemplate(this.dataSource);
-        this.genericDataService = genericDataService;
-        this.readWriteNonCoreDataService = readWriteNonCoreDataService;
-    }
 
     @Override
     public List<SurveyDataTableData> retrieveAllSurveys() {

@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.notification.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.notification.data.TopicSubscriberData;
+
+import java.util.Collection;
 
 public interface TopicSubscriberReadPlatformService {
 	

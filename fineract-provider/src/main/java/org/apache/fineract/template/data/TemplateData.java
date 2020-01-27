@@ -18,14 +18,14 @@
  */
 package org.apache.fineract.template.data;
 
+import org.apache.fineract.template.domain.Template;
+import org.apache.fineract.template.domain.TemplateEntity;
+import org.apache.fineract.template.domain.TemplateType;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.fineract.template.domain.Template;
-import org.apache.fineract.template.domain.TemplateEntity;
-import org.apache.fineract.template.domain.TemplateType;
 
 public class TemplateData {
 

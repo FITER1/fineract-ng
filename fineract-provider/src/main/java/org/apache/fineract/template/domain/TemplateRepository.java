@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.template.domain;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 public interface TemplateRepository extends JpaRepository<Template, Long> {
 

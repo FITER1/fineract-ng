@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.mix.service;
 
-import java.sql.Date;
-
 import org.apache.fineract.mix.data.XBRLData;
+
+import java.sql.Date;
 
 public interface XBRLResultService {
 

@@ -18,10 +18,6 @@
  */
 package org.apache.fineract.portfolio.savings.data;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.HashSet;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
@@ -29,6 +25,10 @@ import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.staff.data.StaffData;
 import org.apache.fineract.portfolio.charge.data.ChargeData;
 import org.apache.fineract.portfolio.tax.data.TaxGroupData;
+
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * Immutable data object representing abstract for Fixed and Recurring Deposit

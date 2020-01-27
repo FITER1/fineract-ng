@@ -18,35 +18,16 @@
  */
 package org.apache.fineract.accounting.journalentry.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.closure.domain.GLClosure;
 import org.apache.fineract.accounting.closure.domain.GLClosureRepository;
-import org.apache.fineract.accounting.common.AccountingConstants.ACCRUAL_ACCOUNTS_FOR_LOAN;
-import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_LOAN;
-import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_SAVINGS;
-import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_SHARES;
-import org.apache.fineract.accounting.common.AccountingConstants.FINANCIAL_ACTIVITY;
+import org.apache.fineract.accounting.common.AccountingConstants.*;
 import org.apache.fineract.accounting.financialactivityaccount.domain.FinancialActivityAccount;
 import org.apache.fineract.accounting.financialactivityaccount.domain.FinancialActivityAccountRepositoryWrapper;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepositoryWrapper;
-import org.apache.fineract.accounting.journalentry.data.ChargePaymentDTO;
-import org.apache.fineract.accounting.journalentry.data.ClientChargePaymentDTO;
-import org.apache.fineract.accounting.journalentry.data.ClientTransactionDTO;
-import org.apache.fineract.accounting.journalentry.data.LoanDTO;
-import org.apache.fineract.accounting.journalentry.data.LoanTransactionDTO;
-import org.apache.fineract.accounting.journalentry.data.SavingsDTO;
-import org.apache.fineract.accounting.journalentry.data.SavingsTransactionDTO;
-import org.apache.fineract.accounting.journalentry.data.SharesDTO;
-import org.apache.fineract.accounting.journalentry.data.SharesTransactionDTO;
-import org.apache.fineract.accounting.journalentry.data.TaxPaymentDTO;
+import org.apache.fineract.accounting.journalentry.data.*;
 import org.apache.fineract.accounting.journalentry.domain.JournalEntry;
 import org.apache.fineract.accounting.journalentry.domain.JournalEntryRepository;
 import org.apache.fineract.accounting.journalentry.domain.JournalEntryType;
@@ -74,10 +55,13 @@ import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransactionRepository;
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountTransactionEnumData;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class AccountingProcessorHelper {
 
     public static final String LOAN_TRANSACTION_IDENTIFIER = "L";
@@ -95,27 +79,6 @@ public class AccountingProcessorHelper {
     private final ClientTransactionRepositoryWrapper clientTransactionRepository;
     private final SavingsAccountTransactionRepository savingsAccountTransactionRepository;
     private final AccountTransfersReadPlatformService accountTransfersReadPlatformService;
-
-    @Autowired
-    public AccountingProcessorHelper(final JournalEntryRepository glJournalEntryRepository,
-            final ProductToGLAccountMappingRepository accountMappingRepository, final GLClosureRepository closureRepository,
-            final OfficeRepositoryWrapper officeRepositoryWrapper, final LoanTransactionRepository loanTransactionRepository,
-            final SavingsAccountTransactionRepository savingsAccountTransactionRepository,
-            final FinancialActivityAccountRepositoryWrapper financialActivityAccountRepository,
-            final AccountTransfersReadPlatformService accountTransfersReadPlatformService,
-            final GLAccountRepositoryWrapper accountRepositoryWrapper,
-            final ClientTransactionRepositoryWrapper clientTransactionRepositoryWrapper) {
-        this.glJournalEntryRepository = glJournalEntryRepository;
-        this.accountMappingRepository = accountMappingRepository;
-        this.closureRepository = closureRepository;
-        this.officeRepositoryWrapper = officeRepositoryWrapper;
-        this.loanTransactionRepository = loanTransactionRepository;
-        this.savingsAccountTransactionRepository = savingsAccountTransactionRepository;
-        this.financialActivityAccountRepository = financialActivityAccountRepository;
-        this.accountTransfersReadPlatformService = accountTransfersReadPlatformService;
-        this.accountRepositoryWrapper = accountRepositoryWrapper;
-        this.clientTransactionRepository = clientTransactionRepositoryWrapper;
-    }
 
     public LoanDTO populateLoanDtoFromMap(final Map<String, Object> accountingBridgeData, final boolean cashBasedAccountingEnabled,
             final boolean upfrontAccrualBasedAccountingEnabled, final boolean periodicAccrualBasedAccountingEnabled) {

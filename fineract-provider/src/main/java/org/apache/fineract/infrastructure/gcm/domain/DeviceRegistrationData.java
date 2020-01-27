@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.infrastructure.gcm.domain;
 
-import java.util.Date;
-
 import org.apache.fineract.portfolio.client.data.ClientData;
+
+import java.util.Date;
 
 public class DeviceRegistrationData {
 

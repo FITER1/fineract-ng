@@ -18,8 +18,7 @@
  */
 package org.apache.fineract.portfolio.paymenttype.service;
 
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -29,25 +28,18 @@ import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeDataValidator;
 import org.apache.fineract.portfolio.paymenttype.domain.PaymentType;
 import org.apache.fineract.portfolio.paymenttype.domain.PaymentTypeRepository;
 import org.apache.fineract.portfolio.paymenttype.domain.PaymentTypeRepositoryWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class PaymentTypeWriteServiceImpl implements PaymentTypeWriteService {
 
     private final PaymentTypeRepository repository;
     private final PaymentTypeRepositoryWrapper repositoryWrapper;
     private final PaymentTypeDataValidator fromApiJsonDeserializer;
-
-    @Autowired
-    public PaymentTypeWriteServiceImpl(PaymentTypeRepository repository, PaymentTypeRepositoryWrapper repositoryWrapper,
-            PaymentTypeDataValidator fromApiJsonDeserializer) {
-        this.repository = repository;
-        this.repositoryWrapper = repositoryWrapper;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-
-    }
 
     @Override
     public CommandProcessingResult createPaymentType(JsonCommand command) {

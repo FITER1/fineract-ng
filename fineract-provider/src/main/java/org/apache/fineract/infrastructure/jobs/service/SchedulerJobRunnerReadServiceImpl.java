@@ -18,40 +18,33 @@
  */
 package org.apache.fineract.infrastructure.jobs.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.jobs.data.JobDetailData;
 import org.apache.fineract.infrastructure.jobs.data.JobDetailHistoryData;
 import org.apache.fineract.infrastructure.jobs.exception.JobNotFoundException;
 import org.apache.fineract.infrastructure.jobs.exception.OperationNotAllowedException;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class SchedulerJobRunnerReadServiceImpl implements SchedulerJobRunnerReadService {
 
     private final JdbcTemplate jdbcTemplate;
     private final ColumnValidator columnValidator;
 
     private final PaginationHelper<JobDetailHistoryData> paginationHelper = new PaginationHelper<>();
-
-    @Autowired
-    public SchedulerJobRunnerReadServiceImpl(final DataSource dataSource,
-    		final ColumnValidator columnValidator) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.columnValidator = columnValidator;
-    }
 
     @Override
     public List<JobDetailData> findAllJobDeatils() {

@@ -18,18 +18,7 @@
  */
 package org.apache.fineract.infrastructure.core.serialization;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import com.google.gson.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.UnsupportedParameterException;
@@ -39,11 +28,11 @@ import org.joda.time.MonthDay;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.security.InvalidParameterException;
+import java.util.*;
+import java.util.Map.Entry;
 
 @Primary
 @Component

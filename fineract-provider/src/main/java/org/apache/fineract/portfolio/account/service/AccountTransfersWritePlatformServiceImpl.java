@@ -18,18 +18,7 @@
  */
 package org.apache.fineract.portfolio.account.service;
 
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromAccountIdParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromAccountTypeParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.toAccountIdParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.toAccountTypeParamName;
-import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.transferAmountParamName;
-import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.transferDateParamName;
-
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -37,12 +26,7 @@ import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRu
 import org.apache.fineract.portfolio.account.PortfolioAccountType;
 import org.apache.fineract.portfolio.account.data.AccountTransferDTO;
 import org.apache.fineract.portfolio.account.data.AccountTransfersDataValidator;
-import org.apache.fineract.portfolio.account.domain.AccountTransferAssembler;
-import org.apache.fineract.portfolio.account.domain.AccountTransferDetailRepository;
-import org.apache.fineract.portfolio.account.domain.AccountTransferDetails;
-import org.apache.fineract.portfolio.account.domain.AccountTransferRepository;
-import org.apache.fineract.portfolio.account.domain.AccountTransferTransaction;
-import org.apache.fineract.portfolio.account.domain.AccountTransferType;
+import org.apache.fineract.portfolio.account.domain.*;
 import org.apache.fineract.portfolio.loanaccount.data.HolidayDetailDTO;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanAccountDomainService;
@@ -61,11 +45,20 @@ import org.apache.fineract.portfolio.savings.service.SavingsAccountWritePlatform
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.List;
+import java.util.Locale;
+
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.*;
+import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.transferAmountParamName;
+import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.transferDateParamName;
+
 @Service
+@RequiredArgsConstructor
 public class AccountTransfersWritePlatformServiceImpl implements AccountTransfersWritePlatformService {
 
     private final AccountTransfersDataValidator accountTransfersDataValidator;
@@ -78,26 +71,6 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
     private final SavingsAccountWritePlatformService savingsAccountWritePlatformService;
     private final AccountTransferDetailRepository accountTransferDetailRepository;
     private final LoanReadPlatformService loanReadPlatformService;
-
-    @Autowired
-    public AccountTransfersWritePlatformServiceImpl(final AccountTransfersDataValidator accountTransfersDataValidator,
-            final AccountTransferAssembler accountTransferAssembler, final AccountTransferRepository accountTransferRepository,
-            final SavingsAccountAssembler savingsAccountAssembler, final SavingsAccountDomainService savingsAccountDomainService,
-            final LoanAssembler loanAssembler, final LoanAccountDomainService loanAccountDomainService,
-            final SavingsAccountWritePlatformService savingsAccountWritePlatformService,
-            final AccountTransferDetailRepository accountTransferDetailRepository,
-            final LoanReadPlatformService loanReadPlatformService) {
-        this.accountTransfersDataValidator = accountTransfersDataValidator;
-        this.accountTransferAssembler = accountTransferAssembler;
-        this.accountTransferRepository = accountTransferRepository;
-        this.savingsAccountAssembler = savingsAccountAssembler;
-        this.savingsAccountDomainService = savingsAccountDomainService;
-        this.loanAccountAssembler = loanAssembler;
-        this.loanAccountDomainService = loanAccountDomainService;
-        this.savingsAccountWritePlatformService = savingsAccountWritePlatformService;
-        this.accountTransferDetailRepository = accountTransferDetailRepository;
-        this.loanReadPlatformService = loanReadPlatformService;
-    }
 
     @Transactional
     @Override

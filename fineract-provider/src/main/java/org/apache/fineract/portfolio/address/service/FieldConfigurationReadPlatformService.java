@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.address.service;
 
+import org.apache.fineract.portfolio.address.data.FieldConfigurationData;
+
 import java.util.Collection;
 import java.util.List;
-
-import org.apache.fineract.portfolio.address.data.FieldConfigurationData;
 
 public interface FieldConfigurationReadPlatformService {
 	public Collection<FieldConfigurationData> retrieveFieldConfiguration(String entity);

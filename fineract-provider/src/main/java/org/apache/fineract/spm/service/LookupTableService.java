@@ -18,28 +18,21 @@
  */
 package org.apache.fineract.spm.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.spm.domain.LookupTable;
 import org.apache.fineract.spm.domain.Survey;
 import org.apache.fineract.spm.repository.LookupTableRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LookupTableService {
 
     private final PlatformSecurityContext securityContext;
     private final LookupTableRepository lookupTableRepository;
-
-    @Autowired
-    public LookupTableService(final PlatformSecurityContext securityContext,
-                              final LookupTableRepository lookupTableRepository) {
-        super();
-        this.securityContext = securityContext;
-        this.lookupTableRepository = lookupTableRepository;
-    }
 
     public List<LookupTable> findByKey(final String key) {
         this.securityContext.authenticatedUser();

@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.spm.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.spm.data.ScorecardData;
+
+import java.util.Collection;
 
 
 public interface ScorecardReadPlatformService {

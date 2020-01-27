@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.savings;
 
+import org.apache.fineract.accounting.common.AccountingConstants.SAVINGS_PRODUCT_ACCOUNTING_PARAMS;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.apache.fineract.accounting.common.AccountingConstants.SAVINGS_PRODUCT_ACCOUNTING_PARAMS;
 
 public class DepositsApiConstants {
 

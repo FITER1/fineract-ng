@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.collectionsheet.data;
 
-import java.math.BigDecimal;
-
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
+
+import java.math.BigDecimal;
 
 /**
  * Immutable data object for representing loan with dues (example: loan is due

@@ -18,15 +18,7 @@
  */
 package org.apache.fineract.portfolio.shareproducts.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingDropdownReadPlatformService;
 import org.apache.fineract.accounting.common.AccountingEnumerations;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
@@ -37,7 +29,6 @@ import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.monetary.service.CurrencyReadPlatformService;
 import org.apache.fineract.portfolio.charge.data.ChargeData;
@@ -48,13 +39,18 @@ import org.apache.fineract.portfolio.products.service.ProductReadPlatformService
 import org.apache.fineract.portfolio.shareaccounts.service.SharesEnumerations;
 import org.apache.fineract.portfolio.shareproducts.data.ShareProductData;
 import org.apache.fineract.portfolio.shareproducts.data.ShareProductMarketPriceData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
 @Service(value = "shareReadPlatformService")
+@RequiredArgsConstructor
 public class ShareProductReadPlatformServiceImpl implements ProductReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
@@ -64,20 +60,6 @@ public class ShareProductReadPlatformServiceImpl implements ProductReadPlatformS
     private final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService;
     private final ProductToGLAccountMappingReadPlatformService accountMappingReadPlatformService;
     private final PaginationHelper<ProductData> shareProductDataPaginationHelper = new PaginationHelper<>();
-
-    @Autowired
-    public ShareProductReadPlatformServiceImpl(final DataSource dataSource,
-            final CurrencyReadPlatformService currencyReadPlatformService, final ChargeReadPlatformService chargeReadPlatformService,
-            final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService,
-            final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService,
-            final ProductToGLAccountMappingReadPlatformService accountMappingReadPlatformService) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.currencyReadPlatformService = currencyReadPlatformService;
-        this.chargeReadPlatformService = chargeReadPlatformService;
-        this.shareProductDropdownReadPlatformService = shareProductDropdownReadPlatformService;
-        this.accountingDropdownReadPlatformService = accountingDropdownReadPlatformService;
-        this.accountMappingReadPlatformService = accountMappingReadPlatformService;
-    }
 
     @Override
     public Page<ProductData> retrieveAllProducts(Integer offSet, Integer limit) {

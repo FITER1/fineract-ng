@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.template.domain;
 
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 @Entity
 @Table(name = "m_templatemappers")

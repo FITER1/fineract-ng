@@ -18,32 +18,22 @@
  */
 package org.apache.fineract.infrastructure.entityaccess.service;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-
-import org.apache.fineract.infrastructure.codes.data.CodeValueData;
-import org.apache.fineract.infrastructure.codes.domain.CodeValue;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
 import org.apache.fineract.infrastructure.configuration.domain.GlobalConfigurationProperty;
 import org.apache.fineract.infrastructure.configuration.domain.GlobalConfigurationRepositoryWrapper;
 import org.apache.fineract.infrastructure.entityaccess.FineractEntityAccessConstants;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityAccessType;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityRelation;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityRelationRepositoryWrapper;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityToEntityMapping;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityToEntityMappingRepository;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityType;
+import org.apache.fineract.infrastructure.entityaccess.domain.*;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.useradministration.domain.AppUser;
-
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+
 @Service
+@RequiredArgsConstructor
 public class FineractEntityAccessUtil {
     
     private final PlatformSecurityContext context;
@@ -55,27 +45,6 @@ public class FineractEntityAccessUtil {
     private final FineractEntityRelationRepositoryWrapper fineractEntityRelationRepositoryWrapper;
     private final FineractEntityToEntityMappingRepository fineractEntityToEntityMappingRepository;
 
-    @Autowired
-    public FineractEntityAccessUtil (
-    		final PlatformSecurityContext context,
-    		final GlobalConfigurationRepositoryWrapper globalConfigurationRepository,
-            final FineractEntityAccessWriteService fineractEntityAccessWriteService,
-            final CodeValueReadPlatformService codeValueReadPlatformService,
-            final CodeValueRepositoryWrapper codeValueRepository,
-            final FineractEntityAccessReadService fineractEntityAccessReadService,
-            final FineractEntityRelationRepositoryWrapper fineractEntityRelationRepositoryWrapper,
-            final FineractEntityToEntityMappingRepository fineractEntityToEntityMappingRepository) {
-    	this.context = context;
-        this.globalConfigurationRepository = globalConfigurationRepository;
-        this.fineractEntityAccessWriteService = fineractEntityAccessWriteService;
-        this.codeValueReadPlatformService = codeValueReadPlatformService;
-        this.codeValueRepository = codeValueRepository;
-        this.fineractEntityAccessReadService = fineractEntityAccessReadService;
-        this.fineractEntityRelationRepositoryWrapper = fineractEntityRelationRepositoryWrapper;
-        this.fineractEntityToEntityMappingRepository = fineractEntityToEntityMappingRepository;
-    }
-
-	
 	@Transactional
 	public void checkConfigurationAndAddProductResrictionsForUserOffice (
 			final FineractEntityAccessType fineractEntityAccessType,

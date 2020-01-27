@@ -18,24 +18,20 @@
  */
 package org.apache.fineract.accounting.journalentry.service;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.closure.domain.GLClosure;
 import org.apache.fineract.accounting.journalentry.data.ClientTransactionDTO;
 import org.apache.fineract.organisation.office.domain.Office;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.util.Date;
+
 @Component
+@RequiredArgsConstructor
 public class CashBasedAccountingProcessorForClientTransactions implements AccountingProcessorForClientTransactions {
 
-    AccountingProcessorHelper helper;
-
-    @Autowired
-    public CashBasedAccountingProcessorForClientTransactions(final AccountingProcessorHelper accountingProcessorHelper) {
-        this.helper = accountingProcessorHelper;
-    }
+    private final AccountingProcessorHelper helper;
 
     @Override
     public void createJournalEntriesForClientTransaction(ClientTransactionDTO clientTransactionDTO) {

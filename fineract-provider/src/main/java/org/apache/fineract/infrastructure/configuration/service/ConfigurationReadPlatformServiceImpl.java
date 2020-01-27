@@ -18,36 +18,27 @@
  */
 package org.apache.fineract.infrastructure.configuration.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.configuration.data.GlobalConfigurationData;
 import org.apache.fineract.infrastructure.configuration.data.GlobalConfigurationPropertyData;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.dataqueries.api.DataTableApiConstant;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ConfigurationReadPlatformServiceImpl implements ConfigurationReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final PlatformSecurityContext context;
-    private final RowMapper<GlobalConfigurationPropertyData> rm;
-
-    @Autowired
-    public ConfigurationReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-
-        this.rm = new GlobalConfigurationRowMapper();
-    }
+    private final RowMapper<GlobalConfigurationPropertyData> rm = new GlobalConfigurationRowMapper();
 
     @Override
     public GlobalConfigurationData retrieveGlobalConfiguration(final boolean survey) {

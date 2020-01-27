@@ -18,12 +18,9 @@
  */
 package org.apache.fineract.portfolio.loanaccount.guarantor.serialization;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.serialization.AbstractFromApiJsonDeserializer;
@@ -32,25 +29,23 @@ import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.loanaccount.guarantor.GuarantorConstants.GUARANTOR_JSON_INPUT_PARAMS;
 import org.apache.fineract.portfolio.loanaccount.guarantor.command.GuarantorCommand;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of {@link FromApiJsonDeserializer} for
  * {@link GuarantorCommand}'s.
  */
 @Component
+@RequiredArgsConstructor
 public final class GuarantorCommandFromApiJsonDeserializer extends AbstractFromApiJsonDeserializer<GuarantorCommand> {
 
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public GuarantorCommandFromApiJsonDeserializer(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     @Override
     public GuarantorCommand commandFromApiJson(final String json) {

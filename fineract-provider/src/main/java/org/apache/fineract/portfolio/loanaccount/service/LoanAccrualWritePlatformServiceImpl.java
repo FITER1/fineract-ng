@@ -18,29 +18,14 @@
  */
 package org.apache.fineract.portfolio.loanaccount.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
-import javax.sql.DataSource;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepositoryWrapper;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.MoneyHelper;
-import org.apache.fineract.portfolio.loanaccount.data.LoanChargeData;
-import org.apache.fineract.portfolio.loanaccount.data.LoanInstallmentChargeData;
-import org.apache.fineract.portfolio.loanaccount.data.LoanScheduleAccrualData;
-import org.apache.fineract.portfolio.loanaccount.data.LoanTransactionData;
-import org.apache.fineract.portfolio.loanaccount.data.LoanTransactionEnumData;
+import org.apache.fineract.portfolio.loanaccount.data.*;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionType;
@@ -50,13 +35,17 @@ import org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations;
 import org.apache.fineract.useradministration.domain.AppUserRepositoryWrapper;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
+import java.math.BigDecimal;
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class LoanAccrualWritePlatformServiceImpl implements LoanAccrualWritePlatformService {
 
     private final LoanReadPlatformService loanReadPlatformService;
@@ -67,21 +56,6 @@ public class LoanAccrualWritePlatformServiceImpl implements LoanAccrualWritePlat
     private final AppUserRepositoryWrapper userRepository;
     private final LoanRepositoryWrapper loanRepositoryWrapper;
     private final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository;
-
-    @Autowired
-    public LoanAccrualWritePlatformServiceImpl(final DataSource dataSource, final LoanReadPlatformService loanReadPlatformService,
-            final JournalEntryWritePlatformService journalEntryWritePlatformService,
-            final LoanChargeReadPlatformService loanChargeReadPlatformService, final AppUserRepositoryWrapper userRepository,
-            final LoanRepositoryWrapper loanRepositoryWrapper, final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository) {
-        this.loanReadPlatformService = loanReadPlatformService;
-        this.dataSource = dataSource;
-        this.jdbcTemplate = new JdbcTemplate(this.dataSource);
-        this.journalEntryWritePlatformService = journalEntryWritePlatformService;
-        this.loanChargeReadPlatformService = loanChargeReadPlatformService;
-        this.userRepository = userRepository;
-        this.loanRepositoryWrapper = loanRepositoryWrapper;
-        this.applicationCurrencyRepository = applicationCurrencyRepository;
-    }
 
     @Override
     @Transactional

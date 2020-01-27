@@ -18,25 +18,9 @@
  */
 package org.apache.fineract.infrastructure.hooks.service;
 
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.actionNameParamName;
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.configParamName;
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.contentTypeName;
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.entityNameParamName;
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.eventsParamName;
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.nameParamName;
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.payloadURLName;
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.templateIdParamName;
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.webTemplateName;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.persistence.PersistenceException;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -46,13 +30,7 @@ import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.apache.fineract.infrastructure.hooks.domain.Hook;
-import org.apache.fineract.infrastructure.hooks.domain.HookConfiguration;
-import org.apache.fineract.infrastructure.hooks.domain.HookRepository;
-import org.apache.fineract.infrastructure.hooks.domain.HookResource;
-import org.apache.fineract.infrastructure.hooks.domain.HookTemplate;
-import org.apache.fineract.infrastructure.hooks.domain.HookTemplateRepository;
-import org.apache.fineract.infrastructure.hooks.domain.Schema;
+import org.apache.fineract.infrastructure.hooks.domain.*;
 import org.apache.fineract.infrastructure.hooks.exception.HookNotFoundException;
 import org.apache.fineract.infrastructure.hooks.exception.HookTemplateNotFoundException;
 import org.apache.fineract.infrastructure.hooks.processor.ProcessorHelper;
@@ -62,16 +40,19 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.template.domain.Template;
 import org.apache.fineract.template.domain.TemplateRepository;
 import org.apache.fineract.template.exception.TemplateNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import javax.persistence.PersistenceException;
+import java.util.*;
+import java.util.Map.Entry;
+
+import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.*;
 
 @Service
+@RequiredArgsConstructor
 public class HookWritePlatformServiceJpaRepositoryImpl
         implements
             HookWritePlatformService {
@@ -82,22 +63,6 @@ public class HookWritePlatformServiceJpaRepositoryImpl
     private final TemplateRepository ugdTemplateRepository;
     private final HookCommandFromApiJsonDeserializer fromApiJsonDeserializer;
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public HookWritePlatformServiceJpaRepositoryImpl(
-            final PlatformSecurityContext context,
-            final HookRepository hookRepository,
-            final HookTemplateRepository hookTemplateRepository,
-            final TemplateRepository ugdTemplateRepository,
-            final HookCommandFromApiJsonDeserializer fromApiJsonDeserializer,
-            final FromJsonHelper fromApiJsonHelper) {
-        this.context = context;
-        this.hookRepository = hookRepository;
-        this.hookTemplateRepository = hookTemplateRepository;
-        this.ugdTemplateRepository = ugdTemplateRepository;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     @Transactional
     @Override

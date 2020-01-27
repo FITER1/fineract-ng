@@ -18,49 +18,8 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.FIXED_DEPOSIT_PRODUCT_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.RECURRING_DEPOSIT_PRODUCT_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.adjustAdvanceTowardsFuturePaymentsParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.allowWithdrawalParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.chartsParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.depositAmountParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.depositMaxAmountParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.depositMinAmountParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.inMultiplesOfDepositTermParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.inMultiplesOfDepositTermTypeIdParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.isMandatoryDepositParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.maxDepositTermParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.maxDepositTermTypeIdParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.minDepositTermParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.minDepositTermTypeIdParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.preClosurePenalApplicableParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.preClosurePenalInterestOnTypeIdParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.preClosurePenalInterestParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.withHoldTaxParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.chargesParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.currencyCodeParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.descriptionParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.digitsAfterDecimalParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.idParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.inMultiplesOfParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.interestCalculationDaysInYearTypeParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.interestCalculationTypeParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.interestCompoundingPeriodTypeParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.interestPostingPeriodTypeParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.lockinPeriodFrequencyParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.lockinPeriodFrequencyTypeParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.minBalanceForInterestCalculationParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.nameParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.nominalAnnualInterestRateParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.shortNameParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.taxGroupIdParamName;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.apache.fineract.accounting.common.AccountingRuleType;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -73,19 +32,35 @@ import org.apache.fineract.portfolio.charge.exception.ChargeCannotBeAppliedToExc
 import org.apache.fineract.portfolio.interestratechart.domain.InterestRateChart;
 import org.apache.fineract.portfolio.interestratechart.service.InterestRateChartAssembler;
 import org.apache.fineract.portfolio.loanproduct.exception.InvalidCurrencyException;
-import org.apache.fineract.portfolio.savings.PreClosurePenalInterestOnType;
-import org.apache.fineract.portfolio.savings.SavingsCompoundingInterestPeriodType;
-import org.apache.fineract.portfolio.savings.SavingsInterestCalculationDaysInYearType;
-import org.apache.fineract.portfolio.savings.SavingsInterestCalculationType;
-import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
-import org.apache.fineract.portfolio.savings.SavingsPostingInterestPeriodType;
+import org.apache.fineract.portfolio.savings.*;
 import org.apache.fineract.portfolio.tax.domain.TaxGroup;
 import org.apache.fineract.portfolio.tax.domain.TaxGroupRepositoryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.apache.fineract.portfolio.savings.DepositsApiConstants.*;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.chargesParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.currencyCodeParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.descriptionParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.digitsAfterDecimalParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.idParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.inMultiplesOfParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.interestCalculationDaysInYearTypeParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.interestCalculationTypeParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.interestCompoundingPeriodTypeParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.interestPostingPeriodTypeParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.lockinPeriodFrequencyParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.lockinPeriodFrequencyTypeParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.nameParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.nominalAnnualInterestRateParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.shortNameParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
 
 @Service
 public class DepositProductAssembler {

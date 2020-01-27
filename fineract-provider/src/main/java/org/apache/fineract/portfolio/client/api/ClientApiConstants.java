@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.client.api;
 
+import org.apache.fineract.portfolio.client.data.ClientData;
+
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.apache.fineract.portfolio.client.data.ClientData;
 
 public class ClientApiConstants {
 

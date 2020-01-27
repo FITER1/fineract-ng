@@ -18,17 +18,10 @@
  */
 package org.apache.fineract.portfolio.loanaccount.guarantor.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.organisation.staff.data.StaffData;
 import org.apache.fineract.organisation.staff.service.StaffReadPlatformService;
 import org.apache.fineract.portfolio.account.data.PortfolioAccountData;
@@ -43,28 +36,26 @@ import org.apache.fineract.portfolio.loanaccount.guarantor.data.ObligeeData;
 import org.apache.fineract.portfolio.savings.data.DepositAccountOnHoldTransactionData;
 import org.apache.fineract.portfolio.savings.service.SavingsEnumerations;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class GuarantorReadPlatformServiceImpl implements GuarantorReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final ClientReadPlatformService clientReadPlatformService;
     private final StaffReadPlatformService staffReadPlatformService;
     private final LoanRepositoryWrapper loanRepositoryWrapper;
-
-    @Autowired
-    public GuarantorReadPlatformServiceImpl(final DataSource dataSource, final ClientReadPlatformService clientReadPlatformService,
-            final StaffReadPlatformService staffReadPlatformService, final LoanRepositoryWrapper loanRepositoryWrapper) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.clientReadPlatformService = clientReadPlatformService;
-        this.staffReadPlatformService = staffReadPlatformService;
-        this.loanRepositoryWrapper = loanRepositoryWrapper;
-    }
 
     @Override
     public List<GuarantorData> retrieveGuarantorsForValidLoan(final Long loanId) {

@@ -20,12 +20,7 @@ package org.apache.fineract.organisation.teller.service;
 
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
-import org.apache.fineract.organisation.teller.data.CashierData;
-import org.apache.fineract.organisation.teller.data.CashierTransactionData;
-import org.apache.fineract.organisation.teller.data.CashierTransactionsWithSummaryData;
-import org.apache.fineract.organisation.teller.data.TellerData;
-import org.apache.fineract.organisation.teller.data.TellerJournalData;
-import org.apache.fineract.organisation.teller.data.TellerTransactionData;
+import org.apache.fineract.organisation.teller.data.*;
 
 import java.util.Collection;
 import java.util.Date;

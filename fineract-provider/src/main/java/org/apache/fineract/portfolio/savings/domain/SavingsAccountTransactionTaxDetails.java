@@ -18,17 +18,12 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
-import java.math.BigDecimal;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.tax.domain.TaxComponent;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "m_savings_account_transaction_tax_details")

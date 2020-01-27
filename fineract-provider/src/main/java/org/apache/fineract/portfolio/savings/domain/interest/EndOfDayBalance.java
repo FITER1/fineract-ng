@@ -18,13 +18,13 @@
  */
 package org.apache.fineract.portfolio.savings.domain.interest;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-
 import org.apache.fineract.infrastructure.core.domain.LocalDateInterval;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.organisation.monetary.domain.MoneyHelper;
 import org.joda.time.LocalDate;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
 
 public class EndOfDayBalance {
 

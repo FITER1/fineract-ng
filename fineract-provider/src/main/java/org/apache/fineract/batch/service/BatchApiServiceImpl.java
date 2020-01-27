@@ -18,15 +18,8 @@
  */
 package org.apache.fineract.batch.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import javax.ws.rs.core.UriInfo;
-
+import com.google.gson.Gson;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.batch.command.CommandContext;
 import org.apache.fineract.batch.command.CommandStrategy;
 import org.apache.fineract.batch.command.CommandStrategyProvider;
@@ -36,7 +29,6 @@ import org.apache.fineract.batch.exception.ClientDetailsNotFoundException;
 import org.apache.fineract.batch.exception.ErrorHandler;
 import org.apache.fineract.batch.exception.ErrorInfo;
 import org.apache.fineract.batch.service.ResolutionHelper.BatchRequestNode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.NonTransientDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionException;
@@ -44,7 +36,13 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import com.google.gson.Gson;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+import javax.ws.rs.core.UriInfo;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Implementation for {@link BatchApiService} to iterate through all the
@@ -58,27 +56,12 @@ import com.google.gson.Gson;
  * @see org.apache.fineract.batch.command.CommandStrategyProvider
  */
 @Service
+@RequiredArgsConstructor
 public class BatchApiServiceImpl implements BatchApiService {
 
     private final CommandStrategyProvider strategyProvider;
     private final ResolutionHelper resolutionHelper;
     private final TransactionTemplate transactionTemplate;
-
-    /**
-     * Constructs a 'BatchApiServiceImpl' with an argument of
-     * {@link org.apache.fineract.batch.command.CommandStrategyProvider} type.
-     * 
-     * @param strategyProvider
-     * @param resolutionHelper
-     * @param transactionTemplate
-     */
-    @Autowired
-    public BatchApiServiceImpl(final CommandStrategyProvider strategyProvider, final ResolutionHelper resolutionHelper,
-            final TransactionTemplate transactionTemplate) {
-        this.strategyProvider = strategyProvider;
-        this.resolutionHelper = resolutionHelper;
-        this.transactionTemplate = transactionTemplate;
-    }
 
     /**
      * Returns the response list by getting a proper

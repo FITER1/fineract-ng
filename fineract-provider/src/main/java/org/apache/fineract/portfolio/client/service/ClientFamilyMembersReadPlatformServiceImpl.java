@@ -18,14 +18,13 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.data.ClientFamilyMembersData;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -37,22 +36,13 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ClientFamilyMembersReadPlatformServiceImpl implements ClientFamilyMembersReadPlatformService
 {
 	private final JdbcTemplate jdbcTemplate;
 	private final PlatformSecurityContext context;
 	private final CodeValueReadPlatformService codeValueReadPlatformService;
 	
-
-	@Autowired
-	public ClientFamilyMembersReadPlatformServiceImpl(final PlatformSecurityContext context,
-			final DataSource dataSource,final CodeValueReadPlatformService codeValueReadPlatformService) {
-		this.context = context;
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-		this.codeValueReadPlatformService=codeValueReadPlatformService;
-		
-	}
-
 	private static final class ClientFamilyMembersMapper implements RowMapper<ClientFamilyMembersData> {
 		public String schema() {
 			return "fmb.id AS id, fmb.client_id AS clientId, fmb.firstname AS firstName, fmb.middlename AS middleName,"

@@ -22,15 +22,12 @@ import com.google.gson.JsonObject;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.interoperation.domain.InteropIdentifierType;
-import org.apache.fineract.interoperation.domain.InteropTransactionRole;
-import org.joda.time.LocalDateTime;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
-import java.util.List;
 
-import static org.apache.fineract.interoperation.util.InteropUtil.*;
+import static org.apache.fineract.interoperation.util.InteropUtil.PARAM_ACCOUNT_ID;
 
 public class InteropIdentifierRequestData {
 

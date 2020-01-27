@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.floatingrates.service;
 
-import java.util.List;
-
 import org.apache.fineract.portfolio.floatingrates.data.FloatingRateData;
 import org.apache.fineract.portfolio.floatingrates.data.InterestRatePeriodData;
+
+import java.util.List;
 
 public interface FloatingRatesReadPlatformService {
 

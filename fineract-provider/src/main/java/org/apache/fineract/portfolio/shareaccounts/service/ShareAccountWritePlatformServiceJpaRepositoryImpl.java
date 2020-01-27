@@ -18,17 +18,7 @@
  */
 package org.apache.fineract.portfolio.shareaccounts.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
@@ -42,11 +32,11 @@ import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityEx
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
-import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_ENTITY;
-import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_EVENTS;
 import org.apache.fineract.portfolio.accounts.constants.ShareAccountApiConstants;
 import org.apache.fineract.portfolio.client.domain.AccountNumberGenerator;
 import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants;
+import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_ENTITY;
+import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_EVENTS;
 import org.apache.fineract.portfolio.common.service.BusinessEventNotifierService;
 import org.apache.fineract.portfolio.note.domain.Note;
 import org.apache.fineract.portfolio.note.domain.NoteRepository;
@@ -59,11 +49,15 @@ import org.apache.fineract.portfolio.shareaccounts.serialization.ShareAccountDat
 import org.apache.fineract.portfolio.shareproducts.domain.ShareProduct;
 import org.apache.fineract.portfolio.shareproducts.domain.ShareProductRepositoryWrapper;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PersistenceException;
+import java.math.BigDecimal;
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class ShareAccountWritePlatformServiceJpaRepositoryImpl implements ShareAccountWritePlatformService {
 
     private final ShareAccountDataSerializer accountDataSerializer;
@@ -81,25 +75,6 @@ public class ShareAccountWritePlatformServiceJpaRepositoryImpl implements ShareA
     private final NoteRepository noteRepository;
 
     private final BusinessEventNotifierService businessEventNotifierService;
-    
-    @Autowired
-    public ShareAccountWritePlatformServiceJpaRepositoryImpl(final ShareAccountDataSerializer accountDataSerializer,
-            final ShareAccountRepositoryWrapper shareAccountRepository, 
-            final ShareProductRepositoryWrapper shareProductRepository,
-            final AccountNumberGenerator accountNumberGenerator,
-            final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository,
-            final JournalEntryWritePlatformService journalEntryWritePlatformService,
-            final NoteRepository noteRepository,
-            final BusinessEventNotifierService businessEventNotifierService) {
-        this.accountDataSerializer = accountDataSerializer;
-        this.shareAccountRepository = shareAccountRepository;
-        this.shareProductRepository = shareProductRepository ;
-        this.accountNumberGenerator = accountNumberGenerator;
-        this.accountNumberFormatRepository = accountNumberFormatRepository;
-        this.journalEntryWritePlatformService = journalEntryWritePlatformService;
-        this.noteRepository = noteRepository;
-        this.businessEventNotifierService = businessEventNotifierService;
-    }
 
     @Override
     public CommandProcessingResult createShareAccount(JsonCommand jsonCommand) {

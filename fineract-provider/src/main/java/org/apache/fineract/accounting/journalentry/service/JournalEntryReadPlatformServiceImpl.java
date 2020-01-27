@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.accounting.journalentry.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.common.AccountingEnumerations;
 import org.apache.fineract.accounting.financialactivityaccount.domain.FinancialActivityAccount;
@@ -27,7 +28,6 @@ import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
 import org.apache.fineract.accounting.glaccount.service.GLAccountReadPlatformService;
 import org.apache.fineract.accounting.journalentry.data.*;
 import org.apache.fineract.accounting.journalentry.exception.JournalEntriesNotFoundException;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
@@ -48,7 +48,6 @@ import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountTransactionEnumData;
 import org.apache.fineract.portfolio.savings.service.SavingsEnumerations;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -66,6 +65,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class JournalEntryReadPlatformServiceImpl implements JournalEntryReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
@@ -75,19 +75,6 @@ public class JournalEntryReadPlatformServiceImpl implements JournalEntryReadPlat
     private final FinancialActivityAccountRepositoryWrapper financialActivityAccountRepositoryWrapper;
 
     private final PaginationHelper<JournalEntryData> paginationHelper = new PaginationHelper<>();
-
-    @Autowired
-    public JournalEntryReadPlatformServiceImpl(final DataSource dataSource,
-            final GLAccountReadPlatformService glAccountReadPlatformService,
-            final ColumnValidator columnValidator,
-            final OfficeReadPlatformService officeReadPlatformService,
-            final FinancialActivityAccountRepositoryWrapper financialActivityAccountRepositoryWrapper) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.glAccountReadPlatformService = glAccountReadPlatformService;
-        this.officeReadPlatformService = officeReadPlatformService;
-        this.financialActivityAccountRepositoryWrapper = financialActivityAccountRepositoryWrapper;
-        this.columnValidator = columnValidator;
-    }
 
     private static final class GLJournalEntryMapper implements RowMapper<JournalEntryData> {
 

@@ -18,15 +18,14 @@
  */
 package org.apache.fineract.accounting.financialactivityaccount.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingConstants.FINANCIAL_ACTIVITY;
 import org.apache.fineract.accounting.common.AccountingDropdownReadPlatformService;
 import org.apache.fineract.accounting.financialactivityaccount.data.FinancialActivityAccountData;
 import org.apache.fineract.accounting.financialactivityaccount.data.FinancialActivityData;
 import org.apache.fineract.accounting.financialactivityaccount.exception.FinancialActivityAccountNotFoundException;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -38,19 +37,12 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class FinancialActivityAccountReadPlatformServiceImpl implements FinancialActivityAccountReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final FinancialActivityAccountMapper financialActivityAccountMapper;
     private final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService;
-
-    @Autowired
-    public FinancialActivityAccountReadPlatformServiceImpl(final DataSource dataSource,
-            final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService) {
-        financialActivityAccountMapper = new FinancialActivityAccountMapper();
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.accountingDropdownReadPlatformService = accountingDropdownReadPlatformService;
-    }
 
     @Override
     public List<FinancialActivityAccountData> retrieveAll() {

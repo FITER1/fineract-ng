@@ -18,12 +18,7 @@
  */
 package org.apache.fineract.portfolio.charge.service;
 
-import java.util.Collection;
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-import javax.sql.DataSource;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepositoryWrapper;
@@ -31,7 +26,6 @@ import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityAccessType;
 import org.apache.fineract.infrastructure.entityaccess.service.FineractEntityAccessUtil;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -48,14 +42,19 @@ import org.apache.fineract.portfolio.tax.domain.TaxGroup;
 import org.apache.fineract.portfolio.tax.domain.TaxGroupRepositoryWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import javax.sql.DataSource;
+import java.util.Collection;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class ChargeWritePlatformServiceJpaRepositoryImpl implements ChargeWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(ChargeWritePlatformServiceJpaRepositoryImpl.class);
@@ -68,23 +67,6 @@ public class ChargeWritePlatformServiceJpaRepositoryImpl implements ChargeWriteP
     private final FineractEntityAccessUtil fineractEntityAccessUtil;
     private final GLAccountRepositoryWrapper gLAccountRepository;
     private final TaxGroupRepositoryWrapper taxGroupRepository;
-
-    @Autowired
-    public ChargeWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final ChargeDefinitionCommandFromApiJsonDeserializer fromApiJsonDeserializer, final ChargeRepository chargeRepository,
-            final LoanProductRepository loanProductRepository, final DataSource dataSource,
-            final FineractEntityAccessUtil fineractEntityAccessUtil, final GLAccountRepositoryWrapper glAccountRepository,
-            final TaxGroupRepositoryWrapper taxGroupRepository) {
-        this.context = context;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.dataSource = dataSource;
-        this.jdbcTemplate = new JdbcTemplate(this.dataSource);
-        this.chargeRepository = chargeRepository;
-        this.loanProductRepository = loanProductRepository;
-        this.fineractEntityAccessUtil = fineractEntityAccessUtil;
-        this.gLAccountRepository = glAccountRepository;
-        this.taxGroupRepository = taxGroupRepository;
-    }
 
     @Transactional
     @Override

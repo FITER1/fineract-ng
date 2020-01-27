@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.commands.data;
 
+import org.apache.fineract.useradministration.data.AppUserData;
+
 import java.util.Collection;
 import java.util.List;
-
-import org.apache.fineract.useradministration.data.AppUserData;
 
 /**
  * Immutable data object representing audit search results.

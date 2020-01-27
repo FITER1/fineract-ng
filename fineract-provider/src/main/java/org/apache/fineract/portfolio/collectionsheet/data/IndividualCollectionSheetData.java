@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.collectionsheet.data;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 import org.joda.time.LocalDate;
+
+import java.util.Collection;
 
 /**
  * Immutable data object for collection sheet.

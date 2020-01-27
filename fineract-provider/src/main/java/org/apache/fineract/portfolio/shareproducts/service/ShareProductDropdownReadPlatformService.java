@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.shareproducts.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+
+import java.util.Collection;
 
 public interface ShareProductDropdownReadPlatformService {
 

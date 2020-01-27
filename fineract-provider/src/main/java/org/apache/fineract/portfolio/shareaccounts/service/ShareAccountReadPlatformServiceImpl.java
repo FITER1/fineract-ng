@@ -18,21 +18,12 @@
  */
 package org.apache.fineract.portfolio.shareaccounts.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.accountdetails.data.ShareAccountSummaryData;
 import org.apache.fineract.portfolio.accounts.constants.AccountsApiConstants;
@@ -49,12 +40,7 @@ import org.apache.fineract.portfolio.products.service.ProductReadPlatformService
 import org.apache.fineract.portfolio.savings.DepositAccountType;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountData;
 import org.apache.fineract.portfolio.savings.service.SavingsAccountReadPlatformService;
-import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountApplicationTimelineData;
-import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountChargeData;
-import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountData;
-import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountDividendData;
-import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountStatusEnumData;
-import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountTransactionData;
+import org.apache.fineract.portfolio.shareaccounts.data.*;
 import org.apache.fineract.portfolio.shareaccounts.domain.PurchasedSharesStatusType;
 import org.apache.fineract.portfolio.shareaccounts.domain.ShareAccountStatusType;
 import org.apache.fineract.portfolio.shareproducts.data.ShareProductData;
@@ -63,14 +49,19 @@ import org.apache.fineract.portfolio.shareproducts.service.ShareProductDropdownR
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
 @Service(value = "share" + AccountsApiConstants.READPLATFORM_NAME)
+@RequiredArgsConstructor
 public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlatformService {
 
     private final ApplicationContext applicationContext;
@@ -83,25 +74,6 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
     private final JdbcTemplate jdbcTemplate;
     private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     private final PaginationHelper<AccountData> shareAccountDataPaginationHelper = new PaginationHelper<>();
-    
-    @Autowired
-    public ShareAccountReadPlatformServiceImpl(final DataSource dataSource, final ApplicationContext applicationContext,
-            final ChargeReadPlatformService chargeReadPlatformService,
-            final ShareProductDropdownReadPlatformService shareProductDropdownReadPlatformService,
-            final SavingsAccountReadPlatformService savingsAccountReadPlatformService,
-            final ClientReadPlatformService clientReadPlatformService,
-            final ShareAccountChargeReadPlatformService shareAccountChargeReadPlatformService,
-            final PurchasedSharesReadPlatformService purchasedSharesReadPlatformService) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.applicationContext = applicationContext;
-        this.chargeReadPlatformService = chargeReadPlatformService;
-        this.shareProductDropdownReadPlatformService = shareProductDropdownReadPlatformService;
-        this.savingsAccountReadPlatformService = savingsAccountReadPlatformService;
-        this.clientReadPlatformService = clientReadPlatformService;
-        this.shareAccountChargeReadPlatformService = shareAccountChargeReadPlatformService;
-        this.purchasedSharesReadPlatformService = purchasedSharesReadPlatformService;
-
-    }
 
     @Override
     public ShareAccountData retrieveTemplate(Long clientId, Long productId) {

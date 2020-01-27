@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.infrastructure.survey.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.dataqueries.service.ReadWriteNonCoreDataService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,15 +29,10 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by Cieyou on 3/13/14.
  */
 @Service
+@RequiredArgsConstructor
 public class WriteSurveyServiceImpl implements WriteSurveyService {
 
     private final ReadWriteNonCoreDataService readWriteNonCoreDataService;
-
-    @Autowired(required = true)
-    WriteSurveyServiceImpl(final ReadWriteNonCoreDataService readWriteNonCoreDataService) {
-        this.readWriteNonCoreDataService = readWriteNonCoreDataService;
-
-    }
 
     @Override
     @Transactional

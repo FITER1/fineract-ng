@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.account.data;
 
-import java.math.BigDecimal;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
+
+import java.math.BigDecimal;
 
 /**
  * Immutable data object representing a savings account.

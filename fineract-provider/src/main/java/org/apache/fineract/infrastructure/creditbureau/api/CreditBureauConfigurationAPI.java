@@ -19,23 +19,8 @@
 
 package org.apache.fineract.infrastructure.creditbureau.api;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -52,14 +37,23 @@ import org.apache.fineract.infrastructure.creditbureau.service.CreditBureauReadC
 import org.apache.fineract.infrastructure.creditbureau.service.CreditBureauReadPlatformService;
 import org.apache.fineract.infrastructure.creditbureau.service.OrganisationCreditBureauReadPlatformService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Path("CreditBureauConfiguration")
 @Component
 @Scope("singleton")
 @Api(value = "CreditBureau Configuration")
+@RequiredArgsConstructor
 public class CreditBureauConfigurationAPI {
 	private final Set<String> RESPONSE_DATA_PARAMETERS = new HashSet<>(
 			Arrays.asList("creditBureauId", "alias", "country", "creditBureauProductId", "startDate", "endDate", "isActive"));
@@ -75,32 +69,6 @@ public class CreditBureauConfigurationAPI {
 	private final ApiRequestParameterHelper apiRequestParameterHelper;
 	private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
 	private final CreditBureauReadConfigurationService creditBureauConfiguration;
-
-	@Autowired
-	public CreditBureauConfigurationAPI(final PlatformSecurityContext context,
-			final CreditBureauReadPlatformService readPlatformService,
-			final DefaultToApiJsonSerializer<CreditBureauData> toApiJsonSerializer,
-			final CreditBureauLoanProductMappingReadPlatformService readPlatformServiceCreditBureauLoanProduct,
-			final DefaultToApiJsonSerializer<CreditBureauLoanProductMappingData> toApiJsonSerializerCreditBureauLoanProduct,
-			final OrganisationCreditBureauReadPlatformService readPlatformServiceOrganisationCreditBureau,
-			final DefaultToApiJsonSerializer<OrganisationCreditBureauData> toApiJsonSerializerOrganisationCreditBureau,
-			final ApiRequestParameterHelper apiRequestParameterHelper,
-			final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-			final DefaultToApiJsonSerializer<CreditBureauConfigurationData> toApiJsonSerializerReport,
-			final CreditBureauReadConfigurationService creditBureauConfiguration) {
-		this.context = context;
-		this.readPlatformService = readPlatformService;
-		this.apiRequestParameterHelper = apiRequestParameterHelper;
-		this.readPlatformServiceCreditBureauLoanProduct = readPlatformServiceCreditBureauLoanProduct;
-		this.toApiJsonSerializerCreditBureauLoanProduct = toApiJsonSerializerCreditBureauLoanProduct;
-		this.readPlatformServiceOrganisationCreditBureau = readPlatformServiceOrganisationCreditBureau;
-		this.toApiJsonSerializerOrganisationCreditBureau = toApiJsonSerializerOrganisationCreditBureau;
-		this.toApiJsonSerializer = toApiJsonSerializer;
-		this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-		this.toApiJsonSerializerReport = toApiJsonSerializerReport;
-		this.creditBureauConfiguration = creditBureauConfiguration;
-
-	}
 
 	@GET
 	@Consumes({ MediaType.APPLICATION_JSON })

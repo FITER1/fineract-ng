@@ -19,8 +19,8 @@
 package org.apache.fineract.portfolio.self.security.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.security.api.UserDetailsApiResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -36,15 +36,10 @@ import javax.ws.rs.core.MediaType;
 @Profile("oauth")
 @Scope("singleton")
 @Api(value = "Self User Details", description = "")
+@RequiredArgsConstructor
 public class SelfUserDetailsApiResource {
 
 	private final UserDetailsApiResource userDetailsApiResource;
-
-	@Autowired
-	public SelfUserDetailsApiResource(
-			final UserDetailsApiResource userDetailsApiResource) {
-		this.userDetailsApiResource = userDetailsApiResource;
-	}
 
 	@GET
 	@Produces({ MediaType.APPLICATION_JSON })

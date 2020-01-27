@@ -18,15 +18,6 @@
  */
 package org.apache.fineract.portfolio.note.domain;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
@@ -38,6 +29,10 @@ import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
 import org.apache.fineract.portfolio.shareaccounts.domain.ShareAccount;
 import org.apache.fineract.useradministration.domain.AppUser;
+
+import javax.persistence.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Entity
 @Table(name = "m_note")

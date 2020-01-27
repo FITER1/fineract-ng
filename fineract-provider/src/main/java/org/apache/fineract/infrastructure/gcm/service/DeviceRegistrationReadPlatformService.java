@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.infrastructure.gcm.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.gcm.domain.DeviceRegistrationData;
+
+import java.util.Collection;
 
 public interface DeviceRegistrationReadPlatformService {
 

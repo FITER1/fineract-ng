@@ -18,16 +18,9 @@
  */
 package org.apache.fineract.useradministration.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.EntityExistsException;
-import javax.persistence.PersistenceException;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -47,19 +40,12 @@ import org.apache.fineract.organisation.staff.domain.StaffRepositoryWrapper;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
 import org.apache.fineract.useradministration.api.AppUserApiConstant;
-import org.apache.fineract.useradministration.domain.AppUser;
-import org.apache.fineract.useradministration.domain.AppUserPreviousPassword;
-import org.apache.fineract.useradministration.domain.AppUserPreviousPasswordRepository;
-import org.apache.fineract.useradministration.domain.AppUserRepository;
-import org.apache.fineract.useradministration.domain.Role;
-import org.apache.fineract.useradministration.domain.RoleRepository;
-import org.apache.fineract.useradministration.domain.UserDomainService;
+import org.apache.fineract.useradministration.domain.*;
 import org.apache.fineract.useradministration.exception.PasswordPreviouslyUsedException;
 import org.apache.fineract.useradministration.exception.RoleNotFoundException;
 import org.apache.fineract.useradministration.exception.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -70,10 +56,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import javax.persistence.PersistenceException;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(AppUserWritePlatformServiceJpaRepositoryImpl.class);
@@ -89,25 +76,6 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
     private final StaffRepositoryWrapper staffRepositoryWrapper;
     private final ClientRepositoryWrapper clientRepositoryWrapper;
     private final TopicDomainService topicDomainService;
-
-    @Autowired
-    public AppUserWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context, final AppUserRepository appUserRepository,
-            final UserDomainService userDomainService, final OfficeRepositoryWrapper officeRepositoryWrapper, final RoleRepository roleRepository,
-            final PlatformPasswordEncoder platformPasswordEncoder, final UserDataValidator fromApiJsonDeserializer,
-            final AppUserPreviousPasswordRepository appUserPreviewPasswordRepository, final StaffRepositoryWrapper staffRepositoryWrapper,
-            final ClientRepositoryWrapper clientRepositoryWrapper, final TopicDomainService topicDomainService) {
-        this.context = context;
-        this.appUserRepository = appUserRepository;
-        this.userDomainService = userDomainService;
-        this.officeRepositoryWrapper = officeRepositoryWrapper;
-        this.roleRepository = roleRepository;
-        this.platformPasswordEncoder = platformPasswordEncoder;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.appUserPreviewPasswordRepository = appUserPreviewPasswordRepository;
-        this.staffRepositoryWrapper = staffRepositoryWrapper;
-        this.clientRepositoryWrapper = clientRepositoryWrapper;
-        this.topicDomainService = topicDomainService;
-    }
 
     @Transactional
     @Override

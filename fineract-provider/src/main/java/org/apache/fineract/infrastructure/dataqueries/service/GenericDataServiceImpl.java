@@ -18,13 +18,8 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.sql.DataSource;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
 import org.apache.fineract.infrastructure.dataqueries.data.ResultsetColumnHeaderData;
 import org.apache.fineract.infrastructure.dataqueries.data.ResultsetColumnValueData;
@@ -34,26 +29,23 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 import org.springframework.stereotype.Service;
 
+import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class GenericDataServiceImpl implements GenericDataService {
 
     private final JdbcTemplate jdbcTemplate;
     private final DataSource dataSource;
     private final static Logger logger = LoggerFactory.getLogger(GenericDataServiceImpl.class);
-
-    @Autowired
-    public GenericDataServiceImpl(final DataSource dataSource) {
-        this.dataSource = dataSource;
-        this.jdbcTemplate = new JdbcTemplate(this.dataSource);
-
-    }
 
     @Override
     public GenericResultsetData fillGenericResultSet(final String sql) {

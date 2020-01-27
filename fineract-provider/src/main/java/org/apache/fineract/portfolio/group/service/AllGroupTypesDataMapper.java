@@ -18,9 +18,6 @@
  */
 package org.apache.fineract.portfolio.group.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.portfolio.client.domain.ClientEnumerations;
@@ -28,6 +25,9 @@ import org.apache.fineract.portfolio.group.data.GroupGeneralData;
 import org.apache.fineract.portfolio.group.data.GroupTimelineData;
 import org.joda.time.LocalDate;
 import org.springframework.jdbc.core.RowMapper;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  *

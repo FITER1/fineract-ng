@@ -18,12 +18,7 @@
  */
 package org.apache.fineract.portfolio.loanaccount.loanschedule.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.api.JsonQuery;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -37,11 +32,7 @@ import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.organisation.monetary.service.CurrencyReadPlatformService;
 import org.apache.fineract.portfolio.accountdetails.domain.AccountType;
 import org.apache.fineract.portfolio.loanaccount.data.ScheduleGeneratorDTO;
-import org.apache.fineract.portfolio.loanaccount.domain.Loan;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanDisbursementDetails;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleInstallment;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleTransactionProcessorFactory;
-import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
+import org.apache.fineract.portfolio.loanaccount.domain.*;
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.LoanRepaymentScheduleTransactionProcessor;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.LoanScheduleData;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.LoanSchedulePeriodData;
@@ -57,10 +48,16 @@ import org.apache.fineract.portfolio.loanproduct.domain.LoanProductRepository;
 import org.apache.fineract.portfolio.loanproduct.exception.LoanProductNotFoundException;
 import org.apache.fineract.portfolio.loanproduct.serialization.LoanProductDataValidator;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class LoanScheduleCalculationPlatformServiceImpl implements LoanScheduleCalculationPlatformService {
 
     private final CalculateLoanScheduleQueryFromApiJsonHelper fromApiJsonDeserializer;
@@ -75,29 +72,6 @@ public class LoanScheduleCalculationPlatformServiceImpl implements LoanScheduleC
     private final ConfigurationDomainService configurationDomainService;
     private final CurrencyReadPlatformService currencyReadPlatformService;
     private final LoanUtilService loanUtilService;
-
-    @Autowired
-    public LoanScheduleCalculationPlatformServiceImpl(final CalculateLoanScheduleQueryFromApiJsonHelper fromApiJsonDeserializer,
-            final LoanScheduleAssembler loanScheduleAssembler, final FromJsonHelper fromJsonHelper,
-            final LoanProductRepository loanProductRepository, final LoanProductDataValidator loanProductCommandFromApiJsonDeserializer,
-            final LoanReadPlatformService loanReadPlatformService, final LoanApplicationCommandFromApiJsonHelper loanApiJsonDeserializer,
-            final LoanAssembler loanAssembler,
-            final LoanRepaymentScheduleTransactionProcessorFactory loanRepaymentScheduleTransactionProcessorFactory,
-            final ConfigurationDomainService configurationDomainService, final CurrencyReadPlatformService currencyReadPlatformService,
-            final LoanUtilService loanUtilService) {
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.loanScheduleAssembler = loanScheduleAssembler;
-        this.fromJsonHelper = fromJsonHelper;
-        this.loanProductRepository = loanProductRepository;
-        this.loanProductCommandFromApiJsonDeserializer = loanProductCommandFromApiJsonDeserializer;
-        this.loanReadPlatformService = loanReadPlatformService;
-        this.loanApiJsonDeserializer = loanApiJsonDeserializer;
-        this.loanAssembler = loanAssembler;
-        this.loanRepaymentScheduleTransactionProcessorFactory = loanRepaymentScheduleTransactionProcessorFactory;
-        this.configurationDomainService = configurationDomainService;
-        this.currencyReadPlatformService = currencyReadPlatformService;
-        this.loanUtilService = loanUtilService;
-    }
 
     @Override
     public LoanScheduleModel calculateLoanSchedule(final JsonQuery query, Boolean validateParams) {

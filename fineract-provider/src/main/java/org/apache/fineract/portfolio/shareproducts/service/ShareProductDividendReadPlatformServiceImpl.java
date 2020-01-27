@@ -18,18 +18,11 @@
  */
 package org.apache.fineract.portfolio.shareproducts.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountDividendData;
@@ -37,24 +30,24 @@ import org.apache.fineract.portfolio.shareaccounts.service.SharesEnumerations;
 import org.apache.fineract.portfolio.shareproducts.data.ShareProductData;
 import org.apache.fineract.portfolio.shareproducts.data.ShareProductDividendPayOutData;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class ShareProductDividendReadPlatformServiceImpl implements ShareProductDividendReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final ColumnValidator columnValidator;
     private final PaginationHelper<ShareProductDividendPayOutData> paginationHelper = new PaginationHelper<>();
-
-    @Autowired
-    public ShareProductDividendReadPlatformServiceImpl(final DataSource dataSource,
-    		final ColumnValidator columnValidator) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.columnValidator = columnValidator;
-    }
 
     @Override
     public Page<ShareProductDividendPayOutData> retriveAll(final Long productId, final Integer status,

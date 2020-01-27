@@ -19,9 +19,9 @@
 
 package org.apache.fineract.portfolio.client.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.client.data.ClientFamilyMembersData;
+
+import java.util.Collection;
 
 public interface ClientFamilyMembersReadPlatformService 
 {

@@ -18,25 +18,6 @@
  */
 package org.apache.fineract.portfolio.calendar.domain;
 
-import static org.apache.fineract.portfolio.calendar.CalendarConstants.CALENDAR_RESOURCE_NAME;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -50,13 +31,13 @@ import org.apache.fineract.portfolio.calendar.exception.CalendarParameterUpdateN
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
 import org.apache.fineract.portfolio.common.domain.NthDayType;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.apache.poi.openxml4j.util.Nullable;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import javax.persistence.*;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.calendar.CalendarConstants.CALENDAR_RESOURCE_NAME;
 
 @Entity
 @Table(name = "m_calendar")

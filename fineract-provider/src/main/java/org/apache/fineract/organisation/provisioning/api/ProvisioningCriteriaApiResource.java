@@ -18,24 +18,8 @@
  */
 package org.apache.fineract.organisation.provisioning.api;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -47,14 +31,23 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.organisation.provisioning.constants.ProvisioningCriteriaConstants;
 import org.apache.fineract.organisation.provisioning.data.ProvisioningCriteriaData;
 import org.apache.fineract.organisation.provisioning.service.ProvisioningCriteriaReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Path("provisioningcriteria")
 @Component
 @Scope("singleton")
 @Api(value = "Provisioning Criteria", description = "This defines the Provisioning Criteria")
+@RequiredArgsConstructor
 public class ProvisioningCriteriaApiResource {
 
     private final PlatformSecurityContext platformSecurityContext;
@@ -74,19 +67,6 @@ public class ProvisioningCriteriaApiResource {
 	private static final Set<String> ALL_PROVISIONING_CRITERIA_PARAMETERS = new HashSet<>(
 			Arrays.asList(ProvisioningCriteriaConstants.CRITERIA_ID_PARAM,
 					ProvisioningCriteriaConstants.CRITERIA_NAME_PARAM, ProvisioningCriteriaConstants.CREATED_BY_PARAM));
-
-    @Autowired
-    public ProvisioningCriteriaApiResource(final PlatformSecurityContext platformSecurityContext,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final ProvisioningCriteriaReadPlatformService provisioningCriteriaReadPlatformService,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final DefaultToApiJsonSerializer<ProvisioningCriteriaData> toApiJsonSerializer) {
-        this.platformSecurityContext = platformSecurityContext;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.provisioningCriteriaReadPlatformService = provisioningCriteriaReadPlatformService;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService ;
-        this.toApiJsonSerializer = toApiJsonSerializer ;
-    }
 
     @GET
     @Path("template")

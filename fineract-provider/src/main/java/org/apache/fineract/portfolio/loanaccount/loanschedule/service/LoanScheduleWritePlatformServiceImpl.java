@@ -18,11 +18,7 @@
  */
 package org.apache.fineract.portfolio.loanaccount.loanschedule.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -36,10 +32,15 @@ import org.apache.fineract.portfolio.loanaccount.service.LoanAssembler;
 import org.apache.fineract.portfolio.loanaccount.service.LoanUtilService;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class LoanScheduleWritePlatformServiceImpl implements LoanScheduleWritePlatformService {
 
     private final LoanAccountDomainService loanAccountDomainService;
@@ -47,17 +48,6 @@ public class LoanScheduleWritePlatformServiceImpl implements LoanScheduleWritePl
     private final LoanScheduleAssembler loanScheduleAssembler;
     private final PlatformSecurityContext context;
     private final LoanUtilService loanUtilService;
-
-    @Autowired
-    public LoanScheduleWritePlatformServiceImpl(final LoanAccountDomainService loanAccountDomainService,
-            final LoanScheduleAssembler loanScheduleAssembler, final LoanAssembler loanAssembler, final PlatformSecurityContext context,
-            final LoanUtilService loanUtilService) {
-        this.loanAccountDomainService = loanAccountDomainService;
-        this.loanScheduleAssembler = loanScheduleAssembler;
-        this.loanAssembler = loanAssembler;
-        this.context = context;
-        this.loanUtilService = loanUtilService;
-    }
 
     @Override
     public CommandProcessingResult addLoanScheduleVariations(final Long loanId, final JsonCommand command) {

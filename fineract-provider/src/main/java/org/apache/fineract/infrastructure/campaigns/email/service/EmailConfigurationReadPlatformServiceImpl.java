@@ -18,11 +18,10 @@
  */
 package org.apache.fineract.infrastructure.campaigns.email.service;
 
-import javax.sql.DataSource;
-import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.campaigns.email.exception.EmailConfigurationNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.campaigns.email.data.EmailConfigurationData;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.fineract.infrastructure.campaigns.email.exception.EmailConfigurationNotFoundException;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -33,18 +32,12 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 @Service
+@RequiredArgsConstructor
 public class EmailConfigurationReadPlatformServiceImpl implements EmailConfigurationReadPlatformService {
 	
 	private final JdbcTemplate jdbcTemplate;
     private final EmailConfigurationRowMapper emailConfigurationRowMapper;
     
-    @Autowired
-    public EmailConfigurationReadPlatformServiceImpl(final DataSource dataSource) {
-    	this.jdbcTemplate = new JdbcTemplate(dataSource);
-    	this.emailConfigurationRowMapper = new EmailConfigurationRowMapper();
-    	
-    }
-	
 	private static final class EmailConfigurationRowMapper implements RowMapper<EmailConfigurationData> {
 		
 		final String schema;

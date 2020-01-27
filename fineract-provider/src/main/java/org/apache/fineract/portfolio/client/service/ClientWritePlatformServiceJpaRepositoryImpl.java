@@ -18,14 +18,8 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-
+import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandProcessingService;
@@ -54,18 +48,8 @@ import org.apache.fineract.organisation.staff.domain.StaffRepositoryWrapper;
 import org.apache.fineract.portfolio.address.service.AddressWritePlatformService;
 import org.apache.fineract.portfolio.client.api.ClientApiConstants;
 import org.apache.fineract.portfolio.client.data.ClientDataValidator;
-import org.apache.fineract.portfolio.client.domain.AccountNumberGenerator;
-import org.apache.fineract.portfolio.client.domain.Client;
-import org.apache.fineract.portfolio.client.domain.ClientNonPerson;
-import org.apache.fineract.portfolio.client.domain.ClientNonPersonRepositoryWrapper;
-import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
-import org.apache.fineract.portfolio.client.domain.ClientStatus;
-import org.apache.fineract.portfolio.client.domain.LegalForm;
-import org.apache.fineract.portfolio.client.exception.ClientActiveForUpdateException;
-import org.apache.fineract.portfolio.client.exception.ClientHasNoStaffException;
-import org.apache.fineract.portfolio.client.exception.ClientMustBePendingToBeDeletedException;
-import org.apache.fineract.portfolio.client.exception.InvalidClientSavingProductException;
-import org.apache.fineract.portfolio.client.exception.InvalidClientStateTransitionException;
+import org.apache.fineract.portfolio.client.domain.*;
+import org.apache.fineract.portfolio.client.exception.*;
 import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_ENTITY;
 import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_EVENTS;
 import org.apache.fineract.portfolio.common.service.BusinessEventNotifierService;
@@ -80,7 +64,6 @@ import org.apache.fineract.portfolio.note.domain.NoteRepository;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountDataDTO;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepositoryWrapper;
-import org.apache.fineract.portfolio.savings.domain.SavingsProduct;
 import org.apache.fineract.portfolio.savings.domain.SavingsProductRepository;
 import org.apache.fineract.portfolio.savings.exception.SavingsProductNotFoundException;
 import org.apache.fineract.portfolio.savings.service.SavingsApplicationProcessWritePlatformService;
@@ -90,14 +73,15 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.JsonElement;
+import javax.persistence.PersistenceException;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(ClientWritePlatformServiceJpaRepositoryImpl.class);
@@ -125,44 +109,6 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
     private final ClientFamilyMembersWritePlatformService clientFamilyMembersWritePlatformService;
     private final BusinessEventNotifierService businessEventNotifierService;
     private final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService;
-    @Autowired
-    public ClientWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final ClientRepositoryWrapper clientRepository, final ClientNonPersonRepositoryWrapper clientNonPersonRepository,
-            final OfficeRepositoryWrapper officeRepositoryWrapper, final NoteRepository noteRepository,
-            final ClientDataValidator fromApiJsonDeserializer, final AccountNumberGenerator accountNumberGenerator,
-            final GroupRepository groupRepository, final StaffRepositoryWrapper staffRepository,
-            final CodeValueRepositoryWrapper codeValueRepository, final LoanRepositoryWrapper loanRepositoryWrapper,
-            final SavingsAccountRepositoryWrapper savingsRepositoryWrapper, final SavingsProductRepository savingsProductRepository,
-            final SavingsApplicationProcessWritePlatformService savingsApplicationProcessWritePlatformService,
-            final CommandProcessingService commandProcessingService, final ConfigurationDomainService configurationDomainService,
-            final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository, final FromJsonHelper fromApiJsonHelper,
-            final ConfigurationReadPlatformService configurationReadPlatformService,
-            final AddressWritePlatformService addressWritePlatformService, final ClientFamilyMembersWritePlatformService clientFamilyMembersWritePlatformService, final BusinessEventNotifierService businessEventNotifierService,
-            final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService) {
-        this.context = context;
-        this.clientRepository = clientRepository;
-        this.clientNonPersonRepository = clientNonPersonRepository;
-        this.officeRepositoryWrapper = officeRepositoryWrapper;
-        this.noteRepository = noteRepository;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.accountNumberGenerator = accountNumberGenerator;
-        this.groupRepository = groupRepository;
-        this.staffRepository = staffRepository;
-        this.codeValueRepository = codeValueRepository;
-        this.loanRepositoryWrapper = loanRepositoryWrapper;
-        this.savingsRepositoryWrapper = savingsRepositoryWrapper;
-        this.savingsProductRepository = savingsProductRepository;
-        this.savingsApplicationProcessWritePlatformService = savingsApplicationProcessWritePlatformService;
-        this.commandProcessingService = commandProcessingService;
-        this.configurationDomainService = configurationDomainService;
-        this.accountNumberFormatRepository = accountNumberFormatRepository;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.configurationReadPlatformService = configurationReadPlatformService;
-        this.addressWritePlatformService = addressWritePlatformService;
-        this.clientFamilyMembersWritePlatformService=clientFamilyMembersWritePlatformService;
-        this.businessEventNotifierService = businessEventNotifierService;
-        this.entityDatatableChecksWritePlatformService = entityDatatableChecksWritePlatformService;
-    }
 
     @Transactional
     @Override

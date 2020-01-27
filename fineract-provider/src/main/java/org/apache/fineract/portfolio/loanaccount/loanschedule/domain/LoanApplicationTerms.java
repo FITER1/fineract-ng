@@ -18,13 +18,6 @@
  */
 package org.apache.fineract.portfolio.loanaccount.loanschedule.domain;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
@@ -33,31 +26,21 @@ import org.apache.fineract.portfolio.calendar.data.CalendarHistoryDataWrapper;
 import org.apache.fineract.portfolio.calendar.domain.Calendar;
 import org.apache.fineract.portfolio.calendar.domain.CalendarInstance;
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
-import org.apache.fineract.portfolio.common.domain.DayOfWeekType;
-import org.apache.fineract.portfolio.common.domain.DaysInMonthType;
-import org.apache.fineract.portfolio.common.domain.DaysInYearType;
-import org.apache.fineract.portfolio.common.domain.NthDayType;
-import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
+import org.apache.fineract.portfolio.common.domain.*;
 import org.apache.fineract.portfolio.loanaccount.data.DisbursementData;
 import org.apache.fineract.portfolio.loanaccount.data.HolidayDetailDTO;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTermVariationsData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTermVariationsDataWrapper;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanInterestRecalculationDetails;
-import org.apache.fineract.portfolio.loanproduct.domain.AmortizationMethod;
-import org.apache.fineract.portfolio.loanproduct.domain.InterestCalculationPeriodMethod;
-import org.apache.fineract.portfolio.loanproduct.domain.InterestMethod;
-import org.apache.fineract.portfolio.loanproduct.domain.InterestRecalculationCompoundingMethod;
-import org.apache.fineract.portfolio.loanproduct.domain.LoanPreClosureInterestCalculationStrategy;
-import org.apache.fineract.portfolio.loanproduct.domain.LoanProductRelatedDetail;
-import org.apache.fineract.portfolio.loanproduct.domain.LoanRescheduleStrategyMethod;
-import org.apache.fineract.portfolio.loanproduct.domain.RecalculationFrequencyType;
-import org.joda.time.Days;
-import org.joda.time.LocalDate;
-import org.joda.time.Months;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
-import org.joda.time.Weeks;
-import org.joda.time.Years;
+import org.apache.fineract.portfolio.loanproduct.domain.*;
+import org.joda.time.*;
+
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public final class LoanApplicationTerms {
 

@@ -18,18 +18,17 @@
  */
 package org.apache.fineract.infrastructure.campaigns.email.service;
 
-import org.joda.time.LocalDate;
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.infrastructure.campaigns.email.data.EmailData;
+import org.apache.fineract.infrastructure.campaigns.email.domain.EmailMessageEnumerations;
+import org.apache.fineract.infrastructure.campaigns.email.domain.EmailMessageStatusType;
+import org.apache.fineract.infrastructure.campaigns.email.exception.EmailNotFoundException;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
-import org.apache.fineract.infrastructure.campaigns.email.exception.EmailNotFoundException;
-import org.apache.fineract.infrastructure.campaigns.email.data.EmailData;
-import org.apache.fineract.infrastructure.campaigns.email.domain.EmailMessageEnumerations;
-import org.apache.fineract.infrastructure.campaigns.email.domain.EmailMessageStatusType;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.joda.time.LocalDate;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -44,17 +43,12 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class EmailReadPlatformServiceImpl implements EmailReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final EmailMapper emailRowMapper = new EmailMapper();
     private final PaginationHelper<EmailData> paginationHelper = new PaginationHelper<>();
-
-
-    @Autowired
-    public EmailReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     private static final class EmailMapper implements RowMapper<EmailData> {
 

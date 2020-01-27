@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.campaigns.email.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.campaigns.email.data.EmailBusinessRulesData;
 import org.apache.fineract.infrastructure.campaigns.email.data.EmailCampaignData;
 import org.apache.fineract.infrastructure.campaigns.email.data.EmailCampaignTimeLine;
@@ -27,13 +28,11 @@ import org.apache.fineract.infrastructure.campaigns.email.domain.EmailCampaignSt
 import org.apache.fineract.infrastructure.campaigns.email.domain.EmailCampaignType;
 import org.apache.fineract.infrastructure.campaigns.email.exception.EmailBusinessRuleNotFound;
 import org.apache.fineract.infrastructure.campaigns.email.exception.EmailCampaignNotFound;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,6 +45,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class EmailCampaignReadPlatformServiceImpl implements EmailCampaignReadPlatformService {
 
 
@@ -54,14 +54,6 @@ public class EmailCampaignReadPlatformServiceImpl implements EmailCampaignReadPl
     private final BusinessRuleMapper businessRuleMapper;
 
     private final EmailCampaignMapper emailCampaignMapper;
-
-    @Autowired
-    public EmailCampaignReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.businessRuleMapper = new BusinessRuleMapper();
-        this.emailCampaignMapper = new EmailCampaignMapper();
-    }
-
 
     private static final class EmailCampaignMapper implements RowMapper<EmailCampaignData>{
 

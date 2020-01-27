@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.paymenttype.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
+
+import java.util.Collection;
 
 public interface PaymentTypeReadPlatformService {
 

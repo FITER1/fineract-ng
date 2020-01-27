@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.loanaccount.loanschedule.data;
 
-import java.util.List;
-
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleInstallment;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanScheduleModel;
+
+import java.util.List;
 
 /**
  * Transfer object to return the schedule after generation of schedule

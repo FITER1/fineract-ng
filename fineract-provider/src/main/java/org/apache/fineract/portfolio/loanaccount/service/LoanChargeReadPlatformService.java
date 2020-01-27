@@ -18,13 +18,13 @@
  */
 package org.apache.fineract.portfolio.loanaccount.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.charge.data.ChargeData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanChargeData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanChargePaidByData;
 import org.apache.fineract.portfolio.loanaccount.data.LoanInstallmentChargeData;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionType;
+
+import java.util.Collection;
 
 public interface LoanChargeReadPlatformService {
 

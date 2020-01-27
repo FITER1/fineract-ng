@@ -18,20 +18,13 @@
  */
 package org.apache.fineract.portfolio.group.domain;
 
-import java.util.Date;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-
 import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "m_staff_assignment_history")

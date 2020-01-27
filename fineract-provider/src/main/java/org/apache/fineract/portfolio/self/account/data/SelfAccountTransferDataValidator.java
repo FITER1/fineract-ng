@@ -18,26 +18,7 @@
  */
 package org.apache.fineract.portfolio.self.account.data;
 
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromAccountIdParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromAccountTypeParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromClientIdParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromOfficeIdParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.toAccountIdParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.toAccountTypeParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.toClientIdParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.toOfficeIdParamName;
-import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.ACCOUNT_TRANSFER_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.transferAmountParamName;
-import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.transferDateParamName;
-import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.transferDescriptionParamName;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.google.gson.JsonElement;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -52,7 +33,11 @@ import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.*;
+import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.*;
 
 @Component
 public class SelfAccountTransferDataValidator {

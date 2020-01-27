@@ -18,10 +18,6 @@
  */
 package org.apache.fineract.portfolio.calendar.data;
 
-import java.util.Collection;
-import java.util.List;
-
-import org.apache.fineract.infrastructure.bulkimport.constants.TemplatePopulateImportConstants;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.calendar.domain.CalendarFrequencyType;
 import org.apache.fineract.portfolio.calendar.domain.CalendarRemindBy;
@@ -32,6 +28,9 @@ import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
 import org.apache.fineract.portfolio.common.domain.NthDayType;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
+
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Immutable data object representing a Calendar.

@@ -18,29 +18,23 @@
  */
 package org.apache.fineract.organisation.provisioning.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.organisation.provisioning.data.ProvisioningCategoryData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+
 @Service
+@RequiredArgsConstructor
 public class ProvisioningCategoryReadPlatformServiceImpl implements ProvisioningCategoryReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final ProvisioningCategoryRowMapper provisionCategoryRowMapper;
-
-    @Autowired
-    public ProvisioningCategoryReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.provisionCategoryRowMapper = new ProvisioningCategoryRowMapper();
-    }
 
     @Override
     public Collection<ProvisioningCategoryData> retrieveAllProvisionCategories() {

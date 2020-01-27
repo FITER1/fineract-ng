@@ -18,16 +18,7 @@
  */
 package org.apache.fineract.portfolio.loanaccount.guarantor.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.annotation.PostConstruct;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
@@ -44,27 +35,22 @@ import org.apache.fineract.portfolio.common.service.BusinessEventNotifierService
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.loanaccount.guarantor.GuarantorConstants;
-import org.apache.fineract.portfolio.loanaccount.guarantor.domain.Guarantor;
-import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorFundingDetails;
-import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorFundingRepository;
-import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorFundingTransaction;
-import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorFundingTransactionRepository;
-import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorRepository;
+import org.apache.fineract.portfolio.loanaccount.guarantor.domain.*;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductGuaranteeDetails;
 import org.apache.fineract.portfolio.paymentdetail.domain.PaymentDetail;
-import org.apache.fineract.portfolio.savings.domain.DepositAccountOnHoldTransaction;
-import org.apache.fineract.portfolio.savings.domain.DepositAccountOnHoldTransactionRepository;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountAssembler;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
+import org.apache.fineract.portfolio.savings.domain.*;
 import org.apache.fineract.portfolio.savings.exception.InsufficientAccountBalanceException;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.math.BigDecimal;
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class GuarantorDomainServiceImpl implements GuarantorDomainService {
 
     private final GuarantorRepository guarantorRepository;
@@ -75,24 +61,6 @@ public class GuarantorDomainServiceImpl implements GuarantorDomainService {
     private final DepositAccountOnHoldTransactionRepository depositAccountOnHoldTransactionRepository;
     private final Map<Long, Long> releaseLoanIds = new HashMap<>(2);
     private final SavingsAccountAssembler savingsAccountAssembler;
-    
-
-    @Autowired
-    public GuarantorDomainServiceImpl(final GuarantorRepository guarantorRepository,
-            final GuarantorFundingRepository guarantorFundingRepository,
-            final GuarantorFundingTransactionRepository guarantorFundingTransactionRepository,
-            final AccountTransfersWritePlatformService accountTransfersWritePlatformService,
-            final BusinessEventNotifierService businessEventNotifierService,
-            final DepositAccountOnHoldTransactionRepository depositAccountOnHoldTransactionRepository,
-            final SavingsAccountAssembler savingsAccountAssembler) {
-        this.guarantorRepository = guarantorRepository;
-        this.guarantorFundingRepository = guarantorFundingRepository;
-        this.guarantorFundingTransactionRepository = guarantorFundingTransactionRepository;
-        this.accountTransfersWritePlatformService = accountTransfersWritePlatformService;
-        this.businessEventNotifierService = businessEventNotifierService;
-        this.depositAccountOnHoldTransactionRepository = depositAccountOnHoldTransactionRepository;
-        this.savingsAccountAssembler = savingsAccountAssembler;
-    }
 
     @PostConstruct
     public void addListners() {

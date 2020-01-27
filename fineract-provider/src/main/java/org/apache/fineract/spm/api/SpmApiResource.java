@@ -18,50 +18,33 @@
  */
 package org.apache.fineract.spm.api;
 
+import com.google.gson.Gson;
 import io.swagger.annotations.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.exception.UnrecognizedQueryParamException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.spm.data.SurveyData;
 import org.apache.fineract.spm.domain.Survey;
 import org.apache.fineract.spm.service.SpmService;
 import org.apache.fineract.spm.util.SurveyMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.Gson;
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Path("surveys")
 @Component
 @Scope("singleton")
 @Api(value = "SPM - Serveys", description = "")
+@RequiredArgsConstructor
 public class SpmApiResource {
-
     private final PlatformSecurityContext securityContext;
     private final SpmService spmService;
-
-    @Autowired
-    public SpmApiResource(final PlatformSecurityContext securityContext, final SpmService spmService) {
-        this.securityContext = securityContext;
-        this.spmService = spmService;
-    }
 
     @GET
     @Consumes({ MediaType.APPLICATION_JSON })

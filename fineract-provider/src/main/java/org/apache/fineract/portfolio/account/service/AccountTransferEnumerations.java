@@ -20,11 +20,7 @@ package org.apache.fineract.portfolio.account.service;
 
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.account.PortfolioAccountType;
-import org.apache.fineract.portfolio.account.domain.AccountTransferRecurrenceType;
-import org.apache.fineract.portfolio.account.domain.AccountTransferType;
-import org.apache.fineract.portfolio.account.domain.StandingInstructionPriority;
-import org.apache.fineract.portfolio.account.domain.StandingInstructionStatus;
-import org.apache.fineract.portfolio.account.domain.StandingInstructionType;
+import org.apache.fineract.portfolio.account.domain.*;
 
 public class AccountTransferEnumerations {
 

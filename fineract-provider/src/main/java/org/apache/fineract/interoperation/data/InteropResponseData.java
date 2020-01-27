@@ -26,7 +26,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 import javax.validation.constraints.NotNull;
 import java.beans.Transient;
-import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 

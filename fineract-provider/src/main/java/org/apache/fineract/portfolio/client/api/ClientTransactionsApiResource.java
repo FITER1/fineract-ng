@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.client.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -33,7 +34,6 @@ import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.data.ClientTransactionData;
 import org.apache.fineract.portfolio.client.service.ClientTransactionReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -44,6 +44,7 @@ import javax.ws.rs.core.UriInfo;
 @Path("clients/{clientId}/transactions")
 @Component
 @Api(value = "Client Transaction", description = "Client Transactions refer to transactions made directly againt a Client's internal account. Currently, these transactions are only created as a result of charge payments/waivers. You are allowed to undo a transaction, however you cannot explicitly create one. ")
+@RequiredArgsConstructor
 public class ClientTransactionsApiResource {
 
     private final PlatformSecurityContext context;
@@ -51,19 +52,6 @@ public class ClientTransactionsApiResource {
     private final DefaultToApiJsonSerializer<ClientTransactionData> toApiJsonSerializer;
     private final ApiRequestParameterHelper apiRequestParameterHelper;
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-
-    @Autowired
-    public ClientTransactionsApiResource(final PlatformSecurityContext context,
-            final ClientTransactionReadPlatformService clientTransactionReadPlatformService,
-            final DefaultToApiJsonSerializer<ClientTransactionData> toApiJsonSerializer,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService) {
-        this.context = context;
-        this.clientTransactionReadPlatformService = clientTransactionReadPlatformService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-    }
 
     @GET
     @Consumes({ MediaType.APPLICATION_JSON })

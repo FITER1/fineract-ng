@@ -18,15 +18,15 @@
  */
 package org.apache.fineract.accounting.glaccount.command;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.fineract.accounting.glaccount.api.GLAccountJsonInputParams;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountUsage;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Immutable command for adding a general Ledger Account

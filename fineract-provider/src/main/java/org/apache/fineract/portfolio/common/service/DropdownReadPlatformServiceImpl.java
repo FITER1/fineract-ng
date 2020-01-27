@@ -18,20 +18,17 @@
  */
 package org.apache.fineract.portfolio.common.service;
 
-import static org.apache.fineract.portfolio.common.service.CommonEnumerations.conditionType;
-import static org.apache.fineract.portfolio.common.service.CommonEnumerations.daysInMonthType;
-import static org.apache.fineract.portfolio.common.service.CommonEnumerations.daysInYearType;
-import static org.apache.fineract.portfolio.common.service.CommonEnumerations.termFrequencyType;
-
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.common.domain.ConditionType;
 import org.apache.fineract.portfolio.common.domain.DaysInMonthType;
 import org.apache.fineract.portfolio.common.domain.DaysInYearType;
 import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.apache.fineract.portfolio.common.service.CommonEnumerations.*;
 
 @Service
 public class DropdownReadPlatformServiceImpl implements DropdownReadPlatformService {

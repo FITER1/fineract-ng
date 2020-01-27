@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.loanaccount.service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
@@ -117,7 +118,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -127,6 +127,7 @@ import java.util.*;
 
 
 @Service
+@RequiredArgsConstructor
 public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(LoanWritePlatformServiceJpaRepositoryImpl.class);
@@ -169,76 +170,6 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
     private final LoanRepaymentScheduleTransactionProcessorFactory transactionProcessingStrategy;
     private final CodeValueRepositoryWrapper codeValueRepository;
     private final CashierTransactionDataValidator cashierTransactionDataValidator;
-
-    @Autowired
-    public LoanWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final LoanEventApiJsonValidator loanEventApiJsonValidator,
-            final LoanUpdateCommandFromApiJsonDeserializer loanUpdateCommandFromApiJsonDeserializer, final LoanAssembler loanAssembler,
-            final LoanAccountDomainService loanAccountDomainService,
-            final LoanTransactionRepository loanTransactionRepository, final NoteRepository noteRepository,
-            final ChargeRepositoryWrapper chargeRepository, final LoanChargeRepository loanChargeRepository,
-            final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepository,
-            final JournalEntryWritePlatformService journalEntryWritePlatformService,
-            final CalendarInstanceRepository calendarInstanceRepository,
-            final PaymentDetailWritePlatformService paymentDetailWritePlatformService, final HolidayRepositoryWrapper holidayRepository,
-            final ConfigurationDomainService configurationDomainService, final WorkingDaysRepositoryWrapper workingDaysRepository,
-            final AccountTransfersWritePlatformService accountTransfersWritePlatformService,
-            final AccountTransfersReadPlatformService accountTransfersReadPlatformService,
-            final AccountAssociationsReadPlatformService accountAssociationsReadPlatformService,
-            final LoanChargeReadPlatformService loanChargeReadPlatformService, final LoanReadPlatformService loanReadPlatformService,
-            final FromJsonHelper fromApiJsonHelper, final AccountTransferRepository accountTransferRepository,
-            final CalendarRepository calendarRepository,
-            final LoanRepaymentScheduleInstallmentRepository repaymentScheduleInstallmentRepository,
-            final LoanScheduleHistoryWritePlatformService loanScheduleHistoryWritePlatformService,
-            final LoanApplicationCommandFromApiJsonHelper loanApplicationCommandFromApiJsonHelper,
-            final AccountAssociationsRepository accountAssociationRepository,
-            final AccountTransferDetailRepository accountTransferDetailRepository,
-            final BusinessEventNotifierService businessEventNotifierService, final GuarantorDomainService guarantorDomainService,
-            final LoanUtilService loanUtilService, final LoanSummaryWrapper loanSummaryWrapper,
-            final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService,
-            final LoanRepaymentScheduleTransactionProcessorFactory transactionProcessingStrategy,
-            final CodeValueRepositoryWrapper codeValueRepository,
-            final LoanRepositoryWrapper loanRepositoryWrapper,
-            final CashierTransactionDataValidator cashierTransactionDataValidator) {
-        this.context = context;
-        this.loanEventApiJsonValidator = loanEventApiJsonValidator;
-        this.loanAssembler = loanAssembler;
-        this.loanRepositoryWrapper = loanRepositoryWrapper ;
-        this.loanAccountDomainService = loanAccountDomainService;
-        this.loanTransactionRepository = loanTransactionRepository;
-        this.noteRepository = noteRepository;
-        this.chargeRepository = chargeRepository;
-        this.loanChargeRepository = loanChargeRepository;
-        this.applicationCurrencyRepository = applicationCurrencyRepository;
-        this.journalEntryWritePlatformService = journalEntryWritePlatformService;
-        this.loanUpdateCommandFromApiJsonDeserializer = loanUpdateCommandFromApiJsonDeserializer;
-        this.calendarInstanceRepository = calendarInstanceRepository;
-        this.paymentDetailWritePlatformService = paymentDetailWritePlatformService;
-        this.holidayRepository = holidayRepository;
-        this.configurationDomainService = configurationDomainService;
-        this.workingDaysRepository = workingDaysRepository;
-        this.accountTransfersWritePlatformService = accountTransfersWritePlatformService;
-        this.accountTransfersReadPlatformService = accountTransfersReadPlatformService;
-        this.accountAssociationsReadPlatformService = accountAssociationsReadPlatformService;
-        this.loanChargeReadPlatformService = loanChargeReadPlatformService;
-        this.loanReadPlatformService = loanReadPlatformService;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.accountTransferRepository = accountTransferRepository;
-        this.calendarRepository = calendarRepository;
-        this.repaymentScheduleInstallmentRepository = repaymentScheduleInstallmentRepository;
-        this.loanScheduleHistoryWritePlatformService = loanScheduleHistoryWritePlatformService;
-        this.loanApplicationCommandFromApiJsonHelper = loanApplicationCommandFromApiJsonHelper;
-        this.accountAssociationRepository = accountAssociationRepository;
-        this.accountTransferDetailRepository = accountTransferDetailRepository;
-        this.businessEventNotifierService = businessEventNotifierService;
-        this.guarantorDomainService = guarantorDomainService;
-        this.loanUtilService = loanUtilService;
-        this.loanSummaryWrapper = loanSummaryWrapper;
-        this.transactionProcessingStrategy = transactionProcessingStrategy;
-        this.entityDatatableChecksWritePlatformService = entityDatatableChecksWritePlatformService;
-        this.codeValueRepository = codeValueRepository;
-        this.cashierTransactionDataValidator = cashierTransactionDataValidator;
-    }
 
     private LoanLifecycleStateMachine defaultLoanLifecycleStateMachine() {
         final List<LoanStatus> allowedLoanStatuses = Arrays.asList(LoanStatus.values());

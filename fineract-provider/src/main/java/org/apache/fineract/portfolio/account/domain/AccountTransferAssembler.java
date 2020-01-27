@@ -18,12 +18,6 @@
  */
 package org.apache.fineract.portfolio.account.domain;
 
-import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.transferAmountParamName;
-import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.transferDateParamName;
-import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.transferDescriptionParamName;
-
-import java.math.BigDecimal;
-
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.account.data.AccountTransferDTO;
@@ -34,6 +28,10 @@ import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+
+import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.*;
 
 @Service
 public class AccountTransferAssembler {

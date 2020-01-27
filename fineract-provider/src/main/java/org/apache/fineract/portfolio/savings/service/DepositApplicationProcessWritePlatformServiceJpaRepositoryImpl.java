@@ -18,16 +18,7 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.isCalendarInheritedParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.recurringFrequencyParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.recurringFrequencyTypeParamName;
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.transferInterestToSavingsParamName;
-
-import java.math.MathContext;
-import java.util.*;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormat;
@@ -51,11 +42,7 @@ import org.apache.fineract.portfolio.account.domain.AccountAssociationType;
 import org.apache.fineract.portfolio.account.domain.AccountAssociations;
 import org.apache.fineract.portfolio.account.domain.AccountAssociationsRepository;
 import org.apache.fineract.portfolio.calendar.domain.Calendar;
-import org.apache.fineract.portfolio.calendar.domain.CalendarEntityType;
-import org.apache.fineract.portfolio.calendar.domain.CalendarFrequencyType;
-import org.apache.fineract.portfolio.calendar.domain.CalendarInstance;
-import org.apache.fineract.portfolio.calendar.domain.CalendarInstanceRepository;
-import org.apache.fineract.portfolio.calendar.domain.CalendarType;
+import org.apache.fineract.portfolio.calendar.domain.*;
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
 import org.apache.fineract.portfolio.client.domain.AccountNumberGenerator;
 import org.apache.fineract.portfolio.client.domain.Client;
@@ -77,30 +64,24 @@ import org.apache.fineract.portfolio.savings.DepositAccountType;
 import org.apache.fineract.portfolio.savings.DepositsApiConstants;
 import org.apache.fineract.portfolio.savings.SavingsApiConstants;
 import org.apache.fineract.portfolio.savings.data.DepositAccountDataValidator;
-import org.apache.fineract.portfolio.savings.domain.DepositAccountAssembler;
-import org.apache.fineract.portfolio.savings.domain.FixedDepositAccount;
-import org.apache.fineract.portfolio.savings.domain.FixedDepositAccountRepository;
-import org.apache.fineract.portfolio.savings.domain.RecurringDepositAccount;
-import org.apache.fineract.portfolio.savings.domain.RecurringDepositAccountRepository;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountCharge;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountChargeAssembler;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepositoryWrapper;
-import org.apache.fineract.portfolio.savings.domain.SavingsProduct;
-import org.apache.fineract.portfolio.savings.domain.SavingsProductRepository;
+import org.apache.fineract.portfolio.savings.domain.*;
 import org.apache.fineract.portfolio.savings.exception.SavingsProductNotFoundException;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_ENTITY;
-import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_EVENTS;
+
+import javax.persistence.PersistenceException;
+import java.math.MathContext;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.savings.DepositsApiConstants.*;
 
 @Service
+@RequiredArgsConstructor
 public class DepositApplicationProcessWritePlatformServiceJpaRepositoryImpl implements DepositApplicationProcessWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(DepositApplicationProcessWritePlatformServiceJpaRepositoryImpl.class);
@@ -125,43 +106,6 @@ public class DepositApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
     private final ConfigurationDomainService configurationDomainService;
     private final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository;
     private final BusinessEventNotifierService businessEventNotifierService;
-
-    @Autowired
-    public DepositApplicationProcessWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final SavingsAccountRepositoryWrapper savingAccountRepository, final DepositAccountAssembler depositAccountAssembler,
-            final DepositAccountDataValidator depositAccountDataValidator, final AccountNumberGenerator accountNumberGenerator,
-            final ClientRepositoryWrapper clientRepository, final GroupRepository groupRepository,
-            final SavingsProductRepository savingsProductRepository, final NoteRepository noteRepository,
-            final StaffRepositoryWrapper staffRepository,
-            final SavingsAccountApplicationTransitionApiJsonValidator savingsAccountApplicationTransitionApiJsonValidator,
-            final SavingsAccountChargeAssembler savingsAccountChargeAssembler,
-            final FixedDepositAccountRepository fixedDepositAccountRepository,
-            final RecurringDepositAccountRepository recurringDepositAccountRepository,
-            final AccountAssociationsRepository accountAssociationsRepository, final FromJsonHelper fromJsonHelper,
-            final CalendarInstanceRepository calendarInstanceRepository, final ConfigurationDomainService configurationDomainService,
-            final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository,
-            final BusinessEventNotifierService businessEventNotifierService) {
-        this.context = context;
-        this.savingAccountRepository = savingAccountRepository;
-        this.depositAccountAssembler = depositAccountAssembler;
-        this.accountNumberGenerator = accountNumberGenerator;
-        this.depositAccountDataValidator = depositAccountDataValidator;
-        this.clientRepository = clientRepository;
-        this.groupRepository = groupRepository;
-        this.savingsProductRepository = savingsProductRepository;
-        this.noteRepository = noteRepository;
-        this.staffRepository = staffRepository;
-        this.savingsAccountApplicationTransitionApiJsonValidator = savingsAccountApplicationTransitionApiJsonValidator;
-        this.savingsAccountChargeAssembler = savingsAccountChargeAssembler;
-        this.fixedDepositAccountRepository = fixedDepositAccountRepository;
-        this.recurringDepositAccountRepository = recurringDepositAccountRepository;
-        this.accountAssociationsRepository = accountAssociationsRepository;
-        this.fromJsonHelper = fromJsonHelper;
-        this.calendarInstanceRepository = calendarInstanceRepository;
-        this.configurationDomainService = configurationDomainService;
-        this.accountNumberFormatRepository = accountNumberFormatRepository;
-        this.businessEventNotifierService = businessEventNotifierService;
-    }
 
     /*
      * Guaranteed to throw an exception no matter what the data integrity issue

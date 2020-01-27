@@ -18,21 +18,8 @@
  */
 package org.apache.fineract.organisation.teller.api;
 
-import java.util.Collection;
-import java.util.Date;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -41,41 +28,30 @@ import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSer
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.apache.fineract.organisation.teller.data.CashierData;
-import org.apache.fineract.organisation.teller.data.CashierTransactionData;
-import org.apache.fineract.organisation.teller.data.CashierTransactionsWithSummaryData;
-import org.apache.fineract.organisation.teller.data.TellerData;
-import org.apache.fineract.organisation.teller.data.TellerJournalData;
-import org.apache.fineract.organisation.teller.data.TellerTransactionData;
+import org.apache.fineract.organisation.teller.data.*;
 import org.apache.fineract.organisation.teller.service.TellerManagementReadPlatformService;
 import org.apache.fineract.organisation.teller.util.DateRange;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.Collection;
+import java.util.Date;
 
 @Path("tellers")
 @Component
 @Scope("singleton")
 @Api(value = "Teller Cash Management", description = "Teller cash management which will allow an organization to manage their cash transactions at branches or head office more effectively.")
+@RequiredArgsConstructor
 public class TellerApiResource {
 
     private final PlatformSecurityContext securityContext;
     private final DefaultToApiJsonSerializer<TellerData> jsonSerializer;
     private final TellerManagementReadPlatformService readPlatformService;
     private final PortfolioCommandSourceWritePlatformService commandWritePlatformService;
-
-    @Autowired
-    public TellerApiResource(PlatformSecurityContext securityContext, DefaultToApiJsonSerializer<TellerData> jsonSerializer,
-            TellerManagementReadPlatformService readPlatformService,
-            PortfolioCommandSourceWritePlatformService commandWritePlatformService) {
-        super();
-        this.securityContext = securityContext;
-        this.jsonSerializer = jsonSerializer;
-        this.readPlatformService = readPlatformService;
-        this.commandWritePlatformService = commandWritePlatformService;
-    }
 
     @GET
     @Consumes({ MediaType.TEXT_HTML, MediaType.APPLICATION_JSON })

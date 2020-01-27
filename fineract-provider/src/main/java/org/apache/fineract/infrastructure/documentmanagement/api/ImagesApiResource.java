@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.documentmanagement.api;
 
 import com.lowagie.text.pdf.codec.Base64;
 import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.domain.Base64EncodedImage;
@@ -34,7 +35,6 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.portfolio.client.data.ClientData;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -48,21 +48,13 @@ import java.io.InputStream;
 @Component
 @Scope("singleton")
 @Api(value = "DomainName//api//v1//{entity}//{entityId}//images", description = "")
+@RequiredArgsConstructor
 public class ImagesApiResource {
 
     private final PlatformSecurityContext context;
     private final ImageReadPlatformService imageReadPlatformService;
     private final ImageWritePlatformService imageWritePlatformService;
     private final DefaultToApiJsonSerializer<ClientData> toApiJsonSerializer;
-
-    @Autowired
-    public ImagesApiResource(final PlatformSecurityContext context, final ImageReadPlatformService readPlatformService,
-            final ImageWritePlatformService imageWritePlatformService, final DefaultToApiJsonSerializer<ClientData> toApiJsonSerializer) {
-        this.context = context;
-        this.imageReadPlatformService = readPlatformService;
-        this.imageWritePlatformService = imageWritePlatformService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-    }
 
     /**
      * Upload images through multi-part form upload

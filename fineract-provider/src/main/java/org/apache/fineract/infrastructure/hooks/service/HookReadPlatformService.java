@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.infrastructure.hooks.service;
 
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.fineract.infrastructure.hooks.data.HookData;
 import org.apache.fineract.infrastructure.hooks.domain.Hook;
+
+import java.util.Collection;
+import java.util.List;
 
 public interface HookReadPlatformService {
 

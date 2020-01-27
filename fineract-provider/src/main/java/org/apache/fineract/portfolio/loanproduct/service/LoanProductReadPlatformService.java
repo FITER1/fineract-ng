@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.loanproduct.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.loanproduct.data.LoanProductBorrowerCycleVariationData;
 import org.apache.fineract.portfolio.loanproduct.data.LoanProductData;
+
+import java.util.Collection;
 
 public interface LoanProductReadPlatformService {
 

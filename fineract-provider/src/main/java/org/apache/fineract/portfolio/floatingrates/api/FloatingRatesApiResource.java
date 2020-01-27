@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.floatingrates.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -29,9 +30,7 @@ import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSer
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.floatingrates.data.FloatingRateData;
 import org.apache.fineract.portfolio.floatingrates.service.FloatingRatesReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
@@ -45,6 +44,7 @@ import java.util.Set;
 @Path("floatingrates")
 @Scope("singleton")
 @Api(value = "Floating Rates", description = "It lets you create, list, retrieve and upload the floating rates")
+@RequiredArgsConstructor
 public class FloatingRatesApiResource {
 
 	private static final String RESOURCE_NAME = "FLOATINGRATE";
@@ -60,20 +60,6 @@ public class FloatingRatesApiResource {
 	private final DefaultToApiJsonSerializer<FloatingRateData> toApiJsonSerializer;
 	private final FloatingRatesReadPlatformService floatingRatesReadPlatformService;
 	private final ApiRequestParameterHelper apiRequestParameterHelper;
-
-	@Autowired
-	public FloatingRatesApiResource(
-			final PlatformSecurityContext context,
-			final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-			final DefaultToApiJsonSerializer<FloatingRateData> toApiJsonSerializer,
-			final ApiRequestParameterHelper apiRequestParameterHelper,
-			final FloatingRatesReadPlatformService floatingRatesReadPlatformService) {
-		this.context = context;
-		this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-		this.toApiJsonSerializer = toApiJsonSerializer;
-		this.apiRequestParameterHelper = apiRequestParameterHelper;
-		this.floatingRatesReadPlatformService = floatingRatesReadPlatformService;
-	}
 
 	@POST
 	@Consumes({ MediaType.APPLICATION_JSON })

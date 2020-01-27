@@ -18,44 +18,30 @@
  */
 package org.apache.fineract.organisation.teller.api;
 
-import java.util.Collection;
-import java.util.Date;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSerializer;
 import org.apache.fineract.organisation.teller.data.CashierData;
 import org.apache.fineract.organisation.teller.service.TellerManagementReadPlatformService;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.Collection;
+import java.util.Date;
 
 @Path("cashiers")
 @Component
 @Scope("singleton")
 @Api(value = "cashiers", description = "")
+@RequiredArgsConstructor
 public class CashierApiResource {
 
     private final DefaultToApiJsonSerializer<CashierData> jsonSerializer;
     private final TellerManagementReadPlatformService readPlatformService;
-
-    @Autowired
-    public CashierApiResource(DefaultToApiJsonSerializer<CashierData> jsonSerializer,
-            TellerManagementReadPlatformService readPlatformService) {
-        this.jsonSerializer = jsonSerializer;
-        this.readPlatformService = readPlatformService;
-    }
 
     @GET
     @Consumes({ MediaType.TEXT_HTML, MediaType.APPLICATION_JSON })

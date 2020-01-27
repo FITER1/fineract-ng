@@ -18,16 +18,10 @@
  */
 package org.apache.fineract.portfolio.floatingrates.serialization;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
@@ -36,14 +30,14 @@ import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.portfolio.floatingrates.domain.FloatingRate;
 import org.apache.fineract.portfolio.floatingrates.domain.FloatingRateRepository;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class FloatingRateDataValidator {
 
 	private final Set<String> supportedParametersForFloatingRates = new HashSet<>(
@@ -56,14 +50,6 @@ public class FloatingRateDataValidator {
 	private final FromJsonHelper fromApiJsonHelper;
 	private final FloatingRateRepository floatingRateRepository;
 	private final DateUtils dateUtils;
-
-	@Autowired
-	public FloatingRateDataValidator(final FromJsonHelper fromApiJsonHelper,
-			final FloatingRateRepository floatingRateRepository, final DateUtils dateUtils) {
-		this.fromApiJsonHelper = fromApiJsonHelper;
-		this.floatingRateRepository = floatingRateRepository;
-		this.dateUtils = dateUtils;
-	}
 
 	public void validateForCreate(String json) {
 		final Type typeOfMap = new TypeToken<Map<String, Object>>() {

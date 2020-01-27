@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.bulkimport.importhandler.center;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -33,13 +34,11 @@ import org.apache.fineract.infrastructure.bulkimport.importhandler.helper.EnumOp
 import org.apache.fineract.infrastructure.bulkimport.importhandler.helper.GroupIdSerializer;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.infrastructure.core.exception.*;
 import org.apache.fineract.portfolio.calendar.data.CalendarData;
 import org.apache.fineract.portfolio.group.data.CenterData;
 import org.apache.fineract.portfolio.group.data.GroupGeneralData;
 import org.apache.poi.ss.usermodel.*;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -48,6 +47,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CenterImportHandler implements ImportHandler {
 
 
@@ -57,12 +57,6 @@ public class CenterImportHandler implements ImportHandler {
     private Workbook workbook;
 
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-
-    @Autowired
-    public CenterImportHandler(final PortfolioCommandSourceWritePlatformService
-            commandsSourceWritePlatformService) {
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-    }
 
     @Override
     public Count process(Workbook workbook, String locale, String dateFormat) {

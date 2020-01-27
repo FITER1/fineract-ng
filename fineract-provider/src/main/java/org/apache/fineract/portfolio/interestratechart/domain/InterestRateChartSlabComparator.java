@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.interestratechart.domain;
 
+import org.apache.fineract.portfolio.savings.domain.DepositAccountInterestRateChartSlabs;
+
 import java.math.BigDecimal;
 import java.util.Comparator;
-
-import org.apache.fineract.portfolio.savings.domain.DepositAccountInterestRateChartSlabs;
 
 /**
  * Sort InterestRateChartSlab by input range 

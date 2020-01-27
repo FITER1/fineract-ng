@@ -18,14 +18,8 @@
  */
 package org.apache.fineract.organisation.office.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
@@ -36,14 +30,20 @@ import org.apache.fineract.organisation.office.data.OfficeTransactionData;
 import org.apache.fineract.organisation.office.exception.OfficeNotFoundException;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+
 @Service
+@RequiredArgsConstructor
 public class OfficeReadPlatformServiceImpl implements OfficeReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
@@ -51,17 +51,6 @@ public class OfficeReadPlatformServiceImpl implements OfficeReadPlatformService 
     private final CurrencyReadPlatformService currencyReadPlatformService;
     private final ColumnValidator columnValidator;
     private final static String nameDecoratedBaseOnHierarchy = "concat(substring('........................................', 1, ((LENGTH(o.hierarchy) - LENGTH(REPLACE(o.hierarchy, '.', '')) - 1) * 4)), o.name)";
-
-    @Autowired
-    public OfficeReadPlatformServiceImpl(final PlatformSecurityContext context,
-            final CurrencyReadPlatformService currencyReadPlatformService,
-            final DataSource dataSource,
-            final ColumnValidator columnValidator) {
-        this.context = context;
-        this.currencyReadPlatformService = currencyReadPlatformService;
-        this.columnValidator = columnValidator;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     private static final class OfficeMapper implements RowMapper<OfficeData> {
 

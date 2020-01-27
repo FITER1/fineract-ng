@@ -18,10 +18,9 @@
  */
 package org.apache.fineract.accounting.glaccount.serialization;
 
-import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.glaccount.api.GLAccountJsonInputParams;
 import org.apache.fineract.accounting.glaccount.command.GLAccountCommand;
@@ -30,25 +29,21 @@ import org.apache.fineract.infrastructure.core.serialization.AbstractFromApiJson
 import org.apache.fineract.infrastructure.core.serialization.FromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.loanaccount.guarantor.command.GuarantorCommand;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of {@link FromApiJsonDeserializer} for
  * {@link GuarantorCommand}'s.
  */
 @Component
+@RequiredArgsConstructor
 public final class GLAccountCommandFromApiJsonDeserializer extends AbstractFromApiJsonDeserializer<GLAccountCommand> {
 
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public GLAccountCommandFromApiJsonDeserializer(final FromJsonHelper fromApiJsonfromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonfromApiJsonHelper;
-    }
 
     @Override
     public GLAccountCommand commandFromApiJson(final String json) {

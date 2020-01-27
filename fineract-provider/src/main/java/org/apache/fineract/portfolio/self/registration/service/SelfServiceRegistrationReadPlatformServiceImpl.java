@@ -18,20 +18,15 @@
  */
 package org.apache.fineract.portfolio.self.registration.service;
 
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class SelfServiceRegistrationReadPlatformServiceImpl implements SelfServiceRegistrationReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public SelfServiceRegistrationReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     @Override
     public boolean isClientExist(String accountNumber, String firstName, String lastName, String mobileNumber,

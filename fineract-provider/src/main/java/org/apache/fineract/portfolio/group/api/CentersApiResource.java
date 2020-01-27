@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.group.api;
 
 import com.google.gson.JsonElement;
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.journalentry.api.DateParam;
 import org.apache.fineract.commands.domain.CommandWrapper;
@@ -60,7 +61,6 @@ import org.apache.fineract.portfolio.meeting.service.MeetingReadPlatformService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -77,6 +77,7 @@ import java.util.*;
 @Component
 @Scope("singleton")
 @Api(value = "Centers", description = "Centers along with Groups are used to provided a distinctive banking distribution channel used in microfinance. Its common in areas such as Southern Asia to use Centers and Group as administrative units in grameen style lending. Typically groups will contain one to five people and centers themselves will be made of anywhere between 2-10 groups.")
+@RequiredArgsConstructor
 public class CentersApiResource {
 
     private final PlatformSecurityContext context;
@@ -94,35 +95,6 @@ public class CentersApiResource {
     private final EntityDatatableChecksReadService entityDatatableChecksReadService;
     private final BulkImportWorkbookService bulkImportWorkbookService;
     private final BulkImportWorkbookPopulatorService bulkImportWorkbookPopulatorService;
-
-    @Autowired
-    public CentersApiResource(final PlatformSecurityContext context, final CenterReadPlatformService centerReadPlatformService,
-            final ToApiJsonSerializer<CenterData> centerApiJsonSerializer, final ToApiJsonSerializer<Object> toApiJsonSerializer,
-            final ToApiJsonSerializer<AccountSummaryCollectionData> groupSummaryToApiJsonSerializer,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final CollectionSheetReadPlatformService collectionSheetReadPlatformService, final FromJsonHelper fromJsonHelper,
-            final AccountDetailsReadPlatformService accountDetailsReadPlatformService,
-            final CalendarReadPlatformService calendarReadPlatformService, final MeetingReadPlatformService meetingReadPlatformService,
-            final EntityDatatableChecksReadService entityDatatableChecksReadService,
-            final BulkImportWorkbookService bulkImportWorkbookService,
-            final BulkImportWorkbookPopulatorService bulkImportWorkbookPopulatorService) {
-        this.context = context;
-        this.centerReadPlatformService = centerReadPlatformService;
-        this.centerApiJsonSerializer = centerApiJsonSerializer;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.groupSummaryToApiJsonSerializer = groupSummaryToApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.collectionSheetReadPlatformService = collectionSheetReadPlatformService;
-        this.fromJsonHelper = fromJsonHelper;
-        this.accountDetailsReadPlatformService = accountDetailsReadPlatformService;
-        this.calendarReadPlatformService = calendarReadPlatformService;
-        this.meetingReadPlatformService = meetingReadPlatformService;
-        this.entityDatatableChecksReadService = entityDatatableChecksReadService;
-        this.bulkImportWorkbookPopulatorService=bulkImportWorkbookPopulatorService;
-        this.bulkImportWorkbookService=bulkImportWorkbookService;
-    }
 
     @GET
     @Path("template")

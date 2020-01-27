@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.infrastructure.security.domain;
 
-import java.util.Collection;
-
 import org.springframework.security.core.GrantedAuthority;
+
+import java.util.Collection;
 
 public class BasicPasswordEncodablePlatformUser implements PlatformUser {
 

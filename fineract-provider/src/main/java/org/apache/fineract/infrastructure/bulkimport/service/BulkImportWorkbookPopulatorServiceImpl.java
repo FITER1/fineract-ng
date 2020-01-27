@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.bulkimport.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.accounting.glaccount.service.GLAccountReadPlatformService;
 import org.apache.fineract.infrastructure.bulkimport.constants.TemplatePopulateImportConstants;
@@ -61,7 +62,6 @@ import org.apache.fineract.portfolio.client.data.ClientData;
 import org.apache.fineract.portfolio.client.service.ClientReadPlatformService;
 import org.apache.fineract.portfolio.fund.data.FundData;
 import org.apache.fineract.portfolio.fund.service.FundReadPlatformService;
-import org.apache.fineract.portfolio.group.api.GroupingTypesApiConstants;
 import org.apache.fineract.portfolio.group.data.CenterData;
 import org.apache.fineract.portfolio.group.data.GroupGeneralData;
 import org.apache.fineract.portfolio.group.service.CenterReadPlatformService;
@@ -84,7 +84,6 @@ import org.apache.fineract.useradministration.data.RoleData;
 import org.apache.fineract.useradministration.service.RoleReadPlatformService;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.core.Response;
@@ -95,6 +94,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BulkImportWorkbookPopulatorServiceImpl implements BulkImportWorkbookPopulatorService {
 
   private final PlatformSecurityContext context;
@@ -117,47 +117,6 @@ public class BulkImportWorkbookPopulatorServiceImpl implements BulkImportWorkboo
   private final DepositProductReadPlatformService depositProductReadPlatformService;
   private final RoleReadPlatformService roleReadPlatformService;
   
-  @Autowired
-  public BulkImportWorkbookPopulatorServiceImpl(final PlatformSecurityContext context,
-      final OfficeReadPlatformService officeReadPlatformService,
-      final StaffReadPlatformService staffReadPlatformService,
-      final ClientReadPlatformService clientReadPlatformService,
-      final CenterReadPlatformService centerReadPlatformService,
-      final GroupReadPlatformService groupReadPlatformService,
-      final FundReadPlatformService fundReadPlatformService,
-      final PaymentTypeReadPlatformService paymentTypeReadPlatformService,
-      final LoanProductReadPlatformService loanProductReadPlatformService,
-      final CurrencyReadPlatformService currencyReadPlatformService,
-      final LoanReadPlatformService loanReadPlatformService,
-      final GLAccountReadPlatformService glAccountReadPlatformService,
-      final SavingsAccountReadPlatformService savingsAccountReadPlatformService,
-		final CodeValueReadPlatformService codeValueReadPlatformService,
-		final SavingsProductReadPlatformService savingsProductReadPlatformService,
-		  final ProductReadPlatformService productReadPlatformService,
-		  final ChargeReadPlatformService chargeReadPlatformService,
-		  final DepositProductReadPlatformService depositProductReadPlatformService,
-		  final RoleReadPlatformService roleReadPlatformService) {
-    this.officeReadPlatformService = officeReadPlatformService;
-    this.staffReadPlatformService = staffReadPlatformService;
-    this.context = context;
-    this.clientReadPlatformService=clientReadPlatformService;
-    this.centerReadPlatformService=centerReadPlatformService;
-    this.groupReadPlatformService=groupReadPlatformService;
-    this.fundReadPlatformService=fundReadPlatformService;
-    this.paymentTypeReadPlatformService=paymentTypeReadPlatformService;
-    this.loanProductReadPlatformService=loanProductReadPlatformService;
-    this.currencyReadPlatformService=currencyReadPlatformService;
-    this.loanReadPlatformService=loanReadPlatformService;
-    this.glAccountReadPlatformService=glAccountReadPlatformService;
-    this.savingsAccountReadPlatformService=savingsAccountReadPlatformService;
-    this.codeValueReadPlatformService=codeValueReadPlatformService;
-    this.savingsProductReadPlatformService=savingsProductReadPlatformService;
-    this.productReadPlatformService=productReadPlatformService;
-    this.chargeReadPlatformService=chargeReadPlatformService;
-    this.depositProductReadPlatformService=depositProductReadPlatformService;
-    this.roleReadPlatformService=roleReadPlatformService;
-  }
-
 	@Override
 	public Response getTemplate(String entityType, Long officeId, Long staffId,final String dateFormat) {
 		WorkbookPopulator populator=null;

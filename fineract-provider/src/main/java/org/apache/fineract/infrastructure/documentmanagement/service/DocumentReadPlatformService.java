@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.documentmanagement.data.DocumentData;
 import org.apache.fineract.infrastructure.documentmanagement.data.FileData;
+
+import java.util.Collection;
 
 public interface DocumentReadPlatformService {
 

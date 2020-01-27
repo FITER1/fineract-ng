@@ -18,20 +18,21 @@
  */
 package org.apache.fineract.interoperation.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.interoperation.data.*;
+import org.apache.fineract.interoperation.domain.InteropActionState;
 import org.apache.fineract.interoperation.domain.InteropIdentifier;
 import org.apache.fineract.interoperation.domain.InteropIdentifierRepository;
 import org.apache.fineract.interoperation.domain.InteropIdentifierType;
+import org.apache.fineract.interoperation.serialization.InteropDataValidator;
+import org.apache.fineract.interoperation.util.MathUtil;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepository;
 import org.apache.fineract.organisation.monetary.domain.Money;
-import org.apache.fineract.interoperation.domain.InteropActionState;
-import org.apache.fineract.interoperation.serialization.InteropDataValidator;
-import org.apache.fineract.interoperation.util.MathUtil;
 import org.apache.fineract.portfolio.note.domain.Note;
 import org.apache.fineract.portfolio.note.domain.NoteRepository;
 import org.apache.fineract.portfolio.paymentdetail.domain.PaymentDetail;
@@ -40,13 +41,7 @@ import org.apache.fineract.portfolio.paymenttype.domain.PaymentType;
 import org.apache.fineract.portfolio.paymenttype.domain.PaymentTypeRepository;
 import org.apache.fineract.portfolio.savings.SavingsAccountTransactionType;
 import org.apache.fineract.portfolio.savings.SavingsTransactionBooleanValues;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountDomainService;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepository;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransactionRepository;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransactionSummaryWrapper;
-import org.apache.fineract.portfolio.savings.domain.SavingsHelper;
+import org.apache.fineract.portfolio.savings.domain.*;
 import org.apache.fineract.portfolio.savings.exception.SavingsAccountNotFoundException;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
@@ -55,7 +50,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -75,9 +69,9 @@ import java.util.function.Predicate;
 
 import static org.apache.fineract.interoperation.util.InteropUtil.DEFAULT_LOCALE;
 import static org.apache.fineract.interoperation.util.InteropUtil.DEFAULT_ROUTING_CODE;
-import static org.springframework.data.jpa.domain.Specification.where;
 
 @Service
+@RequiredArgsConstructor
 public class InteropServiceImpl implements InteropService {
 
     private final static Logger LOG = LoggerFactory.getLogger(InteropServiceImpl.class);
@@ -97,33 +91,6 @@ public class InteropServiceImpl implements InteropService {
 
     private final SavingsAccountDomainService savingsAccountService;
     private final PaymentDetailWritePlatformService paymentDetailService;
-
-    @Autowired
-    public InteropServiceImpl(PlatformSecurityContext securityContext,
-                              InteropDataValidator interopDataValidator,
-                              SavingsAccountRepository savingsAccountRepository,
-                              SavingsAccountTransactionRepository savingsAccountTransactionRepository,
-                              ApplicationCurrencyRepository applicationCurrencyRepository,
-                              NoteRepository noteRepository,
-                              PaymentTypeRepository paymentTypeRepository,
-                              InteropIdentifierRepository identifierRepository,
-                              SavingsHelper savingsHelper,
-                              SavingsAccountTransactionSummaryWrapper savingsAccountTransactionSummaryWrapper,
-                              SavingsAccountDomainService savingsAccountService,
-                              PaymentDetailWritePlatformService paymentDetailWritePlatformService) {
-        this.securityContext = securityContext;
-        this.dataValidator = interopDataValidator;
-        this.savingsAccountRepository = savingsAccountRepository;
-        this.savingsAccountTransactionRepository = savingsAccountTransactionRepository;
-        this.currencyRepository = applicationCurrencyRepository;
-        this.noteRepository = noteRepository;
-        this.paymentTypeRepository = paymentTypeRepository;
-        this.identifierRepository = identifierRepository;
-        this.savingsHelper = savingsHelper;
-        this.savingsAccountTransactionSummaryWrapper = savingsAccountTransactionSummaryWrapper;
-        this.savingsAccountService = savingsAccountService;
-        this.paymentDetailService = paymentDetailWritePlatformService;
-    }
 
     @NotNull
     @Override

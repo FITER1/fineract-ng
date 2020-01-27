@@ -18,26 +18,22 @@
  */
 package org.apache.fineract.infrastructure.jobs.service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.jobs.data.JobDetailDataValidator;
-import org.apache.fineract.infrastructure.jobs.domain.ScheduledJobDetail;
-import org.apache.fineract.infrastructure.jobs.domain.ScheduledJobDetailRepository;
-import org.apache.fineract.infrastructure.jobs.domain.ScheduledJobRunHistory;
-import org.apache.fineract.infrastructure.jobs.domain.ScheduledJobRunHistoryRepository;
-import org.apache.fineract.infrastructure.jobs.domain.SchedulerDetail;
-import org.apache.fineract.infrastructure.jobs.domain.SchedulerDetailRepository;
+import org.apache.fineract.infrastructure.jobs.domain.*;
 import org.apache.fineract.infrastructure.jobs.exception.JobNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class SchedularWritePlatformServiceJpaRepositoryImpl implements SchedularWritePlatformService {
 
     private final ScheduledJobDetailRepository scheduledJobDetailsRepository;
@@ -47,16 +43,6 @@ public class SchedularWritePlatformServiceJpaRepositoryImpl implements Schedular
     private final SchedulerDetailRepository schedulerDetailRepository;
 
     private final JobDetailDataValidator dataValidator;
-
-    @Autowired
-    public SchedularWritePlatformServiceJpaRepositoryImpl(final ScheduledJobDetailRepository scheduledJobDetailsRepository,
-            final ScheduledJobRunHistoryRepository scheduledJobRunHistoryRepository, final JobDetailDataValidator dataValidator,
-            final SchedulerDetailRepository schedulerDetailRepository) {
-        this.scheduledJobDetailsRepository = scheduledJobDetailsRepository;
-        this.scheduledJobRunHistoryRepository = scheduledJobRunHistoryRepository;
-        this.schedulerDetailRepository = schedulerDetailRepository;
-        this.dataValidator = dataValidator;
-    }
 
     @Override
     public List<ScheduledJobDetail> retrieveAllJobs() {

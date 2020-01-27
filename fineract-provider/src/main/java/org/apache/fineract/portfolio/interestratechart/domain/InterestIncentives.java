@@ -18,18 +18,13 @@
  */
 package org.apache.fineract.portfolio.interestratechart.domain;
 
-import java.util.Locale;
-import java.util.Map;
-
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+
+import javax.persistence.*;
+import java.util.Locale;
+import java.util.Map;
 
 @Entity
 @Table(name = "m_interest_incentives")

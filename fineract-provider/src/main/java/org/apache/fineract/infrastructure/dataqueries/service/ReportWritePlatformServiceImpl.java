@@ -18,24 +18,16 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.service;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.PersistenceException;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.apache.fineract.infrastructure.dataqueries.domain.Report;
-import org.apache.fineract.infrastructure.dataqueries.domain.ReportParameter;
-import org.apache.fineract.infrastructure.dataqueries.domain.ReportParameterRepository;
-import org.apache.fineract.infrastructure.dataqueries.domain.ReportParameterUsage;
-import org.apache.fineract.infrastructure.dataqueries.domain.ReportParameterUsageRepository;
-import org.apache.fineract.infrastructure.dataqueries.domain.ReportRepository;
+import org.apache.fineract.infrastructure.dataqueries.domain.*;
 import org.apache.fineract.infrastructure.dataqueries.exception.ReportNotFoundException;
 import org.apache.fineract.infrastructure.dataqueries.exception.ReportParameterNotFoundException;
 import org.apache.fineract.infrastructure.dataqueries.serialization.ReportCommandFromApiJsonDeserializer;
@@ -45,15 +37,17 @@ import org.apache.fineract.useradministration.domain.PermissionRepository;
 import org.apache.fineract.useradministration.exception.PermissionNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import javax.persistence.PersistenceException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class ReportWritePlatformServiceImpl implements ReportWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(ReportWritePlatformServiceImpl.class);
@@ -65,20 +59,6 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
     private final ReportParameterRepository reportParameterRepository;
     private final PermissionRepository permissionRepository;
     private final ReadReportingService readReportingService;
-
-    @Autowired
-    public ReportWritePlatformServiceImpl(final PlatformSecurityContext context,
-            final ReportCommandFromApiJsonDeserializer fromApiJsonDeserializer, final ReportRepository reportRepository,
-            final ReportParameterRepository reportParameterRepository, final ReportParameterUsageRepository reportParameterUsageRepository,
-            final PermissionRepository permissionRepository, final ReadReportingService readReportingService) {
-        this.context = context;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.reportRepository = reportRepository;
-        this.reportParameterRepository = reportParameterRepository;
-        this.reportParameterUsageRepository = reportParameterUsageRepository;
-        this.permissionRepository = permissionRepository;
-        this.readReportingService = readReportingService;
-    }
 
     @Transactional
     @Override

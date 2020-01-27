@@ -18,9 +18,6 @@
  */
 package org.apache.fineract.portfolio.account.data;
 
-import java.math.BigDecimal;
-import java.util.Locale;
-
 import org.apache.fineract.portfolio.account.PortfolioAccountType;
 import org.apache.fineract.portfolio.account.domain.AccountTransferDetails;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
@@ -28,6 +25,9 @@ import org.apache.fineract.portfolio.paymentdetail.domain.PaymentDetail;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormatter;
+
+import java.math.BigDecimal;
+import java.util.Locale;
 
 public class AccountTransferDTO {
 

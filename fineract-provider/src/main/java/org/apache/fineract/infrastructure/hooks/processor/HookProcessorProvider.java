@@ -18,25 +18,19 @@
  */
 package org.apache.fineract.infrastructure.hooks.processor;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.infrastructure.hooks.domain.Hook;
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Service;
+
 import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.smsTemplateName;
 import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.webTemplateName;
 
-import org.apache.fineract.infrastructure.hooks.domain.Hook;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.stereotype.Service;
-
 @Service
-public class HookProcessorProvider implements ApplicationContextAware {
+@RequiredArgsConstructor
+public class HookProcessorProvider {
 
-	private ApplicationContext applicationContext;
-
-	@Override
-	public void setApplicationContext(
-			final ApplicationContext applicationContext) throws BeansException {
-		this.applicationContext = applicationContext;
-	}
+	private final ApplicationContext applicationContext;
 
 	public HookProcessor getProcessor(final Hook hook) {
 		HookProcessor processor;

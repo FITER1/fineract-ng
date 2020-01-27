@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.commands.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandSource;
 import org.apache.fineract.commands.domain.CommandSourceRepository;
 import org.apache.fineract.commands.domain.CommandWrapper;
@@ -36,7 +37,6 @@ import org.apache.fineract.infrastructure.hooks.event.HookEventSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class SynchronousCommandProcessingService implements CommandProcessingService {
 
     private PlatformSecurityContext context;
@@ -54,24 +55,6 @@ public class SynchronousCommandProcessingService implements CommandProcessingSer
     private final ConfigurationDomainService configurationDomainService;
     private final CommandHandlerProvider commandHandlerProvider;
     private final FineractProperties fineractProperties;
-
-    @Autowired
-    public SynchronousCommandProcessingService(final PlatformSecurityContext context, final ApplicationContext applicationContext,
-            final ToApiJsonSerializer<Map<String, Object>> toApiJsonSerializer,
-            final ToApiJsonSerializer<CommandProcessingResult> toApiResultJsonSerializer,
-            final CommandSourceRepository commandSourceRepository, final ConfigurationDomainService configurationDomainService,
-            final CommandHandlerProvider commandHandlerProvider, final FineractProperties fineractProperties) {
-        this.context = context;
-        this.context = context;
-        this.applicationContext = applicationContext;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.toApiResultJsonSerializer = toApiResultJsonSerializer;
-        this.commandSourceRepository = commandSourceRepository;
-        this.commandSourceRepository = commandSourceRepository;
-        this.configurationDomainService = configurationDomainService;
-        this.commandHandlerProvider = commandHandlerProvider;
-        this.fineractProperties = fineractProperties;
-    }
 
     @Transactional
     @Override

@@ -18,12 +18,11 @@
  */
 package org.apache.fineract.adhocquery.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.adhocquery.data.AdHocData;
 import org.apache.fineract.adhocquery.exception.AdHocNotFoundException;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -34,16 +33,11 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 @Service
+@RequiredArgsConstructor
 public class AdHocReadPlatformServiceImpl implements AdHocReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final AdHocMapper adHocRowMapper;
-
-    @Autowired
-    public AdHocReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.adHocRowMapper = new AdHocMapper();
-    }
 
     @Override
     public Collection<AdHocData> retrieveAllAdHocQuery() {

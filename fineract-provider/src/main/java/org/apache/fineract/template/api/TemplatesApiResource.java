@@ -18,32 +18,8 @@
  */
 package org.apache.fineract.template.api;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -59,9 +35,17 @@ import org.apache.fineract.template.domain.TemplateType;
 import org.apache.fineract.template.service.TemplateDomainService;
 import org.apache.fineract.template.service.TemplateMergeService;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.*;
 
 @Path("templates")
 @Consumes({ MediaType.APPLICATION_JSON })
@@ -69,6 +53,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("singleton")
 @Api(value = "User Generated Documents", description = "User Generated Documents(alternatively, Templates) are used for end-user features such as custom user defined document generation (AKA UGD). They are based on {{ moustache }} templates. Think of them as a sort of built-in \"mail merge\" functionality.\n" + "\n" + "User Generated Documents (and other types of templates) can aggregate data from several Apache Fineract back-end API calls via mappers. Mappers can even access non-Apache Fineract REST services from other servers. UGDs can render such data in tables, show images, etc. TBD: Please have a look at some of the Example UGDs included in Apache Fineract (or the Wiki page, for now.).\n" + "\n" + "UGDs can be assigned to an entity like client or loan and be of a type like Document or SMS. The entity and type of a UGD is only there for the convenience of user agents (UIs), in order to know where to show UGDs for the user (i.e. which tab). The Template Engine back-end runner does not actually need this metadata.")
+@RequiredArgsConstructor
 public class TemplatesApiResource {
 
     private final Set<String> RESPONSE_TEMPLATES_DATA_PARAMETERS = new HashSet<>(Arrays.asList("id"));
@@ -82,22 +67,6 @@ public class TemplatesApiResource {
     private final TemplateDomainService templateService;
     private final TemplateMergeService templateMergeService;
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-
-    @Autowired
-    public TemplatesApiResource(final PlatformSecurityContext context, final DefaultToApiJsonSerializer<Template> toApiJsonSerializer,
-            final DefaultToApiJsonSerializer<TemplateData> templateDataApiJsonSerializer,
-            final ApiRequestParameterHelper apiRequestParameterHelper, final TemplateDomainService templateService,
-            final TemplateMergeService templateMergeService,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService) {
-
-        this.context = context;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.templateDataApiJsonSerializer = templateDataApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.templateService = templateService;
-        this.templateMergeService = templateMergeService;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-    }
 
     @GET
     @ApiOperation(value = "Retrieve all UGDs", notes = "Example Requests:\n" + "\n" + "templates\n" + "\n" + "It is also possible to get specific UGDs by entity and type:\n" + "\n" + "templates?type=0&entity=0\n" + "[Entity: Id]\n\n\n\n" + "\n\n" + "client: 0, loan: 1" + "\n\n" + "[Type: Id]\n\n\n\n" + "Document: 0, E-Mail (not yet): 1,  SMS: 2" )

@@ -18,34 +18,15 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.service;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.sql.DataSource;
-import javax.ws.rs.core.StreamingOutput;
-
+import com.lowagie.text.Document;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import javax.sql.DataSource;
-import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
-import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
-import org.apache.fineract.infrastructure.dataqueries.data.ReportParameterData;
-import org.apache.fineract.infrastructure.dataqueries.data.ReportParameterJoinData;
-import org.apache.fineract.infrastructure.dataqueries.data.ResultsetColumnHeaderData;
-import org.apache.fineract.infrastructure.dataqueries.data.ResultsetRowData;
+import org.apache.fineract.infrastructure.dataqueries.data.*;
 import org.apache.fineract.infrastructure.dataqueries.exception.ReportNotFoundException;
 import org.apache.fineract.infrastructure.documentmanagement.contentrepository.FileSystemContentRepository;
 import org.apache.fineract.infrastructure.report.provider.ReportingProcessServiceProvider;
@@ -55,18 +36,20 @@ import org.apache.fineract.infrastructure.security.utils.SQLInjectionException;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Service;
 
-import com.lowagie.text.Document;
-import com.lowagie.text.PageSize;
-import com.lowagie.text.pdf.PdfPTable;
-import com.lowagie.text.pdf.PdfWriter;
+import javax.sql.DataSource;
+import javax.ws.rs.core.StreamingOutput;
+import java.io.*;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ReadReportingServiceImpl implements ReadReportingService {
 
     private final static Logger logger = LoggerFactory.getLogger(ReadReportingServiceImpl.class);
@@ -78,19 +61,6 @@ public class ReadReportingServiceImpl implements ReadReportingService {
     private final GenericDataService genericDataService;
     private final ReportingProcessServiceProvider reportingProcessServiceProvider;
     private final ColumnValidator columnValidator;
-
-    @Autowired
-    public ReadReportingServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final GenericDataService genericDataService, final ReportingProcessServiceProvider reportingProcessServiceProvider,
-            final ColumnValidator columnValidator) {
-
-        this.context = context;
-        this.dataSource = dataSource;
-        this.jdbcTemplate = new JdbcTemplate(this.dataSource);
-        this.genericDataService = genericDataService;
-        this.reportingProcessServiceProvider = reportingProcessServiceProvider;
-        this.columnValidator = columnValidator;
-    }
 
     @Override
 	public StreamingOutput retrieveReportCSV(final String name, final String type,

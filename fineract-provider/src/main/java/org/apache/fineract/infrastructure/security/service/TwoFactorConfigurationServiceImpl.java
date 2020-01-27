@@ -19,12 +19,10 @@
 package org.apache.fineract.infrastructure.security.service;
 
 
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.security.constants.TwoFactorConfigurationConstants;
 import org.apache.fineract.infrastructure.security.constants.TwoFactorConstants;
@@ -35,18 +33,20 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @Profile("twofactor")
+@RequiredArgsConstructor
 public class TwoFactorConfigurationServiceImpl implements TwoFactorConfigurationService {
 
     private static final String DEFAULT_EMAIL_SUBJECT = "Fineract Two-Factor Authentication Token";
@@ -56,12 +56,6 @@ public class TwoFactorConfigurationServiceImpl implements TwoFactorConfiguration
             "{token}.";
 
     private final TwoFactorConfigurationRepository configurationRepository;
-
-
-    @Autowired
-    public TwoFactorConfigurationServiceImpl(TwoFactorConfigurationRepository configurationRepository) {
-        this.configurationRepository = configurationRepository;
-    }
 
     @Override
     @Cacheable(value = "tfConfig", key = "@fineractProperties.getTenantId()")

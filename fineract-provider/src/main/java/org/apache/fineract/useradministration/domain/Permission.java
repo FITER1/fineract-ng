@@ -18,12 +18,11 @@
  */
 package org.apache.fineract.useradministration.domain;
 
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-
 import java.io.Serializable;
 
 @Entity

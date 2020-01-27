@@ -18,18 +18,8 @@
  */
 package org.apache.fineract.accounting.provisioning.api;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.provisioning.constant.ProvisioningEntriesApiConstants;
 import org.apache.fineract.accounting.provisioning.data.LoanProductProvisioningEntryData;
 import org.apache.fineract.accounting.provisioning.data.ProvisioningEntryData;
@@ -45,10 +35,13 @@ import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSer
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -60,7 +53,7 @@ import java.util.Set;
 @SwaggerDefinition(tags = {
         @Tag(name = "Provisioning Entries", description = "This defines the Provisioning Entries for all active loan products\\n\" + \"\\n\" + \"Field Descriptions\\n\" + \"date\\n\" + \"Date on which day provisioning entries should be created\\n\" + \"createjournalentries\\n\" + \"Boolean variable whether to add journal entries for generated provisioning entries\\n")
 })
-
+@RequiredArgsConstructor
 public class ProvisioningEntriesApiResource {
 
     private final PlatformSecurityContext platformSecurityContext;
@@ -73,19 +66,6 @@ public class ProvisioningEntriesApiResource {
 			ProvisioningEntriesApiConstants.PROVISIONINGENTRY_PARAM, ProvisioningEntriesApiConstants.ENTRIES_PARAM));
     private static final Set<String> ALL_PROVISIONING_ENTRIES = new HashSet<>(Arrays.asList
             (ProvisioningEntriesApiConstants.PROVISIONINGENTRY_PARAM));
-    @Autowired
-    public ProvisioningEntriesApiResource(final PlatformSecurityContext platformSecurityContext,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final DefaultToApiJsonSerializer<ProvisioningEntryData> toApiJsonSerializer,
-            final ProvisioningEntriesReadPlatformService provisioningEntriesReadPlatformService,
-            final ApiRequestParameterHelper apiRequestParameterHelper, final DefaultToApiJsonSerializer<Object> entriesApiJsonSerializer) {
-        this.platformSecurityContext = platformSecurityContext;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.provisioningEntriesReadPlatformService = provisioningEntriesReadPlatformService;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.entriesApiJsonSerializer = entriesApiJsonSerializer;
-    }
 
     @POST
     @Consumes({ MediaType.APPLICATION_JSON })

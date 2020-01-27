@@ -18,6 +18,18 @@
  */
 package org.apache.fineract.portfolio.account.service;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.organisation.monetary.data.CurrencyData;
+import org.apache.fineract.portfolio.account.PortfolioAccountType;
+import org.apache.fineract.portfolio.account.data.PortfolioAccountDTO;
+import org.apache.fineract.portfolio.account.data.PortfolioAccountData;
+import org.apache.fineract.portfolio.account.exception.AccountTransferNotFoundException;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,20 +37,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
-import org.apache.fineract.organisation.monetary.data.CurrencyData;
-import org.apache.fineract.portfolio.account.PortfolioAccountType;
-import org.apache.fineract.portfolio.account.data.PortfolioAccountDTO;
-import org.apache.fineract.portfolio.account.data.PortfolioAccountData;
-import org.apache.fineract.portfolio.account.exception.AccountTransferNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Service;
-
 @Service
+@RequiredArgsConstructor
 public class PortfolioAccountReadPlatformServiceImpl implements PortfolioAccountReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
@@ -47,14 +47,6 @@ public class PortfolioAccountReadPlatformServiceImpl implements PortfolioAccount
     private final PortfolioSavingsAccountMapper savingsAccountMapper;
     private final PortfolioLoanAccountMapper loanAccountMapper;
     private final PortfolioLoanAccountRefundByTransferMapper accountRefundByTransferMapper;
-
-    @Autowired
-    public PortfolioAccountReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.savingsAccountMapper = new PortfolioSavingsAccountMapper();
-        this.loanAccountMapper = new PortfolioLoanAccountMapper();
-        this.accountRefundByTransferMapper = new PortfolioLoanAccountRefundByTransferMapper();
-    }
 
     @Override
     public PortfolioAccountData retrieveOne(final Long accountId, final Integer accountTypeId) {

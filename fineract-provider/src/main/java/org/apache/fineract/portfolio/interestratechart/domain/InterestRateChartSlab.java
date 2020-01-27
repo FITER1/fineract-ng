@@ -18,44 +18,24 @@
  */
 package org.apache.fineract.portfolio.interestratechart.domain;
 
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.amountParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.attributeNameParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.attributeValueParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.conditionTypeParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.entityTypeParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.incentiveTypeparamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.deleteParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.idParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.INTERESTRATE_CHART_SLAB_RESOURCE_NAME;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants;
 import org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.*;
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.deleteParamName;
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.idParamName;
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.INTERESTRATE_CHART_SLAB_RESOURCE_NAME;
 
 @Entity
 @Table(name = "m_interest_rate_slab")

@@ -18,12 +18,7 @@
  */
 package org.apache.fineract.useradministration.service;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -42,14 +37,19 @@ import org.apache.fineract.useradministration.exception.RoleNotFoundException;
 import org.apache.fineract.useradministration.serialization.PermissionsCommandFromApiJsonDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(RoleWritePlatformServiceJpaRepositoryImpl.class);
@@ -59,18 +59,6 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
     private final RoleDataValidator roleCommandFromApiJsonDeserializer;
     private final PermissionsCommandFromApiJsonDeserializer permissionsFromApiJsonDeserializer;
     private final TopicDomainService topicDomainService;
-
-    @Autowired
-    public RoleWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context, final RoleRepository roleRepository,
-            final PermissionRepository permissionRepository, final RoleDataValidator roleCommandFromApiJsonDeserializer,
-            final PermissionsCommandFromApiJsonDeserializer fromApiJsonDeserializer, final TopicDomainService topicDomainService) {
-        this.context = context;
-        this.roleRepository = roleRepository;
-        this.permissionRepository = permissionRepository;
-        this.roleCommandFromApiJsonDeserializer = roleCommandFromApiJsonDeserializer;
-        this.permissionsFromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.topicDomainService = topicDomainService;
-    }
 
     @Transactional
     @Override

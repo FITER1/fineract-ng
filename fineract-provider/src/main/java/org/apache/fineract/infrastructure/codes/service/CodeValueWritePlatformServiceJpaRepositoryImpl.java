@@ -18,13 +18,8 @@
  */
 package org.apache.fineract.infrastructure.codes.service;
 
-import java.util.Map;
-
-import org.apache.fineract.infrastructure.codes.domain.Code;
-import org.apache.fineract.infrastructure.codes.domain.CodeRepository;
-import org.apache.fineract.infrastructure.codes.domain.CodeValue;
-import org.apache.fineract.infrastructure.codes.domain.CodeValueRepository;
-import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.infrastructure.codes.domain.*;
 import org.apache.fineract.infrastructure.codes.exception.CodeNotFoundException;
 import org.apache.fineract.infrastructure.codes.serialization.CodeValueCommandFromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -34,13 +29,15 @@ import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityEx
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class CodeValueWritePlatformServiceJpaRepositoryImpl implements CodeValueWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(CodeValueWritePlatformServiceJpaRepositoryImpl.class);
@@ -50,17 +47,6 @@ public class CodeValueWritePlatformServiceJpaRepositoryImpl implements CodeValue
     private final CodeValueRepository codeValueRepository;
     private final CodeRepository codeRepository;
     private final CodeValueCommandFromApiJsonDeserializer fromApiJsonDeserializer;
-
-    @Autowired
-    public CodeValueWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context, final CodeRepository codeRepository,
-            final CodeValueRepositoryWrapper codeValueRepositoryWrapper, final CodeValueRepository codeValueRepository,
-            final CodeValueCommandFromApiJsonDeserializer fromApiJsonDeserializer) {
-        this.context = context;
-        this.codeRepository = codeRepository;
-        this.codeValueRepositoryWrapper = codeValueRepositoryWrapper;
-        this.codeValueRepository = codeValueRepository;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-    }
 
     @Transactional
     @Override

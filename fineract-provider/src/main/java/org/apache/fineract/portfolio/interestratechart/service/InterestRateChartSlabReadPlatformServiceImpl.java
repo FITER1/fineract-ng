@@ -18,18 +18,11 @@
  */
 package org.apache.fineract.portfolio.interestratechart.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.client.api.ClientApiConstants;
@@ -38,14 +31,21 @@ import org.apache.fineract.portfolio.interestratechart.data.InterestIncentiveDat
 import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartSlabData;
 import org.apache.fineract.portfolio.interestratechart.exception.InterestRateChartSlabNotFoundException;
 import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncentiveAttributeName;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class InterestRateChartSlabReadPlatformServiceImpl implements InterestRateChartSlabReadPlatformService {
 
     private final PlatformSecurityContext context;
@@ -54,18 +54,6 @@ public class InterestRateChartSlabReadPlatformServiceImpl implements InterestRat
     private final InterestRateChartDropdownReadPlatformService chartDropdownReadPlatformService;
     private final InterestIncentiveDropdownReadPlatformService interestIncentiveDropdownReadPlatformService;
     private final CodeValueReadPlatformService codeValueReadPlatformService;
-
-    @Autowired
-    public InterestRateChartSlabReadPlatformServiceImpl(PlatformSecurityContext context, final DataSource dataSource,
-            InterestRateChartDropdownReadPlatformService chartDropdownReadPlatformService,
-            final InterestIncentiveDropdownReadPlatformService interestIncentiveDropdownReadPlatformService,
-            final CodeValueReadPlatformService codeValueReadPlatformService) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.chartDropdownReadPlatformService = chartDropdownReadPlatformService;
-        this.interestIncentiveDropdownReadPlatformService = interestIncentiveDropdownReadPlatformService;
-        this.codeValueReadPlatformService = codeValueReadPlatformService;
-    }
 
     @Override
     public Collection<InterestRateChartSlabData> retrieveAll(Long chartId) {

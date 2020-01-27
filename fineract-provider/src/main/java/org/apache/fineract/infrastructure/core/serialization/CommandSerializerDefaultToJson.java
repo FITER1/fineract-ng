@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.infrastructure.core.serialization;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -26,15 +26,10 @@ import org.springframework.stereotype.Component;
  * JSON using google-gson.
  */
 @Component
+@RequiredArgsConstructor
 public class CommandSerializerDefaultToJson implements CommandSerializer {
 
     private final ExcludeNothingWithPrettyPrintingOffJsonSerializerGoogleGson excludeNothingWithPrettyPrintingOff;
-
-    @Autowired
-    public CommandSerializerDefaultToJson(
-            final ExcludeNothingWithPrettyPrintingOffJsonSerializerGoogleGson excludeNothingWithPrettyPrintingOff) {
-        this.excludeNothingWithPrettyPrintingOff = excludeNothingWithPrettyPrintingOff;
-    }
 
     @Override
     public String serializeCommandToJson(final Object command) {

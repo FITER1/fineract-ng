@@ -18,15 +18,11 @@
  */
 package org.apache.fineract.infrastructure.hooks.processor.data;
 
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.payloadURLName;
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.phoneNumberName;
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.smsProviderAccountIdName;
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.smsProviderName;
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.smsProviderTokenIdName;
+import org.apache.fineract.infrastructure.hooks.domain.HookConfiguration;
 
 import java.util.Set;
 
-import org.apache.fineract.infrastructure.hooks.domain.HookConfiguration;
+import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.*;
 
 public class SmsProviderData {
 

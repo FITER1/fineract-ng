@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.accounting.provisioning.exception;
 
-import java.util.Date;
-
 import org.apache.fineract.infrastructure.core.exception.AbstractPlatformResourceNotFoundException;
+
+import java.util.Date;
 
 public class ProvisioningJournalEntriesCannotbeCreatedException extends AbstractPlatformResourceNotFoundException {
 

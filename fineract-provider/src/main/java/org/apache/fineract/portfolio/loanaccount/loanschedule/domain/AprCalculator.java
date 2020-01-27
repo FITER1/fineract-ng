@@ -18,10 +18,11 @@
  */
 package org.apache.fineract.portfolio.loanaccount.loanschedule.domain;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
 import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Component
 public class AprCalculator {

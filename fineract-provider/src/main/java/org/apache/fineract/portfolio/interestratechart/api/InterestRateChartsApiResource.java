@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.interestratechart.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -31,7 +32,6 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants;
 import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartData;
 import org.apache.fineract.portfolio.interestratechart.service.InterestRateChartReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -50,6 +50,7 @@ import static org.apache.fineract.portfolio.interestratechart.InterestRateChartA
 @Component
 @Scope("singleton")
 @Api(value = "Interest Rate Chart", description = "This defines an interest rate scheme that can be associated to a term deposit product. This will have a slab (band or range) of deposit periods and the associated interest rates applicable along with incentives for each band.")
+@RequiredArgsConstructor
 public class InterestRateChartsApiResource {
 
     private final InterestRateChartReadPlatformService chartReadPlatformService;
@@ -61,19 +62,6 @@ public class InterestRateChartsApiResource {
             Arrays.asList(InterestRateChartApiConstants.localeParamName,
                     InterestRateChartApiConstants.dateFormatParamName, idParamName, nameParamName, descriptionParamName,
                     fromDateParamName, endDateParamName, chartSlabs, isPrimaryGroupingByAmountParamName));
-
-    @Autowired
-    public InterestRateChartsApiResource(final InterestRateChartReadPlatformService chartReadPlatformService,
-            final PlatformSecurityContext context, final DefaultToApiJsonSerializer<InterestRateChartData> toApiJsonSerializer,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final ApiRequestParameterHelper apiRequestParameterHelper) {
-
-        this.context = context;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.chartReadPlatformService = chartReadPlatformService;
-    }
 
     @GET
     @Path("template")

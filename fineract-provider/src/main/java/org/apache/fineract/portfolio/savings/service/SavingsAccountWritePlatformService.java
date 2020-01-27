@@ -18,8 +18,6 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import java.util.Set;
-
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.organisation.office.domain.Office;
@@ -28,6 +26,8 @@ import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormatter;
+
+import java.util.Set;
 
 public interface SavingsAccountWritePlatformService {
 

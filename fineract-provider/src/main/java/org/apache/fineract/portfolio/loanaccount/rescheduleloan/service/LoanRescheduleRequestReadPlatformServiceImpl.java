@@ -18,17 +18,11 @@
  */
 package org.apache.fineract.portfolio.loanaccount.rescheduleloan.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import com.amazonaws.util.StringUtils;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTermVariationsData;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
 import org.apache.fineract.portfolio.loanaccount.rescheduleloan.RescheduleLoansApiConstants;
@@ -38,29 +32,26 @@ import org.apache.fineract.portfolio.loanaccount.rescheduleloan.data.LoanResched
 import org.apache.fineract.portfolio.loanaccount.rescheduleloan.data.LoanRescheduleRequestTimelineData;
 import org.apache.fineract.portfolio.loanproduct.service.LoanEnumerations;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import com.amazonaws.util.StringUtils;
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LoanRescheduleRequestReadPlatformServiceImpl implements LoanRescheduleRequestReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final LoanRepositoryWrapper loanRepositoryWrapper;
     private final LoanRescheduleRequestRowMapper loanRescheduleRequestRowMapper = new LoanRescheduleRequestRowMapper();
     private final CodeValueReadPlatformService codeValueReadPlatformService;
-
-    @Autowired
-    public LoanRescheduleRequestReadPlatformServiceImpl(final DataSource dataSource, LoanRepositoryWrapper loanRepositoryWrapper,
-            final CodeValueReadPlatformService codeValueReadPlatformService) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.loanRepositoryWrapper = loanRepositoryWrapper;
-        this.codeValueReadPlatformService = codeValueReadPlatformService;
-    }
 
     private static final class LoanRescheduleRequestRowMapper implements RowMapper<LoanRescheduleRequestData> {
 

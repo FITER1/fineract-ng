@@ -18,26 +18,7 @@
  */
 package org.apache.fineract.portfolio.meeting.api;
 
-import static org.apache.fineract.portfolio.meeting.MeetingApiConstants.MEETING_RESOURCE_NAME;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -63,13 +44,24 @@ import org.apache.fineract.portfolio.meeting.data.MeetingData;
 import org.apache.fineract.portfolio.meeting.exception.MeetingNotSupportedResourceException;
 import org.apache.fineract.portfolio.meeting.service.MeetingReadPlatformService;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.apache.fineract.portfolio.meeting.MeetingApiConstants.MEETING_RESOURCE_NAME;
 
 @Path("{entityType}/{entityId}/meetings")
 @Component
 @Scope("singleton")
+@RequiredArgsConstructor
 public class MeetingsApiResource {
 
     private final PlatformSecurityContext context;
@@ -85,24 +77,6 @@ public class MeetingsApiResource {
 			Arrays.asList(MeetingApiConstants.idParamName, MeetingApiConstants.meetingDateParamName,
 					MeetingApiConstants.clientsAttendance, MeetingApiConstants.clients,
 					MeetingApiConstants.calendarData, MeetingApiConstants.attendanceTypeOptions));
-
-    @Autowired
-    public MeetingsApiResource(final PlatformSecurityContext context, final MeetingReadPlatformService readPlatformService,
-            final ClientAttendanceReadPlatformService attendanceReadPlatformService,
-            final ClientReadPlatformService clientReadPlatformService, final CalendarReadPlatformService calendarReadPlatformService,
-            final AttendanceDropdownReadPlatformService attendanceDropdownReadPlatformService,
-            final DefaultToApiJsonSerializer<MeetingData> toApiJsonSerializer, final ApiRequestParameterHelper apiRequestParameterHelper,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService) {
-        this.context = context;
-        this.readPlatformService = readPlatformService;
-        this.attendanceReadPlatformService = attendanceReadPlatformService;
-        this.clientReadPlatformService = clientReadPlatformService;
-        this.calendarReadPlatformService = calendarReadPlatformService;
-        this.attendanceDropdownReadPlatformService = attendanceDropdownReadPlatformService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-    }
 
     @GET
     @Path("template")

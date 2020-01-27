@@ -18,12 +18,10 @@
  */
 package org.apache.fineract.portfolio.collateral.serialization;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.serialization.AbstractFromApiJsonDeserializer;
@@ -31,26 +29,23 @@ import org.apache.fineract.infrastructure.core.serialization.FromApiJsonDeserial
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.collateral.api.CollateralApiConstants.COLLATERAL_JSON_INPUT_PARAMS;
 import org.apache.fineract.portfolio.collateral.command.CollateralCommand;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of {@link FromApiJsonDeserializer} for
  * {@link CollateralCommand}'s.
  */
 @Component
+@RequiredArgsConstructor
 public final class CollateralCommandFromApiJsonDeserializer extends AbstractFromApiJsonDeserializer<CollateralCommand> {
 
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public CollateralCommandFromApiJsonDeserializer(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     @Override
     public CollateralCommand commandFromApiJson(final String json) {

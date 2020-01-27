@@ -18,27 +18,22 @@
  */
 package org.apache.fineract.infrastructure.configuration.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.configuration.data.ExternalServicesData;
 import org.apache.fineract.infrastructure.configuration.exception.ExternalServiceConfigurationNotFoundException;
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 @Service
+@RequiredArgsConstructor
 public class ExternalServicesReadPlatformServiceImpl implements ExternalServicesReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public ExternalServicesReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     @Override
     public ExternalServicesData getExternalServiceDetailsByServiceName(String serviceName) {

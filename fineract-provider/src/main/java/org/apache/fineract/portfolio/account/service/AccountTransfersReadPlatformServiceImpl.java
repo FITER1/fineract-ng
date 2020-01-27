@@ -18,20 +18,12 @@
  */
 package org.apache.fineract.portfolio.account.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
@@ -48,16 +40,23 @@ import org.apache.fineract.portfolio.client.service.ClientReadPlatformService;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 @Service
-public class AccountTransfersReadPlatformServiceImpl implements
-		AccountTransfersReadPlatformService {
+@RequiredArgsConstructor
+public class AccountTransfersReadPlatformServiceImpl implements AccountTransfersReadPlatformService {
 
 	private final JdbcTemplate jdbcTemplate;
 	private final ClientReadPlatformService clientReadPlatformService;
@@ -66,28 +65,12 @@ public class AccountTransfersReadPlatformServiceImpl implements
 	private final ColumnValidator columnValidator;
 
 	// mapper
-	private final AccountTransfersMapper accountTransfersMapper;
+	private final AccountTransfersMapper accountTransfersMapper = new AccountTransfersMapper();
 
 	// pagination
 	private final PaginationHelper<AccountTransferData> paginationHelper = new PaginationHelper<>();
 	private final DateTimeFormatter formatter = DateTimeFormat
 			.forPattern("yyyy-MM-dd");
-
-	@Autowired
-	public AccountTransfersReadPlatformServiceImpl(
-			final DataSource dataSource,
-			final ClientReadPlatformService clientReadPlatformService,
-			final OfficeReadPlatformService officeReadPlatformService,
-			final PortfolioAccountReadPlatformService portfolioAccountReadPlatformService,
-			final ColumnValidator columnValidator) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-		this.clientReadPlatformService = clientReadPlatformService;
-		this.officeReadPlatformService = officeReadPlatformService;
-		this.portfolioAccountReadPlatformService = portfolioAccountReadPlatformService;
-		this.columnValidator = columnValidator;
-
-		this.accountTransfersMapper = new AccountTransfersMapper();
-	}
 
 	@Override
 	public AccountTransferData retrieveTemplate(final Long fromOfficeId,

@@ -18,36 +18,28 @@
  */
 package org.apache.fineract.organisation.provisioning.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepository;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.provisioning.constants.ProvisioningCriteriaConstants;
-import org.apache.fineract.organisation.provisioning.domain.LoanProductProvisionCriteria;
-import org.apache.fineract.organisation.provisioning.domain.ProvisioningCategory;
-import org.apache.fineract.organisation.provisioning.domain.ProvisioningCategoryRepository;
-import org.apache.fineract.organisation.provisioning.domain.ProvisioningCriteria;
-import org.apache.fineract.organisation.provisioning.domain.ProvisioningCriteriaDefinition;
+import org.apache.fineract.organisation.provisioning.domain.*;
 import org.apache.fineract.organisation.provisioning.exception.ProvisioningCriteriaOverlappingDefinitionException;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductRepository;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ProvisioningCriteriaAssembler {
 
     private final FromJsonHelper fromApiJsonHelper;
@@ -55,17 +47,6 @@ public class ProvisioningCriteriaAssembler {
     private final LoanProductRepository loanProductRepository;
     private final GLAccountRepository glAccountRepository;
     private final PlatformSecurityContext platformSecurityContext;
-
-    @Autowired
-    public ProvisioningCriteriaAssembler(final FromJsonHelper fromApiJsonHelper,
-            final ProvisioningCategoryRepository provisioningCategoryRepository, final LoanProductRepository loanProductRepository,
-            final GLAccountRepository glAccountRepository, final PlatformSecurityContext platformSecurityContext) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.provisioningCategoryRepository = provisioningCategoryRepository;
-        this.loanProductRepository = loanProductRepository;
-        this.glAccountRepository = glAccountRepository;
-        this.platformSecurityContext = platformSecurityContext;
-    }
 
     public List<LoanProduct> parseLoanProducts(final JsonElement jsonElement) {
         List<LoanProduct> loanProducts = new ArrayList<>();

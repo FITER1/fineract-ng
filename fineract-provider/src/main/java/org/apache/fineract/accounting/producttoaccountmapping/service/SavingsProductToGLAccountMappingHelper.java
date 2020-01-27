@@ -18,12 +18,10 @@
  */
 package org.apache.fineract.accounting.producttoaccountmapping.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.fineract.accounting.common.AccountingRuleType;
+import com.google.gson.JsonElement;
 import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_SAVINGS;
 import org.apache.fineract.accounting.common.AccountingConstants.SAVINGS_PRODUCT_ACCOUNTING_PARAMS;
+import org.apache.fineract.accounting.common.AccountingRuleType;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepository;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepositoryWrapper;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
@@ -36,7 +34,8 @@ import org.apache.fineract.portfolio.paymenttype.domain.PaymentTypeRepositoryWra
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class SavingsProductToGLAccountMappingHelper extends ProductToGLAccountMappingHelper {
@@ -46,8 +45,7 @@ public class SavingsProductToGLAccountMappingHelper extends ProductToGLAccountMa
             final ProductToGLAccountMappingRepository glAccountMappingRepository, final FromJsonHelper fromApiJsonHelper,
             final ChargeRepositoryWrapper chargeRepositoryWrapper, final GLAccountRepositoryWrapper accountRepositoryWrapper,
             final PaymentTypeRepositoryWrapper paymentTypeRepositoryWrapper) {
-        super(glAccountRepository, glAccountMappingRepository, fromApiJsonHelper, chargeRepositoryWrapper, accountRepositoryWrapper,
-                paymentTypeRepositoryWrapper);
+        super(glAccountRepository, accountRepositoryWrapper, glAccountMappingRepository, fromApiJsonHelper, chargeRepositoryWrapper, paymentTypeRepositoryWrapper);
     }
 
     /*** Set of abstractions for saving Saving Products to GL Account Mappings ***/

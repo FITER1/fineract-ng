@@ -18,18 +18,13 @@
  */
 package org.apache.fineract.portfolio.loanproduct.domain;
 
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+import org.apache.fineract.portfolio.loanproduct.LoanProductConstants;
+
+import javax.persistence.*;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.portfolio.loanproduct.LoanProductConstants;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 @Entity
 @Table(name = "m_product_loan_variable_installment_config")

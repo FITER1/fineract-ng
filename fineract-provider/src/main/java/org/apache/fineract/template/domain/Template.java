@@ -18,19 +18,17 @@
  */
 package org.apache.fineract.template.domain;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-
-import javax.persistence.*;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 @Entity
 @Table(name = "m_template", uniqueConstraints = {@UniqueConstraint(columnNames = {"name"}, name = "unq_name")})

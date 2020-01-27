@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.infrastructure.security.exception;
 
-import java.util.ArrayList;
-
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
+
+import java.util.ArrayList;
 
 /**
  * A {@link RuntimeException} that is thrown in the case where a user does not

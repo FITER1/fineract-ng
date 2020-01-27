@@ -18,19 +18,8 @@
  */
 package org.apache.fineract.infrastructure.survey.api;
 
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -43,9 +32,12 @@ import org.apache.fineract.infrastructure.survey.data.ClientScoresOverview;
 import org.apache.fineract.infrastructure.survey.data.SurveyData;
 import org.apache.fineract.infrastructure.survey.data.SurveyDataTableData;
 import org.apache.fineract.infrastructure.survey.service.ReadSurveyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 /**
  * Created by Cieyou on 2/27/14.
@@ -54,6 +46,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("singleton")
 @Api(value = "Survey", description = "")
+@RequiredArgsConstructor
 public class SurveyApiResource {
 
     private final DefaultToApiJsonSerializer<SurveyData> toApiJsonSerializer;
@@ -62,20 +55,6 @@ public class SurveyApiResource {
     private final ReadSurveyService readSurveyService;
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
     private final GenericDataService genericDataService;
-
-    @Autowired
-    public SurveyApiResource(final DefaultToApiJsonSerializer<SurveyData> toApiJsonSerializer, final PlatformSecurityContext context,
-            final ReadSurveyService readSurveyService, final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final DefaultToApiJsonSerializer<ClientScoresOverview> toApiJsonClientScoreOverviewSerializer,
-            final GenericDataService genericDataService) {
-
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.context = context;
-        this.readSurveyService = readSurveyService;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.toApiJsonClientScoreOverviewSerializer = toApiJsonClientScoreOverviewSerializer;
-        this.genericDataService = genericDataService;
-    }
 
     @GET
     @Consumes({ MediaType.APPLICATION_JSON })

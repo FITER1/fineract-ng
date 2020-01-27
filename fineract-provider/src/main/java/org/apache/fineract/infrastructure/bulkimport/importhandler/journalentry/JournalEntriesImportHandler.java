@@ -19,12 +19,12 @@
 package org.apache.fineract.infrastructure.bulkimport.importhandler.journalentry;
 
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.journalentry.data.CreditDebit;
 import org.apache.fineract.accounting.journalentry.data.JournalEntryData;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
-import org.apache.fineract.infrastructure.bulkimport.constants.ChartOfAcountsConstants;
 import org.apache.fineract.infrastructure.bulkimport.constants.JournalEntryConstants;
 import org.apache.fineract.infrastructure.bulkimport.constants.TemplatePopulateImportConstants;
 import org.apache.fineract.infrastructure.bulkimport.data.Count;
@@ -33,17 +33,17 @@ import org.apache.fineract.infrastructure.bulkimport.importhandler.ImportHandler
 import org.apache.fineract.infrastructure.bulkimport.importhandler.helper.CurrencyDateCodeSerializer;
 import org.apache.fineract.infrastructure.bulkimport.importhandler.helper.DateSerializer;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.exception.*;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.poi.ss.usermodel.*;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class JournalEntriesImportHandler implements ImportHandler {
     private Workbook workbook;
     private List<JournalEntryData> gltransaction;
@@ -53,12 +53,6 @@ public class JournalEntriesImportHandler implements ImportHandler {
     List<CreditDebit> debits = new ArrayList<>();
 
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-
-    @Autowired
-    public JournalEntriesImportHandler(final PortfolioCommandSourceWritePlatformService
-            commandsSourceWritePlatformService) {
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-    }
 
     @Override
     public Count process(Workbook workbook, String locale, String dateFormat) {

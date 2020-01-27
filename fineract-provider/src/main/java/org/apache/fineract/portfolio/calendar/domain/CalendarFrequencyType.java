@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.calendar.domain;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
 import org.springframework.util.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public enum CalendarFrequencyType {
 

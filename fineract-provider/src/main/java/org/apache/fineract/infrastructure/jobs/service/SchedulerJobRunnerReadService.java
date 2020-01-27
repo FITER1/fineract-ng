@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.infrastructure.jobs.service;
 
-import java.util.List;
-
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.jobs.data.JobDetailData;
 import org.apache.fineract.infrastructure.jobs.data.JobDetailHistoryData;
+
+import java.util.List;
 
 public interface SchedulerJobRunnerReadService {
 

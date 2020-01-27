@@ -18,17 +18,8 @@
  */
 package org.apache.fineract.infrastructure.security.api;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Set;
-
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.serialization.ToApiJsonSerializer;
 import org.apache.fineract.infrastructure.security.constants.TwoFactorConstants;
@@ -38,14 +29,21 @@ import org.apache.fineract.infrastructure.security.service.TwoFactorUtils;
 import org.apache.fineract.useradministration.data.RoleData;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.useradministration.domain.Role;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
 
 /*
  * Implementation of Oauth2 authentication APIs, loaded only when "oauth" profile is enabled. 
@@ -55,23 +53,13 @@ import org.springframework.stereotype.Component;
 @Profile("oauth")
 @Scope("singleton")
 @Api(value = "Fetch authenticated user details", description = "")
+@RequiredArgsConstructor
 public class UserDetailsApiResource {
 
     private final ResourceServerTokenServices tokenServices;
     private final ToApiJsonSerializer<AuthenticatedOauthUserData> apiJsonSerializerService;
     private final SpringSecurityPlatformSecurityContext springSecurityPlatformSecurityContext;
     private final TwoFactorUtils twoFactorUtils;
-
-    @Autowired
-    public UserDetailsApiResource(@Qualifier("tokenServices") final ResourceServerTokenServices tokenServices,
-            final ToApiJsonSerializer<AuthenticatedOauthUserData> apiJsonSerializerService,
-            final SpringSecurityPlatformSecurityContext springSecurityPlatformSecurityContext,
-            final TwoFactorUtils twoFactorUtils) {
-        this.tokenServices = tokenServices;
-        this.apiJsonSerializerService = apiJsonSerializerService;
-        this.springSecurityPlatformSecurityContext = springSecurityPlatformSecurityContext;
-        this.twoFactorUtils = twoFactorUtils;
-    }
 
     @GET
     @Produces({ MediaType.APPLICATION_JSON })

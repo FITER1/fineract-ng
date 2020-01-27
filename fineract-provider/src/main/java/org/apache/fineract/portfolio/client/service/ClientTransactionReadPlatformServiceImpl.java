@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
-import javax.sql.DataSource;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
@@ -32,7 +32,6 @@ import org.apache.fineract.portfolio.client.exception.ClientTransactionNotFoundE
 import org.apache.fineract.portfolio.paymentdetail.data.PaymentDetailData;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -44,18 +43,12 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 @Service
+@RequiredArgsConstructor
 public class ClientTransactionReadPlatformServiceImpl implements ClientTransactionReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final ClientTransactionMapper clientTransactionMapper;
     private final PaginationHelper<ClientTransactionData> paginationHelper;
-
-    @Autowired
-    public ClientTransactionReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.clientTransactionMapper = new ClientTransactionMapper();
-        this.paginationHelper = new PaginationHelper<>();
-    }
 
     private static final class ClientTransactionMapper implements RowMapper<ClientTransactionData> {
 

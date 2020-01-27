@@ -18,16 +18,16 @@
  */
 package org.apache.fineract.portfolio.loanaccount.rescheduleloan.domain;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.LoanScheduleData;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.LoanSchedulePeriodData;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.LoanRepaymentScheduleHistory;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public final class LoanRescheduleModel {
 

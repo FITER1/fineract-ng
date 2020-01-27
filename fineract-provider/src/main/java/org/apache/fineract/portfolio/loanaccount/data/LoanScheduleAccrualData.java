@@ -18,13 +18,13 @@
  */
 package org.apache.fineract.portfolio.loanaccount.data;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.Map;
-
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
 import org.joda.time.LocalDate;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.Map;
 
 public class LoanScheduleAccrualData {
 

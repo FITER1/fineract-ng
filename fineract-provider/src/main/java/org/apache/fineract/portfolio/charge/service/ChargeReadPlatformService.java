@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.charge.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.charge.data.ChargeData;
 import org.apache.fineract.portfolio.charge.domain.ChargeTimeType;
+
+import java.util.Collection;
 
 public interface ChargeReadPlatformService {
 

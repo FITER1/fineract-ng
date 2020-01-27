@@ -18,36 +18,29 @@
  */
 package org.apache.fineract.portfolio.floatingrates.service;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.portfolio.floatingrates.data.FloatingRateData;
+import org.apache.fineract.portfolio.floatingrates.data.FloatingRatePeriodData;
+import org.apache.fineract.portfolio.floatingrates.data.InterestRatePeriodData;
+import org.apache.fineract.portfolio.floatingrates.exception.FloatingRateNotFoundException;
+import org.joda.time.LocalDate;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
-import org.apache.fineract.portfolio.floatingrates.data.FloatingRateData;
-import org.apache.fineract.portfolio.floatingrates.data.FloatingRatePeriodData;
-import org.apache.fineract.portfolio.floatingrates.data.InterestRatePeriodData;
-import org.apache.fineract.portfolio.floatingrates.exception.FloatingRateNotFoundException;
-import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Service;
-
 @Service
-public class FloatingRatesReadPlatformServiceImpl implements
-		FloatingRatesReadPlatformService {
+@RequiredArgsConstructor
+public class FloatingRatesReadPlatformServiceImpl implements FloatingRatesReadPlatformService {
 
 	private final JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public FloatingRatesReadPlatformServiceImpl(
-			final DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
 
 	@Override
 	public List<FloatingRateData> retrieveAll() {

@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.portfolio.loanaccount.guarantor.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorFundStatusType;
 import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuarantorEnumerations {
 

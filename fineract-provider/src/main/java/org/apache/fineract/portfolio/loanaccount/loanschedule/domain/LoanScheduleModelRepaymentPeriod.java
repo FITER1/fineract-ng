@@ -18,14 +18,14 @@
  */
 package org.apache.fineract.portfolio.loanaccount.loanschedule.domain;
 
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
-
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanInterestRecalcualtionAdditionalDetails;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.LoanSchedulePeriodData;
 import org.joda.time.LocalDate;
+
+import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Domain representation of a Loan Schedule Repayment Period (not used for

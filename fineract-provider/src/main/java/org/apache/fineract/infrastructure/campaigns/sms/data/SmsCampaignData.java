@@ -18,13 +18,11 @@
  */
 package org.apache.fineract.infrastructure.campaigns.sms.data;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+
+import java.util.Collection;
 
 @SuppressWarnings("unused")
 public class SmsCampaignData {

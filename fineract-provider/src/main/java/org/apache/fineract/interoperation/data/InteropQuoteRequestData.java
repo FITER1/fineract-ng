@@ -21,9 +21,9 @@ package org.apache.fineract.interoperation.data;
 import com.google.gson.JsonObject;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.interoperation.domain.InteropAmountType;
 import org.apache.fineract.interoperation.domain.InteropTransactionRole;
+import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.joda.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;

@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.loanproduct.domain;
 
-import java.math.BigDecimal;
-
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
+
+import java.math.BigDecimal;
 
 /**
  * Represents the bare minimum repayment details needed for activities related

@@ -18,13 +18,10 @@
  */
 package org.apache.fineract.portfolio.tax.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepositoryWrapper;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
@@ -40,27 +37,18 @@ import org.apache.fineract.portfolio.tax.domain.TaxComponentRepositoryWrapper;
 import org.apache.fineract.portfolio.tax.domain.TaxGroup;
 import org.apache.fineract.portfolio.tax.domain.TaxGroupMappings;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class TaxAssembler {
 
     private final FromJsonHelper fromApiJsonHelper;
     private final GLAccountRepositoryWrapper glAccountRepositoryWrapper;
     private final TaxComponentRepositoryWrapper taxComponentRepositoryWrapper;
-
-    @Autowired
-    public TaxAssembler(final FromJsonHelper fromApiJsonHelper, final GLAccountRepositoryWrapper glAccountRepositoryWrapper,
-            final TaxComponentRepositoryWrapper taxComponentRepositoryWrapper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.glAccountRepositoryWrapper = glAccountRepositoryWrapper;
-        this.taxComponentRepositoryWrapper = taxComponentRepositoryWrapper;
-    }
 
     public TaxComponent assembleTaxComponentFrom(final JsonCommand command) {
         final JsonElement element = command.parsedJson();

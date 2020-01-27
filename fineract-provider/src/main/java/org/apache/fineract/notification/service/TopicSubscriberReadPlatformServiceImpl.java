@@ -18,28 +18,24 @@
  */
 package org.apache.fineract.notification.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.notification.data.TopicSubscriberData;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+
 @Service
+@RequiredArgsConstructor
 public class TopicSubscriberReadPlatformServiceImpl implements TopicSubscriberReadPlatformService{
 
 	private final JdbcTemplate jdbcTemplate;
-	
-	@Autowired
-	public TopicSubscriberReadPlatformServiceImpl(final DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
-	
+
 	private static final class TopicSubscriberMapper implements RowMapper<TopicSubscriberData> {
 
 		private final String schema;

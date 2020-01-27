@@ -18,29 +18,6 @@
  */
 package org.apache.fineract.portfolio.group.domain;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
@@ -55,13 +32,12 @@ import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.group.api.GroupingTypesApiConstants;
-import org.apache.fineract.portfolio.group.exception.ClientExistInGroupException;
-import org.apache.fineract.portfolio.group.exception.ClientNotInGroupException;
-import org.apache.fineract.portfolio.group.exception.GroupExistsInCenterException;
-import org.apache.fineract.portfolio.group.exception.GroupNotExistsInCenterException;
-import org.apache.fineract.portfolio.group.exception.InvalidGroupStateTransitionException;
+import org.apache.fineract.portfolio.group.exception.*;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
+
+import javax.persistence.*;
+import java.util.*;
 
 @Entity
 @Table(name = "m_group")

@@ -18,21 +18,13 @@
  */
 package org.apache.fineract.infrastructure.hooks.processor;
 
-import java.util.Map;
-
-import org.apache.fineract.infrastructure.hooks.processor.data.SmsProviderData;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.http.Body;
-import retrofit2.http.FieldMap;
-import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.POST;
-
 import com.google.gson.JsonObject;
+import org.apache.fineract.infrastructure.hooks.processor.data.SmsProviderData;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.http.*;
+
+import java.util.Map;
 
 public interface WebHookService {
 

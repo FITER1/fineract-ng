@@ -18,14 +18,14 @@
  */
 package org.apache.fineract.portfolio.common.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.common.domain.ConditionType;
 import org.apache.fineract.portfolio.common.domain.DaysInMonthType;
 import org.apache.fineract.portfolio.common.domain.DaysInYearType;
 import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommonEnumerations {
     

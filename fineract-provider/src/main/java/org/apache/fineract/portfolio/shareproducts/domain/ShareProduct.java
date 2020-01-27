@@ -18,7 +18,6 @@
  */
 package org.apache.fineract.portfolio.shareproducts.domain;
 
-import com.google.common.base.Optional;
 import org.apache.fineract.accounting.common.AccountingRuleType;
 import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
 import org.apache.fineract.infrastructure.core.service.DateUtils;

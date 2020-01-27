@@ -18,14 +18,8 @@
  */
 package org.apache.fineract.infrastructure.cache.command;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.annotation.CommandType;
 import org.apache.fineract.commands.handler.NewCommandSourceHandler;
@@ -39,24 +33,20 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuild
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.*;
 
 @Service
 @CommandType(entity = "CACHE", action = "UPDATE")
+@RequiredArgsConstructor
 public class UpdateCacheCommandHandler implements NewCommandSourceHandler {
 
     private final CacheWritePlatformService cacheService;
     private static final Set<String> REQUEST_DATA_PARAMETERS = new HashSet<>(Arrays.asList(CacheApiConstants
             .cacheTypeParameter));
-
-    @Autowired
-    public UpdateCacheCommandHandler(final CacheWritePlatformService cacheService) {
-        this.cacheService = cacheService;
-    }
 
     @Transactional
     @Override

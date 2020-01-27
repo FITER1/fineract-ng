@@ -18,27 +18,8 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.api;
 
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.ResponseBuilder;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.ApiParameterHelper;
 import org.apache.fineract.infrastructure.core.serialization.ToApiJsonSerializer;
 import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
@@ -51,14 +32,22 @@ import org.apache.fineract.infrastructure.security.exception.NoAuthorizationExce
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.SQLInjectionValidator;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.*;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 @Path("runreports")
 @Component
 @Scope("singleton")
 @Api(value = "Run Reports", description = "")
+@RequiredArgsConstructor
 public class RunreportsApiResource {
 
     private final PlatformSecurityContext context;
@@ -66,17 +55,6 @@ public class RunreportsApiResource {
     private final ReadReportingService readExtraDataAndReportingService;
     private final GenericDataService genericDataService;
     private final ReportingProcessServiceProvider reportingProcessServiceProvider;
-
-    @Autowired
-    public RunreportsApiResource(final PlatformSecurityContext context, final ReadReportingService readExtraDataAndReportingService,
-            final GenericDataService genericDataService, final ToApiJsonSerializer<ReportData> toApiJsonSerializer,
-            final ReportingProcessServiceProvider reportingProcessServiceProvider) {
-        this.context = context;
-        this.readExtraDataAndReportingService = readExtraDataAndReportingService;
-        this.genericDataService = genericDataService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.reportingProcessServiceProvider = reportingProcessServiceProvider;
-    }
 
     @GET
     @Path("{reportName}")

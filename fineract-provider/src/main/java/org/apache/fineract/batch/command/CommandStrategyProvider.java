@@ -18,12 +18,13 @@
  */
 package org.apache.fineract.batch.command;
 
-import java.util.concurrent.ConcurrentHashMap;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.batch.command.internal.UnknownCommandStrategy;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Provides an appropriate CommandStrategy using the 'method' and 'resourceUrl'.
@@ -34,27 +35,11 @@ import org.springframework.stereotype.Component;
  * @see org.apache.fineract.batch.command.internal.UnknownCommandStrategy
  */
 @Component
+@RequiredArgsConstructor
 public class CommandStrategyProvider {
 
     private final ApplicationContext applicationContext;
     private final ConcurrentHashMap<CommandContext, String> commandStrategies = new ConcurrentHashMap<>();
-
-    /**
-     * Constructs a CommandStrategyProvider with argument of ApplicationContext
-     * type. It also initialize commandStrategies using init() function by
-     * filling it with available CommandStrategies in
-     * {@link org.apache.fineract.batch.command.internal}.
-     * 
-     * @param applicationContext
-     */
-    @Autowired
-    public CommandStrategyProvider(final ApplicationContext applicationContext) {
-
-        // calls init() function of this class.
-        init();
-
-        this.applicationContext = applicationContext;
-    }
 
     /**
      * Returns an appropriate commandStrategy after determining it using the
@@ -86,7 +71,8 @@ public class CommandStrategyProvider {
      * Strategy will have to be added within this function in order to initiate
      * it within the constructor.
      */
-    private void init() {
+    @PostConstruct
+    public void init() {
         this.commandStrategies.put(CommandContext.resource("clients").method("POST").build(), "createClientCommandStrategy");
         this.commandStrategies.put(CommandContext.resource("clients\\/\\d+").method("PUT").build(), "updateClientCommandStrategy");
         this.commandStrategies.put(CommandContext.resource("loans").method("POST").build(), "applyLoanCommandStrategy");

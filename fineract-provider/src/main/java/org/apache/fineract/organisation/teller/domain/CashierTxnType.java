@@ -18,8 +18,6 @@
  */
 package org.apache.fineract.organisation.teller.domain;
 
-import java.util.HashMap;
-
 public class CashierTxnType {
 	
 	private Integer id;

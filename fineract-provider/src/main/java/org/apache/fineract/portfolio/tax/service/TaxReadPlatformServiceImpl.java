@@ -18,29 +18,29 @@
  */
 package org.apache.fineract.portfolio.tax.service;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.accounting.common.AccountingDropdownReadPlatformService;
+import org.apache.fineract.accounting.common.AccountingEnumerations;
+import org.apache.fineract.accounting.glaccount.data.GLAccountData;
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.portfolio.tax.data.TaxComponentData;
+import org.apache.fineract.portfolio.tax.data.TaxComponentHistoryData;
+import org.apache.fineract.portfolio.tax.data.TaxGroupData;
+import org.apache.fineract.portfolio.tax.data.TaxGroupMappingsData;
+import org.joda.time.LocalDate;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.apache.fineract.accounting.common.AccountingDropdownReadPlatformService;
-import org.apache.fineract.accounting.common.AccountingEnumerations;
-import org.apache.fineract.accounting.glaccount.data.GLAccountData;
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
-import org.apache.fineract.portfolio.tax.data.TaxComponentData;
-import org.apache.fineract.portfolio.tax.data.TaxComponentHistoryData;
-import org.apache.fineract.portfolio.tax.data.TaxGroupData;
-import org.apache.fineract.portfolio.tax.data.TaxGroupMappingsData;
-import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Service;
-
 @Service
+@RequiredArgsConstructor
 public class TaxReadPlatformServiceImpl implements TaxReadPlatformService {
 
     final TaxComponentMapper taxComponentMapper = new TaxComponentMapper();
@@ -50,13 +50,6 @@ public class TaxReadPlatformServiceImpl implements TaxReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService;
-
-    @Autowired
-    public TaxReadPlatformServiceImpl(final DataSource dataSource,
-            final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.accountingDropdownReadPlatformService = accountingDropdownReadPlatformService;
-    }
 
     @Override
     public Collection<TaxComponentData> retrieveAllTaxComponents() {

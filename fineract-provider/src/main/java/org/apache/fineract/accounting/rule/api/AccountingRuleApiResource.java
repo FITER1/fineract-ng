@@ -18,28 +18,8 @@
  */
 package org.apache.fineract.accounting.rule.api;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingConstants;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.accounting.glaccount.service.GLAccountReadPlatformService;
@@ -60,9 +40,13 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.organisation.office.data.OfficeData;
 import org.apache.fineract.organisation.office.service.OfficeReadPlatformService;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.*;
 
 @Path("accountingrules")
 @Scope("singleton")
@@ -70,7 +54,7 @@ import org.springframework.stereotype.Component;
 @SwaggerDefinition(tags = {
         @Tag(name = "Accounting Rules", description = "It is typical scenario in MFI's that non accountants pass journal entries on a regular basis. For Ex: A branch office might deposit their entire cash at hand to their Bank account at the end of a working day. The branch office users might not understand enough of accounting to figure out which account needs to get credited and which account needs to be debited to represent this transaction.\\n\" + \"\\n\" + \"Enter accounting rules, an abstraction on top of manual Journal entires for enabling simpler data entry. An accounting rule can define any of the following abstractions\\n\" + \"\\n\" + \"A Simple journal entry where both the credit and debit account have been preselected\\n\" + \"A Simple journal entry where either credit or debit accounts have been limited to a pre-selected list of accounts (Ex: Debit account should be one of \\\"Bank of America\\\" of \\\"JP Morgan\\\" and credit account should be \\\"Cash\\\")\\n\" + \"A Compound journal entry where multiple debits and / or multiple credits may be made amongst a set of preselected list of accounts (Ex: Credit account should be either \\\"Bank Of America\\\" or \\\"Cash\\\" and debit account can be \\\"Employee Salary\\\" and/or \\\"Miscellenous Expenses\\\")\\n\" + \"An accounting rule can also be optionally associated with a branch, so that only a particular Branch's users have access to the rule")
 })
-
+@RequiredArgsConstructor
 public class AccountingRuleApiResource {
 
     private static final Set<String> RESPONSE_DATA_PARAMETERS = new HashSet<>(Arrays.asList("id", "officeId", "officeName",
@@ -88,23 +72,6 @@ public class AccountingRuleApiResource {
     private final PlatformSecurityContext context;
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
     private final CodeValueReadPlatformService codeValueReadPlatformService;
-
-    @Autowired
-    public AccountingRuleApiResource(final PlatformSecurityContext context,
-            final AccountingRuleReadPlatformService accountingRuleReadPlatformService,
-            final DefaultToApiJsonSerializer<AccountingRuleData> toApiJsonSerializer,
-            final ApiRequestParameterHelper apiRequestParameterHelper, final GLAccountReadPlatformService accountReadPlatformService,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final OfficeReadPlatformService officeReadPlatformService, final CodeValueReadPlatformService codeValueReadPlatformService) {
-        this.context = context;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.apiJsonSerializerService = toApiJsonSerializer;
-        this.accountingRuleReadPlatformService = accountingRuleReadPlatformService;
-        this.officeReadPlatformService = officeReadPlatformService;
-        this.accountReadPlatformService = accountReadPlatformService;
-        this.codeValueReadPlatformService = codeValueReadPlatformService;
-    }
 
     @GET
     @Path("template")

@@ -19,12 +19,11 @@
 package org.apache.fineract.mix.service;
 
 import com.google.gson.Gson;
-import javax.sql.DataSource;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.mix.data.MixTaxonomyData;
 import org.apache.fineract.mix.data.MixTaxonomyMappingData;
 import org.apache.fineract.mix.data.XBRLData;
 import org.apache.fineract.mix.exception.XBRLMappingInvalidException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -41,6 +40,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
+@RequiredArgsConstructor
 public class XBRLResultServiceImpl implements XBRLResultService {
 
     private static final ScriptEngine SCRIPT_ENGINE = new ScriptEngineManager().getEngineByName("JavaScript");
@@ -49,14 +49,6 @@ public class XBRLResultServiceImpl implements XBRLResultService {
     private final MixTaxonomyReadPlatformService readTaxonomyService;
     private final JdbcTemplate jdbcTemplate;
     private HashMap<String, BigDecimal> accountBalanceMap;
-
-    @Autowired
-    public XBRLResultServiceImpl(final DataSource dataSource,
-            final MixTaxonomyMappingReadPlatformService readTaxonomyMappingService, final MixTaxonomyReadPlatformService readTaxonomyService) {
-        this.readTaxonomyMappingService = readTaxonomyMappingService;
-        this.readTaxonomyService = readTaxonomyService;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     @Override
     public XBRLData getXBRLResult(final Date startDate, final Date endDate, final String currency) {

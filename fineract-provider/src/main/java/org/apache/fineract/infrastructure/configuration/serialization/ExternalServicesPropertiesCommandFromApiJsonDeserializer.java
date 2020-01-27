@@ -18,10 +18,8 @@
  */
 package org.apache.fineract.infrastructure.configuration.serialization;
 
-import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.configuration.exception.ExternalServiceConfigurationNotFoundException;
 import org.apache.fineract.infrastructure.configuration.service.ExternalServicesConstants.NOTIFICATION_JSON_INPUT_PARAMS;
@@ -30,12 +28,14 @@ import org.apache.fineract.infrastructure.configuration.service.ExternalServices
 import org.apache.fineract.infrastructure.configuration.service.ExternalServicesConstants.SMTP_JSON_INPUT_PARAMS;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.Map;
+import java.util.Set;
 
 @Component
+@RequiredArgsConstructor
 public class ExternalServicesPropertiesCommandFromApiJsonDeserializer {
 
     private final Set<String> S3SupportedParameters = S3_JSON_INPUT_PARAMS.getAllValues();
@@ -43,11 +43,6 @@ public class ExternalServicesPropertiesCommandFromApiJsonDeserializer {
     private final Set<String> SMSSupportedParameters = SMS_JSON_INPUT_PARAMS.getAllValues();
     private final Set<String> NotificationSupportedParameters = NOTIFICATION_JSON_INPUT_PARAMS.getAllValues();
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public ExternalServicesPropertiesCommandFromApiJsonDeserializer(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validateForUpdate(final String json, final String externalServiceName) {
         if (StringUtils.isBlank(json)) { throw new InvalidJsonException(); }

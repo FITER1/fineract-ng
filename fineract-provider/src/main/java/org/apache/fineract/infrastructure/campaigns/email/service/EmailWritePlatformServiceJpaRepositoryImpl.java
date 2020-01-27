@@ -18,17 +18,17 @@
  */
 package org.apache.fineract.infrastructure.campaigns.email.service;
 
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
-import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.campaigns.email.data.EmailDataValidator;
 import org.apache.fineract.infrastructure.campaigns.email.domain.EmailMessage;
 import org.apache.fineract.infrastructure.campaigns.email.domain.EmailMessageAssembler;
 import org.apache.fineract.infrastructure.campaigns.email.domain.EmailMessageRepository;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
+import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +36,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class EmailWritePlatformServiceJpaRepositoryImpl implements EmailWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(EmailWritePlatformServiceJpaRepositoryImpl.class);
@@ -43,14 +44,6 @@ public class EmailWritePlatformServiceJpaRepositoryImpl implements EmailWritePla
     private final EmailMessageAssembler assembler;
     private final EmailMessageRepository repository;
     private final EmailDataValidator validator;
-
-    @Autowired
-    public EmailWritePlatformServiceJpaRepositoryImpl(final EmailMessageAssembler assembler, final EmailMessageRepository repository,
-            final EmailDataValidator validator) {
-        this.assembler = assembler;
-        this.repository = repository;
-        this.validator = validator;
-    }
 
     @Transactional
     @Override

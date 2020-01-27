@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.collateral.data;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
+
+import java.math.BigDecimal;
+import java.util.Collection;
 
 /**
  * Immutable data object for Collateral data.

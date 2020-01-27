@@ -18,14 +18,14 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.contentrepository;
 
-import java.io.InputStream;
-
 import org.apache.fineract.infrastructure.core.domain.Base64EncodedImage;
 import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCommand;
 import org.apache.fineract.infrastructure.documentmanagement.data.DocumentData;
 import org.apache.fineract.infrastructure.documentmanagement.data.FileData;
 import org.apache.fineract.infrastructure.documentmanagement.data.ImageData;
 import org.apache.fineract.infrastructure.documentmanagement.domain.StorageType;
+
+import java.io.InputStream;
 
 public interface ContentRepository {
 

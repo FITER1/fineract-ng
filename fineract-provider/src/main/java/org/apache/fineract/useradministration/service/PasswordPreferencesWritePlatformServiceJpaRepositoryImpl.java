@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.useradministration.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -33,25 +30,21 @@ import org.apache.fineract.useradministration.domain.PasswordValidationPolicyRep
 import org.apache.fineract.useradministration.exception.PasswordValidationPolicyNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class PasswordPreferencesWritePlatformServiceJpaRepositoryImpl implements PasswordPreferencesWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(PasswordPreferencesWritePlatformServiceJpaRepositoryImpl.class);
     private final PasswordValidationPolicyRepository validationRepository;
     private final PasswordPreferencesDataValidator dataValidator;
-
-    @Autowired
-    public PasswordPreferencesWritePlatformServiceJpaRepositoryImpl(final PasswordValidationPolicyRepository validationPolicyRepository,
-            final PasswordPreferencesDataValidator dataValidator) {
-        this.validationRepository = validationPolicyRepository;
-        this.dataValidator = dataValidator;
-
-    }
 
     @Transactional
     @Override

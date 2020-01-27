@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.shareaccounts.data;
 
-import java.math.BigDecimal;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.joda.time.LocalDate;
+
+import java.math.BigDecimal;
 
 @SuppressWarnings("unused")
 public class ShareAccountTransactionData {

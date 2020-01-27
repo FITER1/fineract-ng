@@ -18,18 +18,8 @@
  */
 package org.apache.fineract.infrastructure.jobs.api;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.ApiRequestParameterHelper;
 import org.apache.fineract.infrastructure.core.exception.UnrecognizedQueryParamException;
@@ -39,27 +29,24 @@ import org.apache.fineract.infrastructure.jobs.data.SchedulerDetailData;
 import org.apache.fineract.infrastructure.jobs.service.JobRegisterService;
 import org.apache.fineract.infrastructure.security.exception.NoAuthorizationException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
 
 @Path("scheduler")
 @Component
 @Api(value = "Scheduler", description = "")
+@RequiredArgsConstructor
 public class SchedulerApiResource {
 
     private final PlatformSecurityContext context;
     private final JobRegisterService jobRegisterService;
     private final ToApiJsonSerializer<SchedulerDetailData> toApiJsonSerializer;
     private final ApiRequestParameterHelper apiRequestParameterHelper;
-
-    @Autowired
-    public SchedulerApiResource(final PlatformSecurityContext context, final JobRegisterService jobRegisterService,
-            final ToApiJsonSerializer<SchedulerDetailData> toApiJsonSerializer, final ApiRequestParameterHelper apiRequestParameterHelper) {
-        this.context = context;
-        this.jobRegisterService = jobRegisterService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-    }
 
     @GET
     @Consumes({ MediaType.APPLICATION_JSON })

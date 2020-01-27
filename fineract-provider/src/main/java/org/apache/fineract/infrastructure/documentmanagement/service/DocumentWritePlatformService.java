@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.service;
 
-import java.io.InputStream;
-
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCommand;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.io.InputStream;
 
 public interface DocumentWritePlatformService {
 

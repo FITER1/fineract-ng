@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.savings.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -36,7 +37,6 @@ import org.apache.fineract.portfolio.savings.DepositsApiConstants;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountTransactionData;
 import org.apache.fineract.portfolio.savings.service.DepositAccountReadPlatformService;
 import org.apache.fineract.portfolio.savings.service.SavingsAccountReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -53,6 +53,7 @@ import java.util.Set;
 @Component
 @Scope("singleton")
 @Api(value = "Recurring Deposit Account Transactions", description = "Transactions possible on a recurring deposit account.")
+@RequiredArgsConstructor
 public class RecurringDepositAccountTransactionsApiResource {
 
     private final PlatformSecurityContext context;
@@ -68,23 +69,6 @@ public class RecurringDepositAccountTransactionsApiResource {
                     DepositsApiConstants.amountParamName, DepositsApiConstants.dateParamName,
                     DepositsApiConstants.paymentDetailDataParamName, DepositsApiConstants.runningBalanceParamName,
                     DepositsApiConstants.reversedParamName));
-
-    @Autowired
-    public RecurringDepositAccountTransactionsApiResource(final PlatformSecurityContext context,
-            final DefaultToApiJsonSerializer<SavingsAccountTransactionData> toApiJsonSerializer,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final SavingsAccountReadPlatformService savingsAccountReadPlatformService,
-            final DepositAccountReadPlatformService depositAccountReadPlatformService,
-            final PaymentTypeReadPlatformService paymentTypeReadPlatformService) {
-        this.context = context;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.savingsAccountReadPlatformService = savingsAccountReadPlatformService;
-        this.depositAccountReadPlatformService = depositAccountReadPlatformService;
-        this.paymentTypeReadPlatformService = paymentTypeReadPlatformService;
-    }
 
     private boolean is(final String commandParam, final String commandValue) {
         return StringUtils.isNotBlank(commandParam) && commandParam.trim().equalsIgnoreCase(commandValue);

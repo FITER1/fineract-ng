@@ -22,6 +22,7 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.campaigns.sms.constants.SmsCampaignStatus;
 import org.apache.fineract.infrastructure.campaigns.sms.constants.SmsCampaignTriggerType;
@@ -75,7 +76,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -86,6 +86,7 @@ import java.io.StringWriter;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(SmsCampaignWritePlatformServiceJpaImpl.class);
@@ -104,29 +105,6 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
     private final DeviceRegistrationRepositoryWrapper deviceRegistrationRepository;
     private final SmsMessageScheduledJobService smsMessageScheduledJobService;
     private final FineractProperties fineractProperties;
-
-    @Autowired
-    public SmsCampaignWritePlatformServiceJpaImpl(final PlatformSecurityContext context, final SmsCampaignRepository smsCampaignRepository,
-            final SmsCampaignValidator smsCampaignValidator, final ReportRepository reportRepository,
-            final SmsMessageRepository smsMessageRepository, final ClientRepositoryWrapper clientRepositoryWrapper,
-            final ReadReportingService readReportingService, final GenericDataService genericDataService,
-            final FromJsonHelper fromJsonHelper, final GroupRepository groupRepository,
-            final SmsMessageScheduledJobService smsMessageScheduledJobService, final DeviceRegistrationRepositoryWrapper deviceRegistrationRepository,
-            final FineractProperties fineractProperties) {
-        this.context = context;
-        this.smsCampaignRepository = smsCampaignRepository;
-        this.smsCampaignValidator = smsCampaignValidator;
-        this.reportRepository = reportRepository;
-        this.smsMessageRepository = smsMessageRepository;
-        this.clientRepositoryWrapper = clientRepositoryWrapper;
-        this.readReportingService = readReportingService;
-        this.genericDataService = genericDataService;
-        this.fromJsonHelper = fromJsonHelper;
-        this.groupRepository = groupRepository;
-        this.smsMessageScheduledJobService = smsMessageScheduledJobService ;
-        this.deviceRegistrationRepository = deviceRegistrationRepository;
-        this.fineractProperties = fineractProperties;
-    }
 
     @Transactional
     @Override

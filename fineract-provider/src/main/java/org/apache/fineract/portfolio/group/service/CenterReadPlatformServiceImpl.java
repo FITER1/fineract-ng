@@ -18,32 +18,17 @@
  */
 package org.apache.fineract.portfolio.group.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.api.ApiParameterHelper;
-import org.apache.fineract.infrastructure.core.data.ApiParameterError;
-import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.infrastructure.core.data.PaginationParameters;
-import org.apache.fineract.infrastructure.core.data.PaginationParametersDataValidator;
+import org.apache.fineract.infrastructure.core.data.*;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
@@ -72,14 +57,19 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class CenterReadPlatformServiceImpl implements CenterReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
@@ -100,24 +90,6 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
     private final PaginationHelper<CenterData> paginationHelper = new PaginationHelper<>();
     private final PaginationParametersDataValidator paginationParametersDataValidator;
     private final static Set<String> supportedOrderByValues = new HashSet<>(Arrays.asList("id", "name", "officeId", "officeName"));
-
-    @Autowired
-    public CenterReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final ClientReadPlatformService clientReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
-            final StaffReadPlatformService staffReadPlatformService, final CodeValueReadPlatformService codeValueReadPlatformService,
-            final PaginationParametersDataValidator paginationParametersDataValidator, final ConfigurationDomainService configurationDomainService,
-            final CalendarReadPlatformService calendarReadPlatformService, final ColumnValidator columnValidator) {
-        this.context = context;
-        this.clientReadPlatformService = clientReadPlatformService;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.officeReadPlatformService = officeReadPlatformService;
-        this.staffReadPlatformService = staffReadPlatformService;
-        this.codeValueReadPlatformService = codeValueReadPlatformService;
-        this.paginationParametersDataValidator = paginationParametersDataValidator;
-        this.configurationDomainService = configurationDomainService;
-        this.calendarReadPlatformService = calendarReadPlatformService;
-        this.columnValidator = columnValidator;
-    }
 
     // 'g.' preffix because of ERROR 1052 (23000): Column 'column_name' in where
     // clause is ambiguous

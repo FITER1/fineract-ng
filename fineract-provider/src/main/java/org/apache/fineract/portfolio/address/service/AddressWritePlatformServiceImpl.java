@@ -18,8 +18,9 @@
  */
 package org.apache.fineract.portfolio.address.service;
 
-import java.math.BigDecimal;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepository;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -29,18 +30,13 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.portfolio.address.domain.Address;
 import org.apache.fineract.portfolio.address.domain.AddressRepository;
 import org.apache.fineract.portfolio.address.serialization.AddressCommandFromApiJsonDeserializer;
-import org.apache.fineract.portfolio.client.domain.Client;
-import org.apache.fineract.portfolio.client.domain.ClientAddress;
-import org.apache.fineract.portfolio.client.domain.ClientAddressRepository;
-import org.apache.fineract.portfolio.client.domain.ClientAddressRepositoryWrapper;
-import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.fineract.portfolio.client.domain.*;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import java.math.BigDecimal;
 
 @Service
+@RequiredArgsConstructor
 public class AddressWritePlatformServiceImpl implements AddressWritePlatformService {
 	private final PlatformSecurityContext context;
 	private final CodeValueRepository codeValueRepository;
@@ -49,22 +45,6 @@ public class AddressWritePlatformServiceImpl implements AddressWritePlatformServ
 	private final AddressRepository addressRepository;
 	private final ClientAddressRepositoryWrapper clientAddressRepositoryWrapper;
 	private final AddressCommandFromApiJsonDeserializer fromApiJsonDeserializer;
-
-	@Autowired
-	public AddressWritePlatformServiceImpl(final PlatformSecurityContext context,
-			final CodeValueRepository codeValueRepository, final ClientAddressRepository clientAddressRepository,
-			final ClientRepositoryWrapper clientRepositoryWrapper, final AddressRepository addressRepository,
-			final ClientAddressRepositoryWrapper clientAddressRepositoryWrapper,
-			final AddressCommandFromApiJsonDeserializer fromApiJsonDeserializer) {
-		this.context = context;
-		this.codeValueRepository = codeValueRepository;
-		this.clientAddressRepository = clientAddressRepository;
-		this.clientRepositoryWrapper = clientRepositoryWrapper;
-		this.addressRepository = addressRepository;
-		this.clientAddressRepositoryWrapper = clientAddressRepositoryWrapper;
-		this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-
-	}
 
 	@Override
 	public CommandProcessingResult addClientAddress(final Long clientId, final Long addressTypeId,

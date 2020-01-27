@@ -18,46 +18,26 @@
  */
 package org.apache.fineract.portfolio.interestratechart.domain;
 
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.INTERESTRATE_CHART_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.deleteParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.descriptionParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.idParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.amountRangeFromParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.amountRangeToParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.annualInterestRateParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.fromPeriodParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.periodTypeParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.toPeriodParamName;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants;
 import org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants;
 import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
 import org.joda.time.LocalDate;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.descriptionParamName;
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.idParamName;
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.*;
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.*;
 
 @Entity
 @Table(name = "m_interest_rate_chart")

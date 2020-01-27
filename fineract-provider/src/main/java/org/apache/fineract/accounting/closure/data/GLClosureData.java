@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.accounting.closure.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.apache.fineract.organisation.office.data.OfficeData;
 import org.joda.time.LocalDate;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Immutable object representing a General Ledger Account

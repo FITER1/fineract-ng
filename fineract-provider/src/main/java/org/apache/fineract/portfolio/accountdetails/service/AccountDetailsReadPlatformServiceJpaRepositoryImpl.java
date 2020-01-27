@@ -18,22 +18,12 @@
  */
 package org.apache.fineract.portfolio.accountdetails.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
-import org.apache.fineract.portfolio.accountdetails.data.AccountSummaryCollectionData;
-import org.apache.fineract.portfolio.accountdetails.data.GuarantorAccountSummaryData;
-import org.apache.fineract.portfolio.accountdetails.data.LoanAccountSummaryData;
-import org.apache.fineract.portfolio.accountdetails.data.SavingsAccountSummaryData;
-import org.apache.fineract.portfolio.accountdetails.data.ShareAccountSummaryData;
+import org.apache.fineract.portfolio.accountdetails.data.*;
 import org.apache.fineract.portfolio.client.service.ClientReadPlatformService;
 import org.apache.fineract.portfolio.group.service.GroupReadPlatformService;
 import org.apache.fineract.portfolio.loanaccount.data.LoanApplicationTimelineData;
@@ -47,28 +37,24 @@ import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountApplicationT
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountStatusEnumData;
 import org.apache.fineract.portfolio.shareaccounts.service.SharesEnumerations;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class AccountDetailsReadPlatformServiceJpaRepositoryImpl implements AccountDetailsReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final ClientReadPlatformService clientReadPlatformService;
     private final GroupReadPlatformService groupReadPlatformService;
     private final ColumnValidator columnValidator;
-
-    @Autowired
-    public AccountDetailsReadPlatformServiceJpaRepositoryImpl(final ClientReadPlatformService clientReadPlatformService,
-            final DataSource dataSource, final GroupReadPlatformService groupReadPlatformService,
-            final ColumnValidator columnValidator) {
-        this.clientReadPlatformService = clientReadPlatformService;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.groupReadPlatformService = groupReadPlatformService;
-        this.columnValidator = columnValidator;
-    }
 
     @Override
     public AccountSummaryCollectionData retrieveClientAccountDetails(final Long clientId) {

@@ -17,7 +17,9 @@
  * under the License.
  */
 package org.apache.fineract.portfolio.savings.api;
+
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -32,7 +34,6 @@ import org.apache.fineract.portfolio.charge.data.ChargeData;
 import org.apache.fineract.portfolio.charge.service.ChargeReadPlatformService;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountChargeData;
 import org.apache.fineract.portfolio.savings.service.SavingsAccountChargeReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +49,7 @@ import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
 @Component
 @Scope("singleton")
 @Api(value = "Savings Charges", description = "Its typical for MFIs to add maintenance and operating charges. They can be either Fees or Penalties.\n" + "\n" + "Savings Charges are instances of Charges and represent either fees and penalties for savings products. Refer Charges for documentation of the various properties of a charge, Only additional properties ( specific to the context of a Charge being associated with a Savings account) are described here")
+@RequiredArgsConstructor
 public class SavingsAccountChargesApiResource {
 
     private final PlatformSecurityContext context;
@@ -56,21 +58,6 @@ public class SavingsAccountChargesApiResource {
     private final DefaultToApiJsonSerializer<SavingsAccountChargeData> toApiJsonSerializer;
     private final ApiRequestParameterHelper apiRequestParameterHelper;
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-
-    @Autowired
-    public SavingsAccountChargesApiResource(final PlatformSecurityContext context,
-            final ChargeReadPlatformService chargeReadPlatformService,
-            final SavingsAccountChargeReadPlatformService savingsAccountChargeReadPlatformService,
-            final DefaultToApiJsonSerializer<SavingsAccountChargeData> toApiJsonSerializer,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService) {
-        this.context = context;
-        this.chargeReadPlatformService = chargeReadPlatformService;
-        this.savingsAccountChargeReadPlatformService = savingsAccountChargeReadPlatformService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-    }
 
     private boolean is(final String commandParam, final String commandValue) {
         return StringUtils.isNotBlank(commandParam) && commandParam.trim().equalsIgnoreCase(commandValue);

@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.savings.data;
 
-import java.math.BigDecimal;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.interestratechart.data.InterestIncentiveData;
+
+import java.math.BigDecimal;
 
 public class DepositAccountInterestIncentiveData {
 

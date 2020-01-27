@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.loanaccount.guarantor.domain;
 
-import java.util.List;
-
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.util.List;
 
 public interface GuarantorRepository extends JpaRepository<Guarantor, Long>, JpaSpecificationExecutor<Guarantor> {
 

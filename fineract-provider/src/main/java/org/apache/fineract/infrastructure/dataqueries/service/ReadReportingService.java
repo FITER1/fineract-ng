@@ -18,17 +18,16 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.service;
 
-import java.io.ByteArrayOutputStream;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.ws.rs.core.StreamingOutput;
-
 import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
 import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
 import org.apache.fineract.infrastructure.dataqueries.data.ReportParameterData;
 import org.apache.fineract.useradministration.domain.AppUser;
+
+import javax.ws.rs.core.StreamingOutput;
+import java.io.ByteArrayOutputStream;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Map;
 
 public interface ReadReportingService {
 

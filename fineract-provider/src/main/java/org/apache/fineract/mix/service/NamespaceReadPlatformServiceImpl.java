@@ -18,27 +18,21 @@
  */
 package org.apache.fineract.mix.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.mix.data.NamespaceData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 @Service
+@RequiredArgsConstructor
 public class NamespaceReadPlatformServiceImpl implements NamespaceReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final NamespaceMapper namespaceMapper;
-
-    @Autowired
-    public NamespaceReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.namespaceMapper = new NamespaceMapper();
-    }
 
     private static final class NamespaceMapper implements RowMapper<NamespaceData> {
 

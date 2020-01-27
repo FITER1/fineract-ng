@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.accounting.rule.exception;
 
-import java.util.Date;
-
 import org.apache.fineract.infrastructure.core.exception.AbstractPlatformDomainRuleException;
+
+import java.util.Date;
 
 /**
  * A {@link RuntimeException} thrown when a GL Closure Delte command is invalid

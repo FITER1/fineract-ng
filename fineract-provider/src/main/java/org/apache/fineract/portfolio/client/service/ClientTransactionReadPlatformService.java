@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.portfolio.client.data.ClientTransactionData;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
 
 public interface ClientTransactionReadPlatformService {
 

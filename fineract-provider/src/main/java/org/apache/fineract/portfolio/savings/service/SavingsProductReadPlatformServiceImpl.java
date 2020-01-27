@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingEnumerations;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityType;
@@ -30,7 +30,6 @@ import org.apache.fineract.portfolio.savings.DepositAccountType;
 import org.apache.fineract.portfolio.savings.data.SavingsProductData;
 import org.apache.fineract.portfolio.savings.exception.SavingsProductNotFoundException;
 import org.apache.fineract.portfolio.tax.data.TaxGroupData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -42,6 +41,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 @Service
+@RequiredArgsConstructor
 public class SavingsProductReadPlatformServiceImpl implements SavingsProductReadPlatformService {
 
     private final PlatformSecurityContext context;
@@ -49,14 +49,6 @@ public class SavingsProductReadPlatformServiceImpl implements SavingsProductRead
     private final SavingProductMapper savingsProductRowMapper = new SavingProductMapper();
     private final SavingProductLookupMapper savingsProductLookupsRowMapper = new SavingProductLookupMapper();
     private final FineractEntityAccessUtil fineractEntityAccessUtil;
-
-    @Autowired
-    public SavingsProductReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final FineractEntityAccessUtil fineractEntityAccessUtil) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.fineractEntityAccessUtil = fineractEntityAccessUtil;
-    }
 
     @Override
     public Collection<SavingsProductData> retrieveAll() {

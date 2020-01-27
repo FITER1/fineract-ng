@@ -18,16 +18,12 @@
  */
 package org.apache.fineract.portfolio.shareproducts.service;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.products.service.ProductReadPlatformService;
-import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountTransactionData;
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountData;
+import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountTransactionData;
 import org.apache.fineract.portfolio.shareaccounts.domain.PurchasedSharesStatusType;
 import org.apache.fineract.portfolio.shareaccounts.domain.ShareAccountDividendDetails;
 import org.apache.fineract.portfolio.shareaccounts.service.ShareAccountReadPlatformService;
@@ -36,21 +32,19 @@ import org.apache.fineract.portfolio.shareproducts.domain.ShareProductDividendPa
 import org.apache.fineract.portfolio.shareproducts.exception.ShareAccountsNotFoundException;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 @Component
+@RequiredArgsConstructor
 public class ShareProductDividendAssembler {
 
     private final ProductReadPlatformService shareProductReadPlatformService;
     private final ShareAccountReadPlatformService ShareAccountReadPlatformService;
-
-    @Autowired
-    public ShareProductDividendAssembler(final ShareProductReadPlatformServiceImpl shareProductReadPlatformService,
-            final ShareAccountReadPlatformService ShareAccountReadPlatformService) {
-        this.shareProductReadPlatformService = shareProductReadPlatformService;
-        this.ShareAccountReadPlatformService = ShareAccountReadPlatformService;
-    }
 
     public ShareProductDividendPayOutDetails calculateDividends(final Long productId, final BigDecimal amount,
             final LocalDate dividendPeriodStartDate, final LocalDate dividendPeriodEndDate) {

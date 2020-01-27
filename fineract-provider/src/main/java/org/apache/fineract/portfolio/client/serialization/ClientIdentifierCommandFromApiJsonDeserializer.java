@@ -18,30 +18,29 @@
  */
 package org.apache.fineract.portfolio.client.serialization;
 
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.serialization.AbstractFromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.core.serialization.FromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.client.command.ClientIdentifierCommand;
-import org.apache.fineract.portfolio.client.domain.ClientIdentifierStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of {@link FromApiJsonDeserializer} for
  * {@link ClientIdentifierCommandFromApiJsonDeserializer} 's.
  */
 @Component
+@RequiredArgsConstructor
 public final class ClientIdentifierCommandFromApiJsonDeserializer extends AbstractFromApiJsonDeserializer<ClientIdentifierCommand> {
 
     /**
@@ -50,11 +49,6 @@ public final class ClientIdentifierCommandFromApiJsonDeserializer extends Abstra
     private final Set<String> supportedParameters = new HashSet<>(Arrays.asList("documentTypeId", "documentKey","status", "description"));
 
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public ClientIdentifierCommandFromApiJsonDeserializer(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     @Override
     public ClientIdentifierCommand commandFromApiJson(final String json) {

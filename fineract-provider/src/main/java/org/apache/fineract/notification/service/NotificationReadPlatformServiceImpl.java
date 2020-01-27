@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.notification.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
@@ -27,18 +28,17 @@ import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.notification.cache.CacheNotificationResponseHeader;
 import org.apache.fineract.notification.data.NotificationData;
 import org.apache.fineract.notification.data.NotificationMapperData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class NotificationReadPlatformServiceImpl implements NotificationReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
@@ -51,17 +51,6 @@ public class NotificationReadPlatformServiceImpl implements NotificationReadPlat
     @Deprecated
     private HashMap<String, HashMap<Long, CacheNotificationResponseHeader>> tenantNotificationResponseHeaderCache = new HashMap<>();
     private HashMap<Long, CacheNotificationResponseHeader> appUserNotificationResponseHeaderCache = new HashMap<>();
-
-    @Autowired
-    public NotificationReadPlatformServiceImpl(final DataSource dataSource,
-    		final PlatformSecurityContext context,
-    		final ColumnValidator columnValidator,
-            final FineractProperties fineractProperties) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.context = context;
-        this.columnValidator = columnValidator;
-        this.fineractProperties = fineractProperties;
-    }
 
     @Override
     public boolean hasUnreadNotifications(Long appUserId) {

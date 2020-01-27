@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.loanaccount.data;
 
-import java.util.List;
-
 import org.apache.fineract.organisation.holiday.domain.Holiday;
 import org.apache.fineract.organisation.workingdays.domain.WorkingDays;
+
+import java.util.List;
 
 public class HolidayDetailDTO {
 

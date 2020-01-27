@@ -18,8 +18,6 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
-import java.util.List;
-
 import org.apache.fineract.portfolio.savings.DepositAccountType;
 import org.apache.fineract.portfolio.savings.exception.SavingsAccountNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +26,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * <p>

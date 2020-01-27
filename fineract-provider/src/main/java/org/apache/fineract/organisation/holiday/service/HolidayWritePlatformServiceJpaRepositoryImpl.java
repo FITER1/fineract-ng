@@ -18,14 +18,9 @@
  */
 package org.apache.fineract.organisation.holiday.service;
 
-import static org.apache.fineract.organisation.holiday.api.HolidayApiConstants.officesParamName;
-
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.PersistenceException;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -46,15 +41,19 @@ import org.apache.fineract.organisation.workingdays.service.WorkingDaysUtil;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import javax.persistence.PersistenceException;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
+import static org.apache.fineract.organisation.holiday.api.HolidayApiConstants.officesParamName;
 
 @Service
+@RequiredArgsConstructor
 public class HolidayWritePlatformServiceJpaRepositoryImpl implements HolidayWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(HolidayWritePlatformServiceJpaRepositoryImpl.class);
@@ -65,19 +64,6 @@ public class HolidayWritePlatformServiceJpaRepositoryImpl implements HolidayWrit
     private final PlatformSecurityContext context;
     private final OfficeRepositoryWrapper officeRepositoryWrapper;
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public HolidayWritePlatformServiceJpaRepositoryImpl(final HolidayDataValidator fromApiJsonDeserializer,
-            final HolidayRepositoryWrapper holidayRepository, final PlatformSecurityContext context,
-            final OfficeRepositoryWrapper officeRepositoryWrapper, final FromJsonHelper fromApiJsonHelper,
-            final WorkingDaysRepositoryWrapper daysRepositoryWrapper) {
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.holidayRepository = holidayRepository;
-        this.context = context;
-        this.officeRepositoryWrapper = officeRepositoryWrapper;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.daysRepositoryWrapper = daysRepositoryWrapper;
-    }
 
     @Transactional
     @Override

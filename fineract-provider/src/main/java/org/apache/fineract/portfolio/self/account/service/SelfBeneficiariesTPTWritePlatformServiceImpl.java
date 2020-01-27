@@ -18,15 +18,7 @@
  */
 package org.apache.fineract.portfolio.self.account.service;
 
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.ACCOUNT_NUMBER_PARAM_NAME;
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.ACCOUNT_TYPE_PARAM_NAME;
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.NAME_PARAM_NAME;
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.OFFICE_NAME_PARAM_NAME;
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.TRANSFER_LIMIT_PARAM_NAME;
-
-import java.util.HashMap;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -44,15 +36,18 @@ import org.apache.fineract.portfolio.self.account.exception.InvalidAccountInform
 import org.apache.fineract.portfolio.self.account.exception.InvalidBeneficiaryException;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.*;
+
 @Service
-public class SelfBeneficiariesTPTWritePlatformServiceImpl implements
-		SelfBeneficiariesTPTWritePlatformService {
+@RequiredArgsConstructor
+public class SelfBeneficiariesTPTWritePlatformServiceImpl implements SelfBeneficiariesTPTWritePlatformService {
 
 	private final Logger logger;
 	private final PlatformSecurityContext context;
@@ -60,22 +55,6 @@ public class SelfBeneficiariesTPTWritePlatformServiceImpl implements
 	private final SelfBeneficiariesTPTDataValidator validator;
 	private final LoanRepositoryWrapper loanRepositoryWrapper;
 	private final SavingsAccountRepositoryWrapper savingRepositoryWrapper;
-
-	@Autowired
-	public SelfBeneficiariesTPTWritePlatformServiceImpl(
-			final PlatformSecurityContext context,
-			final SelfBeneficiariesTPTRepository repository,
-			final SelfBeneficiariesTPTDataValidator validator,
-			final LoanRepositoryWrapper loanRepositoryWrapper,
-			final SavingsAccountRepositoryWrapper savingRepositoryWrapper) {
-		this.context = context;
-		this.repository = repository;
-		this.validator = validator;
-		this.loanRepositoryWrapper = loanRepositoryWrapper;
-		this.savingRepositoryWrapper = savingRepositoryWrapper;
-		this.logger = LoggerFactory
-				.getLogger(SelfBeneficiariesTPTWritePlatformServiceImpl.class);
-	}
 
 	@Transactional
 	@Override

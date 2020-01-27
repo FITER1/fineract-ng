@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.infrastructure.jobs.service;
 
+import lombok.RequiredArgsConstructor;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -29,6 +29,7 @@ import org.springframework.stereotype.Component;
  * completes
  */
 @Component
+@RequiredArgsConstructor
 public class SchedulerStopListener implements JobListener {
 
     private static final String name = "Singlr Trigger Global Listner";
@@ -39,12 +40,7 @@ public class SchedulerStopListener implements JobListener {
     // code base, the following fields are not final, and there is no
     // constructor, but setters.
 
-    private JobRegisterService jobRegisterService;
-
-    @Autowired
-    public void setJobRegisterService(JobRegisterService jobRegisterService) {
-        this.jobRegisterService = jobRegisterService;
-    }
+    private final JobRegisterService jobRegisterService;
 
     @Override
     public String getName() {

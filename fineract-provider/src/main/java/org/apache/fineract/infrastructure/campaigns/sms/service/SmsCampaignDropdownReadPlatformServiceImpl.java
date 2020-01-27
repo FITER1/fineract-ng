@@ -18,13 +18,7 @@
  */
 package org.apache.fineract.infrastructure.campaigns.sms.service;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.campaigns.constants.CampaignType;
 import org.apache.fineract.infrastructure.campaigns.helper.SmsConfigUtils;
 import org.apache.fineract.infrastructure.campaigns.sms.constants.SmsCampaignEnumerations;
@@ -34,7 +28,6 @@ import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.calendar.domain.CalendarWeekDaysType;
 import org.apache.fineract.portfolio.calendar.service.CalendarEnumerations;
 import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -43,19 +36,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class SmsCampaignDropdownReadPlatformServiceImpl implements SmsCampaignDropdownReadPlatformService {
 
     private final RestTemplate restTemplate;
 
     private final SmsConfigUtils smsConfigUtils ;
     
-    @Autowired
-    public SmsCampaignDropdownReadPlatformServiceImpl(final SmsConfigUtils smsConfigUtils) {
-        this.restTemplate = new RestTemplate();
-        this.smsConfigUtils = smsConfigUtils ;
-    }
-
     @Override
     public Collection<EnumOptionData> retrieveCampaignTriggerTypes() {
         final List<EnumOptionData> triggerTypeCodeValues = Arrays.asList( //

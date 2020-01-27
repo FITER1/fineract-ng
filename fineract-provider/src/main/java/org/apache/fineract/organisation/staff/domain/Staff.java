@@ -18,20 +18,6 @@
  */
 package org.apache.fineract.organisation.staff.domain;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
-
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -40,6 +26,11 @@ import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.documentmanagement.domain.Image;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.joda.time.LocalDate;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Builder
 @Data

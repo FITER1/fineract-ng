@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
@@ -41,12 +38,15 @@ import org.apache.fineract.portfolio.client.exception.DuplicateClientIdentifierE
 import org.apache.fineract.portfolio.client.serialization.ClientIdentifierCommandFromApiJsonDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements ClientIdentifierWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(ClientIdentifierWritePlatformServiceJpaRepositoryImpl.class);
@@ -56,18 +56,6 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
     private final ClientIdentifierRepository clientIdentifierRepository;
     private final CodeValueRepositoryWrapper codeValueRepository;
     private final ClientIdentifierCommandFromApiJsonDeserializer clientIdentifierCommandFromApiJsonDeserializer;
-
-    @Autowired
-    public ClientIdentifierWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final ClientRepositoryWrapper clientRepository, final ClientIdentifierRepository clientIdentifierRepository,
-            final CodeValueRepositoryWrapper codeValueRepository,
-            final ClientIdentifierCommandFromApiJsonDeserializer clientIdentifierCommandFromApiJsonDeserializer) {
-        this.context = context;
-        this.clientRepository = clientRepository;
-        this.clientIdentifierRepository = clientIdentifierRepository;
-        this.codeValueRepository = codeValueRepository;
-        this.clientIdentifierCommandFromApiJsonDeserializer = clientIdentifierCommandFromApiJsonDeserializer;
-    }
 
     @Transactional
     @Override

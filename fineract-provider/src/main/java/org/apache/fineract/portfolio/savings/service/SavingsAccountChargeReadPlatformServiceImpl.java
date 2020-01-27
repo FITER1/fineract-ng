@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -36,7 +36,6 @@ import org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType;
 import org.apache.fineract.portfolio.tax.data.TaxGroupData;
 import org.joda.time.LocalDate;
 import org.joda.time.MonthDay;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -50,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class SavingsAccountChargeReadPlatformServiceImpl implements SavingsAccountChargeReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
@@ -58,18 +58,7 @@ public class SavingsAccountChargeReadPlatformServiceImpl implements SavingsAccou
     private final DropdownReadPlatformService dropdownReadPlatformService;
 
     // mappers
-    private final SavingsAccountChargeDueMapper chargeDueMapper;
-
-    @Autowired
-    public SavingsAccountChargeReadPlatformServiceImpl(final PlatformSecurityContext context,
-            final ChargeDropdownReadPlatformService chargeDropdownReadPlatformService, final DataSource dataSource,
-            final DropdownReadPlatformService dropdownReadPlatformService) {
-        this.context = context;
-        this.chargeDropdownReadPlatformService = chargeDropdownReadPlatformService;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.chargeDueMapper = new SavingsAccountChargeDueMapper();
-        this.dropdownReadPlatformService = dropdownReadPlatformService;
-    }
+    private final SavingsAccountChargeDueMapper chargeDueMapper = new SavingsAccountChargeDueMapper();
 
     private static final class SavingsAccountChargeMapper implements RowMapper<SavingsAccountChargeData> {
 

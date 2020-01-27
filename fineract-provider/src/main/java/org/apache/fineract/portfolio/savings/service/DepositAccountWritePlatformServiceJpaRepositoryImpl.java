@@ -18,23 +18,7 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.RECURRING_DEPOSIT_ACCOUNT_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.SAVINGS_ACCOUNT_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.amountParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.chargeIdParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.dueAsOfDateParamName;
-
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
@@ -51,11 +35,7 @@ import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.holiday.domain.HolidayRepositoryWrapper;
-import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
-import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepositoryWrapper;
-import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
-import org.apache.fineract.organisation.monetary.domain.Money;
-import org.apache.fineract.organisation.monetary.domain.MoneyHelper;
+import org.apache.fineract.organisation.monetary.domain.*;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.organisation.workingdays.domain.WorkingDaysRepositoryWrapper;
@@ -67,11 +47,7 @@ import org.apache.fineract.portfolio.account.service.AccountAssociationsReadPlat
 import org.apache.fineract.portfolio.account.service.AccountTransfersReadPlatformService;
 import org.apache.fineract.portfolio.account.service.AccountTransfersWritePlatformService;
 import org.apache.fineract.portfolio.calendar.domain.Calendar;
-import org.apache.fineract.portfolio.calendar.domain.CalendarEntityType;
-import org.apache.fineract.portfolio.calendar.domain.CalendarFrequencyType;
-import org.apache.fineract.portfolio.calendar.domain.CalendarInstance;
-import org.apache.fineract.portfolio.calendar.domain.CalendarInstanceRepository;
-import org.apache.fineract.portfolio.calendar.domain.CalendarType;
+import org.apache.fineract.portfolio.calendar.domain.*;
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
 import org.apache.fineract.portfolio.charge.domain.Charge;
 import org.apache.fineract.portfolio.charge.domain.ChargeRepositoryWrapper;
@@ -91,20 +67,7 @@ import org.apache.fineract.portfolio.savings.SavingsApiConstants;
 import org.apache.fineract.portfolio.savings.data.DepositAccountTransactionDataValidator;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountChargeDataValidator;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountTransactionDTO;
-import org.apache.fineract.portfolio.savings.domain.DepositAccountAssembler;
-import org.apache.fineract.portfolio.savings.domain.DepositAccountDomainService;
-import org.apache.fineract.portfolio.savings.domain.DepositAccountOnHoldTransaction;
-import org.apache.fineract.portfolio.savings.domain.DepositAccountOnHoldTransactionRepository;
-import org.apache.fineract.portfolio.savings.domain.DepositAccountRecurringDetail;
-import org.apache.fineract.portfolio.savings.domain.FixedDepositAccount;
-import org.apache.fineract.portfolio.savings.domain.RecurringDepositAccount;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountCharge;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountChargeRepositoryWrapper;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepositoryWrapper;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransactionRepository;
+import org.apache.fineract.portfolio.savings.domain.*;
 import org.apache.fineract.portfolio.savings.exception.DepositAccountTransactionNotAllowedException;
 import org.apache.fineract.portfolio.savings.exception.InsufficientAccountBalanceException;
 import org.apache.fineract.portfolio.savings.exception.SavingsAccountTransactionNotFoundException;
@@ -113,11 +76,18 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.savings.DepositsApiConstants.RECURRING_DEPOSIT_ACCOUNT_RESOURCE_NAME;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
+
 @Service
+@RequiredArgsConstructor
 public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements DepositAccountWritePlatformService {
 
     private final PlatformSecurityContext context;
@@ -142,50 +112,6 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
     private final HolidayRepositoryWrapper holidayRepository;
     private final WorkingDaysRepositoryWrapper workingDaysRepository;
     private final DepositAccountOnHoldTransactionRepository depositAccountOnHoldTransactionRepository;
-
-    @Autowired
-    public DepositAccountWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final SavingsAccountRepositoryWrapper savingAccountRepositoryWrapper,
-            final SavingsAccountTransactionRepository savingsAccountTransactionRepository,
-            final DepositAccountAssembler depositAccountAssembler,
-            final DepositAccountTransactionDataValidator depositAccountTransactionDataValidator,
-            final SavingsAccountChargeDataValidator savingsAccountChargeDataValidator,
-            final PaymentDetailWritePlatformService paymentDetailWritePlatformService,
-            final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepositoryWrapper,
-            final JournalEntryWritePlatformService journalEntryWritePlatformService,
-            final DepositAccountDomainService depositAccountDomainService, final NoteRepository noteRepository,
-            final AccountTransfersReadPlatformService accountTransfersReadPlatformService, final ChargeRepositoryWrapper chargeRepository,
-            final SavingsAccountChargeRepositoryWrapper savingsAccountChargeRepository, final HolidayRepositoryWrapper holidayRepository,
-            final WorkingDaysRepositoryWrapper workingDaysRepository,
-            final AccountAssociationsReadPlatformService accountAssociationsReadPlatformService,
-            final AccountTransfersWritePlatformService accountTransfersWritePlatformService,
-            final DepositAccountReadPlatformService depositAccountReadPlatformService,
-            final CalendarInstanceRepository calendarInstanceRepository, final ConfigurationDomainService configurationDomainService,
-            final DepositAccountOnHoldTransactionRepository depositAccountOnHoldTransactionRepository) {
-
-        this.context = context;
-        this.savingAccountRepositoryWrapper = savingAccountRepositoryWrapper;
-        this.savingsAccountTransactionRepository = savingsAccountTransactionRepository;
-        this.depositAccountAssembler = depositAccountAssembler;
-        this.depositAccountTransactionDataValidator = depositAccountTransactionDataValidator;
-        this.savingsAccountChargeDataValidator = savingsAccountChargeDataValidator;
-        this.paymentDetailWritePlatformService = paymentDetailWritePlatformService;
-        this.applicationCurrencyRepositoryWrapper = applicationCurrencyRepositoryWrapper;
-        this.journalEntryWritePlatformService = journalEntryWritePlatformService;
-        this.depositAccountDomainService = depositAccountDomainService;
-        this.noteRepository = noteRepository;
-        this.accountTransfersReadPlatformService = accountTransfersReadPlatformService;
-        this.chargeRepository = chargeRepository;
-        this.savingsAccountChargeRepository = savingsAccountChargeRepository;
-        this.holidayRepository = holidayRepository;
-        this.workingDaysRepository = workingDaysRepository;
-        this.accountAssociationsReadPlatformService = accountAssociationsReadPlatformService;
-        this.accountTransfersWritePlatformService = accountTransfersWritePlatformService;
-        this.depositAccountReadPlatformService = depositAccountReadPlatformService;
-        this.calendarInstanceRepository = calendarInstanceRepository;
-        this.configurationDomainService = configurationDomainService;
-        this.depositAccountOnHoldTransactionRepository = depositAccountOnHoldTransactionRepository;
-    }
 
     @Transactional
     @Override

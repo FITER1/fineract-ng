@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.scheduledjobs.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.glaccount.domain.TrialBalance;
 import org.apache.fineract.accounting.glaccount.domain.TrialBalanceRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -43,7 +44,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,6 +59,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service(value = "scheduledJobRunnerService")
+@RequiredArgsConstructor
 public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService {
 
     private final static Logger logger = LoggerFactory.getLogger(ScheduledJobRunnerServiceImpl.class);
@@ -73,24 +74,6 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
     private final ShareAccountDividendReadPlatformService shareAccountDividendReadPlatformService;
     private final ShareAccountSchedularService shareAccountSchedularService;
     private final TrialBalanceRepositoryWrapper trialBalanceRepositoryWrapper;
-
-    @Autowired
-    public ScheduledJobRunnerServiceImpl(final DataSource routingDataSource,
-            final SavingsAccountWritePlatformService savingsAccountWritePlatformService,
-            final SavingsAccountChargeReadPlatformService savingsAccountChargeReadPlatformService,
-            final DepositAccountReadPlatformService depositAccountReadPlatformService,
-            final DepositAccountWritePlatformService depositAccountWritePlatformService,
-            final ShareAccountDividendReadPlatformService shareAccountDividendReadPlatformService,
-            final ShareAccountSchedularService shareAccountSchedularService, final TrialBalanceRepositoryWrapper trialBalanceRepositoryWrapper) {
-        this.routingDataSource = routingDataSource;
-        this.savingsAccountWritePlatformService = savingsAccountWritePlatformService;
-        this.savingsAccountChargeReadPlatformService = savingsAccountChargeReadPlatformService;
-        this.depositAccountReadPlatformService = depositAccountReadPlatformService;
-        this.depositAccountWritePlatformService = depositAccountWritePlatformService;
-        this.shareAccountDividendReadPlatformService = shareAccountDividendReadPlatformService;
-        this.shareAccountSchedularService = shareAccountSchedularService;
-        this.trialBalanceRepositoryWrapper=trialBalanceRepositoryWrapper;
-    }
 
     @Transactional
     @Override

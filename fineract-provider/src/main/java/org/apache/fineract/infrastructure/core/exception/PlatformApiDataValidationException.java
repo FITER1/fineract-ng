@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.infrastructure.core.exception;
 
-import java.util.List;
-
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
+
+import java.util.List;
 
 /**
  * Exception thrown when problem with an API request to the platform.

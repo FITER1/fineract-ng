@@ -18,31 +18,25 @@
  */
 package org.apache.fineract.portfolio.loanaccount.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
 import org.apache.fineract.portfolio.loanaccount.data.LoanScheduleAccrualData;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class LoanAccrualPlatformServiceImpl implements LoanAccrualPlatformService {
 
     private final LoanReadPlatformService loanReadPlatformService;
     private final LoanAccrualWritePlatformService loanAccrualWritePlatformService;
-
-    @Autowired
-    public LoanAccrualPlatformServiceImpl(final LoanReadPlatformService loanReadPlatformService,
-            final LoanAccrualWritePlatformService loanAccrualWritePlatformService) {
-        this.loanReadPlatformService = loanReadPlatformService;
-        this.loanAccrualWritePlatformService = loanAccrualWritePlatformService;
-    }
 
     @Override
     @CronTarget(jobName = JobName.ADD_ACCRUAL_ENTRIES)

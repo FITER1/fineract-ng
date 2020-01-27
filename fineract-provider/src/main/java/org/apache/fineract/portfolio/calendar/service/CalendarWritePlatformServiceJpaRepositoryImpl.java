@@ -18,14 +18,7 @@
  */
 package org.apache.fineract.portfolio.calendar.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -35,13 +28,7 @@ import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.portfolio.calendar.CalendarConstants.CALENDAR_SUPPORTED_PARAMETERS;
 import org.apache.fineract.portfolio.calendar.domain.Calendar;
-import org.apache.fineract.portfolio.calendar.domain.CalendarEntityType;
-import org.apache.fineract.portfolio.calendar.domain.CalendarHistory;
-import org.apache.fineract.portfolio.calendar.domain.CalendarHistoryRepository;
-import org.apache.fineract.portfolio.calendar.domain.CalendarInstance;
-import org.apache.fineract.portfolio.calendar.domain.CalendarInstanceRepository;
-import org.apache.fineract.portfolio.calendar.domain.CalendarRepository;
-import org.apache.fineract.portfolio.calendar.domain.CalendarType;
+import org.apache.fineract.portfolio.calendar.domain.*;
 import org.apache.fineract.portfolio.calendar.exception.CalendarNotFoundException;
 import org.apache.fineract.portfolio.calendar.serialization.CalendarCommandFromApiJsonDeserializer;
 import org.apache.fineract.portfolio.client.domain.Client;
@@ -55,11 +42,13 @@ import org.apache.fineract.portfolio.loanaccount.service.LoanWritePlatformServic
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class CalendarWritePlatformServiceJpaRepositoryImpl implements CalendarWritePlatformService {
 
     private final CalendarRepository calendarRepository;
@@ -71,24 +60,6 @@ public class CalendarWritePlatformServiceJpaRepositoryImpl implements CalendarWr
     private final GroupRepositoryWrapper groupRepository;
     private final LoanRepositoryWrapper loanRepositoryWrapper;
     private final ClientRepositoryWrapper clientRepository;
-
-    @Autowired
-    public CalendarWritePlatformServiceJpaRepositoryImpl(final CalendarRepository calendarRepository,
-            final CalendarHistoryRepository calendarHistoryRepository,
-            final CalendarCommandFromApiJsonDeserializer fromApiJsonDeserializer,
-            final CalendarInstanceRepository calendarInstanceRepository, final LoanWritePlatformService loanWritePlatformService,
-            final ConfigurationDomainService configurationDomainService, final GroupRepositoryWrapper groupRepository,
-            final LoanRepositoryWrapper loanRepositoryWrapper, final ClientRepositoryWrapper clientRepository) {
-        this.calendarRepository = calendarRepository;
-        this.calendarHistoryRepository = calendarHistoryRepository;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.calendarInstanceRepository = calendarInstanceRepository;
-        this.loanWritePlatformService = loanWritePlatformService;
-        this.configurationDomainService = configurationDomainService;
-        this.groupRepository = groupRepository;
-        this.loanRepositoryWrapper = loanRepositoryWrapper;
-        this.clientRepository = clientRepository;
-    }
 
     @Override
     public CommandProcessingResult createCalendar(final JsonCommand command) {

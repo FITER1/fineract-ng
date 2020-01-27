@@ -18,13 +18,13 @@
  */
 package org.apache.fineract.portfolio.savings.data;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 import org.apache.fineract.portfolio.paymentdetail.domain.PaymentDetail;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormatter;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 public class SavingsAccountTransactionDTO {
 

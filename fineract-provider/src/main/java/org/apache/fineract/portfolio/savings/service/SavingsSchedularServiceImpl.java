@@ -18,40 +18,30 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountAssembler;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepository;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepositoryWrapper;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class SavingsSchedularServiceImpl implements SavingsSchedularService {
 
     private final SavingsAccountAssembler savingAccountAssembler;
     private final SavingsAccountWritePlatformService savingsAccountWritePlatformService;
     private final SavingsAccountReadPlatformService savingAccountReadPlatformService;
     private final SavingsAccountRepositoryWrapper savingsAccountRepository;
-
-    @Autowired
-    public SavingsSchedularServiceImpl(final SavingsAccountAssembler savingAccountAssembler,
-            final SavingsAccountWritePlatformService savingsAccountWritePlatformService,
-            final SavingsAccountReadPlatformService savingAccountReadPlatformService, final SavingsAccountRepositoryWrapper savingsAccountRepository) {
-        this.savingAccountAssembler = savingAccountAssembler;
-        this.savingsAccountWritePlatformService = savingsAccountWritePlatformService;
-        this.savingAccountReadPlatformService = savingAccountReadPlatformService;
-        this.savingsAccountRepository = savingsAccountRepository;
-    }
 
     @CronTarget(jobName = JobName.POST_INTEREST_FOR_SAVINGS)
     @Override

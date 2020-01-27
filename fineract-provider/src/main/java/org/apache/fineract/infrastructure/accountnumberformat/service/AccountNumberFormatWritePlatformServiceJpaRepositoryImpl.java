@@ -18,11 +18,7 @@
  */
 package org.apache.fineract.infrastructure.accountnumberformat.service;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.accountnumberformat.data.AccountNumberFormatDataValidator;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormat;
@@ -35,24 +31,21 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuild
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class AccountNumberFormatWritePlatformServiceJpaRepositoryImpl implements AccountNumberFormatWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(AccountNumberFormatWritePlatformServiceJpaRepositoryImpl.class);
     private final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository;
     private final AccountNumberFormatDataValidator accountNumberFormatDataValidator;
-
-    @Autowired
-    AccountNumberFormatWritePlatformServiceJpaRepositoryImpl(final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository,
-            final AccountNumberFormatDataValidator accountNumberFormatDataValidator) {
-        this.accountNumberFormatRepository = accountNumberFormatRepository;
-        this.accountNumberFormatDataValidator = accountNumberFormatDataValidator;
-    }
 
     @Override
     @Transactional

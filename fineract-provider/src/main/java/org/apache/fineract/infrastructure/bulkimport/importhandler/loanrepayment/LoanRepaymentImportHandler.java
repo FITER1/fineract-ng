@@ -18,10 +18,9 @@
  */
 package org.apache.fineract.infrastructure.bulkimport.importhandler.loanrepayment;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -33,18 +32,16 @@ import org.apache.fineract.infrastructure.bulkimport.importhandler.ImportHandler
 import org.apache.fineract.infrastructure.bulkimport.importhandler.helper.DateSerializer;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTransactionData;
 import org.apache.fineract.portfolio.loanaccount.service.LoanReadPlatformService;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.IndexedColors;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class LoanRepaymentImportHandler implements ImportHandler {
     private  Workbook workbook;
     private  List<LoanTransactionData> loanRepayments;
@@ -52,12 +49,6 @@ public class LoanRepaymentImportHandler implements ImportHandler {
     private final LoanReadPlatformService loanReadPlatformService;
 
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-    @Autowired
-    public LoanRepaymentImportHandler(final PortfolioCommandSourceWritePlatformService
-            commandsSourceWritePlatformService, final LoanReadPlatformService loanReadPlatformService) {
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.loanReadPlatformService = loanReadPlatformService;
-    }
 
     @Override
     public Count process(Workbook workbook, String locale, String dateFormat) {

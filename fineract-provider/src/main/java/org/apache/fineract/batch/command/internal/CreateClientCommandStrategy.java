@@ -18,16 +18,16 @@
  */
 package org.apache.fineract.batch.command.internal;
 
-import javax.ws.rs.core.UriInfo;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.batch.command.CommandStrategy;
 import org.apache.fineract.batch.domain.BatchRequest;
 import org.apache.fineract.batch.domain.BatchResponse;
 import org.apache.fineract.batch.exception.ErrorHandler;
 import org.apache.fineract.batch.exception.ErrorInfo;
 import org.apache.fineract.portfolio.client.api.ClientsApiResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.core.UriInfo;
 
 /**
  * Implements {@link org.apache.fineract.batch.command.CommandStrategy} to handle
@@ -45,14 +45,10 @@ import org.springframework.stereotype.Component;
  * @see org.apache.fineract.batch.domain.BatchResponse
  */
 @Component
+@RequiredArgsConstructor
 public class CreateClientCommandStrategy implements CommandStrategy {
 
     private final ClientsApiResource clientsApiResource;
-
-    @Autowired
-    public CreateClientCommandStrategy(final ClientsApiResource clientsApiResource) {
-        this.clientsApiResource = clientsApiResource;
-    }
 
     @Override
     public BatchResponse execute(final BatchRequest request, @SuppressWarnings("unused") UriInfo uriInfo) {

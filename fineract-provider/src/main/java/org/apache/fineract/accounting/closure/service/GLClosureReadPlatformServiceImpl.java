@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.accounting.closure.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.closure.data.GLClosureData;
 import org.apache.fineract.accounting.closure.domain.GLClosure;
 import org.apache.fineract.accounting.closure.domain.GLClosureRepository;
 import org.apache.fineract.accounting.closure.exception.GLClosureNotFoundException;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -32,10 +32,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class GLClosureReadPlatformServiceImpl implements GLClosureReadPlatformService {
 
-    @Autowired
-    private GLClosureRepository glClosureRepository;
+    private final GLClosureRepository glClosureRepository;
 
     @Override
     public List<GLClosureData> retrieveAllGLClosures(final Long officeId) {

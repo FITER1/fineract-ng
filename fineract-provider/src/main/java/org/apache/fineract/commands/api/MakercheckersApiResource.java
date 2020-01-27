@@ -18,24 +18,8 @@
  */
 package org.apache.fineract.commands.api;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.data.AuditData;
 import org.apache.fineract.commands.data.AuditSearchData;
@@ -47,14 +31,23 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.exception.UnrecognizedQueryParamException;
 import org.apache.fineract.infrastructure.core.serialization.ApiRequestJsonSerializationSettings;
 import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSerializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Path("makercheckers")
 @Component
 @Scope("singleton")
 @Api(value = "Maker Checker (or 4-eye) functionality")
+@RequiredArgsConstructor
 public class MakercheckersApiResource {
 
     private final Set<String> RESPONSE_DATA_PARAMETERS = new HashSet<>(Arrays.asList("id", "actionName", "entityName", "resourceId",
@@ -66,18 +59,6 @@ public class MakercheckersApiResource {
     private final DefaultToApiJsonSerializer<AuditSearchData> toApiJsonSerializerSearchTemplate;
     private final ApiRequestParameterHelper apiRequestParameterHelper;
     private final PortfolioCommandSourceWritePlatformService writePlatformService;
-
-    @Autowired
-    public MakercheckersApiResource(final AuditReadPlatformService readPlatformService,
-            final DefaultToApiJsonSerializer<AuditData> toApiJsonSerializerAudit,
-            final DefaultToApiJsonSerializer<AuditSearchData> toApiJsonSerializerSearchTemplate,
-            final ApiRequestParameterHelper apiRequestParameterHelper, final PortfolioCommandSourceWritePlatformService writePlatformService) {
-        this.readPlatformService = readPlatformService;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.toApiJsonSerializerAudit = toApiJsonSerializerAudit;
-        this.toApiJsonSerializerSearchTemplate = toApiJsonSerializerSearchTemplate;
-        this.writePlatformService = writePlatformService;
-    }
 
     @GET
     @Consumes({ MediaType.APPLICATION_JSON })

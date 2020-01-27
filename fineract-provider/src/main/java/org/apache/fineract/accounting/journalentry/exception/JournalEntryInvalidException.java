@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.accounting.journalentry.exception;
 
-import java.util.Date;
-
 import org.apache.fineract.infrastructure.core.exception.AbstractPlatformDomainRuleException;
+
+import java.util.Date;
 
 /**
  * A {@link RuntimeException} thrown when a GL Journal Entry is Invalid

@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.bulkimport.importhandler.users;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -29,27 +30,21 @@ import org.apache.fineract.infrastructure.bulkimport.data.Count;
 import org.apache.fineract.infrastructure.bulkimport.importhandler.ImportHandler;
 import org.apache.fineract.infrastructure.bulkimport.importhandler.ImportHandlerUtils;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.exception.*;
 import org.apache.fineract.useradministration.data.AppUserData;
 import org.apache.poi.ss.usermodel.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class UserImportHandler implements ImportHandler{
     private Workbook workbook;
     private List<AppUserData> users;
     private List<String> statuses;
 
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-
-    @Autowired
-    public UserImportHandler(final PortfolioCommandSourceWritePlatformService
-            commandsSourceWritePlatformService) {
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-    }
 
     @Override
     public Count process(Workbook workbook, String locale, String dateFormat) {

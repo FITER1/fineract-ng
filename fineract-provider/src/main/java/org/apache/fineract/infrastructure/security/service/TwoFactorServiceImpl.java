@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.infrastructure.security.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.EmailDetail;
@@ -39,19 +36,20 @@ import org.apache.fineract.infrastructure.sms.domain.SmsMessage;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageRepository;
 import org.apache.fineract.infrastructure.sms.scheduler.SmsMessageScheduledJobService;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 @Service
 @Profile("twofactor")
+@RequiredArgsConstructor
 public class TwoFactorServiceImpl implements TwoFactorService {
-
-
-
     private final AccessTokenGenerationService accessTokenGenerationService;
     private final PlatformEmailService emailService;
     private final SmsMessageScheduledJobService smsMessageScheduledJobService;
@@ -61,24 +59,6 @@ public class TwoFactorServiceImpl implements TwoFactorService {
     private final SmsMessageRepository smsMessageRepository;
 
     private final TwoFactorConfigurationService configurationService;
-
-    @Autowired
-    public TwoFactorServiceImpl(AccessTokenGenerationService accessTokenGenerationService,
-            PlatformEmailService emailService,
-            SmsMessageScheduledJobService smsMessageScheduledJobService,
-            OTPRequestRepository otpRequestRepository,
-            TFAccessTokenRepository tfAccessTokenRepository,
-            SmsMessageRepository smsMessageRepository,
-            TwoFactorConfigurationService configurationService) {
-        this.accessTokenGenerationService = accessTokenGenerationService;
-        this.emailService = emailService;
-        this.smsMessageScheduledJobService = smsMessageScheduledJobService;
-        this.otpRequestRepository = otpRequestRepository;
-        this.tfAccessTokenRepository = tfAccessTokenRepository;
-        this.smsMessageRepository = smsMessageRepository;
-        this.configurationService = configurationService;
-    }
-
 
     @Override
     public List<OTPDeliveryMethod> getDeliveryMethodsForUser(final AppUser user) {

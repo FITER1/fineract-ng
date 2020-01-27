@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.infrastructure.core.service;
 
-import java.util.List;
-
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+
+import java.util.List;
 
 public class PaginationHelper<E> {
 

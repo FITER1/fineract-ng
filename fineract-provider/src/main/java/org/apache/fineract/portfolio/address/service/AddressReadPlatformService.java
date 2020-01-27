@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.address.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.address.data.AddressData;
+
+import java.util.Collection;
 
 public interface AddressReadPlatformService {
 	public Collection<AddressData> retrieveAddressFields(long clientid);

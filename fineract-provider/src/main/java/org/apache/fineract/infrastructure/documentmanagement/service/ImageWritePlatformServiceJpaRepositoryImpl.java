@@ -18,8 +18,7 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.service;
 
-import java.io.InputStream;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.domain.Base64EncodedImage;
 import org.apache.fineract.infrastructure.documentmanagement.api.ImagesApiResource.ENTITY_TYPE_FOR_IMAGES;
@@ -32,27 +31,19 @@ import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.organisation.staff.domain.StaffRepositoryWrapper;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.InputStream;
+
 @Service
+@RequiredArgsConstructor
 public class ImageWritePlatformServiceJpaRepositoryImpl implements ImageWritePlatformService {
 
     private final ContentRepositoryFactory contentRepositoryFactory;
     private final ClientRepositoryWrapper clientRepositoryWrapper;
     private final ImageRepository imageRepository;
     private final StaffRepositoryWrapper staffRepositoryWrapper;
-
-    @Autowired
-    public ImageWritePlatformServiceJpaRepositoryImpl(final ContentRepositoryFactory documentStoreFactory,
-            final ClientRepositoryWrapper clientRepositoryWrapper, final ImageRepository imageRepository,
-            StaffRepositoryWrapper staffRepositoryWrapper) {
-        this.contentRepositoryFactory = documentStoreFactory;
-        this.clientRepositoryWrapper = clientRepositoryWrapper;
-        this.imageRepository = imageRepository;
-        this.staffRepositoryWrapper = staffRepositoryWrapper;
-    }
 
     @Transactional
     @Override

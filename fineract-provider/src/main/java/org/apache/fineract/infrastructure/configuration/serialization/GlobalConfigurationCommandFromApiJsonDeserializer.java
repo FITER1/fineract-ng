@@ -18,28 +18,28 @@
  */
 package org.apache.fineract.infrastructure.configuration.serialization;
 
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.configuration.command.UpdateGlobalConfigurationCommand;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.serialization.AbstractFromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.core.serialization.FromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Implementation of {@link FromApiJsonDeserializer} for
  * {@link UpdateGlobalConfigurationCommand}'s.
  */
 @Component
+@RequiredArgsConstructor
 public final class GlobalConfigurationCommandFromApiJsonDeserializer extends
         AbstractFromApiJsonDeserializer<UpdateGlobalConfigurationCommand> {
 
@@ -48,11 +48,6 @@ public final class GlobalConfigurationCommandFromApiJsonDeserializer extends
      */
     private final Set<String> supportedParameters = new HashSet<>(Arrays.asList("globalConfiguration"));
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public GlobalConfigurationCommandFromApiJsonDeserializer(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     @Override
     public UpdateGlobalConfigurationCommand commandFromApiJson(final String json) {

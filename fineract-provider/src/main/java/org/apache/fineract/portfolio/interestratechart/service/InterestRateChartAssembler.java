@@ -18,18 +18,8 @@
  */
 package org.apache.fineract.portfolio.interestratechart.service;
 
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.INTERESTRATE_CHART_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.descriptionParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.endDateParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.fromDateParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.isPrimaryGroupingByAmountParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.nameParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.currencyCodeParamName;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -40,26 +30,22 @@ import org.apache.fineract.portfolio.interestratechart.domain.InterestRateChart;
 import org.apache.fineract.portfolio.interestratechart.domain.InterestRateChartFields;
 import org.apache.fineract.portfolio.interestratechart.domain.InterestRateChartSlab;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonElement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.*;
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.currencyCodeParamName;
 
 @Service
+@RequiredArgsConstructor
 public class InterestRateChartAssembler {
 
     private final FromJsonHelper fromApiJsonHelper;
     private final InterestRateChartRepositoryWrapper interestRateChartRepositoryWrapper;
     private final InterestRateChartSlabAssembler chartSlabAssembler;
-
-    @Autowired
-    public InterestRateChartAssembler(final FromJsonHelper fromApiJsonHelper,
-            final InterestRateChartRepositoryWrapper interestRateChartRepositoryWrapper,
-            final InterestRateChartSlabAssembler chartSlabAssembler) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.interestRateChartRepositoryWrapper = interestRateChartRepositoryWrapper;
-        this.chartSlabAssembler = chartSlabAssembler;
-    }
 
     /**
      * Assembles a new {@link InterestRateChart} from JSON Slabs passed in

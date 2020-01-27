@@ -19,11 +19,10 @@
 
 package org.apache.fineract.portfolio.client.service;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepository;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -35,15 +34,16 @@ import org.apache.fineract.portfolio.client.domain.ClientFamilyMembers;
 import org.apache.fineract.portfolio.client.domain.ClientFamilyMembersRepository;
 import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
 import org.apache.fineract.portfolio.client.serialization.ClientFamilyMemberCommandFromApiJsonDeserializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Service
-public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamilyMembersWritePlatformService 
+@RequiredArgsConstructor
+public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamilyMembersWritePlatformService
 {
 	
 	private final PlatformSecurityContext context;
@@ -52,22 +52,6 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 	private final ClientRepositoryWrapper clientRepositoryWrapper;
 	private final ClientFamilyMemberCommandFromApiJsonDeserializer  apiJsonDeserializer;
 	
-	
-	@Autowired
-	public ClientFamilyMembersWritePlatformServiceImpl(final PlatformSecurityContext context,final CodeValueRepository codeValueRepository,
-			final ClientFamilyMembersRepository clientFamilyRepository,final ClientRepositoryWrapper clientRepositoryWrapper,final ClientFamilyMemberCommandFromApiJsonDeserializer  apiJsonDeserializer
-			)
-	{
-		this.context=context;
-		this.codeValueRepository=codeValueRepository;
-		this.clientFamilyRepository=clientFamilyRepository;
-		this.clientRepositoryWrapper=clientRepositoryWrapper;
-		this.apiJsonDeserializer=apiJsonDeserializer;
-		
-	}
-	
-	
-
 	@Override
 	public CommandProcessingResult addFamilyMember(final long clientId,final JsonCommand command) 
 	{

@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.accounting.journalentry.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingEnumerations;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
 import org.apache.fineract.accounting.journalentry.api.JournalEntryJsonInputParams;
@@ -25,7 +26,6 @@ import org.apache.fineract.accounting.journalentry.data.JournalEntryData;
 import org.apache.fineract.accounting.journalentry.data.JournalEntryDataValidator;
 import org.apache.fineract.accounting.journalentry.domain.JournalEntryType;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
@@ -36,7 +36,6 @@ import org.apache.fineract.infrastructure.jobs.service.JobName;
 import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -48,6 +47,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class JournalEntryRunningBalanceUpdateServiceImpl implements JournalEntryRunningBalanceUpdateService {
 
     private final static Logger logger = LoggerFactory.getLogger(JournalEntryRunningBalanceUpdateServiceImpl.class);
@@ -81,15 +81,6 @@ public class JournalEntryRunningBalanceUpdateServiceImpl implements JournalEntry
             + "inner join (select max(id) as id from acc_gl_journal_entry where entry_date < ? group by office_id,account_id,entry_date) je2 "
             + "inner join (select max(entry_date) as date from acc_gl_journal_entry where entry_date < ? group by office_id,account_id) je3 "
             + "where je2.id = je.id and je.entry_date = je3.date group by je.id order by je.entry_date DESC " + selectRunningBalanceSqlLimit;
-
-    @Autowired
-    public JournalEntryRunningBalanceUpdateServiceImpl(final DataSource dataSource, final OfficeRepositoryWrapper officeRepositoryWrapper,
-                                                       final JournalEntryDataValidator dataValidator, final FromJsonHelper fromApiJsonHelper) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.officeRepositoryWrapper = officeRepositoryWrapper;
-        this.dataValidator = dataValidator;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     @Override
     @CronTarget(jobName = JobName.ACCOUNTING_RUNNING_BALANCE_UPDATE)

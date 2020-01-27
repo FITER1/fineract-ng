@@ -18,29 +18,22 @@
  */
 package org.apache.fineract.infrastructure.creditbureau.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-
-import javax.sql.DataSource;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.creditbureau.data.CreditBureauLoanProductMappingData;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+
 @Service
+@RequiredArgsConstructor
 public class CreditBureauLoanProductMappingReadPlatformServiceImpl implements CreditBureauLoanProductMappingReadPlatformService {
 	private final JdbcTemplate jdbcTemplate;
 	private final PlatformSecurityContext context;
-
-	@Autowired
-	public CreditBureauLoanProductMappingReadPlatformServiceImpl(final PlatformSecurityContext context,
-			final DataSource dataSource) {
-		this.context = context;
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
 
 	private static final class CreditBureauLoanProductMapper implements RowMapper<CreditBureauLoanProductMappingData> {
 

@@ -18,13 +18,12 @@
  */
 package org.apache.fineract.portfolio.shareaccounts.domain;
 
-import java.math.BigDecimal;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "m_share_account_dividend_details")

@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.loanaccount.guarantor.data;
 
-import java.math.BigDecimal;
-
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
+
+import java.math.BigDecimal;
 
 public class GuarantorDTO {
 

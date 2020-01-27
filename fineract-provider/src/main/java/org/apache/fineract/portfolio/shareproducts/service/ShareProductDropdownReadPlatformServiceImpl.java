@@ -18,14 +18,14 @@
  */
 package org.apache.fineract.portfolio.shareproducts.service;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.shareaccounts.service.SharesEnumerations;
 import org.apache.fineract.portfolio.shareproducts.SharePeriodFrequencyType;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 @Service
 public class ShareProductDropdownReadPlatformServiceImpl implements ShareProductDropdownReadPlatformService {

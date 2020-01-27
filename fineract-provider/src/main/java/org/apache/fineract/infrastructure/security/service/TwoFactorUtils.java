@@ -19,22 +19,17 @@
 package org.apache.fineract.infrastructure.security.service;
 
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class TwoFactorUtils {
 
     private static final String TWO_FACTOR_PROFILE_NAME = "twofactor";
 
     private final Environment environment;
-
-    @Autowired
-    public TwoFactorUtils(Environment environment) {
-        this.environment = environment;
-    }
-
 
     public boolean isTwoFactorAuthEnabled() {
         for(final String profile : this.environment.getActiveProfiles()) {

@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.accounting.financialactivityaccount.service;
 
-import java.util.List;
-
 import org.apache.fineract.accounting.financialactivityaccount.data.FinancialActivityAccountData;
+
+import java.util.List;
 
 public interface FinancialActivityAccountReadPlatformService {
 

@@ -18,21 +18,17 @@
  */
 package org.apache.fineract.notification.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.notification.domain.TopicSubscriber;
 import org.apache.fineract.notification.domain.TopicSubscriberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class TopicSubscriberWritePlatformServiceJpaRepositoryImpl implements TopicSubscriberWritePlatformService {
 
 private final TopicSubscriberRepository topicSubscriberRepository;
-	
-	@Autowired
-	public TopicSubscriberWritePlatformServiceJpaRepositoryImpl(TopicSubscriberRepository topicSubscriberRepository) {
-		this.topicSubscriberRepository = topicSubscriberRepository;
-	}
-	
+
 	@Override
 	public Long create(TopicSubscriber topicSubscriber) {
 		topicSubscriberRepository.save(topicSubscriber);

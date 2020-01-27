@@ -18,15 +18,7 @@
  */
 package org.apache.fineract.portfolio.self.savings.data;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import javax.ws.rs.core.UriInfo;
-
+import com.google.gson.JsonElement;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.ApiParameterHelper;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -39,7 +31,8 @@ import org.apache.fineract.portfolio.savings.SavingsApiConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
+import javax.ws.rs.core.UriInfo;
+import java.util.*;
 
 @Component
 public class SelfSavingsDataValidator {

@@ -18,14 +18,9 @@
  */
 package org.apache.fineract.portfolio.note.serialization;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -35,16 +30,16 @@ import org.apache.fineract.infrastructure.core.serialization.AbstractFromApiJson
 import org.apache.fineract.infrastructure.core.serialization.FromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.note.command.NoteCommand;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.*;
 
 /**
  * Implementation of {@link FromApiJsonDeserializer} for {@link NoteCommand} 's.
  */
 @Component
+@RequiredArgsConstructor
 public final class NoteCommandFromApiJsonDeserializer extends AbstractFromApiJsonDeserializer<NoteCommand> {
 
     /**
@@ -53,11 +48,6 @@ public final class NoteCommandFromApiJsonDeserializer extends AbstractFromApiJso
     private final Set<String> supportedParameters = new HashSet<>(Arrays.asList("note"));
 
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public NoteCommandFromApiJsonDeserializer(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     @Override
     public NoteCommand commandFromApiJson(final String json) {

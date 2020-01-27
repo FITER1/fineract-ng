@@ -18,8 +18,7 @@
  */
 package org.apache.fineract.infrastructure.survey.service;
 
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -30,29 +29,22 @@ import org.apache.fineract.infrastructure.survey.domain.Likelihood;
 import org.apache.fineract.infrastructure.survey.domain.LikelihoodRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by Cieyou on 3/12/14.
  */
 @Service
+@RequiredArgsConstructor
 public class WriteLikelihoodServiceImpl implements WriteLikelihoodService {
 
     private final static Logger logger = LoggerFactory.getLogger(PovertyLineService.class);
     private final PlatformSecurityContext context;
     private final LikelihoodDataValidator likelihoodDataValidator;
     private final LikelihoodRepository repository;
-
-    @Autowired
-    WriteLikelihoodServiceImpl(final PlatformSecurityContext context, final LikelihoodDataValidator likelihoodDataValidator,
-            final LikelihoodRepository repository) {
-        this.context = context;
-        this.likelihoodDataValidator = likelihoodDataValidator;
-        this.repository = repository;
-
-    }
 
     @Override
     public CommandProcessingResult update(Long likelihoodId, JsonCommand command) {

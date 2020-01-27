@@ -18,16 +18,7 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.data.PaginationParameters;
 import org.apache.fineract.infrastructure.core.data.PaginationParametersDataValidator;
@@ -35,7 +26,6 @@ import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.staff.data.StaffData;
@@ -63,26 +53,8 @@ import org.apache.fineract.portfolio.interestratechart.service.InterestRateChart
 import org.apache.fineract.portfolio.paymentdetail.data.PaymentDetailData;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 import org.apache.fineract.portfolio.paymenttype.service.PaymentTypeReadPlatformService;
-import org.apache.fineract.portfolio.savings.DepositAccountOnClosureType;
-import org.apache.fineract.portfolio.savings.DepositAccountType;
-import org.apache.fineract.portfolio.savings.SavingsAccountTransactionType;
-import org.apache.fineract.portfolio.savings.SavingsCompoundingInterestPeriodType;
-import org.apache.fineract.portfolio.savings.SavingsInterestCalculationDaysInYearType;
-import org.apache.fineract.portfolio.savings.SavingsInterestCalculationType;
-import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
-import org.apache.fineract.portfolio.savings.SavingsPostingInterestPeriodType;
-import org.apache.fineract.portfolio.savings.data.DepositAccountData;
-import org.apache.fineract.portfolio.savings.data.DepositAccountInterestRateChartData;
-import org.apache.fineract.portfolio.savings.data.DepositProductData;
-import org.apache.fineract.portfolio.savings.data.FixedDepositAccountData;
-import org.apache.fineract.portfolio.savings.data.RecurringDepositAccountData;
-import org.apache.fineract.portfolio.savings.data.SavingsAccountApplicationTimelineData;
-import org.apache.fineract.portfolio.savings.data.SavingsAccountChargeData;
-import org.apache.fineract.portfolio.savings.data.SavingsAccountData;
-import org.apache.fineract.portfolio.savings.data.SavingsAccountStatusEnumData;
-import org.apache.fineract.portfolio.savings.data.SavingsAccountSummaryData;
-import org.apache.fineract.portfolio.savings.data.SavingsAccountTransactionData;
-import org.apache.fineract.portfolio.savings.data.SavingsAccountTransactionEnumData;
+import org.apache.fineract.portfolio.savings.*;
+import org.apache.fineract.portfolio.savings.data.*;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType;
 import org.apache.fineract.portfolio.savings.exception.DepositAccountNotFoundException;
 import org.apache.fineract.portfolio.tax.data.TaxGroupData;
@@ -90,14 +62,19 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class DepositAccountReadPlatformServiceImpl implements DepositAccountReadPlatformService {
 
     private final PlatformSecurityContext context;
@@ -119,7 +96,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
     private final StaffReadPlatformService staffReadPlatformService;
     private final DepositsDropdownReadPlatformService depositsDropdownReadPlatformService;
     private final SavingsAccountReadPlatformService savingsAccountReadPlatformService;
-    private final RecurringAccountDepositTransactionTemplateMapper rdTransactionTemplateMapper;
+    private final RecurringAccountDepositTransactionTemplateMapper rdTransactionTemplateMapper = new RecurringAccountDepositTransactionTemplateMapper();
     private final DropdownReadPlatformService dropdownReadPlatformService;
     private final CalendarReadPlatformService calendarReadPlatformService;
     private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
@@ -127,39 +104,6 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
     // allowed column names for sorting the query result
     private final static Set<String> supportedOrderByValues = new HashSet<>(Arrays.asList("id", "accountNumbr",
             "officeId", "officeName"));
-
-    @Autowired
-    public DepositAccountReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final DepositAccountInterestRateChartReadPlatformService chartReadPlatformService,
-            final PaginationParametersDataValidator paginationParametersDataValidator,
-            final ClientReadPlatformService clientReadPlatformService, final GroupReadPlatformService groupReadPlatformService,
-            final DepositProductReadPlatformService depositProductReadPlatformService,
-            final SavingsDropdownReadPlatformService savingsDropdownReadPlatformService,
-            final ChargeReadPlatformService chargeReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
-            final DepositsDropdownReadPlatformService depositsDropdownReadPlatformService,
-            final InterestRateChartReadPlatformService productChartReadPlatformService,
-            final SavingsAccountReadPlatformService savingsAccountReadPlatformService,
-            final DropdownReadPlatformService dropdownReadPlatformService, final CalendarReadPlatformService calendarReadPlatformService,
-            PaymentTypeReadPlatformService paymentTypeReadPlatformService) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.accountChartReadPlatformService = chartReadPlatformService;
-        this.paginationParametersDataValidator = paginationParametersDataValidator;
-        this.transactionsMapper = new SavingsAccountTransactionsMapper();
-        this.clientReadPlatformService = clientReadPlatformService;
-        this.groupReadPlatformService = groupReadPlatformService;
-        this.depositProductReadPlatformService = depositProductReadPlatformService;
-        this.savingsDropdownReadPlatformService = savingsDropdownReadPlatformService;
-        this.chargeReadPlatformService = chargeReadPlatformService;
-        this.staffReadPlatformService = staffReadPlatformService;
-        this.depositsDropdownReadPlatformService = depositsDropdownReadPlatformService;
-        this.productChartReadPlatformService = productChartReadPlatformService;
-        this.savingsAccountReadPlatformService = savingsAccountReadPlatformService;
-        this.rdTransactionTemplateMapper = new RecurringAccountDepositTransactionTemplateMapper();
-        this.dropdownReadPlatformService = dropdownReadPlatformService;
-        this.calendarReadPlatformService = calendarReadPlatformService;
-        this.paymentTypeReadPlatformService = paymentTypeReadPlatformService;
-    }
 
     @Override
     public Collection<DepositAccountData> retrieveAll(final DepositAccountType depositAccountType,

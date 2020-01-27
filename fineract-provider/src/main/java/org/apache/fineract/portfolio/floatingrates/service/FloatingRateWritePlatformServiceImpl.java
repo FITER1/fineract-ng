@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.portfolio.floatingrates.service;
 
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -34,30 +31,22 @@ import org.apache.fineract.portfolio.floatingrates.serialization.FloatingRateDat
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import java.util.Map;
+
 @Service
-public class FloatingRateWritePlatformServiceImpl implements
-		FloatingRateWritePlatformService {
+@RequiredArgsConstructor
+public class FloatingRateWritePlatformServiceImpl implements FloatingRateWritePlatformService {
 
 	private final static Logger logger = LoggerFactory
 			.getLogger(FloatingRateWritePlatformServiceImpl.class);
 	private final PlatformSecurityContext context;
 	private final FloatingRateDataValidator fromApiJsonDeserializer;
 	private final FloatingRateRepositoryWrapper floatingRateRepository;
-
-	@Autowired
-	public FloatingRateWritePlatformServiceImpl(
-			final PlatformSecurityContext context,
-			final FloatingRateDataValidator fromApiJsonDeserializer,
-			final FloatingRateRepositoryWrapper floatingRateRepository) {
-		this.context = context;
-		this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-		this.floatingRateRepository = floatingRateRepository;
-	}
 
 	@Transactional
 	@Override

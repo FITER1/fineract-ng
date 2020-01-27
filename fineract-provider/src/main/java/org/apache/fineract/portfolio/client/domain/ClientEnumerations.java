@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.client.domain;
 
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 
 public class ClientEnumerations {
 

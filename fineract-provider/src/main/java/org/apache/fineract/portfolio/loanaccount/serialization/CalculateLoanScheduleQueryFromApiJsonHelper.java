@@ -18,14 +18,9 @@
  */
 package org.apache.fineract.portfolio.loanaccount.serialization;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
@@ -34,13 +29,13 @@ import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.loanaccount.api.LoanApiConstants;
 import org.apache.fineract.portfolio.loanproduct.LoanProductConstants;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public final class CalculateLoanScheduleQueryFromApiJsonHelper {
 
     /**
@@ -72,11 +67,6 @@ public final class CalculateLoanScheduleQueryFromApiJsonHelper {
             LoanApiConstants.isTopup, LoanApiConstants.loanIdToClose, LoanApiConstants.datatables, LoanApiConstants.isEqualAmortizationParam));
 
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public CalculateLoanScheduleQueryFromApiJsonHelper(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validate(final String json) {
         if (StringUtils.isBlank(json)) { throw new InvalidJsonException(); }

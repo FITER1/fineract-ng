@@ -18,13 +18,11 @@
  */
 package org.apache.fineract.accounting.producttoaccountmapping.service;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.fineract.accounting.common.AccountingRuleType;
+import com.google.gson.JsonElement;
 import org.apache.fineract.accounting.common.AccountingConstants.ACCRUAL_ACCOUNTS_FOR_LOAN;
 import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_LOAN;
 import org.apache.fineract.accounting.common.AccountingConstants.LOAN_PRODUCT_ACCOUNTING_PARAMS;
+import org.apache.fineract.accounting.common.AccountingRuleType;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepository;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepositoryWrapper;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
@@ -37,7 +35,8 @@ import org.apache.fineract.portfolio.paymenttype.domain.PaymentTypeRepositoryWra
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class LoanProductToGLAccountMappingHelper extends ProductToGLAccountMappingHelper {
@@ -47,8 +46,7 @@ public class LoanProductToGLAccountMappingHelper extends ProductToGLAccountMappi
             final ProductToGLAccountMappingRepository glAccountMappingRepository, final FromJsonHelper fromApiJsonHelper,
             final ChargeRepositoryWrapper chargeRepositoryWrapper, final GLAccountRepositoryWrapper accountRepositoryWrapper,
             final PaymentTypeRepositoryWrapper paymentTypeRepositoryWrapper) {
-        super(glAccountRepository, glAccountMappingRepository, fromApiJsonHelper, chargeRepositoryWrapper, accountRepositoryWrapper,
-                paymentTypeRepositoryWrapper);
+        super(glAccountRepository, accountRepositoryWrapper, glAccountMappingRepository, fromApiJsonHelper, chargeRepositoryWrapper, paymentTypeRepositoryWrapper);
     }
 
     /*** Set of abstractions for saving Loan Products to GL Account Mappings ***/

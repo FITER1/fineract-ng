@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.self.loanaccount.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.exception.UnrecognizedQueryParamException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -34,7 +35,6 @@ import org.apache.fineract.portfolio.self.client.service.AppuserClientMapperRead
 import org.apache.fineract.portfolio.self.loanaccount.data.SelfLoansDataValidator;
 import org.apache.fineract.portfolio.self.loanaccount.service.AppuserLoansMapperReadService;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -48,6 +48,7 @@ import java.util.HashMap;
 @Component
 @Scope("singleton")
 @Api(value = "Self Loans", description = "")
+@RequiredArgsConstructor
 public class SelfLoansApiResource {
 
 	private final PlatformSecurityContext context;
@@ -58,24 +59,6 @@ public class SelfLoansApiResource {
 	private final AppuserClientMapperReadService appUserClientMapperReadService;
 	private final SelfLoansDataValidator dataValidator;
 	private final GuarantorsApiResource guarantorsApiResource;
-
-	@Autowired
-	public SelfLoansApiResource(final PlatformSecurityContext context,
-			final LoansApiResource loansApiResource,
-			final LoanTransactionsApiResource loanTransactionsApiResource,
-			final LoanChargesApiResource loanChargesApiResource,
-			final AppuserLoansMapperReadService appuserLoansMapperReadService,
-			final AppuserClientMapperReadService appUserClientMapperReadService,
-			final SelfLoansDataValidator dataValidator, final GuarantorsApiResource guarantorsApiResource) {
-		this.context = context;
-		this.loansApiResource = loansApiResource;
-		this.loanTransactionsApiResource = loanTransactionsApiResource;
-		this.loanChargesApiResource = loanChargesApiResource;
-		this.appuserLoansMapperReadService = appuserLoansMapperReadService;
-		this.appUserClientMapperReadService = appUserClientMapperReadService;
-		this.dataValidator = dataValidator;
-		this.guarantorsApiResource = guarantorsApiResource;
-	}
 
 	@GET
 	@Path("{loanId}")

@@ -18,12 +18,7 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.SAVINGS_ACCOUNT_RESOURCE_NAME;
-
-import java.util.*;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
@@ -69,12 +64,17 @@ import org.apache.fineract.portfolio.savings.exception.SavingsProductNotFoundExc
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.SAVINGS_ACCOUNT_RESOURCE_NAME;
+
 @Service
+@RequiredArgsConstructor
 public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl implements SavingsApplicationProcessWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl.class);
@@ -97,40 +97,6 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
     private final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository;
     private final BusinessEventNotifierService businessEventNotifierService;
     private final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService;
-	
-    @Autowired
-    public SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final SavingsAccountRepositoryWrapper savingAccountRepository, final SavingsAccountAssembler savingAccountAssembler,
-            final SavingsAccountDataValidator savingsAccountDataValidator, final AccountNumberGenerator accountNumberGenerator,
-            final ClientRepositoryWrapper clientRepository, final GroupRepository groupRepository,
-            final SavingsProductRepository savingsProductRepository, final NoteRepository noteRepository,
-            final StaffRepositoryWrapper staffRepository,
-            final SavingsAccountApplicationTransitionApiJsonValidator savingsAccountApplicationTransitionApiJsonValidator,
-            final SavingsAccountChargeAssembler savingsAccountChargeAssembler, final CommandProcessingService commandProcessingService,
-            final SavingsAccountDomainService savingsAccountDomainService,
-            final SavingsAccountWritePlatformService savingsAccountWritePlatformService,
-            final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository,
-            final BusinessEventNotifierService businessEventNotifierService,
-            final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService) {
-        this.context = context;
-        this.savingAccountRepository = savingAccountRepository;
-        this.savingAccountAssembler = savingAccountAssembler;
-        this.accountNumberGenerator = accountNumberGenerator;
-        this.savingsAccountDataValidator = savingsAccountDataValidator;
-        this.clientRepository = clientRepository;
-        this.groupRepository = groupRepository;
-        this.savingsProductRepository = savingsProductRepository;
-        this.noteRepository = noteRepository;
-        this.staffRepository = staffRepository;
-        this.savingsAccountApplicationTransitionApiJsonValidator = savingsAccountApplicationTransitionApiJsonValidator;
-        this.savingsAccountChargeAssembler = savingsAccountChargeAssembler;
-        this.commandProcessingService = commandProcessingService;
-        this.savingsAccountDomainService = savingsAccountDomainService;
-        this.accountNumberFormatRepository = accountNumberFormatRepository;
-        this.savingsAccountWritePlatformService = savingsAccountWritePlatformService;
-        this.businessEventNotifierService = businessEventNotifierService ;
-        this.entityDatatableChecksWritePlatformService = entityDatatableChecksWritePlatformService;
-    }
 
     /*
      * Guaranteed to throw an exception no matter what the data integrity issue

@@ -18,37 +18,27 @@
  */
 package org.apache.fineract.portfolio.search.api;
 
-import java.util.Collection;
-import java.util.Set;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.ApiRequestParameterHelper;
 import org.apache.fineract.infrastructure.core.serialization.ApiRequestJsonSerializationSettings;
 import org.apache.fineract.infrastructure.core.serialization.ToApiJsonSerializer;
 import org.apache.fineract.portfolio.search.SearchConstants.SEARCH_RESPONSE_PARAMETERS;
-import org.apache.fineract.portfolio.search.data.AdHocQueryDataValidator;
-import org.apache.fineract.portfolio.search.data.AdHocQuerySearchConditions;
-import org.apache.fineract.portfolio.search.data.AdHocSearchQueryData;
-import org.apache.fineract.portfolio.search.data.SearchConditions;
-import org.apache.fineract.portfolio.search.data.SearchData;
+import org.apache.fineract.portfolio.search.data.*;
 import org.apache.fineract.portfolio.search.service.SearchReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.Collection;
+import java.util.Set;
 
 @Path("search")
 @Component
 @Scope("singleton")
+@RequiredArgsConstructor
 public class SearchApiResource {
 
     private final Set<String> searchResponseParameters = SEARCH_RESPONSE_PARAMETERS.getAllValues();
@@ -57,18 +47,6 @@ public class SearchApiResource {
     private final ToApiJsonSerializer<Object> toApiJsonSerializer;
     private final ApiRequestParameterHelper apiRequestParameterHelper;
     private final AdHocQueryDataValidator fromApiJsonDeserializer;
-
-    @Autowired
-    public SearchApiResource(final SearchReadPlatformService searchReadPlatformService,
-            final ToApiJsonSerializer<Object> toApiJsonSerializer, final ApiRequestParameterHelper apiRequestParameterHelper,
-            final AdHocQueryDataValidator fromApiJsonDeserializer) {
-
-        this.searchReadPlatformService = searchReadPlatformService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-
-    }
 
     @GET
     @Path("template")

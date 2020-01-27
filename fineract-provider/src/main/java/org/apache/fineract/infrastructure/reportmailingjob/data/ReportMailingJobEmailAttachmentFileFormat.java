@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.infrastructure.reportmailingjob.data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public enum ReportMailingJobEmailAttachmentFileFormat {
     INVALID(0, "ReportMailingJobEmailAttachmentFileFormat.INVALID", "Invalid"),

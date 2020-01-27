@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.infrastructure.reportmailingjob.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobConfigurationData;
+
+import java.util.Collection;
 
 public interface ReportMailingJobConfigurationReadPlatformService {
     /** 

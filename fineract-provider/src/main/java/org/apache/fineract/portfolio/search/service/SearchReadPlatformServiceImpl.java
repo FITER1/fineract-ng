@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.portfolio.search.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -37,7 +37,6 @@ import org.apache.fineract.portfolio.search.data.AdHocSearchQueryData;
 import org.apache.fineract.portfolio.search.data.SearchConditions;
 import org.apache.fineract.portfolio.search.data.SearchData;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -50,21 +49,13 @@ import java.sql.SQLException;
 import java.util.Collection;
 
 @Service
+@RequiredArgsConstructor
 public class SearchReadPlatformServiceImpl implements SearchReadPlatformService {
 
     private final NamedParameterJdbcTemplate namedParameterjdbcTemplate;
     private final PlatformSecurityContext context;
     private final LoanProductReadPlatformService loanProductReadPlatformService;
     private final OfficeReadPlatformService officeReadPlatformService;
-
-    @Autowired
-    public SearchReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final LoanProductReadPlatformService loanProductReadPlatformService, final OfficeReadPlatformService officeReadPlatformService) {
-        this.context = context;
-        this.namedParameterjdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-        this.loanProductReadPlatformService = loanProductReadPlatformService;
-        this.officeReadPlatformService = officeReadPlatformService;
-    }
 
     @Override
     public Collection<SearchData> retriveMatchingData(final SearchConditions searchConditions) {

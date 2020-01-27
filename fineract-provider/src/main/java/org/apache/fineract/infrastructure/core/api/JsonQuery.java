@@ -18,11 +18,8 @@
  */
 package org.apache.fineract.infrastructure.core.api;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Map;
-
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
@@ -31,8 +28,10 @@ import org.apache.fineract.infrastructure.security.domain.PlatformUser;
 import org.apache.fineract.infrastructure.security.service.PlatformPasswordEncoder;
 import org.joda.time.LocalDate;
 
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Map;
 
 /**
  * Immutable representation of a query.

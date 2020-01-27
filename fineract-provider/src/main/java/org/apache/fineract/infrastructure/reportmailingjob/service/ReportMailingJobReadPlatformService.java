@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.infrastructure.reportmailingjob.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobData;
+
+import java.util.Collection;
 
 public interface ReportMailingJobReadPlatformService {
     /** 

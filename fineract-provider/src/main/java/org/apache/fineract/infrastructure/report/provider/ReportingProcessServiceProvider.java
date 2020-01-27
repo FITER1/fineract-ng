@@ -18,34 +18,29 @@
  */
 package org.apache.fineract.infrastructure.report.provider;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.fineract.infrastructure.report.annotation.ReportService;
+import org.apache.fineract.infrastructure.report.service.ReportingProcessService;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.lang3.ArrayUtils;
-import org.apache.fineract.infrastructure.report.annotation.ReportService;
-import org.apache.fineract.infrastructure.report.service.ReportingProcessService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
+@Slf4j
 @Component
 @Scope("singleton")
-public class ReportingProcessServiceProvider implements ApplicationContextAware {
+@RequiredArgsConstructor
+public class ReportingProcessServiceProvider {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ReportingProcessServiceProvider.class);
-
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
 
     Map<String, String> reportingProcessServices = null;
-
-    ReportingProcessServiceProvider() {
-        super();
-    }
 
     public ReportingProcessService findReportingProcessService(final String reportType) {
         if (this.reportingProcessServices.containsKey(reportType)) { return (ReportingProcessService) this.applicationContext
@@ -53,30 +48,25 @@ public class ReportingProcessServiceProvider implements ApplicationContextAware 
         return null;
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-        this.initializeRegistry();
-    }
-
     public Collection<String> findAllReportingTypes() {
         return this.reportingProcessServices.keySet();
 
     }
 
-    private void initializeRegistry() {
+    @PostConstruct
+    public void initializeRegistry() {
         if (this.reportingProcessServices == null) {
             this.reportingProcessServices = new HashMap<>();
 
             final String[] reportServiceBeans = this.applicationContext.getBeanNamesForAnnotation(ReportService.class);
             if (ArrayUtils.isNotEmpty(reportServiceBeans)) {
                 for (final String reportName : reportServiceBeans) {
-                    LOGGER.info("Register report service '" + reportName + "' ...");
+                    log.info("Register report service '" + reportName + "' ...");
                     final ReportService service = this.applicationContext.findAnnotationOnBean(reportName, ReportService.class);
                     try {
                         this.reportingProcessServices.put(service.type(), reportName);
                     } catch (final Throwable th) {
-                        LOGGER.error("Unable to register reporting service '" + reportName + "'!", th);
+                        log.error("Unable to register reporting service '" + reportName + "'!", th);
                     }
                 }
             }

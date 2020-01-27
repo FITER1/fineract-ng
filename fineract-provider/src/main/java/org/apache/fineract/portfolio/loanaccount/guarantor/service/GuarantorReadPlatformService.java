@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.loanaccount.guarantor.service;
 
-import java.util.List;
-
 import org.apache.fineract.portfolio.loanaccount.guarantor.data.GuarantorData;
 import org.apache.fineract.portfolio.loanaccount.guarantor.data.ObligeeData;
+
+import java.util.List;
 
 public interface GuarantorReadPlatformService {
 

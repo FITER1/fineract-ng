@@ -29,7 +29,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 import static org.apache.fineract.portfolio.charge.service.ChargeEnumerations.*;
 
 @Service

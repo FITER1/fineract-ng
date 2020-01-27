@@ -18,30 +18,17 @@
  */
 package org.apache.fineract.portfolio.meeting.service;
 
-import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.isTransactionDateOnNonMeetingDateParamName;
-import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.transactionDateParamName;
-import static org.apache.fineract.portfolio.meeting.MeetingApiConstants.attendanceTypeParamName;
-import static org.apache.fineract.portfolio.meeting.MeetingApiConstants.calendarIdParamName;
-import static org.apache.fineract.portfolio.meeting.MeetingApiConstants.clientIdParamName;
-import static org.apache.fineract.portfolio.meeting.MeetingApiConstants.clientsAttendanceParamName;
-import static org.apache.fineract.portfolio.meeting.MeetingApiConstants.meetingDateParamName;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Map;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.apache.fineract.portfolio.calendar.domain.Calendar;
-import org.apache.fineract.portfolio.calendar.domain.CalendarEntityType;
-import org.apache.fineract.portfolio.calendar.domain.CalendarInstance;
-import org.apache.fineract.portfolio.calendar.domain.CalendarInstanceRepository;
-import org.apache.fineract.portfolio.calendar.domain.CalendarRepository;
+import org.apache.fineract.portfolio.calendar.domain.*;
 import org.apache.fineract.portfolio.calendar.exception.CalendarInstanceNotFoundException;
 import org.apache.fineract.portfolio.calendar.exception.CalendarNotFoundException;
 import org.apache.fineract.portfolio.client.domain.Client;
@@ -55,15 +42,20 @@ import org.apache.fineract.portfolio.meeting.domain.Meeting;
 import org.apache.fineract.portfolio.meeting.domain.MeetingRepository;
 import org.apache.fineract.portfolio.meeting.domain.MeetingRepositoryWrapper;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
+
+import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.isTransactionDateOnNonMeetingDateParamName;
+import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.transactionDateParamName;
+import static org.apache.fineract.portfolio.meeting.MeetingApiConstants.*;
 
 @Service
+@RequiredArgsConstructor
 public class MeetingWritePlatformServiceJpaRepositoryImpl implements MeetingWritePlatformService {
 
     private final MeetingRepositoryWrapper meetingRepositoryWrapper;
@@ -75,23 +67,6 @@ public class MeetingWritePlatformServiceJpaRepositoryImpl implements MeetingWrit
     private final GroupRepository groupRepository;
     private final FromJsonHelper fromApiJsonHelper;
     private final ConfigurationDomainService configurationDomainService;
-
-    @Autowired
-    public MeetingWritePlatformServiceJpaRepositoryImpl(final MeetingRepositoryWrapper meetingRepositoryWrapper,
-            final MeetingRepository meetingRepository, final MeetingDataValidator meetingDataValidator,
-            final CalendarInstanceRepository calendarInstanceRepository, final CalendarRepository calendarRepository,
-            final ClientRepositoryWrapper clientRepositoryWrapper, final GroupRepository groupRepository, final FromJsonHelper fromApiJsonHelper,
-            final ConfigurationDomainService configurationDomainService) {
-        this.meetingRepositoryWrapper = meetingRepositoryWrapper;
-        this.meetingRepository = meetingRepository;
-        this.meetingDataValidator = meetingDataValidator;
-        this.calendarInstanceRepository = calendarInstanceRepository;
-        this.calendarRepository = calendarRepository;
-        this.clientRepositoryWrapper = clientRepositoryWrapper;
-        this.groupRepository = groupRepository;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.configurationDomainService = configurationDomainService;
-    }
 
     @Override
     public CommandProcessingResult createMeeting(final JsonCommand command) {

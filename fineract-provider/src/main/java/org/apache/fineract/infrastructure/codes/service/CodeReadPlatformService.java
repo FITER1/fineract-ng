@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.infrastructure.codes.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.codes.data.CodeData;
+
+import java.util.Collection;
 
 public interface CodeReadPlatformService {
 

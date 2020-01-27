@@ -18,16 +18,12 @@
  */
 package org.apache.fineract.organisation.provisioning.service;
 
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import javax.sql.DataSource;
 import org.apache.fineract.organisation.provisioning.domain.ProvisioningCategory;
 import org.apache.fineract.organisation.provisioning.domain.ProvisioningCategoryRepository;
 import org.apache.fineract.organisation.provisioning.exception.ProvisioningCategoryCannotBeDeletedException;
@@ -36,12 +32,15 @@ import org.apache.fineract.organisation.provisioning.serialization.ProvisioningC
 import org.apache.fineract.portfolio.charge.service.ChargeWritePlatformServiceJpaRepositoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.PersistenceException;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class ProvisioningCategoryWritePlatformServiceJpaRepositoryImpl implements ProvisioningCategoryWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(ChargeWritePlatformServiceJpaRepositoryImpl.class);
@@ -50,14 +49,6 @@ public class ProvisioningCategoryWritePlatformServiceJpaRepositoryImpl implement
 
     private final ProvisioningCategoryDefinitionJsonDeserializer fromApiJsonDeserializer;
     private final JdbcTemplate jdbcTemplate;
-    
-    @Autowired
-    public ProvisioningCategoryWritePlatformServiceJpaRepositoryImpl(final ProvisioningCategoryRepository provisioningCategoryRepository,
-            final ProvisioningCategoryDefinitionJsonDeserializer fromApiJsonDeserializer, final DataSource dataSource) {
-        this.provisioningCategoryRepository = provisioningCategoryRepository;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     @Override
     public CommandProcessingResult createProvisioningCateogry(JsonCommand command) {

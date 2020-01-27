@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.hooks.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.hooks.data.*;
 import org.apache.fineract.infrastructure.hooks.domain.Hook;
@@ -25,34 +26,23 @@ import org.apache.fineract.infrastructure.hooks.domain.HookRepository;
 import org.apache.fineract.infrastructure.hooks.exception.HookNotFoundException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class HookReadPlatformServiceImpl implements HookReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final HookRepository hookRepository;
     private final PlatformSecurityContext context;
-
-    @Autowired
-    public HookReadPlatformServiceImpl(final PlatformSecurityContext context,
-            final HookRepository hookRepository,
-            final DataSource dataSource) {
-        this.context = context;
-        this.hookRepository = hookRepository;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     @Override
     public Collection<HookData> retrieveAllHooks() {

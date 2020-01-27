@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.infrastructure.security.domain;
 
-import java.util.List;
-
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+
+import java.util.List;
 
 @Profile("twofactor")
 public interface TwoFactorConfigurationRepository extends

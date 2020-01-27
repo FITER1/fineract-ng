@@ -18,13 +18,13 @@
  */
 package org.apache.fineract.portfolio.interestratechart.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncentiveAttributeName;
 import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncentiveEntityType;
 import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncentiveType;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InterestIncentivesEnumerations {
 

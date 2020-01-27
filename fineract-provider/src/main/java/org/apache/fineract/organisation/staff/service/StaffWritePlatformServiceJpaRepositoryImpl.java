@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.organisation.staff.service;
 
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -36,12 +33,15 @@ import org.apache.fineract.organisation.staff.exception.StaffNotFoundException;
 import org.apache.fineract.organisation.staff.serialization.StaffCommandFromApiJsonDeserializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class StaffWritePlatformServiceJpaRepositoryImpl implements StaffWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(StaffWritePlatformServiceJpaRepositoryImpl.class);
@@ -49,14 +49,6 @@ public class StaffWritePlatformServiceJpaRepositoryImpl implements StaffWritePla
     private final StaffCommandFromApiJsonDeserializer fromApiJsonDeserializer;
     private final StaffRepository staffRepository;
     private final OfficeRepositoryWrapper officeRepositoryWrapper;
-
-    @Autowired
-    public StaffWritePlatformServiceJpaRepositoryImpl(final StaffCommandFromApiJsonDeserializer fromApiJsonDeserializer,
-            final StaffRepository staffRepository, final OfficeRepositoryWrapper officeRepositoryWrapper) {
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.staffRepository = staffRepository;
-        this.officeRepositoryWrapper = officeRepositoryWrapper;
-    }
 
     @Transactional
     @Override

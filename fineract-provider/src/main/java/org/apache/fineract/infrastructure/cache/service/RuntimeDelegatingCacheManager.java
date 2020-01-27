@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.infrastructure.cache.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.cache.CacheApiConstants;
 import org.apache.fineract.infrastructure.cache.CacheEnumerations;
 import org.apache.fineract.infrastructure.cache.data.CacheData;
 import org.apache.fineract.infrastructure.cache.domain.CacheType;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.ehcache.EhCacheCacheManager;
@@ -45,17 +45,12 @@ import java.util.Map;
  * switch implementation through UI/API
  */
 @Component(value = "runtimeDelegatingCacheManager")
+@RequiredArgsConstructor
 public class RuntimeDelegatingCacheManager /*implements CacheManager*/ {
 
     private final CacheManager cacheManager;
     private final CacheManager noOpCacheManager = new NoOpCacheManager();
     private CacheManager currentCacheManager;
-
-    @Autowired
-    public RuntimeDelegatingCacheManager(final CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
-        this.currentCacheManager = this.noOpCacheManager;
-    }
 
     // @Override
     public Cache getCache(final String name) {

@@ -18,11 +18,8 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.documentmanagement.api.ImagesApiResource.ENTITY_TYPE_FOR_IMAGES;
 import org.apache.fineract.infrastructure.documentmanagement.contentrepository.ContentRepository;
 import org.apache.fineract.infrastructure.documentmanagement.contentrepository.ContentRepositoryFactory;
@@ -32,28 +29,22 @@ import org.apache.fineract.organisation.staff.domain.StaffRepositoryWrapper;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
 import org.apache.fineract.portfolio.client.exception.ImageNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 @Service
+@RequiredArgsConstructor
 public class ImageReadPlatformServiceImpl implements ImageReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final ContentRepositoryFactory contentRepositoryFactory;
     private final ClientRepositoryWrapper clientRepositoryWrapper;
     private final StaffRepositoryWrapper staffRepositoryWrapper;
-
-    @Autowired
-    public ImageReadPlatformServiceImpl(final DataSource dataSource, final ContentRepositoryFactory documentStoreFactory,
-            final ClientRepositoryWrapper clientRepositoryWrapper, StaffRepositoryWrapper staffRepositoryWrapper) {
-        this.staffRepositoryWrapper = staffRepositoryWrapper;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.contentRepositoryFactory = documentStoreFactory;
-        this.clientRepositoryWrapper = clientRepositoryWrapper;
-    }
 
     private static final class ImageMapper implements RowMapper<ImageData> {
 

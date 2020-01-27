@@ -18,13 +18,13 @@
  */
 package org.apache.fineract.infrastructure.security.domain;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.apache.fineract.infrastructure.security.data.OTPRequest;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.Assert;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 @Profile("twofactor")

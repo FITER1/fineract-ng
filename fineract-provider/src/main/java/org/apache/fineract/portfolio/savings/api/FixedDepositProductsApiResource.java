@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.savings.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingDropdownReadPlatformService;
 import org.apache.fineract.accounting.common.AccountingEnumerations;
 import org.apache.fineract.accounting.common.AccountingRuleType;
@@ -52,7 +53,6 @@ import org.apache.fineract.portfolio.savings.service.SavingsDropdownReadPlatform
 import org.apache.fineract.portfolio.savings.service.SavingsEnumerations;
 import org.apache.fineract.portfolio.tax.data.TaxGroupData;
 import org.apache.fineract.portfolio.tax.service.TaxReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -70,6 +70,7 @@ import java.util.Map;
 @Component
 @Scope("singleton")
 @Api(value = "Fixed Deposit Product", description = "This is one of the advanced term deposit product offered by MFI's. The Fixed Deposit Products (aka FD) product offerings are modeled using this API.\n" + "\n" + "The FD products are deposit accounts which are held for a fixed term – like 1 year, 2 years etc.\n" + "\n" + "When creating fixed deposit accounts, the details from the fixed deposit product are used to auto fill details of the fixed deposit account application process.")
+@RequiredArgsConstructor
 public class FixedDepositProductsApiResource {
 
     private final DepositProductReadPlatformService depositProductReadPlatformService;
@@ -88,38 +89,6 @@ public class FixedDepositProductsApiResource {
     private final DropdownReadPlatformService dropdownReadPlatformService;
     private final PaymentTypeReadPlatformService paymentTypeReadPlatformService;
     private final TaxReadPlatformService taxReadPlatformService;
-
-    @Autowired
-    public FixedDepositProductsApiResource(final DepositProductReadPlatformService depositProductReadPlatformService,
-            final SavingsDropdownReadPlatformService savingsDropdownReadPlatformService,
-            final CurrencyReadPlatformService currencyReadPlatformService, final PlatformSecurityContext context,
-            final DefaultToApiJsonSerializer<FixedDepositProductData> toApiJsonSerializer,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService,
-            final ProductToGLAccountMappingReadPlatformService accountMappingReadPlatformService,
-            final ChargeReadPlatformService chargeReadPlatformService, final InterestRateChartReadPlatformService chartReadPlatformService,
-            final InterestRateChartReadPlatformService interestRateChartReadPlatformService,
-            final DepositsDropdownReadPlatformService depositsDropdownReadPlatformService,
-            final DropdownReadPlatformService dropdownReadPlatformService,
-            final PaymentTypeReadPlatformService paymentTypeReadPlatformService, final TaxReadPlatformService taxReadPlatformService) {
-        this.depositProductReadPlatformService = depositProductReadPlatformService;
-        this.savingsDropdownReadPlatformService = savingsDropdownReadPlatformService;
-        this.currencyReadPlatformService = currencyReadPlatformService;
-        this.context = context;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.accountingDropdownReadPlatformService = accountingDropdownReadPlatformService;
-        this.accountMappingReadPlatformService = accountMappingReadPlatformService;
-        this.chargeReadPlatformService = chargeReadPlatformService;
-        this.chartReadPlatformService = chartReadPlatformService;
-        this.interestRateChartReadPlatformService = interestRateChartReadPlatformService;
-        this.depositsDropdownReadPlatformService = depositsDropdownReadPlatformService;
-        this.dropdownReadPlatformService = dropdownReadPlatformService;
-        this.paymentTypeReadPlatformService = paymentTypeReadPlatformService;
-        this.taxReadPlatformService = taxReadPlatformService;
-    }
 
     @POST
     @Consumes({ MediaType.APPLICATION_JSON })

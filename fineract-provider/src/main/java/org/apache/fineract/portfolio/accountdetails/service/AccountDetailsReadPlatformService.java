@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.accountdetails.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.accountdetails.data.AccountSummaryCollectionData;
 import org.apache.fineract.portfolio.accountdetails.data.LoanAccountSummaryData;
+
+import java.util.Collection;
 
 public interface AccountDetailsReadPlatformService {
 

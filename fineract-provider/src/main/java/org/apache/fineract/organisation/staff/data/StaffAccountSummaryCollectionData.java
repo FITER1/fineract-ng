@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.organisation.staff.data;
 
+import org.apache.fineract.portfolio.accountdetails.data.LoanAccountSummaryData;
+
 import java.util.Collection;
 import java.util.List;
-
-import org.apache.fineract.portfolio.accountdetails.data.LoanAccountSummaryData;
 
 /**
  *

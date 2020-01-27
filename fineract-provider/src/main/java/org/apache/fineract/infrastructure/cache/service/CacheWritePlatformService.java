@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.infrastructure.cache.service;
 
-import java.util.Map;
-
 import org.apache.fineract.infrastructure.cache.domain.CacheType;
+
+import java.util.Map;
 
 public interface CacheWritePlatformService {
 

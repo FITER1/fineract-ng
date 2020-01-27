@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.infrastructure.security.data;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.useradministration.data.RoleData;
+
+import java.util.Collection;
 
 /**
  * Immutable data object for authentication.

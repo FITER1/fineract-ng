@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.group.api;
 
 import com.google.gson.JsonElement;
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -63,7 +64,6 @@ import org.apache.fineract.portfolio.meeting.service.MeetingReadPlatformService;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -81,6 +81,7 @@ import java.util.*;
 @Component
 @Scope("singleton")
 @Api(value = "Groups", description = "Groups are used to provide a distinctive banking distribution channel used in microfinances throughout the world. The Group is an administrative unit. It can contain as few as 5 people or as many as 40 depending on how its used.\n\n" + "\n\n" + "Different styles of group lending - Joint-Liability Group, Grameen Model (Center-Group), Self-Help Groups, Village/Communal Banks)")
+@RequiredArgsConstructor
 public class GroupsApiResource {
 
     private final PlatformSecurityContext context;
@@ -101,43 +102,6 @@ public class GroupsApiResource {
     private final EntityDatatableChecksReadService entityDatatableChecksReadService;
     private final BulkImportWorkbookService bulkImportWorkbookService;
     private final BulkImportWorkbookPopulatorService bulkImportWorkbookPopulatorService;
-
-
-    @Autowired
-    public GroupsApiResource(final PlatformSecurityContext context, final GroupReadPlatformService groupReadPlatformService,
-            final CenterReadPlatformService centerReadPlatformService, final ClientReadPlatformService clientReadPlatformService,
-            final ToApiJsonSerializer<Object> toApiJsonSerializer,
-            final ToApiJsonSerializer<GroupGeneralData> groupTopOfHierarchyApiJsonSerializer,
-            final ToApiJsonSerializer<AccountSummaryCollectionData> groupSummaryToApiJsonSerializer,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final CollectionSheetReadPlatformService collectionSheetReadPlatformService, final FromJsonHelper fromJsonHelper,
-            final GroupRolesReadPlatformService groupRolesReadPlatformService,
-            final AccountDetailsReadPlatformService accountDetailsReadPlatformService,
-            final CalendarReadPlatformService calendarReadPlatformService, final MeetingReadPlatformService meetingReadPlatformService,
-            final EntityDatatableChecksReadService entityDatatableChecksReadService,
-            final BulkImportWorkbookService bulkImportWorkbookService,
-            final BulkImportWorkbookPopulatorService bulkImportWorkbookPopulatorService) {
-
-        this.context = context;
-        this.groupReadPlatformService = groupReadPlatformService;
-        this.centerReadPlatformService = centerReadPlatformService;
-        this.clientReadPlatformService = clientReadPlatformService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.groupGeneralApiJsonSerializer = groupTopOfHierarchyApiJsonSerializer;
-        this.groupSummaryToApiJsonSerializer = groupSummaryToApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.collectionSheetReadPlatformService = collectionSheetReadPlatformService;
-        this.fromJsonHelper = fromJsonHelper;
-        this.groupRolesReadPlatformService = groupRolesReadPlatformService;
-        this.accountDetailsReadPlatformService = accountDetailsReadPlatformService;
-        this.calendarReadPlatformService = calendarReadPlatformService;
-        this.meetingReadPlatformService = meetingReadPlatformService;
-        this.entityDatatableChecksReadService = entityDatatableChecksReadService;
-        this.bulkImportWorkbookPopulatorService=bulkImportWorkbookPopulatorService;
-        this.bulkImportWorkbookService=bulkImportWorkbookService;
-    }
 
     @GET
     @Path("template")

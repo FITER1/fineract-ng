@@ -18,46 +18,28 @@
  */
 package org.apache.fineract.infrastructure.gcm.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.configuration.service.ExternalServicesPropertiesReadPlatformService;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.gcm.GcmConstants;
-import org.apache.fineract.infrastructure.gcm.domain.DeviceRegistration;
-import org.apache.fineract.infrastructure.gcm.domain.DeviceRegistrationRepositoryWrapper;
-import org.apache.fineract.infrastructure.gcm.domain.Message;
+import org.apache.fineract.infrastructure.gcm.domain.*;
 import org.apache.fineract.infrastructure.gcm.domain.Message.Builder;
 import org.apache.fineract.infrastructure.gcm.domain.Message.Priority;
-import org.apache.fineract.infrastructure.gcm.domain.Notification;
-import org.apache.fineract.infrastructure.gcm.domain.NotificationConfigurationData;
-import org.apache.fineract.infrastructure.gcm.domain.Result;
-import org.apache.fineract.infrastructure.gcm.domain.Sender;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessage;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageRepository;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageStatusType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class NotificationSenderService {
 
 	private final DeviceRegistrationRepositoryWrapper deviceRegistrationRepositoryWrapper;
 	private final SmsMessageRepository smsMessageRepository;
 	private ExternalServicesPropertiesReadPlatformService propertiesReadPlatformService;
-
-	@Autowired
-	public NotificationSenderService(
-			final DeviceRegistrationRepositoryWrapper deviceRegistrationRepositoryWrapper,
-			final SmsMessageRepository smsMessageRepository, final ExternalServicesPropertiesReadPlatformService propertiesReadPlatformService) {
-		this.deviceRegistrationRepositoryWrapper = deviceRegistrationRepositoryWrapper;
-		this.smsMessageRepository = smsMessageRepository;
-		this.propertiesReadPlatformService = propertiesReadPlatformService;
-	}
 
 	public void sendNotification(List<SmsMessage> smsMessages) {
 		Map<Long, List<SmsMessage>> notificationByEachClient = getNotificationListByClient(smsMessages);

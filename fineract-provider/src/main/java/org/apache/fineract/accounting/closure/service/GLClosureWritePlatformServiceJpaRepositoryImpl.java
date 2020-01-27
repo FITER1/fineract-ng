@@ -18,9 +18,7 @@
  */
 package org.apache.fineract.accounting.closure.service;
 
-import java.util.Date;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.closure.api.GLClosureJsonInputParams;
 import org.apache.fineract.accounting.closure.command.GLClosureCommand;
 import org.apache.fineract.accounting.closure.domain.GLClosure;
@@ -40,12 +38,15 @@ import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class GLClosureWritePlatformServiceJpaRepositoryImpl implements GLClosureWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(GLClosureWritePlatformServiceJpaRepositoryImpl.class);
@@ -53,14 +54,6 @@ public class GLClosureWritePlatformServiceJpaRepositoryImpl implements GLClosure
     private final GLClosureRepository glClosureRepository;
     private final OfficeRepositoryWrapper officeRepositoryWrapper;
     private final GLClosureCommandFromApiJsonDeserializer fromApiJsonDeserializer;
-
-    @Autowired
-    public GLClosureWritePlatformServiceJpaRepositoryImpl(final GLClosureRepository glClosureRepository,
-            final OfficeRepositoryWrapper officeRepositoryWrapper, final GLClosureCommandFromApiJsonDeserializer fromApiJsonDeserializer) {
-        this.glClosureRepository = glClosureRepository;
-        this.officeRepositoryWrapper = officeRepositoryWrapper;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-    }
 
     @Transactional
     @Override

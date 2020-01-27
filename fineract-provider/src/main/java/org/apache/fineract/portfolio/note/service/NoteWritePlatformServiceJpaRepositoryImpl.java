@@ -18,8 +18,7 @@
  */
 package org.apache.fineract.portfolio.note.service;
 
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -34,7 +33,6 @@ import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionRepository;
-import org.apache.fineract.portfolio.loanaccount.exception.LoanNotFoundException;
 import org.apache.fineract.portfolio.loanaccount.exception.LoanTransactionNotFoundException;
 import org.apache.fineract.portfolio.note.domain.Note;
 import org.apache.fineract.portfolio.note.domain.NoteRepository;
@@ -42,10 +40,12 @@ import org.apache.fineract.portfolio.note.domain.NoteType;
 import org.apache.fineract.portfolio.note.exception.NoteNotFoundException;
 import org.apache.fineract.portfolio.note.exception.NoteResourceNotSupportedException;
 import org.apache.fineract.portfolio.note.serialization.NoteCommandFromApiJsonDeserializer;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatformService {
 
     private final NoteRepository noteRepository;
@@ -54,18 +54,6 @@ public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatf
     private final LoanRepositoryWrapper loanRepository;
     private final LoanTransactionRepository loanTransactionRepository;
     private final NoteCommandFromApiJsonDeserializer fromApiJsonDeserializer;
-
-    @Autowired
-    public NoteWritePlatformServiceJpaRepositoryImpl(final NoteRepository noteRepository, final ClientRepositoryWrapper clientRepository,
-            final GroupRepository groupRepository, final LoanRepositoryWrapper loanRepository,
-            final LoanTransactionRepository loanTransactionRepository, final NoteCommandFromApiJsonDeserializer fromApiJsonDeserializer) {
-        this.noteRepository = noteRepository;
-        this.clientRepository = clientRepository;
-        this.groupRepository = groupRepository;
-        this.loanRepository = loanRepository;
-        this.loanTransactionRepository = loanTransactionRepository;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-    }
 
     private CommandProcessingResult createClientNote(final JsonCommand command) {
 

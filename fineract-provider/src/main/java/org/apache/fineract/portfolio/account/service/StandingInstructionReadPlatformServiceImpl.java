@@ -18,12 +18,31 @@
  */
 package org.apache.fineract.portfolio.account.service;
 
-import static org.apache.fineract.portfolio.account.service.AccountTransferEnumerations.accountType;
-import static org.apache.fineract.portfolio.account.service.AccountTransferEnumerations.recurrenceType;
-import static org.apache.fineract.portfolio.account.service.AccountTransferEnumerations.standingInstructionPriority;
-import static org.apache.fineract.portfolio.account.service.AccountTransferEnumerations.standingInstructionStatus;
-import static org.apache.fineract.portfolio.account.service.AccountTransferEnumerations.standingInstructionType;
-import static org.apache.fineract.portfolio.account.service.AccountTransferEnumerations.transferType;
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.infrastructure.core.service.DateUtils;
+import org.apache.fineract.infrastructure.core.service.Page;
+import org.apache.fineract.infrastructure.core.service.PaginationHelper;
+import org.apache.fineract.infrastructure.core.service.SearchParameters;
+import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
+import org.apache.fineract.organisation.office.data.OfficeData;
+import org.apache.fineract.organisation.office.service.OfficeReadPlatformService;
+import org.apache.fineract.portfolio.account.PortfolioAccountType;
+import org.apache.fineract.portfolio.account.data.*;
+import org.apache.fineract.portfolio.account.domain.*;
+import org.apache.fineract.portfolio.account.exception.AccountTransferNotFoundException;
+import org.apache.fineract.portfolio.client.data.ClientData;
+import org.apache.fineract.portfolio.client.service.ClientReadPlatformService;
+import org.apache.fineract.portfolio.common.service.CommonEnumerations;
+import org.apache.fineract.portfolio.common.service.DropdownReadPlatformService;
+import org.joda.time.LocalDate;
+import org.joda.time.MonthDay;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -33,42 +52,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.DateUtils;
-import org.apache.fineract.infrastructure.core.service.Page;
-import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
-import org.apache.fineract.infrastructure.core.service.SearchParameters;
-import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
-import org.apache.fineract.organisation.office.data.OfficeData;
-import org.apache.fineract.organisation.office.service.OfficeReadPlatformService;
-import org.apache.fineract.portfolio.account.PortfolioAccountType;
-import org.apache.fineract.portfolio.account.data.PortfolioAccountDTO;
-import org.apache.fineract.portfolio.account.data.PortfolioAccountData;
-import org.apache.fineract.portfolio.account.data.StandingInstructionDTO;
-import org.apache.fineract.portfolio.account.data.StandingInstructionData;
-import org.apache.fineract.portfolio.account.data.StandingInstructionDuesData;
-import org.apache.fineract.portfolio.account.domain.AccountTransferRecurrenceType;
-import org.apache.fineract.portfolio.account.domain.AccountTransferType;
-import org.apache.fineract.portfolio.account.domain.StandingInstructionPriority;
-import org.apache.fineract.portfolio.account.domain.StandingInstructionStatus;
-import org.apache.fineract.portfolio.account.domain.StandingInstructionType;
-import org.apache.fineract.portfolio.account.exception.AccountTransferNotFoundException;
-import org.apache.fineract.portfolio.client.data.ClientData;
-import org.apache.fineract.portfolio.client.service.ClientReadPlatformService;
-import org.apache.fineract.portfolio.common.service.CommonEnumerations;
-import org.apache.fineract.portfolio.common.service.DropdownReadPlatformService;
-import org.joda.time.LocalDate;
-import org.joda.time.MonthDay;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
+import static org.apache.fineract.portfolio.account.service.AccountTransferEnumerations.*;
 
 @Service
+@RequiredArgsConstructor
 public class StandingInstructionReadPlatformServiceImpl implements StandingInstructionReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
@@ -79,25 +66,10 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
     private final DropdownReadPlatformService dropdownReadPlatformService;
 
     // mapper
-    private final StandingInstructionMapper standingInstructionMapper;
+    private final StandingInstructionMapper standingInstructionMapper = new StandingInstructionMapper();
 
     // pagination
     private final PaginationHelper<StandingInstructionData> paginationHelper = new PaginationHelper<>();
-
-    @Autowired
-    public StandingInstructionReadPlatformServiceImpl(final DataSource dataSource,
-            final ClientReadPlatformService clientReadPlatformService, final OfficeReadPlatformService officeReadPlatformService,
-            final PortfolioAccountReadPlatformService portfolioAccountReadPlatformService,
-            final DropdownReadPlatformService dropdownReadPlatformService,
-            final ColumnValidator columnValidator) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.clientReadPlatformService = clientReadPlatformService;
-        this.officeReadPlatformService = officeReadPlatformService;
-        this.portfolioAccountReadPlatformService = portfolioAccountReadPlatformService;
-        this.dropdownReadPlatformService = dropdownReadPlatformService;
-        this.standingInstructionMapper = new StandingInstructionMapper();
-        this.columnValidator = columnValidator;
-    }
 
     @Override
     public StandingInstructionData retrieveTemplate(final Long fromOfficeId, final Long fromClientId, final Long fromAccountId,

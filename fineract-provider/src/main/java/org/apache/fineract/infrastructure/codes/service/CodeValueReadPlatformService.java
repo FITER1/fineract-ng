@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.infrastructure.codes.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
+
+import java.util.Collection;
 
 /**
  * A service for retrieving code value information based on the code itself.

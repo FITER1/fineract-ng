@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.address.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
 import org.apache.fineract.infrastructure.core.api.ApiRequestParameterHelper;
 import org.apache.fineract.infrastructure.core.serialization.ApiRequestJsonSerializationSettings;
@@ -27,7 +28,6 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.portfolio.address.data.AddressData;
 import org.apache.fineract.portfolio.address.data.FieldConfigurationData;
 import org.apache.fineract.portfolio.address.service.FieldConfigurationReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +44,7 @@ import java.util.Set;
 @Component
 @Scope("singleton")
 @Api(value = "Entity Field Configuration", description = "Entity Field configuration API is a generic and extensible \n" + "wherein various entities and subentities can be related.\n" + "Also it gives the user an ability to enable/disable fields,\n" + "add regular expression for validation")
+@RequiredArgsConstructor
 public class EntityFieldConfigurationApiResources {
 
 	private final Set<String> RESPONSE_DATA_PARAMETERS = new HashSet<>(Arrays.asList("clientAddressId", "client_id",
@@ -57,26 +58,11 @@ public class EntityFieldConfigurationApiResources {
 	private final ApiRequestParameterHelper apiRequestParameterHelper;
 	private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
 
-	@Autowired
-	public EntityFieldConfigurationApiResources(final PlatformSecurityContext context,
-			final DefaultToApiJsonSerializer<AddressData> toApiJsonSerializer,
-			final FieldConfigurationReadPlatformService readPlatformServicefld,
-			final DefaultToApiJsonSerializer<FieldConfigurationData> toApiJsonSerializerfld,
-			final ApiRequestParameterHelper apiRequestParameterHelper,
-			final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService) {
-		this.context = context;
-		this.toApiJsonSerializer = toApiJsonSerializer;
-		this.readPlatformServicefld = readPlatformServicefld;
-		this.toApiJsonSerializerfld = toApiJsonSerializerfld;
-		this.apiRequestParameterHelper = apiRequestParameterHelper;
-		this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-	}
-
 	@GET
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@Produces({ MediaType.APPLICATION_JSON })
-       @ApiOperation(httpMethod = "GET", value = "Retrieves the Entity Field Configuration", notes = "It retrieves all the Entity Field Configuration")
-       @ApiResponses({@ApiResponse(code = 200, message = "OK", response = EntityFieldConfigurationApiResourcesSwagger.GetFieldConfigurationEntityResponse.class, responseContainer = "List")})
+   	@ApiOperation(httpMethod = "GET", value = "Retrieves the Entity Field Configuration", notes = "It retrieves all the Entity Field Configuration")
+   	@ApiResponses({@ApiResponse(code = 200, message = "OK", response = EntityFieldConfigurationApiResourcesSwagger.GetFieldConfigurationEntityResponse.class, responseContainer = "List")})
 	public String getAddresses(@PathParam("entity") @ApiParam(value = "entity") final String entityname, @Context final UriInfo uriInfo) {
 		this.context.authenticatedUser().validateHasReadPermission(this.resourceNameForPermissions);
 

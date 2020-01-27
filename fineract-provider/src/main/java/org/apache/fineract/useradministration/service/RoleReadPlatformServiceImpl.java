@@ -18,32 +18,26 @@
  */
 package org.apache.fineract.useradministration.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.portfolio.self.registration.SelfServiceApiConstants;
 import org.apache.fineract.useradministration.data.RoleData;
 import org.apache.fineract.useradministration.exception.RoleNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+
 @Service
+@RequiredArgsConstructor
 public class RoleReadPlatformServiceImpl implements RoleReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final RoleMapper roleRowMapper;
-
-    @Autowired
-    public RoleReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.roleRowMapper = new RoleMapper();
-    }
 
     @Override
     public Collection<RoleData> retrieveAll() {

@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.account.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.account.data.PortfolioAccountDTO;
 import org.apache.fineract.portfolio.account.data.PortfolioAccountData;
+
+import java.util.Collection;
 
 public interface PortfolioAccountReadPlatformService {
 

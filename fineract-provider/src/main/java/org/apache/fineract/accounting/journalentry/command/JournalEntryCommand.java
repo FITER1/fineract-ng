@@ -18,15 +18,15 @@
  */
 package org.apache.fineract.accounting.journalentry.command;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.fineract.accounting.journalentry.api.JournalEntryJsonInputParams;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.joda.time.LocalDate;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Immutable command for adding an accounting closure

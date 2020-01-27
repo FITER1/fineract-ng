@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.portfolio.interestratechart.incentive;
 
-import java.math.BigDecimal;
-
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.interestratechart.domain.InterestIncentivesFields;
 import org.joda.time.LocalDate;
 import org.joda.time.Years;
+
+import java.math.BigDecimal;
 
 public class ClientAttributeIncentiveCalculation extends AttributeIncentiveCalculation {
 

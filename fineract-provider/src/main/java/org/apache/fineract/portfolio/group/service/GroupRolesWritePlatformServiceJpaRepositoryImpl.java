@@ -18,8 +18,7 @@
  */
 package org.apache.fineract.portfolio.group.service;
 
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -38,11 +37,13 @@ import org.apache.fineract.portfolio.group.exception.ClientNotInGroupException;
 import org.apache.fineract.portfolio.group.serialization.GroupRolesDataValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class GroupRolesWritePlatformServiceJpaRepositoryImpl implements GroupRolesWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(GroupRolesWritePlatformServiceJpaRepositoryImpl.class);
@@ -53,19 +54,6 @@ public class GroupRolesWritePlatformServiceJpaRepositoryImpl implements GroupRol
     private final CodeValueRepositoryWrapper codeValueRepository;
     private final ClientRepositoryWrapper clientRepository;
     private final GroupRoleRepositoryWrapper groupRoleRepository;
-
-    @Autowired
-    public GroupRolesWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final GroupRepositoryWrapper groupRepository, final GroupRolesDataValidator fromApiJsonDeserializer,
-            final CodeValueRepositoryWrapper codeValueRepository, final ClientRepositoryWrapper clientRepository,
-            final GroupRoleRepositoryWrapper groupRoleRepository) {
-        this.context = context;
-        this.groupRepository = groupRepository;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.codeValueRepository = codeValueRepository;
-        this.clientRepository = clientRepository;
-        this.groupRoleRepository = groupRoleRepository;
-    }
 
     @Override
     public CommandProcessingResult createRole(final JsonCommand command) {

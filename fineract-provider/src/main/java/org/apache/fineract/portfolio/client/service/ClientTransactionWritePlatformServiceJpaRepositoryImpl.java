@@ -18,24 +18,20 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
-import java.util.Map;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.organisation.office.domain.OrganisationCurrencyRepositoryWrapper;
-import org.apache.fineract.portfolio.client.domain.Client;
-import org.apache.fineract.portfolio.client.domain.ClientCharge;
-import org.apache.fineract.portfolio.client.domain.ClientChargePaidBy;
-import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
-import org.apache.fineract.portfolio.client.domain.ClientTransaction;
-import org.apache.fineract.portfolio.client.domain.ClientTransactionRepositoryWrapper;
+import org.apache.fineract.portfolio.client.domain.*;
 import org.apache.fineract.portfolio.client.exception.ClientTransactionCannotBeUndoneException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.Set;
+
 @Service
+@RequiredArgsConstructor
 public class ClientTransactionWritePlatformServiceJpaRepositoryImpl implements ClientTransactionWritePlatformService {
 
     private final ClientTransactionRepositoryWrapper clientTransactionRepository;
@@ -43,17 +39,6 @@ public class ClientTransactionWritePlatformServiceJpaRepositoryImpl implements C
     private final ClientRepositoryWrapper clientRepository;
     private final OrganisationCurrencyRepositoryWrapper organisationCurrencyRepository;
     private final JournalEntryWritePlatformService journalEntryWritePlatformService;
-
-    @Autowired
-    public ClientTransactionWritePlatformServiceJpaRepositoryImpl(final ClientTransactionRepositoryWrapper clientTransactionRepository,
-            final ClientRepositoryWrapper clientRepositoryWrapper,
-            final OrganisationCurrencyRepositoryWrapper organisationCurrencyRepositoryWrapper,
-            JournalEntryWritePlatformService journalEntryWritePlatformService) {
-        this.clientTransactionRepository = clientTransactionRepository;
-        this.clientRepository = clientRepositoryWrapper;
-        this.organisationCurrencyRepository = organisationCurrencyRepositoryWrapper;
-        this.journalEntryWritePlatformService = journalEntryWritePlatformService;
-    }
 
     @Override
     public CommandProcessingResult undo(Long clientId, Long transactionId) {

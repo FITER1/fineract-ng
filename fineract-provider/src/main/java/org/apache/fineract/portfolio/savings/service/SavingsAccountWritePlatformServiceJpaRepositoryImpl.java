@@ -18,26 +18,7 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.SAVINGS_ACCOUNT_CHARGE_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.SAVINGS_ACCOUNT_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.amountParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.chargeIdParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.dueAsOfDateParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.withHoldTaxParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.withdrawBalanceParamName;
-
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
@@ -55,11 +36,7 @@ import org.apache.fineract.infrastructure.dataqueries.data.StatusEnum;
 import org.apache.fineract.infrastructure.dataqueries.service.EntityDatatableChecksWritePlatformService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.holiday.domain.HolidayRepositoryWrapper;
-import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
-import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepositoryWrapper;
-import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
-import org.apache.fineract.organisation.monetary.domain.Money;
-import org.apache.fineract.organisation.monetary.domain.MoneyHelper;
+import org.apache.fineract.organisation.monetary.domain.*;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.organisation.staff.domain.StaffRepositoryWrapper;
@@ -91,37 +68,27 @@ import org.apache.fineract.portfolio.savings.data.SavingsAccountChargeDataValida
 import org.apache.fineract.portfolio.savings.data.SavingsAccountDataValidator;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountTransactionDTO;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountTransactionDataValidator;
-import org.apache.fineract.portfolio.savings.domain.DepositAccountOnHoldTransaction;
-import org.apache.fineract.portfolio.savings.domain.DepositAccountOnHoldTransactionRepository;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountAssembler;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountCharge;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountChargeRepositoryWrapper;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountDomainService;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepositoryWrapper;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransactionRepository;
-import org.apache.fineract.portfolio.savings.exception.PostInterestAsOnDateException;
+import org.apache.fineract.portfolio.savings.domain.*;
+import org.apache.fineract.portfolio.savings.exception.*;
 import org.apache.fineract.portfolio.savings.exception.PostInterestAsOnDateException.PostInterestAsOnException_TYPE;
-import org.apache.fineract.portfolio.savings.exception.PostInterestClosingDateException;
-import org.apache.fineract.portfolio.savings.exception.SavingsAccountClosingNotAllowedException;
-import org.apache.fineract.portfolio.savings.exception.SavingsAccountTransactionNotFoundException;
-import org.apache.fineract.portfolio.savings.exception.SavingsOfficerAssignmentException;
-import org.apache.fineract.portfolio.savings.exception.SavingsOfficerUnassignmentException;
-import org.apache.fineract.portfolio.savings.exception.TransactionUpdateNotAllowedException;
 import org.apache.fineract.portfolio.transfer.api.TransferApiConstants;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.useradministration.domain.AppUserRepositoryWrapper;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
+
 @Service
+@RequiredArgsConstructor
 public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements SavingsAccountWritePlatformService {
 
     private final PlatformSecurityContext context;
@@ -149,54 +116,6 @@ public class SavingsAccountWritePlatformServiceJpaRepositoryImpl implements Savi
     private final AppUserRepositoryWrapper appuserRepository;
     private final StandingInstructionRepository standingInstructionRepository;
     private final BusinessEventNotifierService businessEventNotifierService;
-
-    @Autowired
-    public SavingsAccountWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final SavingsAccountRepositoryWrapper savingAccountRepositoryWrapper,
-            final SavingsAccountTransactionRepository savingsAccountTransactionRepository,
-            final SavingsAccountAssembler savingAccountAssembler,
-            final SavingsAccountTransactionDataValidator savingsAccountTransactionDataValidator,
-            final SavingsAccountChargeDataValidator savingsAccountChargeDataValidator,
-            final PaymentDetailWritePlatformService paymentDetailWritePlatformService,
-            final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepositoryWrapper,
-            final JournalEntryWritePlatformService journalEntryWritePlatformService,
-            final SavingsAccountDomainService savingsAccountDomainService, final NoteRepository noteRepository,
-            final AccountTransfersReadPlatformService accountTransfersReadPlatformService, final HolidayRepositoryWrapper holidayRepository,
-            final WorkingDaysRepositoryWrapper workingDaysRepository,
-            final AccountAssociationsReadPlatformService accountAssociationsReadPlatformService,
-            final ChargeRepositoryWrapper chargeRepository, final SavingsAccountChargeRepositoryWrapper savingsAccountChargeRepository,
-            final SavingsAccountDataValidator fromApiJsonDeserializer, final StaffRepositoryWrapper staffRepository,
-            final ConfigurationDomainService configurationDomainService,
-            final DepositAccountOnHoldTransactionRepository depositAccountOnHoldTransactionRepository,
-            final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService,
-            final AppUserRepositoryWrapper appuserRepository, final StandingInstructionRepository standingInstructionRepository,
-            final BusinessEventNotifierService businessEventNotifierService) {
-        this.context = context;
-        this.savingAccountRepositoryWrapper = savingAccountRepositoryWrapper;
-        this.savingsAccountTransactionRepository = savingsAccountTransactionRepository;
-        this.savingAccountAssembler = savingAccountAssembler;
-        this.savingsAccountTransactionDataValidator = savingsAccountTransactionDataValidator;
-        this.savingsAccountChargeDataValidator = savingsAccountChargeDataValidator;
-        this.paymentDetailWritePlatformService = paymentDetailWritePlatformService;
-        this.applicationCurrencyRepositoryWrapper = applicationCurrencyRepositoryWrapper;
-        this.journalEntryWritePlatformService = journalEntryWritePlatformService;
-        this.savingsAccountDomainService = savingsAccountDomainService;
-        this.noteRepository = noteRepository;
-        this.accountTransfersReadPlatformService = accountTransfersReadPlatformService;
-        this.accountAssociationsReadPlatformService = accountAssociationsReadPlatformService;
-        this.chargeRepository = chargeRepository;
-        this.savingsAccountChargeRepository = savingsAccountChargeRepository;
-        this.holidayRepository = holidayRepository;
-        this.workingDaysRepository = workingDaysRepository;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.staffRepository = staffRepository;
-        this.configurationDomainService = configurationDomainService;
-        this.depositAccountOnHoldTransactionRepository = depositAccountOnHoldTransactionRepository;
-        this.entityDatatableChecksWritePlatformService = entityDatatableChecksWritePlatformService;
-        this.appuserRepository = appuserRepository;
-        this.standingInstructionRepository = standingInstructionRepository;
-        this.businessEventNotifierService = businessEventNotifierService;
-    }
 
     @Transactional
     @Override

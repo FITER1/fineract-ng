@@ -19,18 +19,7 @@
 
 package org.apache.fineract.infrastructure.campaigns.sms.service;
 
-import java.io.IOException;
-import java.security.InvalidParameterException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.PostConstruct;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.campaigns.sms.constants.SmsCampaignTriggerType;
 import org.apache.fineract.infrastructure.campaigns.sms.domain.SmsCampaign;
 import org.apache.fineract.infrastructure.campaigns.sms.domain.SmsCampaignRepository;
@@ -60,10 +49,15 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.security.InvalidParameterException;
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
 
 	private static final Logger logger = LoggerFactory.getLogger(SmsCampaignDomainServiceImpl.class);
@@ -80,23 +74,6 @@ public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
     private final SmsMessageScheduledJobService smsMessageScheduledJobService; 
     private final SmsCampaignValidator smsCampaignValidator;
     
-    @Autowired
-    public SmsCampaignDomainServiceImpl(final SmsCampaignRepository smsCampaignRepository, final SmsMessageRepository smsMessageRepository,
-                                        final BusinessEventNotifierService businessEventNotifierService, final OfficeRepository officeRepository,
-                                        final SmsCampaignWritePlatformService smsCampaignWritePlatformCommandHandler,
-                                        final GroupRepository groupRepository,
-                                        final SmsMessageScheduledJobService smsMessageScheduledJobService,
-                                        final SmsCampaignValidator smsCampaignValidator){
-        this.smsCampaignRepository = smsCampaignRepository;
-        this.smsMessageRepository = smsMessageRepository;
-        this.businessEventNotifierService = businessEventNotifierService;
-        this.officeRepository = officeRepository;
-        this.smsCampaignWritePlatformCommandHandler = smsCampaignWritePlatformCommandHandler;
-        this.groupRepository = groupRepository;
-        this.smsMessageScheduledJobService = smsMessageScheduledJobService ;
-        this.smsCampaignValidator = smsCampaignValidator;
-    }
-
     @PostConstruct
     public void addListners() {
         this.businessEventNotifierService.addBusinessEventPostListners(BUSINESS_EVENTS.LOAN_APPROVED, new SendSmsOnLoanApproved());

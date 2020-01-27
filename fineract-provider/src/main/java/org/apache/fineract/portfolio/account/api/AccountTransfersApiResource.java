@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.account.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -31,7 +32,6 @@ import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.account.data.AccountTransferData;
 import org.apache.fineract.portfolio.account.service.AccountTransfersReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +44,7 @@ import javax.ws.rs.core.UriInfo;
 @Component
 @Scope("singleton")
 @Api(value = "Account Transfers", description = "Ability to be able to transfer monetary funds from one account to another.\n\n" + "\n\n" + "Note: At present only savings account to savings account transfers are supported.")
+@RequiredArgsConstructor
 public class AccountTransfersApiResource {
 
     private final PlatformSecurityContext context;
@@ -51,19 +52,6 @@ public class AccountTransfersApiResource {
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
     private final ApiRequestParameterHelper apiRequestParameterHelper;
     private final AccountTransfersReadPlatformService accountTransfersReadPlatformService;
-
-    @Autowired
-    public AccountTransfersApiResource(final PlatformSecurityContext context,
-            final DefaultToApiJsonSerializer<AccountTransferData> toApiJsonSerializer,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final AccountTransfersReadPlatformService accountTransfersReadPlatformService) {
-        this.context = context;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.accountTransfersReadPlatformService = accountTransfersReadPlatformService;
-    }
 
     @GET
     @Path("template")

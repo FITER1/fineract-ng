@@ -19,10 +19,10 @@
 
 package org.apache.fineract.portfolio.client.data;
 
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.joda.time.LocalDate;
+
+import java.util.Collection;
 
 public class ClientFamilyMembersData {
 

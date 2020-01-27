@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.infrastructure.codes.service;
 
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.codes.domain.Code;
 import org.apache.fineract.infrastructure.codes.domain.CodeRepository;
@@ -35,13 +32,16 @@ import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityEx
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class CodeWritePlatformServiceJpaRepositoryImpl implements CodeWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(CodeWritePlatformServiceJpaRepositoryImpl.class);
@@ -49,14 +49,6 @@ public class CodeWritePlatformServiceJpaRepositoryImpl implements CodeWritePlatf
     private final PlatformSecurityContext context;
     private final CodeRepository codeRepository;
     private final CodeCommandFromApiJsonDeserializer fromApiJsonDeserializer;
-
-    @Autowired
-    public CodeWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context, final CodeRepository codeRepository,
-            final CodeCommandFromApiJsonDeserializer fromApiJsonDeserializer) {
-        this.context = context;
-        this.codeRepository = codeRepository;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-    }
 
     @Transactional
     @Override

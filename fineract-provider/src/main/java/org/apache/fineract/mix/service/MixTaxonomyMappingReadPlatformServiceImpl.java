@@ -18,26 +18,21 @@
  */
 package org.apache.fineract.mix.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import javax.sql.DataSource;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.mix.data.MixTaxonomyMappingData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 @Service
+@RequiredArgsConstructor
 public class MixTaxonomyMappingReadPlatformServiceImpl implements MixTaxonomyMappingReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public MixTaxonomyMappingReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     private static final class TaxonomyMappingMapper implements RowMapper<MixTaxonomyMappingData> {
 

@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -38,7 +38,6 @@ import org.apache.fineract.portfolio.savings.data.DepositAccountInterestRateChar
 import org.apache.fineract.portfolio.savings.data.DepositAccountInterestRateChartSlabData;
 import org.apache.fineract.portfolio.savings.exception.DepositAccountInterestRateChartNotFoundException;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -54,6 +53,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class DepositAccountInterestRateChartReadPlatformServiceImpl implements DepositAccountInterestRateChartReadPlatformService {
 
     private final PlatformSecurityContext context;
@@ -63,18 +63,6 @@ public class DepositAccountInterestRateChartReadPlatformServiceImpl implements D
     private final InterestRateChartDropdownReadPlatformService chartDropdownReadPlatformService;
     private final InterestIncentiveDropdownReadPlatformService interestIncentiveDropdownReadPlatformService;
     private final CodeValueReadPlatformService codeValueReadPlatformService;
-
-    @Autowired
-    public DepositAccountInterestRateChartReadPlatformServiceImpl(PlatformSecurityContext context, final DataSource dataSource,
-            InterestRateChartDropdownReadPlatformService chartDropdownReadPlatformService,
-            final InterestIncentiveDropdownReadPlatformService interestIncentiveDropdownReadPlatformService,
-            final CodeValueReadPlatformService codeValueReadPlatformService) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.chartDropdownReadPlatformService = chartDropdownReadPlatformService;
-        this.interestIncentiveDropdownReadPlatformService = interestIncentiveDropdownReadPlatformService;
-        this.codeValueReadPlatformService = codeValueReadPlatformService;
-    }
 
     @Override
     public DepositAccountInterestRateChartData retrieveOne(Long chartId) {

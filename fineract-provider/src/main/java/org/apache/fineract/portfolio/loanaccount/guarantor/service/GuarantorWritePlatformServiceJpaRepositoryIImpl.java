@@ -18,11 +18,7 @@
  */
 package org.apache.fineract.portfolio.loanaccount.guarantor.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -43,11 +39,7 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
 import org.apache.fineract.portfolio.loanaccount.guarantor.GuarantorConstants;
 import org.apache.fineract.portfolio.loanaccount.guarantor.GuarantorConstants.GUARANTOR_JSON_INPUT_PARAMS;
 import org.apache.fineract.portfolio.loanaccount.guarantor.command.GuarantorCommand;
-import org.apache.fineract.portfolio.loanaccount.guarantor.domain.Guarantor;
-import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorFundStatusType;
-import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorFundingDetails;
-import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorRepository;
-import org.apache.fineract.portfolio.loanaccount.guarantor.domain.GuarantorType;
+import org.apache.fineract.portfolio.loanaccount.guarantor.domain.*;
 import org.apache.fineract.portfolio.loanaccount.guarantor.exception.DuplicateGuarantorException;
 import org.apache.fineract.portfolio.loanaccount.guarantor.exception.GuarantorNotFoundException;
 import org.apache.fineract.portfolio.loanaccount.guarantor.exception.InvalidGuarantorException;
@@ -57,12 +49,17 @@ import org.apache.fineract.portfolio.savings.domain.SavingsAccountAssembler;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class GuarantorWritePlatformServiceJpaRepositoryIImpl implements GuarantorWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(GuarantorWritePlatformServiceJpaRepositoryIImpl.class);
@@ -76,23 +73,6 @@ public class GuarantorWritePlatformServiceJpaRepositoryIImpl implements Guaranto
     private final SavingsAccountAssembler savingsAccountAssembler;
     private final AccountAssociationsRepository accountAssociationsRepository;
     private final GuarantorDomainService guarantorDomainService;
-
-    @Autowired
-    public GuarantorWritePlatformServiceJpaRepositoryIImpl(final LoanRepositoryWrapper loanRepositoryWrapper,
-            final GuarantorRepository guarantorRepository, final ClientRepositoryWrapper clientRepositoryWrapper,
-            final StaffRepositoryWrapper staffRepositoryWrapper, final GuarantorCommandFromApiJsonDeserializer fromApiJsonDeserializer,
-            final CodeValueRepositoryWrapper codeValueRepositoryWrapper, final SavingsAccountAssembler savingsAccountAssembler,
-            final AccountAssociationsRepository accountAssociationsRepository, final GuarantorDomainService guarantorDomainService) {
-        this.loanRepositoryWrapper = loanRepositoryWrapper;
-        this.clientRepositoryWrapper = clientRepositoryWrapper;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.guarantorRepository = guarantorRepository;
-        this.staffRepositoryWrapper = staffRepositoryWrapper;
-        this.codeValueRepositoryWrapper = codeValueRepositoryWrapper;
-        this.savingsAccountAssembler = savingsAccountAssembler;
-        this.accountAssociationsRepository = accountAssociationsRepository;
-        this.guarantorDomainService = guarantorDomainService;
-    }
 
     @Override
     @Transactional

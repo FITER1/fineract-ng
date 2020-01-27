@@ -18,14 +18,14 @@
  */
 package org.apache.fineract.spm.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.spm.util.SurveyApiConstants;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class SurveyValidator {

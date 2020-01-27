@@ -18,17 +18,11 @@
  */
 package org.apache.fineract.portfolio.loanproduct.service;
 
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingEnumerations;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityType;
 import org.apache.fineract.infrastructure.entityaccess.service.FineractEntityAccessUtil;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -44,29 +38,25 @@ import org.apache.fineract.portfolio.loanproduct.domain.LoanProductConfigurableA
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductParamType;
 import org.apache.fineract.portfolio.loanproduct.exception.LoanProductNotFoundException;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+
 @Service
+@RequiredArgsConstructor
 public class LoanProductReadPlatformServiceImpl implements LoanProductReadPlatformService {
 
     private final PlatformSecurityContext context;
     private final JdbcTemplate jdbcTemplate;
     private final ChargeReadPlatformService chargeReadPlatformService;
     private final FineractEntityAccessUtil fineractEntityAccessUtil;
-
-    @Autowired
-    public LoanProductReadPlatformServiceImpl(final PlatformSecurityContext context,
-            final ChargeReadPlatformService chargeReadPlatformService, final DataSource dataSource,
-            final FineractEntityAccessUtil fineractEntityAccessUtil) {
-        this.context = context;
-        this.chargeReadPlatformService = chargeReadPlatformService;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.fineractEntityAccessUtil = fineractEntityAccessUtil;
-    }
 
     @Override
     public LoanProductData retrieveLoanProduct(final Long loanProductId) {

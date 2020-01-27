@@ -18,18 +18,7 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.SAVINGS_PRODUCT_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.accountingRuleParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.chargesParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.taxGroupIdParamName;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.accounting.producttoaccountmapping.service.ProductToGLAccountMappingWritePlatformService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -51,13 +40,20 @@ import org.apache.fineract.portfolio.savings.domain.SavingsProductRepository;
 import org.apache.fineract.portfolio.savings.exception.SavingsProductNotFoundException;
 import org.apache.fineract.portfolio.tax.domain.TaxGroup;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
+
 @Service
+@RequiredArgsConstructor
 public class SavingsProductWritePlatformServiceJpaRepositoryImpl implements SavingsProductWritePlatformService {
 
     private final Logger logger;
@@ -67,21 +63,6 @@ public class SavingsProductWritePlatformServiceJpaRepositoryImpl implements Savi
     private final SavingsProductAssembler savingsProductAssembler;
     private final ProductToGLAccountMappingWritePlatformService accountMappingWritePlatformService;
     private final FineractEntityAccessUtil fineractEntityAccessUtil;
-
-    @Autowired
-    public SavingsProductWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final SavingsProductRepository savingProductRepository, final SavingsProductDataValidator fromApiJsonDataValidator,
-            final SavingsProductAssembler savingsProductAssembler,
-            final ProductToGLAccountMappingWritePlatformService accountMappingWritePlatformService,
-            final FineractEntityAccessUtil fineractEntityAccessUtil) {
-        this.context = context;
-        this.savingProductRepository = savingProductRepository;
-        this.fromApiJsonDataValidator = fromApiJsonDataValidator;
-        this.savingsProductAssembler = savingsProductAssembler;
-        this.logger = LoggerFactory.getLogger(SavingsProductWritePlatformServiceJpaRepositoryImpl.class);
-        this.accountMappingWritePlatformService = accountMappingWritePlatformService;
-        this.fineractEntityAccessUtil = fineractEntityAccessUtil;
-    }
 
     /*
      * Guaranteed to throw an exception no matter what the data integrity issue

@@ -18,22 +18,8 @@
  */
 package org.apache.fineract.portfolio.self.account.data;
 
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.RESOURCE_NAME;
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.NAME_PARAM_NAME;
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.OFFICE_NAME_PARAM_NAME;
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.ACCOUNT_TYPE_PARAM_NAME;
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.ACCOUNT_NUMBER_PARAM_NAME;
-import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.TRANSFER_LIMIT_PARAM_NAME;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -45,8 +31,10 @@ import org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiCon
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.*;
 
 @Component
 public class SelfBeneficiariesTPTDataValidator {

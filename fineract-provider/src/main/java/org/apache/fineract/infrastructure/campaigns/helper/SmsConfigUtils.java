@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.infrastructure.campaigns.helper;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.campaigns.sms.constants.SmsCampaignConstants;
 import org.apache.fineract.infrastructure.campaigns.sms.data.MessageGatewayConfigurationData;
 import org.apache.fineract.infrastructure.configuration.service.ExternalServicesPropertiesReadPlatformService;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -34,13 +34,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@RequiredArgsConstructor
 public class SmsConfigUtils {
 
-	@Autowired
-    private ExternalServicesPropertiesReadPlatformService propertiesReadPlatformService;
+    private final ExternalServicesPropertiesReadPlatformService propertiesReadPlatformService;
 
-	@Autowired
-	private FineractProperties fineractProperties;
+	private final FineractProperties fineractProperties;
 	
 	//This method will return uri and HttpEntry objects with keys as uri and entity
     public Map<String, Object> getMessageGateWayRequestURI(final String apiEndPoint, String apiQueueResourceDatas) {

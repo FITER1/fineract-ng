@@ -18,23 +18,9 @@
  */
 package org.apache.fineract.accounting.financialactivityaccount.api;
 
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.financialactivityaccount.data.FinancialActivityAccountData;
-import org.apache.fineract.accounting.financialactivityaccount.data.FinancialActivityData;
 import org.apache.fineract.accounting.financialactivityaccount.service.FinancialActivityAccountReadPlatformService;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -44,9 +30,14 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.serialization.ApiRequestJsonSerializationSettings;
 import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSerializer;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
 
 @Path("financialactivityaccounts")
 @Component
@@ -55,7 +46,7 @@ import org.springframework.stereotype.Component;
 @SwaggerDefinition(tags = {
         @Tag(name = "Mapping Financial Activities to Accounts", description = "Organization Level Financial Activities like Asset and Liability Transfer can be mapped to GL Account. Integrated accounting takes these accounts into consideration when an Account transfer is made between a savings to loan/savings account and vice-versa\\n\" + \"\\n\" +\"\\nField Descriptions\\n\" +\"financialActivityId\\n\" +\"The identifier of the Financial Activity\\n\" +\"glAccountId\\n\" +\"The identifier of a GL Account ( Ledger Account) which shall be used as the default account for the selected Financial Activity")
 })
-
+@RequiredArgsConstructor
 public class FinancialActivityAccountsApiResource {
 
     private final FinancialActivityAccountReadPlatformService financialActivityAccountReadPlatformService;
@@ -63,19 +54,6 @@ public class FinancialActivityAccountsApiResource {
     private final ApiRequestParameterHelper apiRequestParameterHelper;
     private final PlatformSecurityContext context;
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-
-    @Autowired
-    public FinancialActivityAccountsApiResource(final PlatformSecurityContext context,
-            final FinancialActivityAccountReadPlatformService officeToGLAccountMappingReadPlatformService,
-            final DefaultToApiJsonSerializer<FinancialActivityAccountData> toApiJsonSerializer,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService) {
-        this.context = context;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.apiJsonSerializerService = toApiJsonSerializer;
-        this.financialActivityAccountReadPlatformService = officeToGLAccountMappingReadPlatformService;
-    }
 
     @GET
     @Path("template")

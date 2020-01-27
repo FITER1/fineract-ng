@@ -18,17 +18,10 @@
  */
 package org.apache.fineract.organisation.staff.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.exception.UnrecognizedQueryParamException;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
 import org.apache.fineract.organisation.staff.data.StaffData;
@@ -37,13 +30,20 @@ import org.apache.fineract.portfolio.client.domain.ClientStatus;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanStatus;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class StaffReadPlatformServiceImpl implements StaffReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
@@ -51,14 +51,6 @@ public class StaffReadPlatformServiceImpl implements StaffReadPlatformService {
     private final StaffLookupMapper lookupMapper = new StaffLookupMapper();
     private final StaffInOfficeHierarchyMapper staffInOfficeHierarchyMapper = new StaffInOfficeHierarchyMapper();
     private final ColumnValidator columnValidator;
-
-    @Autowired
-    public StaffReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-    		final ColumnValidator columnValidator) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.columnValidator = columnValidator;
-    }
 
     private static final class StaffMapper implements RowMapper<StaffData> {
 

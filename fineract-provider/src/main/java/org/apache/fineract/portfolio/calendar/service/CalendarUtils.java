@@ -18,25 +18,11 @@
  */
 package org.apache.fineract.portfolio.calendar.service;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
-
+import com.google.gson.JsonElement;
 import net.fortuna.ical4j.model.Date;
-import net.fortuna.ical4j.model.DateList;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.NumberList;
-import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.WeekDay;
-import net.fortuna.ical4j.model.WeekDayList;
+import net.fortuna.ical4j.model.*;
 import net.fortuna.ical4j.model.parameter.Value;
 import net.fortuna.ical4j.model.property.RRule;
-
 import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
@@ -53,7 +39,10 @@ import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.google.gson.JsonElement;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 // TODO: @aleks check if the Enum.name() changes are ok here
 public class CalendarUtils {

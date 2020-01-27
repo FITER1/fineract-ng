@@ -18,32 +18,25 @@
  */
 package org.apache.fineract.organisation.monetary.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+
 @Service
+@RequiredArgsConstructor
 public class CurrencyReadPlatformServiceImpl implements CurrencyReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final PlatformSecurityContext context;
     private final CurrencyMapper currencyRowMapper;
-
-    @Autowired
-    public CurrencyReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.currencyRowMapper = new CurrencyMapper();
-    }
 
     @Override
     public Collection<CurrencyData> retrieveAllowedCurrencies() {

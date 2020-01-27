@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.adhocquery.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.adhocquery.data.AdHocData;
+
+import java.util.Collection;
 
 public interface AdHocReadPlatformService {
 

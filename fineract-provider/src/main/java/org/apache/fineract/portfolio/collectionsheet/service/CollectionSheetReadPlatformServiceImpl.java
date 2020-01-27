@@ -18,28 +18,12 @@
  */
 package org.apache.fineract.portfolio.collectionsheet.service;
 
-import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.calendarIdParamName;
-import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.officeIdParamName;
-import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.staffIdParamName;
-import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.transactionDateParamName;
-
-import java.math.BigDecimal;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.api.JsonQuery;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.calendar.domain.Calendar;
@@ -48,15 +32,7 @@ import org.apache.fineract.portfolio.calendar.domain.CalendarInstanceRepository;
 import org.apache.fineract.portfolio.calendar.domain.CalendarRepositoryWrapper;
 import org.apache.fineract.portfolio.calendar.exception.NotValidRecurringDateException;
 import org.apache.fineract.portfolio.calendar.service.CalendarReadPlatformService;
-import org.apache.fineract.portfolio.collectionsheet.data.IndividualClientData;
-import org.apache.fineract.portfolio.collectionsheet.data.IndividualCollectionSheetData;
-import org.apache.fineract.portfolio.collectionsheet.data.IndividualCollectionSheetLoanFlatData;
-import org.apache.fineract.portfolio.collectionsheet.data.JLGClientData;
-import org.apache.fineract.portfolio.collectionsheet.data.JLGCollectionSheetData;
-import org.apache.fineract.portfolio.collectionsheet.data.JLGCollectionSheetFlatData;
-import org.apache.fineract.portfolio.collectionsheet.data.JLGGroupData;
-import org.apache.fineract.portfolio.collectionsheet.data.LoanDueData;
-import org.apache.fineract.portfolio.collectionsheet.data.SavingsDueData;
+import org.apache.fineract.portfolio.collectionsheet.data.*;
 import org.apache.fineract.portfolio.collectionsheet.serialization.CollectionSheetGenerateCommandFromApiJsonDeserializer;
 import org.apache.fineract.portfolio.group.data.CenterData;
 import org.apache.fineract.portfolio.group.data.GroupGeneralData;
@@ -70,7 +46,6 @@ import org.apache.fineract.portfolio.paymenttype.service.PaymentTypeReadPlatform
 import org.apache.fineract.portfolio.savings.data.SavingsProductData;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
@@ -79,7 +54,17 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants.*;
+
 @Service
+@RequiredArgsConstructor
 public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetReadPlatformService {
 
     private final PlatformSecurityContext context;
@@ -95,29 +80,6 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
     private final CalendarReadPlatformService calendarReadPlatformService;
     private final ConfigurationDomainService configurationDomainService;
     private final CalendarInstanceRepository calendarInstanceRepository;
-
-    @Autowired
-    public CollectionSheetReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final CenterReadPlatformService centerReadPlatformService, final GroupReadPlatformService groupReadPlatformService,
-            final CollectionSheetGenerateCommandFromApiJsonDeserializer collectionSheetGenerateCommandFromApiJsonDeserializer,
-            final CalendarRepositoryWrapper calendarRepositoryWrapper,
-            final AttendanceDropdownReadPlatformService attendanceDropdownReadPlatformService,
-            final CodeValueReadPlatformService codeValueReadPlatformService, final PaymentTypeReadPlatformService paymentTypeReadPlatformService,
-            final CalendarReadPlatformService calendarReadPlatformService, final ConfigurationDomainService configurationDomainService,
-            final CalendarInstanceRepository calendarInstanceRepository) {
-        this.context = context;
-        this.centerReadPlatformService = centerReadPlatformService;
-        this.namedParameterjdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
-        this.collectionSheetGenerateCommandFromApiJsonDeserializer = collectionSheetGenerateCommandFromApiJsonDeserializer;
-        this.groupReadPlatformService = groupReadPlatformService;
-        this.calendarRepositoryWrapper = calendarRepositoryWrapper;
-        this.attendanceDropdownReadPlatformService = attendanceDropdownReadPlatformService;
-        this.codeValueReadPlatformService = codeValueReadPlatformService;
-        this.paymentTypeReadPlatformService = paymentTypeReadPlatformService;
-        this.calendarReadPlatformService = calendarReadPlatformService;
-        this.configurationDomainService = configurationDomainService;
-        this.calendarInstanceRepository = calendarInstanceRepository;
-    }
 
     /*
      * Reads all the loans which are due for disbursement or collection and

@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.loanaccount.rescheduleloan.domain;
 
-import java.math.BigDecimal;
-
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.LoanSchedulePeriodData;
 import org.joda.time.LocalDate;
+
+import java.math.BigDecimal;
 
 public interface LoanRescheduleModalPeriod {
 	

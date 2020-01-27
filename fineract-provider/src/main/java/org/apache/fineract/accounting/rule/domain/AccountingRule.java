@@ -19,7 +19,6 @@
 package org.apache.fineract.accounting.rule.domain;
 
 import lombok.*;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.accounting.journalentry.domain.JournalEntryType;
 import org.apache.fineract.accounting.rule.api.AccountingRuleJsonInputParams;

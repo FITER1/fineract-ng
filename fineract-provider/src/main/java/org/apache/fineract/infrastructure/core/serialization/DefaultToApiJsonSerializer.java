@@ -18,37 +18,26 @@
  */
 package org.apache.fineract.infrastructure.core.serialization;
 
-import java.util.Collection;
-import java.util.Set;
-
+import com.google.gson.Gson;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.service.Page;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.Gson;
+import java.util.Collection;
+import java.util.Set;
 
 /**
  * An abstract helper implementation of {@link ToApiJsonSerializer} for
  * resources to serialize their Java data objects into JSON.
  */
 @Component
+@RequiredArgsConstructor
 public final class DefaultToApiJsonSerializer<T> implements ToApiJsonSerializer<T> {
 
     private final ExcludeNothingWithPrettyPrintingOffJsonSerializerGoogleGson excludeNothingWithPrettyPrintingOff;
     private final ExcludeNothingWithPrettyPrintingOnJsonSerializerGoogleGson excludeNothingWithPrettyPrintingOn;
     private final CommandProcessingResultJsonSerializer commandProcessingResultSerializer;
     private final GoogleGsonSerializerHelper helper;
-
-    @Autowired
-    public DefaultToApiJsonSerializer(
-            final ExcludeNothingWithPrettyPrintingOffJsonSerializerGoogleGson excludeNothingWithPrettyPrintingOff,
-            final ExcludeNothingWithPrettyPrintingOnJsonSerializerGoogleGson excludeNothingWithPrettyPrintingOn,
-            final CommandProcessingResultJsonSerializer commandProcessingResultSerializer, final GoogleGsonSerializerHelper helper) {
-        this.excludeNothingWithPrettyPrintingOff = excludeNothingWithPrettyPrintingOff;
-        this.excludeNothingWithPrettyPrintingOn = excludeNothingWithPrettyPrintingOn;
-        this.commandProcessingResultSerializer = commandProcessingResultSerializer;
-        this.helper = helper;
-    }
 
     @Override
     public String serializeResult(final Object object) {

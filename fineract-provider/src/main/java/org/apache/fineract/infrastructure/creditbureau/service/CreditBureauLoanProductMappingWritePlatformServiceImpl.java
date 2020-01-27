@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.creditbureau.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -29,11 +30,11 @@ import org.apache.fineract.infrastructure.creditbureau.serialization.CreditBurea
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class CreditBureauLoanProductMappingWritePlatformServiceImpl implements CreditBureauLoanProductMappingWritePlatformService {
 
 	private final PlatformSecurityContext context;
@@ -45,19 +46,6 @@ public class CreditBureauLoanProductMappingWritePlatformServiceImpl implements C
 	private final LoanProductRepository loanProductRepository;
 
 	private final CreditBureauLoanProductCommandFromApiJsonDeserializer fromApiJsonDeserializer;
-
-	@Autowired
-	public CreditBureauLoanProductMappingWritePlatformServiceImpl(final PlatformSecurityContext context,
-			final CreditBureauLoanProductMappingRepository creditbureauLoanProductMappingRepository,
-			final OrganisationCreditBureauRepository organisationCreditBureauRepository, LoanProductRepository loanProductRepository,
-			final CreditBureauLoanProductCommandFromApiJsonDeserializer fromApiJsonDeserializer) {
-		this.context = context;
-		this.creditBureauLoanProductMappingRepository = creditbureauLoanProductMappingRepository;
-		this.organisationCreditBureauRepository = organisationCreditBureauRepository;
-		this.loanProductRepository = loanProductRepository;
-		this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-
-	}
 
 	@Transactional
 	@Override

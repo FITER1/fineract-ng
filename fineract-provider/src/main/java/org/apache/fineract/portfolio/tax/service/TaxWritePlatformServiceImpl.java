@@ -18,24 +18,19 @@
  */
 package org.apache.fineract.portfolio.tax.service;
 
-import java.util.Map;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
-import org.apache.fineract.portfolio.tax.domain.TaxComponent;
-import org.apache.fineract.portfolio.tax.domain.TaxComponentRepository;
-import org.apache.fineract.portfolio.tax.domain.TaxComponentRepositoryWrapper;
-import org.apache.fineract.portfolio.tax.domain.TaxGroup;
-import org.apache.fineract.portfolio.tax.domain.TaxGroupMappings;
-import org.apache.fineract.portfolio.tax.domain.TaxGroupRepository;
-import org.apache.fineract.portfolio.tax.domain.TaxGroupRepositoryWrapper;
+import org.apache.fineract.portfolio.tax.domain.*;
 import org.apache.fineract.portfolio.tax.serialization.TaxValidator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.Set;
+
 @Service
+@RequiredArgsConstructor
 public class TaxWritePlatformServiceImpl implements TaxWritePlatformService {
 
     private final TaxValidator validator;
@@ -44,18 +39,6 @@ public class TaxWritePlatformServiceImpl implements TaxWritePlatformService {
     private final TaxComponentRepositoryWrapper taxComponentRepositoryWrapper;
     private final TaxGroupRepository taxGroupRepository;
     private final TaxGroupRepositoryWrapper taxGroupRepositoryWrapper;
-
-    @Autowired
-    public TaxWritePlatformServiceImpl(final TaxValidator validator, final TaxAssembler taxAssembler,
-            final TaxComponentRepository taxComponentRepository, final TaxGroupRepository taxGroupRepository,
-            final TaxComponentRepositoryWrapper taxComponentRepositoryWrapper, final TaxGroupRepositoryWrapper taxGroupRepositoryWrapper) {
-        this.validator = validator;
-        this.taxAssembler = taxAssembler;
-        this.taxComponentRepository = taxComponentRepository;
-        this.taxGroupRepository = taxGroupRepository;
-        this.taxComponentRepositoryWrapper = taxComponentRepositoryWrapper;
-        this.taxGroupRepositoryWrapper = taxGroupRepositoryWrapper;
-    }
 
     @Override
     public CommandProcessingResult createTaxComponent(final JsonCommand command) {

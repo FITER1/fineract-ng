@@ -18,9 +18,10 @@
  */
 package org.apache.fineract.portfolio.collectionsheet.serialization;
 
-import java.math.BigDecimal;
-import java.util.Locale;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.serialization.AbstractFromApiJsonDeserializer;
@@ -29,27 +30,21 @@ import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.collectionsheet.command.CollectionSheetBulkDisbursalCommand;
 import org.apache.fineract.portfolio.collectionsheet.command.SingleDisbursalCommand;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import java.math.BigDecimal;
+import java.util.Locale;
 
 /**
  * Implementation of {@link FromApiJsonDeserializer} for
  * {@link CollectionSheetBulkDisbursalCommand}'s.
  */
 @Component
+@RequiredArgsConstructor
 public final class CollectionSheetBulkDisbursalCommandFromApiJsonDeserializer extends
         AbstractFromApiJsonDeserializer<CollectionSheetBulkDisbursalCommand> {
 
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public CollectionSheetBulkDisbursalCommandFromApiJsonDeserializer(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     @Override
     public CollectionSheetBulkDisbursalCommand commandFromApiJson(final String json) {

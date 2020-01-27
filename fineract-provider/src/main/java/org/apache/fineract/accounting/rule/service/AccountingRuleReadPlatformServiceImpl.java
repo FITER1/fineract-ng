@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.accounting.rule.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingEnumerations;
 import org.apache.fineract.accounting.glaccount.data.GLAccountDataForLookup;
 import org.apache.fineract.accounting.glaccount.service.GLAccountReadPlatformService;
@@ -26,10 +27,8 @@ import org.apache.fineract.accounting.rule.data.AccountingRuleData;
 import org.apache.fineract.accounting.rule.data.AccountingTagRuleData;
 import org.apache.fineract.accounting.rule.exception.AccountingRuleNotFoundException;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -42,17 +41,11 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class AccountingRuleReadPlatformServiceImpl implements AccountingRuleReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
     private final GLAccountReadPlatformService glAccountReadPlatformService;
-
-    @Autowired
-    public AccountingRuleReadPlatformServiceImpl(final DataSource dataSource,
-            final GLAccountReadPlatformService glAccountReadPlatformService) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.glAccountReadPlatformService = glAccountReadPlatformService;
-    }
 
     private static final class AccountingRuleDataExtractor implements ResultSetExtractor<Map<Long, AccountingRuleData>> {
 

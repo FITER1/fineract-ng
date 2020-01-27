@@ -18,13 +18,13 @@
  */
 package org.apache.fineract.accounting.journalentry.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Map;
-
 import org.apache.fineract.accounting.provisioning.domain.ProvisioningEntry;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Map;
 
 public interface JournalEntryWritePlatformService {
 

@@ -18,11 +18,12 @@
  */
 package org.apache.fineract.portfolio.loanaccount.data;
 
+import org.joda.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
-import org.joda.time.LocalDate;
 
 public class LoanTermVariationsDataWrapper {
 

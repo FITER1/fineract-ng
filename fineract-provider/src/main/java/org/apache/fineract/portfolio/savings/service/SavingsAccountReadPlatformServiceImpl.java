@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -55,7 +55,6 @@ import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -72,6 +71,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountReadPlatformService {
 
     private final PlatformSecurityContext context;
@@ -85,9 +85,9 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
 	private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 
     // mappers
-    private final SavingsAccountTransactionTemplateMapper transactionTemplateMapper;
-    private final SavingsAccountTransactionsMapper transactionsMapper;
-    private final SavingAccountMapper savingAccountMapper;
+    private final SavingsAccountTransactionTemplateMapper transactionTemplateMapper = new SavingsAccountTransactionTemplateMapper();
+    private final SavingsAccountTransactionsMapper transactionsMapper = new SavingsAccountTransactionsMapper();
+    private final SavingAccountMapper savingAccountMapper = new SavingAccountMapper();
     // private final SavingsAccountAnnualFeeMapper annualFeeMapper;
 
     // pagination
@@ -95,29 +95,6 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
 
     private final EntityDatatableChecksReadService entityDatatableChecksReadService;
     private final ColumnValidator columnValidator;
-
-    @Autowired
-    public SavingsAccountReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final ClientReadPlatformService clientReadPlatformService, final GroupReadPlatformService groupReadPlatformService,
-            final SavingsProductReadPlatformService savingProductReadPlatformService,
-            final StaffReadPlatformService staffReadPlatformService, final SavingsDropdownReadPlatformService dropdownReadPlatformService,
-            final ChargeReadPlatformService chargeReadPlatformService,
-            final EntityDatatableChecksReadService entityDatatableChecksReadService, final ColumnValidator columnValidator) {
-        this.context = context;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.clientReadPlatformService = clientReadPlatformService;
-        this.groupReadPlatformService = groupReadPlatformService;
-        this.savingsProductReadPlatformService = savingProductReadPlatformService;
-        this.staffReadPlatformService = staffReadPlatformService;
-        this.dropdownReadPlatformService = dropdownReadPlatformService;
-        this.transactionTemplateMapper = new SavingsAccountTransactionTemplateMapper();
-        this.transactionsMapper = new SavingsAccountTransactionsMapper();
-        this.savingAccountMapper = new SavingAccountMapper();
-        // this.annualFeeMapper = new SavingsAccountAnnualFeeMapper();
-        this.chargeReadPlatformService = chargeReadPlatformService;
-        this.entityDatatableChecksReadService = entityDatatableChecksReadService;
-        this.columnValidator = columnValidator;
-    }
 
     @Override
     public Collection<SavingsAccountData> retrieveAllForLookup(final Long clientId) {

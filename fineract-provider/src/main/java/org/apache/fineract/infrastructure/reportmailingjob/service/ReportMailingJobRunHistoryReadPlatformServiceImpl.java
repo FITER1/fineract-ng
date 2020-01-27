@@ -18,39 +18,31 @@
  */
 package org.apache.fineract.infrastructure.reportmailingjob.service;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.infrastructure.core.service.Page;
+import org.apache.fineract.infrastructure.core.service.PaginationHelper;
+import org.apache.fineract.infrastructure.core.service.SearchParameters;
+import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobRunHistoryData;
+import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
+import org.joda.time.DateTime;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.core.service.Page;
-import org.apache.fineract.infrastructure.core.service.PaginationHelper;
-import javax.sql.DataSource;
-import org.apache.fineract.infrastructure.core.service.SearchParameters;
-import org.apache.fineract.infrastructure.reportmailingjob.data.ReportMailingJobRunHistoryData;
-import org.apache.fineract.infrastructure.security.utils.ColumnValidator;
-import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Service;
-
 @Service
+@RequiredArgsConstructor
 public class ReportMailingJobRunHistoryReadPlatformServiceImpl implements ReportMailingJobRunHistoryReadPlatformService {
     private final JdbcTemplate jdbcTemplate;
     private final ReportMailingJobRunHistoryMapper reportMailingJobRunHistoryMapper;
     private final ColumnValidator columnValidator;
     private final PaginationHelper<ReportMailingJobRunHistoryData> paginationHelper = new PaginationHelper<>();
-    
-    @Autowired
-    public ReportMailingJobRunHistoryReadPlatformServiceImpl(final DataSource dataSource,
-    		final ColumnValidator columnValidator) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.reportMailingJobRunHistoryMapper = new ReportMailingJobRunHistoryMapper();
-        this.columnValidator = columnValidator;
-    }
-    
+
     @Override
     public Page<ReportMailingJobRunHistoryData> retrieveRunHistoryByJobId(final Long reportMailingJobId, 
             final SearchParameters searchParameters) {

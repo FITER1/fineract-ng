@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.accounts.service;
 
-import java.util.Set;
-
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.portfolio.accounts.data.AccountData;
+
+import java.util.Set;
 
 public interface AccountReadPlatformService {
 

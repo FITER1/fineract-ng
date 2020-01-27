@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.notification.eventandlistener;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.notification.data.NotificationData;
 import org.apache.fineract.notification.service.NotificationWritePlatformService;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.useradministration.domain.AppUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
@@ -31,18 +31,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Component
+@RequiredArgsConstructor
 public class SpringEventListener implements ApplicationListener<SpringEvent> {
 
     private final NotificationWritePlatformService notificationWritePlatformService;
 
     private final AppUserRepository appUserRepository;
-    
-    @Autowired
-    public SpringEventListener(NotificationWritePlatformService notificationWritePlatformService,
-                                     AppUserRepository appUserRepository) {
-        this.notificationWritePlatformService = notificationWritePlatformService;
-        this.appUserRepository = appUserRepository;
-    }
 
 	@Override
 	public void onApplicationEvent(SpringEvent event) {

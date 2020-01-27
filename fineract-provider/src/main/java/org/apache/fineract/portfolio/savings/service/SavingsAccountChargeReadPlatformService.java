@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.charge.data.ChargeData;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountAnnualFeeData;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountChargeData;
+
+import java.util.Collection;
 
 public interface SavingsAccountChargeReadPlatformService {
 

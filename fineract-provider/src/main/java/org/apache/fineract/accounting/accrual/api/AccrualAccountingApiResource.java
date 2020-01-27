@@ -18,22 +18,23 @@
  */
 package org.apache.fineract.accounting.accrual.api;
 
+import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.commands.domain.CommandWrapper;
+import org.apache.fineract.commands.service.CommandWrapperBuilder;
+import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
+import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
+import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSerializer;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import io.swagger.annotations.*;
 // import org.apache.fineract.accounting.accrual.swagger.runaccuralPost;
-import org.apache.fineract.commands.domain.CommandWrapper;
-import org.apache.fineract.commands.service.CommandWrapperBuilder;
-import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.serialization.DefaultToApiJsonSerializer;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 @Path("runaccruals")
 @Component
@@ -42,19 +43,11 @@ import org.springframework.stereotype.Component;
 @SwaggerDefinition(tags = {
         @Tag(name = "Periodic Accrual Accounting", description = "Periodic Accrual is to accrue the loan income till the specific date or till batch job scheduled time.\n\n")
 })
-
+@RequiredArgsConstructor
 public class AccrualAccountingApiResource {
 
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
     private final DefaultToApiJsonSerializer<String> apiJsonSerializerService;
-
-    @Autowired
-    public AccrualAccountingApiResource(final DefaultToApiJsonSerializer<String> apiJsonSerializerService,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService) {
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.apiJsonSerializerService = apiJsonSerializerService;
-
-    }
 
     @POST
     @Consumes({ MediaType.APPLICATION_JSON })

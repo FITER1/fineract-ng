@@ -18,14 +18,14 @@
  */
 package org.apache.fineract.portfolio.interestratechart.data;
 
+import org.apache.fineract.infrastructure.codes.data.CodeValueData;
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.organisation.monetary.data.CurrencyData;
+
 import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.apache.fineract.infrastructure.codes.data.CodeValueData;
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.organisation.monetary.data.CurrencyData;
 
 /**
  * Immutable data object representing a InterestRateChartSlab.

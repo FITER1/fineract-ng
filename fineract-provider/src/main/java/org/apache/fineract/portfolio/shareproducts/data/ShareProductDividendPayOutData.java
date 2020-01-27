@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.portfolio.shareproducts.data;
 
-import java.math.BigDecimal;
-import java.util.Collection;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountDividendData;
 import org.joda.time.LocalDate;
+
+import java.math.BigDecimal;
+import java.util.Collection;
 
 public class ShareProductDividendPayOutData {
 

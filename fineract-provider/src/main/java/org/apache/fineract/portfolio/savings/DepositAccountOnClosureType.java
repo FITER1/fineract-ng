@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.savings;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.fineract.portfolio.savings.domain.FixedDepositAccount;
 import org.apache.fineract.portfolio.savings.domain.RecurringDepositAccount;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An enumeration of different options available on account closure

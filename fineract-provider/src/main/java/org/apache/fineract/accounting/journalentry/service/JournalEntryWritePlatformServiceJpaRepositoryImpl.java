@@ -18,16 +18,7 @@
  */
 package org.apache.fineract.accounting.journalentry.service;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.closure.domain.GLClosure;
 import org.apache.fineract.accounting.closure.domain.GLClosureRepository;
@@ -52,7 +43,6 @@ import org.apache.fineract.accounting.journalentry.domain.JournalEntryType;
 import org.apache.fineract.accounting.journalentry.exception.JournalEntriesNotFoundException;
 import org.apache.fineract.accounting.journalentry.exception.JournalEntryInvalidException;
 import org.apache.fineract.accounting.journalentry.exception.JournalEntryInvalidException.GL_JOURNAL_ENTRY_INVALID_REASON;
-
 import org.apache.fineract.accounting.journalentry.exception.JournalEntryRuntimeException;
 import org.apache.fineract.accounting.journalentry.serialization.JournalEntryCommandFromApiJsonDeserializer;
 import org.apache.fineract.accounting.producttoaccountmapping.domain.PortfolioProductType;
@@ -80,13 +70,16 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class JournalEntryWritePlatformServiceJpaRepositoryImpl implements JournalEntryWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(JournalEntryWritePlatformServiceJpaRepositoryImpl.class);
@@ -107,37 +100,6 @@ public class JournalEntryWritePlatformServiceJpaRepositoryImpl implements Journa
     private final PaymentDetailWritePlatformService paymentDetailWritePlatformService;
     private final FinancialActivityAccountRepositoryWrapper financialActivityAccountRepositoryWrapper;
     private final CashBasedAccountingProcessorForClientTransactions accountingProcessorForClientTransactions;
-
-    @Autowired
-    public JournalEntryWritePlatformServiceJpaRepositoryImpl(final GLClosureRepository glClosureRepository,
-            final JournalEntryRepository glJournalEntryRepository, final OfficeRepositoryWrapper officeRepositoryWrapper,
-            final GLAccountRepository glAccountRepository, final JournalEntryCommandFromApiJsonDeserializer fromApiJsonDeserializer,
-            final AccountingProcessorHelper accountingProcessorHelper, final AccountingRuleRepository accountingRuleRepository,
-            final AccountingProcessorForLoanFactory accountingProcessorForLoanFactory,
-            final AccountingProcessorForSavingsFactory accountingProcessorForSavingsFactory,
-            final AccountingProcessorForSharesFactory accountingProcessorForSharesFactory,
-            final GLAccountReadPlatformService glAccountReadPlatformService,
-            final OrganisationCurrencyRepositoryWrapper organisationCurrencyRepository, final PlatformSecurityContext context,
-            final PaymentDetailWritePlatformService paymentDetailWritePlatformService,
-            final FinancialActivityAccountRepositoryWrapper financialActivityAccountRepositoryWrapper,
-            final CashBasedAccountingProcessorForClientTransactions accountingProcessorForClientTransactions) {
-        this.glClosureRepository = glClosureRepository;
-        this.officeRepositoryWrapper = officeRepositoryWrapper;
-        this.glJournalEntryRepository = glJournalEntryRepository;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.glAccountRepository = glAccountRepository;
-        this.accountingProcessorForLoanFactory = accountingProcessorForLoanFactory;
-        this.accountingProcessorForSavingsFactory = accountingProcessorForSavingsFactory;
-        this.accountingProcessorForSharesFactory = accountingProcessorForSharesFactory;
-        this.helper = accountingProcessorHelper;
-        this.accountingRuleRepository = accountingRuleRepository;
-        this.glAccountReadPlatformService = glAccountReadPlatformService;
-        this.organisationCurrencyRepository = organisationCurrencyRepository;
-        this.context = context;
-        this.paymentDetailWritePlatformService = paymentDetailWritePlatformService;
-        this.financialActivityAccountRepositoryWrapper = financialActivityAccountRepositoryWrapper;
-        this.accountingProcessorForClientTransactions = accountingProcessorForClientTransactions;
-    }
 
     @Transactional
     @Override

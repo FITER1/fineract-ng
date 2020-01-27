@@ -18,14 +18,10 @@
  */
 package org.apache.fineract.useradministration.service;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -34,14 +30,13 @@ import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidati
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.useradministration.domain.PasswordValidationPolicy;
 import org.apache.fineract.useradministration.domain.PasswordValidationPolicyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public final class UserDataValidator {
 
     /**
@@ -54,12 +49,6 @@ public final class UserDataValidator {
     private final FromJsonHelper fromApiJsonHelper;
 
     private final PasswordValidationPolicyRepository passwordValidationPolicy;
-
-    @Autowired
-    public UserDataValidator(final FromJsonHelper fromApiJsonHelper, final PasswordValidationPolicyRepository passwordValidationPolicy) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.passwordValidationPolicy = passwordValidationPolicy;
-    }
 
     public void validateForCreate(final String json) {
         if (StringUtils.isBlank(json)) { throw new InvalidJsonException(); }

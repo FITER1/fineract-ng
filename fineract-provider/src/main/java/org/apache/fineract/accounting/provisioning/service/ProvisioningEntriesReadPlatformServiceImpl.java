@@ -18,13 +18,12 @@
  */
 package org.apache.fineract.accounting.provisioning.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.provisioning.data.LoanProductProvisioningEntryData;
 import org.apache.fineract.accounting.provisioning.data.ProvisioningEntryData;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -37,17 +36,13 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ProvisioningEntriesReadPlatformServiceImpl implements ProvisioningEntriesReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
 
     private final PaginationHelper<LoanProductProvisioningEntryData> loanProductProvisioningEntryDataPaginationHelper = new PaginationHelper<>();
     private final PaginationHelper<ProvisioningEntryData> provisioningEntryDataPaginationHelper = new PaginationHelper<>();
-
-    @Autowired
-    public ProvisioningEntriesReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     @Override
     public Collection<LoanProductProvisioningEntryData> retrieveLoanProductsProvisioningData(Date date) {

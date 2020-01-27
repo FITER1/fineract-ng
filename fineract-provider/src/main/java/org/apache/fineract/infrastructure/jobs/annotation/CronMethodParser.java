@@ -18,12 +18,6 @@
  */
 package org.apache.fineract.infrastructure.jobs.annotation;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.fineract.infrastructure.jobs.service.JobName;
 import org.springframework.core.env.StandardEnvironment;
 import org.springframework.core.io.Resource;
@@ -34,6 +28,12 @@ import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.util.ClassUtils;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Parser to find method which is marked with CronTargetMethod annotation

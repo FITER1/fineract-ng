@@ -18,16 +18,11 @@
  */
 package org.apache.fineract.portfolio.meeting.attendance.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.meeting.domain.Meeting;
-import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "m_client_attendance", uniqueConstraints = { @UniqueConstraint(columnNames = { "client_id", "meeting_id" }, name = "unique_client_meeting_attendance") })

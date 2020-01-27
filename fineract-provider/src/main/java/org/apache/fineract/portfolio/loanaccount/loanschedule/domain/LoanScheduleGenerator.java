@@ -18,9 +18,6 @@
  */
 package org.apache.fineract.portfolio.loanaccount.loanschedule.domain;
 
-import java.math.MathContext;
-import java.util.Set;
-
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.portfolio.loanaccount.data.HolidayDetailDTO;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
@@ -29,6 +26,9 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleIns
 import org.apache.fineract.portfolio.loanaccount.domain.transactionprocessor.LoanRepaymentScheduleTransactionProcessor;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.LoanScheduleDTO;
 import org.joda.time.LocalDate;
+
+import java.math.MathContext;
+import java.util.Set;
 
 public interface LoanScheduleGenerator {
 

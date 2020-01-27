@@ -18,7 +18,6 @@
  */
 package org.apache.fineract.portfolio.client.data;
 
-import org.apache.fineract.infrastructure.bulkimport.constants.TemplatePopulateImportConstants;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.joda.time.LocalDate;
 

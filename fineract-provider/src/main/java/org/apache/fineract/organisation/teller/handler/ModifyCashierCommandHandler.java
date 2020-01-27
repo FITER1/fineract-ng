@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.organisation.teller.handler;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.handler.NewCommandSourceHandler;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.organisation.teller.service.CashierWritePlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Handles a modify cashier command.
@@ -31,21 +31,10 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @see org.apache.fineract.organisation.teller.service.CashierWritePlatformService
  * @since 2.0.0
  */
+@RequiredArgsConstructor
 public class ModifyCashierCommandHandler implements NewCommandSourceHandler {
 
     private final CashierWritePlatformService writePlatformService;
-
-    /**
-     * Creates a new instance.
-     *
-     * @param writePlatformService the {@code CashierWritePlatformService} used to access the backend
-     */
-    @Autowired
-    public ModifyCashierCommandHandler(final CashierWritePlatformService writePlatformService) {
-        super();
-        this.writePlatformService = writePlatformService;
-    }
-
 
     @Override
     public CommandProcessingResult processCommand(final JsonCommand command) {

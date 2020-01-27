@@ -18,11 +18,9 @@
  */
 package org.apache.fineract.portfolio.loanaccount.service;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import javax.persistence.PersistenceException;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormat;
@@ -54,8 +52,8 @@ import org.apache.fineract.portfolio.account.domain.AccountAssociationType;
 import org.apache.fineract.portfolio.account.domain.AccountAssociations;
 import org.apache.fineract.portfolio.account.domain.AccountAssociationsRepository;
 import org.apache.fineract.portfolio.accountdetails.domain.AccountType;
-import org.apache.fineract.portfolio.calendar.domain.*;
 import org.apache.fineract.portfolio.calendar.domain.Calendar;
+import org.apache.fineract.portfolio.calendar.domain.*;
 import org.apache.fineract.portfolio.calendar.exception.CalendarNotFoundException;
 import org.apache.fineract.portfolio.calendar.service.CalendarReadPlatformService;
 import org.apache.fineract.portfolio.charge.domain.Charge;
@@ -90,10 +88,10 @@ import org.apache.fineract.portfolio.loanaccount.serialization.LoanApplicationTr
 import org.apache.fineract.portfolio.loanproduct.LoanProductConstants;
 import org.apache.fineract.portfolio.loanproduct.data.LoanProductData;
 import org.apache.fineract.portfolio.loanproduct.domain.*;
-import org.apache.fineract.portfolio.loanproduct.service.LoanProductReadPlatformService;
 import org.apache.fineract.portfolio.loanproduct.exception.LinkedAccountRequiredException;
 import org.apache.fineract.portfolio.loanproduct.exception.LoanProductNotFoundException;
 import org.apache.fineract.portfolio.loanproduct.serialization.LoanProductDataValidator;
+import org.apache.fineract.portfolio.loanproduct.service.LoanProductReadPlatformService;
 import org.apache.fineract.portfolio.note.domain.Note;
 import org.apache.fineract.portfolio.note.domain.NoteRepository;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
@@ -102,16 +100,17 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
+import javax.persistence.PersistenceException;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements LoanApplicationWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(LoanApplicationWritePlatformServiceJpaRepositoryImpl.class);
@@ -151,66 +150,6 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
     private final FineractEntityToEntityMappingRepository repository;
     private final FineractEntityRelationRepository fineractEntityRelationRepository;
     private final LoanProductReadPlatformService loanProductReadPlatformService;
-
-    @Autowired
-    public LoanApplicationWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context, final FromJsonHelper fromJsonHelper,
-            final LoanApplicationTransitionApiJsonValidator loanApplicationTransitionApiJsonValidator,
-            final LoanApplicationCommandFromApiJsonHelper fromApiJsonDeserializer,
-            final LoanProductDataValidator loanProductCommandFromApiJsonDeserializer, final AprCalculator aprCalculator,
-            final LoanAssembler loanAssembler, final LoanChargeAssembler loanChargeAssembler,
-            final CollateralAssembler loanCollateralAssembler, final LoanRepositoryWrapper loanRepositoryWrapper,
-            final NoteRepository noteRepository,
-            final LoanScheduleCalculationPlatformService calculationPlatformService, final ClientRepositoryWrapper clientRepository,
-            final LoanProductRepository loanProductRepository, final AccountNumberGenerator accountNumberGenerator,
-            final LoanSummaryWrapper loanSummaryWrapper, final GroupRepositoryWrapper groupRepository,
-            final LoanRepaymentScheduleTransactionProcessorFactory loanRepaymentScheduleTransactionProcessorFactory,
-            final CalendarRepository calendarRepository, final CalendarInstanceRepository calendarInstanceRepository,
-            final SavingsAccountAssembler savingsAccountAssembler, final AccountAssociationsRepository accountAssociationsRepository,
-            final LoanRepaymentScheduleInstallmentRepository repaymentScheduleInstallmentRepository,
-            final LoanReadPlatformService loanReadPlatformService,
-            final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository,
-            final BusinessEventNotifierService businessEventNotifierService, final ConfigurationDomainService configurationDomainService,
-            final LoanScheduleAssembler loanScheduleAssembler, final LoanUtilService loanUtilService, 
-            final CalendarReadPlatformService calendarReadPlatformService, final GlobalConfigurationRepositoryWrapper globalConfigurationRepository,
-            final FineractEntityToEntityMappingRepository repository, final FineractEntityRelationRepository fineractEntityRelationRepository,
-            final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService, final LoanProductReadPlatformService loanProductReadPlatformService) {
-        this.context = context;
-        this.fromJsonHelper = fromJsonHelper;
-        this.loanApplicationTransitionApiJsonValidator = loanApplicationTransitionApiJsonValidator;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.loanProductCommandFromApiJsonDeserializer = loanProductCommandFromApiJsonDeserializer;
-        this.aprCalculator = aprCalculator;
-        this.loanAssembler = loanAssembler;
-        this.loanChargeAssembler = loanChargeAssembler;
-        this.loanCollateralAssembler = loanCollateralAssembler;
-        this.loanRepositoryWrapper = loanRepositoryWrapper ;
-        this.noteRepository = noteRepository;
-        this.calculationPlatformService = calculationPlatformService;
-        this.clientRepository = clientRepository;
-        this.loanProductRepository = loanProductRepository;
-        this.accountNumberGenerator = accountNumberGenerator;
-        this.loanSummaryWrapper = loanSummaryWrapper;
-        this.groupRepository = groupRepository;
-        this.loanRepaymentScheduleTransactionProcessorFactory = loanRepaymentScheduleTransactionProcessorFactory;
-        this.calendarRepository = calendarRepository;
-        this.calendarInstanceRepository = calendarInstanceRepository;
-        this.savingsAccountAssembler = savingsAccountAssembler;
-        this.accountAssociationsRepository = accountAssociationsRepository;
-        this.repaymentScheduleInstallmentRepository = repaymentScheduleInstallmentRepository;
-        this.loanReadPlatformService = loanReadPlatformService;
-        this.accountNumberFormatRepository = accountNumberFormatRepository;
-        this.businessEventNotifierService = businessEventNotifierService;
-        this.configurationDomainService = configurationDomainService;
-        this.loanScheduleAssembler = loanScheduleAssembler;
-        this.loanUtilService = loanUtilService;
-        this.calendarReadPlatformService = calendarReadPlatformService;
-        this.entityDatatableChecksWritePlatformService = entityDatatableChecksWritePlatformService;
-        this.globalConfigurationRepository = globalConfigurationRepository;
-        this.repository = repository;
-        this.fineractEntityRelationRepository = fineractEntityRelationRepository;
-        this.loanProductReadPlatformService = loanProductReadPlatformService;
-
-    }
 
     private LoanLifecycleStateMachine defaultLoanLifecycleStateMachine() {
         final List<LoanStatus> allowedLoanStatuses = Arrays.asList(LoanStatus.values());

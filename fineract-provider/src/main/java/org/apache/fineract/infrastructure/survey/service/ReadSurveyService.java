@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.infrastructure.survey.service;
 
-import java.util.List;
-
 import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
 import org.apache.fineract.infrastructure.survey.data.ClientScoresOverview;
 import org.apache.fineract.infrastructure.survey.data.SurveyDataTableData;
+
+import java.util.List;
 
 /**
  * Created by Cieyou on 2/27/14.

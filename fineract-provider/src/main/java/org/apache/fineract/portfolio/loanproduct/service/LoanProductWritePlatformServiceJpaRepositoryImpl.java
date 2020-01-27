@@ -18,13 +18,9 @@
  */
 package org.apache.fineract.portfolio.loanproduct.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.accounting.producttoaccountmapping.service.ProductToGLAccountMappingWritePlatformService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -48,8 +44,6 @@ import org.apache.fineract.portfolio.fund.exception.FundNotFoundException;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanTransactionProcessingStrategyRepository;
 import org.apache.fineract.portfolio.loanaccount.exception.LoanTransactionProcessingStrategyNotFoundException;
-import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_ENTITY;
-import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants.BUSINESS_EVENTS;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.AprCalculator;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProductRepository;
@@ -62,15 +56,18 @@ import org.apache.fineract.portfolio.loanproduct.serialization.LoanProductDataVa
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
+import javax.persistence.PersistenceException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class LoanProductWritePlatformServiceJpaRepositoryImpl implements LoanProductWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(LoanProductWritePlatformServiceJpaRepositoryImpl.class);
@@ -86,31 +83,6 @@ public class LoanProductWritePlatformServiceJpaRepositoryImpl implements LoanPro
     private final FloatingRateRepositoryWrapper floatingRateRepository;
     private final LoanRepositoryWrapper loanRepositoryWrapper;
     private final BusinessEventNotifierService businessEventNotifierService;
-
-    @Autowired
-    public LoanProductWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final LoanProductDataValidator fromApiJsonDeserializer, final LoanProductRepository loanProductRepository,
-            final AprCalculator aprCalculator, final FundRepository fundRepository,
-            final LoanTransactionProcessingStrategyRepository loanTransactionProcessingStrategyRepository,
-            final ChargeRepositoryWrapper chargeRepository,
-            final ProductToGLAccountMappingWritePlatformService accountMappingWritePlatformService,
-            final FineractEntityAccessUtil fineractEntityAccessUtil,
-            final FloatingRateRepositoryWrapper floatingRateRepository,
-            final LoanRepositoryWrapper loanRepositoryWrapper,
-            final BusinessEventNotifierService businessEventNotifierService) {
-        this.context = context;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.loanProductRepository = loanProductRepository;
-        this.aprCalculator = aprCalculator;
-        this.fundRepository = fundRepository;
-        this.loanTransactionProcessingStrategyRepository = loanTransactionProcessingStrategyRepository;
-        this.chargeRepository = chargeRepository;
-        this.accountMappingWritePlatformService = accountMappingWritePlatformService;
-        this.fineractEntityAccessUtil = fineractEntityAccessUtil;
-        this.floatingRateRepository = floatingRateRepository;
-        this.loanRepositoryWrapper = loanRepositoryWrapper;
-        this.businessEventNotifierService = businessEventNotifierService;
-    }
 
     @Transactional
     @Override

@@ -18,21 +18,15 @@
  */
 package org.apache.fineract.portfolio.self.loanaccount.service;
 
-import javax.sql.DataSource;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AppuserLoansMapperReadServiceImpl implements
-		AppuserLoansMapperReadService {
+@RequiredArgsConstructor
+public class AppuserLoansMapperReadServiceImpl implements AppuserLoansMapperReadService {
 
 	private final JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public AppuserLoansMapperReadServiceImpl(final DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
 
 	@Override
 	public Boolean isLoanMappedToUser(Long loanId, Long appUserId) {

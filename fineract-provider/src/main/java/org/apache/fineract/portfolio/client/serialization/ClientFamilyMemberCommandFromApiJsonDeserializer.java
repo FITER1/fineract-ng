@@ -19,14 +19,10 @@
 
 package org.apache.fineract.portfolio.client.serialization;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -35,26 +31,18 @@ import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.*;
 
 @Component
-public class ClientFamilyMemberCommandFromApiJsonDeserializer 
+@RequiredArgsConstructor
+public class ClientFamilyMemberCommandFromApiJsonDeserializer
 {
 	private final FromJsonHelper fromApiJsonHelper;
 	 private final Set<String> supportedParameters = new HashSet<>(Arrays.asList("id","clientId","firstName","middleName","lastName","qualification","mobileNumber",
 			 "age","isDependent","relationshipId","maritalStatusId","genderId","dateOfBirth","professionId","locale","dateFormat","familyMembers"));
-	
-	@Autowired
-	private ClientFamilyMemberCommandFromApiJsonDeserializer(final FromJsonHelper fromApiJsonHelper)
-	{
-			this.fromApiJsonHelper=fromApiJsonHelper;
-	}
-	
 	
 	public void validateForCreate(String json)
 	{

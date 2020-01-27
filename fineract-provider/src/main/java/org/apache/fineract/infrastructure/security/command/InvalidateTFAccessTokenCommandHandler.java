@@ -18,13 +18,9 @@
  */
 package org.apache.fineract.infrastructure.security.command;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.annotation.CommandType;
 import org.apache.fineract.commands.handler.NewCommandSourceHandler;
@@ -41,33 +37,24 @@ import org.apache.fineract.infrastructure.security.domain.TFAccessToken;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.service.TwoFactorService;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.gson.JsonElement;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.util.*;
 
 
 @Service
 @CommandType(entity = "TWOFACTOR_ACCESSTOKEN", action = "INVALIDATE")
 @Profile("twofactor")
+@RequiredArgsConstructor
 public class InvalidateTFAccessTokenCommandHandler implements NewCommandSourceHandler {
 
 
     private final TwoFactorService twoFactorService;
     private final PlatformSecurityContext securityContext;
     private final FromJsonHelper fromJsonHelper;
-
-    @Autowired
-    public InvalidateTFAccessTokenCommandHandler(TwoFactorService twoFactorService,
-                                                 PlatformSecurityContext securityContext,
-                                                 FromJsonHelper fromJsonHelper) {
-        this.twoFactorService = twoFactorService;
-        this.securityContext = securityContext;
-        this.fromJsonHelper = fromJsonHelper;
-    }
 
     @Transactional
     @Override

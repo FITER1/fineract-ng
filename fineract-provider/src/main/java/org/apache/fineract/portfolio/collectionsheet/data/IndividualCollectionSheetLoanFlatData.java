@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.collectionsheet.data;
 
-import java.math.BigDecimal;
-
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
+
+import java.math.BigDecimal;
 
 /**
  * Immutable data object for extracting flat data for joint liability group's

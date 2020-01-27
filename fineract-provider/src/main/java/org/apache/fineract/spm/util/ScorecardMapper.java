@@ -18,9 +18,6 @@
  */
 package org.apache.fineract.spm.util;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.spm.data.ScorecardData;
@@ -31,6 +28,9 @@ import org.apache.fineract.spm.domain.Scorecard;
 import org.apache.fineract.spm.domain.Survey;
 import org.apache.fineract.spm.exception.SurveyResponseNotAvailableException;
 import org.apache.fineract.useradministration.domain.AppUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ScorecardMapper {
 

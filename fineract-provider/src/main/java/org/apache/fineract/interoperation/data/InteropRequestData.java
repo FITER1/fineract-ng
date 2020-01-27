@@ -23,12 +23,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.interoperation.domain.InteropTransactionRole;
+import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.codehaus.jackson.map.annotate.JsonDeserialize;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.map.ext.JodaDeserializers;
-import org.codehaus.jackson.map.ext.JodaSerializers;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 

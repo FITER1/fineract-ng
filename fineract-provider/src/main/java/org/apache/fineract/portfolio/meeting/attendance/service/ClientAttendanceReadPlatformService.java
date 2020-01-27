@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.meeting.attendance.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.meeting.attendance.data.ClientAttendanceData;
+
+import java.util.Collection;
 
 public interface ClientAttendanceReadPlatformService {
 

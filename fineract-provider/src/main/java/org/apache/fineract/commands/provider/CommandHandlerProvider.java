@@ -19,6 +19,7 @@
 package org.apache.fineract.commands.provider;
 
 import com.google.common.base.Preconditions;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.annotation.CommandType;
@@ -26,12 +27,11 @@ import org.apache.fineract.commands.exception.UnsupportedCommandException;
 import org.apache.fineract.commands.handler.NewCommandSourceHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.HashMap;
 
 /**
@@ -49,16 +49,13 @@ import java.util.HashMap;
  */
 @Component
 @Scope("singleton")
-public class CommandHandlerProvider implements ApplicationContextAware {
+@RequiredArgsConstructor
+public class CommandHandlerProvider {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandlerProvider.class);
 
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
     private HashMap<String, String> registeredHandlers;
-
-    CommandHandlerProvider() {
-        super();
-    }
 
     /**
      * Returns a handler for the given entity and action.<br>
@@ -79,7 +76,8 @@ public class CommandHandlerProvider implements ApplicationContextAware {
         return (NewCommandSourceHandler)this.applicationContext.getBean(this.registeredHandlers.get(key));
     }
 
-    private void initializeHandlerRegistry() {
+    @PostConstruct
+    public void initializeHandlerRegistry() {
         if (this.registeredHandlers == null) {
             this.registeredHandlers = new HashMap<>();
 
@@ -96,11 +94,5 @@ public class CommandHandlerProvider implements ApplicationContextAware {
                 }
             }
         }
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-        this.initializeHandlerRegistry();
     }
 }

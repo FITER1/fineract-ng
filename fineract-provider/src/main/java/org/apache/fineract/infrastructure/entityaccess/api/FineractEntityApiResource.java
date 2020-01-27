@@ -18,21 +18,8 @@
  */
 package org.apache.fineract.infrastructure.entityaccess.api;
 
-import java.util.Collection;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.UriInfo;
-
 import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -44,9 +31,14 @@ import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityRelati
 import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityToEntityMappingData;
 import org.apache.fineract.infrastructure.entityaccess.service.FineractEntityAccessReadService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriInfo;
+import java.util.Collection;
 
 @Path("entitytoentitymapping")
 @Consumes({ MediaType.APPLICATION_JSON })
@@ -54,6 +46,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Scope("singleton")
 @Api(value = "DomainName/api/v1/entitytoentitymapping", description = "") // https://github.com/swagger-api/swagger-ui/issues/1655
+@RequiredArgsConstructor
 public class FineractEntityApiResource {
 
     private final PlatformSecurityContext context;
@@ -62,20 +55,6 @@ public class FineractEntityApiResource {
     private final DefaultToApiJsonSerializer<FineractEntityToEntityMappingData> toApiJsonSerializerOfficeToLoanProducts;
     private final ApiRequestParameterHelper apiRequestParameterHelper;
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-
-    @Autowired
-    public FineractEntityApiResource(final PlatformSecurityContext context, final FineractEntityAccessReadService readPlatformService,
-            final DefaultToApiJsonSerializer<FineractEntityRelationData> toApiJsonSerializer,
-            final DefaultToApiJsonSerializer<FineractEntityToEntityMappingData> toApiJsonSerializerOfficeToLoanProducts,
-            final ApiRequestParameterHelper apiRequestParameterHelper,
-            final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService) {
-        this.context = context;
-        this.readPlatformService = readPlatformService;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.toApiJsonSerializerOfficeToLoanProducts = toApiJsonSerializerOfficeToLoanProducts;
-    }
 
     @GET
     @Consumes({ MediaType.APPLICATION_JSON })

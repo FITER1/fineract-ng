@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.bulkimport.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.bulkimport.data.BulkImportEvent;
 import org.apache.fineract.infrastructure.bulkimport.data.Count;
 import org.apache.fineract.infrastructure.bulkimport.data.GlobalEntityType;
@@ -30,7 +31,6 @@ import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCom
 import org.apache.fineract.infrastructure.documentmanagement.domain.Document;
 import org.apache.fineract.infrastructure.documentmanagement.service.DocumentWritePlatformService;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Service;
@@ -43,22 +43,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class BulkImportEventListener implements ApplicationListener<BulkImportEvent> {
 
 
     private final ApplicationContext applicationContext;
     private final ImportDocumentRepository importRepository;
     private final DocumentWritePlatformService documentService;
-
-    @Autowired
-    public BulkImportEventListener(
-            final ApplicationContext context,
-            final ImportDocumentRepository importRepository,
-            final DocumentWritePlatformService documentService) {
-        this.applicationContext = context;
-        this.importRepository = importRepository;
-        this.documentService = documentService;
-    }
 
     @Override
     public void onApplicationEvent(final BulkImportEvent event) {

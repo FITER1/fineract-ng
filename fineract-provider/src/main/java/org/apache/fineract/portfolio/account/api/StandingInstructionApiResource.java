@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.account.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -37,7 +38,6 @@ import org.apache.fineract.portfolio.account.data.StandingInstructionDTO;
 import org.apache.fineract.portfolio.account.data.StandingInstructionData;
 import org.apache.fineract.portfolio.account.service.AccountTransfersReadPlatformService;
 import org.apache.fineract.portfolio.account.service.StandingInstructionReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -53,6 +53,7 @@ import java.util.Set;
 @Component
 @Scope("singleton")
 @Api(value = "Standing Instructions", description = "Standing instructions (or standing orders) refer to instructions a bank account holder (\"the payer\") gives to his or her bank to pay a set amount at regular intervals to another's (\"the payee's\") account.\n" + "\n" + "Note: At present only savings account to savings account and savings account to Loan account transfers are permitted.")
+@RequiredArgsConstructor
 public class StandingInstructionApiResource {
 
     private final PlatformSecurityContext context;
@@ -61,21 +62,6 @@ public class StandingInstructionApiResource {
     private final ApiRequestParameterHelper apiRequestParameterHelper;
     private final StandingInstructionReadPlatformService standingInstructionReadPlatformService;
     private final AccountTransfersReadPlatformService accountTransfersReadPlatformService;
-
-    @Autowired
-    public StandingInstructionApiResource(final PlatformSecurityContext context,
-                        final DefaultToApiJsonSerializer<StandingInstructionData> toApiJsonSerializer,
-                        final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService,
-                        final ApiRequestParameterHelper apiRequestParameterHelper,
-                        final StandingInstructionReadPlatformService standingInstructionReadPlatformService,
-                        final AccountTransfersReadPlatformService accountTransfersReadPlatformService) {
-        this.context = context;
-        this.toApiJsonSerializer = toApiJsonSerializer;
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.standingInstructionReadPlatformService = standingInstructionReadPlatformService;
-        this.accountTransfersReadPlatformService = accountTransfersReadPlatformService;
-    }
 
     @GET
     @Path("template")

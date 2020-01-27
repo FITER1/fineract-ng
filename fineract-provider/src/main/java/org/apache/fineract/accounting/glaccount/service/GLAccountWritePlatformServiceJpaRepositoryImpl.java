@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.accounting.glaccount.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingConstants;
 import org.apache.fineract.accounting.glaccount.api.GLAccountJsonInputParams;
 import org.apache.fineract.accounting.glaccount.command.GLAccountCommand;
@@ -33,13 +34,11 @@ import org.apache.fineract.accounting.journalentry.domain.JournalEntryRepository
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class GLAccountWritePlatformServiceJpaRepositoryImpl implements GLAccountWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(GLAccountWritePlatformServiceJpaRepositoryImpl.class);
@@ -59,17 +59,6 @@ public class GLAccountWritePlatformServiceJpaRepositoryImpl implements GLAccount
     private final GLAccountCommandFromApiJsonDeserializer fromApiJsonDeserializer;
     private final CodeValueRepositoryWrapper codeValueRepositoryWrapper;
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public GLAccountWritePlatformServiceJpaRepositoryImpl(final GLAccountRepository glAccountRepository,
-            final JournalEntryRepository glJournalEntryRepository, final GLAccountCommandFromApiJsonDeserializer fromApiJsonDeserializer,
-            final CodeValueRepositoryWrapper codeValueRepositoryWrapper, final DataSource dataSource) {
-        this.glAccountRepository = glAccountRepository;
-        this.glJournalEntryRepository = glJournalEntryRepository;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.codeValueRepositoryWrapper = codeValueRepositoryWrapper;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     @Transactional
     @Override

@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.savings.exception;
 
-import java.math.BigDecimal;
-
 import org.apache.fineract.infrastructure.core.exception.AbstractPlatformDomainRuleException;
+
+import java.math.BigDecimal;
 
 /**
  * Thrown when an attempt is made to withdraw money that is greater than the

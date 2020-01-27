@@ -18,13 +18,7 @@
  */
 package org.apache.fineract.accounting.accrual.service;
 
-import static org.apache.fineract.accounting.accrual.api.AccrualAccountingConstants.PERIODIC_ACCRUAL_ACCOUNTING_EXECUTION_ERROR_CODE;
-import static org.apache.fineract.accounting.accrual.api.AccrualAccountingConstants.PERIODIC_ACCRUAL_ACCOUNTING_RESOURCE_NAME;
-import static org.apache.fineract.accounting.accrual.api.AccrualAccountingConstants.accrueTillParamName;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.accrual.serialization.AccrualAccountingDataValidator;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -33,21 +27,19 @@ import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.portfolio.loanaccount.service.LoanAccrualPlatformService;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.apache.fineract.accounting.accrual.api.AccrualAccountingConstants.*;
+
 @Service
+@RequiredArgsConstructor
 public class AccrualAccountingWritePlatformServiceImpl implements AccrualAccountingWritePlatformService {
 
     private final LoanAccrualPlatformService loanAccrualPlatformService;
     private final AccrualAccountingDataValidator accountingDataValidator;
-
-    @Autowired
-    public AccrualAccountingWritePlatformServiceImpl(final LoanAccrualPlatformService loanAccrualPlatformService,
-            final AccrualAccountingDataValidator accountingDataValidator) {
-        this.loanAccrualPlatformService = loanAccrualPlatformService;
-        this.accountingDataValidator = accountingDataValidator;
-    }
 
     @Override
     public CommandProcessingResult executeLoansPeriodicAccrual(JsonCommand command) {

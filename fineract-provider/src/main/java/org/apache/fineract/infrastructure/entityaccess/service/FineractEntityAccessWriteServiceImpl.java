@@ -18,11 +18,7 @@
  */
 package org.apache.fineract.infrastructure.entityaccess.service;
 
-import java.util.Date;
-import java.util.Map;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -31,22 +27,20 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuild
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.entityaccess.api.FineractEntityApiResourceConstants;
 import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityDataValidator;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityAccess;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityAccessRepository;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityRelation;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityRelationRepositoryWrapper;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityToEntityMapping;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityToEntityMappingRepository;
-import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityToEntityMappingRepositoryWrapper;
+import org.apache.fineract.infrastructure.entityaccess.domain.*;
 import org.apache.fineract.infrastructure.entityaccess.exception.FineractEntityToEntityMappingDateException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import java.util.Date;
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class FineractEntityAccessWriteServiceImpl implements FineractEntityAccessWriteService {
 
     private final static Logger logger = LoggerFactory.getLogger(FineractEntityAccessWriteServiceImpl.class);
@@ -55,19 +49,6 @@ public class FineractEntityAccessWriteServiceImpl implements FineractEntityAcces
     private final FineractEntityToEntityMappingRepository fineractEntityToEntityMappingRepository;
     private final FineractEntityToEntityMappingRepositoryWrapper fineractEntityToEntityMappingRepositoryWrapper;
     private final FineractEntityDataValidator fromApiJsonDeserializer;
-
-    @Autowired
-    public FineractEntityAccessWriteServiceImpl(final FineractEntityAccessRepository entityAccessRepository,
-            final FineractEntityRelationRepositoryWrapper fineractEntityRelationRepositoryWrapper,
-            final FineractEntityToEntityMappingRepository fineractEntityToEntityMappingRepository,
-            final FineractEntityToEntityMappingRepositoryWrapper fineractEntityToEntityMappingRepositoryWrapper,
-            FineractEntityDataValidator fromApiJsonDeserializer) {
-        this.entityAccessRepository = entityAccessRepository;
-        this.fineractEntityToEntityMappingRepository = fineractEntityToEntityMappingRepository;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.fineractEntityRelationRepositoryWrapper = fineractEntityRelationRepositoryWrapper;
-        this.fineractEntityToEntityMappingRepositoryWrapper = fineractEntityToEntityMappingRepositoryWrapper;
-    }
 
     @Override
     public CommandProcessingResult createEntityAccess(@SuppressWarnings("unused") JsonCommand command) {

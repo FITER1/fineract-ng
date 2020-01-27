@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.hooks.listener;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.hooks.domain.Hook;
 import org.apache.fineract.infrastructure.hooks.event.HookEvent;
@@ -26,26 +27,17 @@ import org.apache.fineract.infrastructure.hooks.processor.HookProcessor;
 import org.apache.fineract.infrastructure.hooks.processor.HookProcessorProvider;
 import org.apache.fineract.infrastructure.hooks.service.HookReadPlatformService;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class FineractHookListener implements HookListener {
 
     private final HookProcessorProvider hookProcessorProvider;
     private final HookReadPlatformService hookReadPlatformService;
     private final FineractProperties fineractProperties;
-
-    @Autowired
-    public FineractHookListener(final HookProcessorProvider hookProcessorProvider,
-            final HookReadPlatformService hookReadPlatformService,
-            final FineractProperties fineractProperties) {
-        this.hookReadPlatformService = hookReadPlatformService;
-        this.hookProcessorProvider = hookProcessorProvider;
-        this.fineractProperties = fineractProperties;
-    }
 
     @Override
     public void onApplicationEvent(final HookEvent event) {

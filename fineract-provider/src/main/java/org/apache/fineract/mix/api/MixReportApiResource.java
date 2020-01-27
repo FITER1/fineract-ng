@@ -18,36 +18,30 @@
  */
 package org.apache.fineract.mix.api;
 
-import java.sql.Date;
+import io.swagger.annotations.Api;
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.mix.data.XBRLData;
+import org.apache.fineract.mix.service.XBRLBuilder;
+import org.apache.fineract.mix.service.XBRLResultService;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-
-import io.swagger.annotations.Api;
-import org.apache.fineract.mix.data.XBRLData;
-import org.apache.fineract.mix.service.XBRLBuilder;
-import org.apache.fineract.mix.service.XBRLResultService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
+import java.sql.Date;
 
 @Path("mixreport")
 @Component
 @Scope("singleton")
 @Api(value = "Mix Report", description = "")
+@RequiredArgsConstructor
 public class MixReportApiResource {
 
     private final XBRLResultService xbrlResultService;
     private final XBRLBuilder xbrlBuilder;
-
-    @Autowired
-    public MixReportApiResource(final XBRLResultService xbrlResultService, final XBRLBuilder xbrlBuilder) {
-        this.xbrlResultService = xbrlResultService;
-        this.xbrlBuilder = xbrlBuilder;
-    }
 
     @GET
     @Produces({ MediaType.APPLICATION_XML })

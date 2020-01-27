@@ -18,8 +18,7 @@
  */
 package org.apache.fineract.infrastructure.sms.service;
 
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -30,12 +29,14 @@ import org.apache.fineract.infrastructure.sms.domain.SmsMessageAssembler;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class SmsWritePlatformServiceJpaRepositoryImpl implements SmsWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(SmsWritePlatformServiceJpaRepositoryImpl.class);
@@ -43,14 +44,6 @@ public class SmsWritePlatformServiceJpaRepositoryImpl implements SmsWritePlatfor
     private final SmsMessageAssembler assembler;
     private final SmsMessageRepository repository;
     private final SmsDataValidator validator;
-
-    @Autowired
-    public SmsWritePlatformServiceJpaRepositoryImpl(final SmsMessageAssembler assembler, final SmsMessageRepository repository,
-            final SmsDataValidator validator) {
-        this.assembler = assembler;
-        this.repository = repository;
-        this.validator = validator;
-    }
 
     @Transactional
     @Override

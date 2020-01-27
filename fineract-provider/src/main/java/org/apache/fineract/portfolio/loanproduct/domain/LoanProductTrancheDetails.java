@@ -18,14 +18,13 @@
  */
 package org.apache.fineract.portfolio.loanproduct.domain;
 
-import java.math.BigDecimal;
-import java.util.Map;
+import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.portfolio.loanproduct.LoanProductConstants;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.portfolio.loanproduct.LoanProductConstants;
+import java.math.BigDecimal;
+import java.util.Map;
 
 @Embeddable
 public class LoanProductTrancheDetails {

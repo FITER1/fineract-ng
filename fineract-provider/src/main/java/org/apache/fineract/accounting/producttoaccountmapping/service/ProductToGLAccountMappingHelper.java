@@ -18,13 +18,10 @@
  */
 package org.apache.fineract.accounting.producttoaccountmapping.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_LOAN;
 import org.apache.fineract.accounting.common.AccountingConstants.LOAN_PRODUCT_ACCOUNTING_PARAMS;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
@@ -42,36 +39,20 @@ import org.apache.fineract.portfolio.charge.domain.Charge;
 import org.apache.fineract.portfolio.charge.domain.ChargeRepositoryWrapper;
 import org.apache.fineract.portfolio.paymenttype.domain.PaymentType;
 import org.apache.fineract.portfolio.paymenttype.domain.PaymentTypeRepositoryWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class ProductToGLAccountMappingHelper {
 
     protected final GLAccountRepository accountRepository;
     protected final GLAccountRepositoryWrapper accountRepositoryWrapper;
     protected final ProductToGLAccountMappingRepository accountMappingRepository;
     protected final FromJsonHelper fromApiJsonHelper;
-    private final ChargeRepositoryWrapper chargeRepositoryWrapper;
-    private final PaymentTypeRepositoryWrapper paymentTypeRepositoryWrapper;
-
-    @Autowired
-    public ProductToGLAccountMappingHelper(final GLAccountRepository glAccountRepository,
-            final ProductToGLAccountMappingRepository glAccountMappingRepository, final FromJsonHelper fromApiJsonHelper,
-            final ChargeRepositoryWrapper chargeRepositoryWrapper, final GLAccountRepositoryWrapper accountRepositoryWrapper,
-            PaymentTypeRepositoryWrapper paymentTypeRepositoryWrapper) {
-        this.accountRepository = glAccountRepository;
-        this.accountMappingRepository = glAccountMappingRepository;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.chargeRepositoryWrapper = chargeRepositoryWrapper;
-        this.accountRepositoryWrapper = accountRepositoryWrapper;
-        this.paymentTypeRepositoryWrapper = paymentTypeRepositoryWrapper;
-
-    }
+    protected final ChargeRepositoryWrapper chargeRepositoryWrapper;
+    protected final PaymentTypeRepositoryWrapper paymentTypeRepositoryWrapper;
 
     public void saveProductToAccountMapping(final JsonElement element, final String paramName, final Long productId,
             final int placeHolderTypeId, final GLAccountType expectedAccountType, final PortfolioProductType portfolioProductType) {
@@ -361,10 +342,6 @@ public class ProductToGLAccountMappingHelper {
         }
     }
 
-    /**
-     * @param productId
-     * @param jsonObject
-     */
     private void savePaymentChannelToFundSourceMapping(final Long productId, final Long paymentTypeId,
             final Long paymentTypeSpecificFundAccountId, final PortfolioProductType portfolioProductType) {
         final PaymentType paymentType = this.paymentTypeRepositoryWrapper.findOneWithNotFoundDetection(paymentTypeId);
@@ -375,10 +352,6 @@ public class ProductToGLAccountMappingHelper {
         this.accountMappingRepository.save(accountMapping);
     }
 
-    /**
-     * @param productId
-     * @param jsonObject
-     */
     private void saveChargeToFundSourceMapping(final Long productId, final Long chargeId, final Long incomeAccountId,
             final PortfolioProductType portfolioProductType, final boolean isPenalty) {
         final Charge charge = this.chargeRepositoryWrapper.findOneWithNotFoundDetection(chargeId);

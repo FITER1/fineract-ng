@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.bulkimport.importhandler.sharedaccount;
 
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -29,18 +30,18 @@ import org.apache.fineract.infrastructure.bulkimport.importhandler.ImportHandler
 import org.apache.fineract.infrastructure.bulkimport.importhandler.ImportHandlerUtils;
 import org.apache.fineract.infrastructure.bulkimport.importhandler.helper.DateSerializer;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.exception.*;
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountChargeData;
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountData;
 import org.apache.poi.ss.usermodel.*;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class SharedAccountImportHandler implements ImportHandler {
     private Workbook workbook;
     private List<ShareAccountData> shareAccountDataList;
@@ -48,11 +49,6 @@ public class SharedAccountImportHandler implements ImportHandler {
 
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
 
-    @Autowired
-    public SharedAccountImportHandler(final PortfolioCommandSourceWritePlatformService
-            commandsSourceWritePlatformService) {
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-    }
     @Override
     public Count process(Workbook workbook, String locale, String dateFormat) {
         this.workbook=workbook;

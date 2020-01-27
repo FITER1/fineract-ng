@@ -21,8 +21,6 @@ package org.apache.fineract.infrastructure.hooks.processor;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,8 +38,6 @@ import java.security.cert.X509Certificate;
 
 @Slf4j
 public class ProcessorHelper {
-
-	private final static Logger logger = LoggerFactory.getLogger(ProcessorHelper.class);
 
 	@SuppressWarnings("null")
 	public static OkHttpClient configureClient(final OkHttpClient client) {
@@ -98,15 +94,15 @@ public class ProcessorHelper {
 			@Override
 			public void onResponse(Call call, Response response) {
 				if(response.code() < 400) {
-					logger.info("URL : " + url + "\tStatus : " + response.code());
+					log.info("URL : " + url + "\tStatus : " + response.code());
 				} else {
-					logger.error("URL : " + url + "\tStatus : " + response.code());
+					log.error("URL : " + url + "\tStatus : " + response.code());
 				}
 			}
 
 			@Override
 			public void onFailure(Call call, Throwable t) {
-				logger.error("URL : " + call.request().url() + "\tMessage : " + t.getMessage());
+				log.error("URL : " + call.request().url() + "\tMessage : " + t.getMessage());
 			}
 		};
 	}

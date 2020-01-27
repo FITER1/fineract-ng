@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.fund.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.portfolio.fund.data.FundData;
+
+import java.util.Collection;
 
 public interface FundReadPlatformService {
 

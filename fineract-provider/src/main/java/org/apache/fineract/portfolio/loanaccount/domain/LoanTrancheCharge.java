@@ -18,14 +18,10 @@
  */
 package org.apache.fineract.portfolio.loanaccount.domain;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.portfolio.charge.domain.Charge;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "m_loan_tranche_charges")

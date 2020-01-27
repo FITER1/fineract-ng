@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.adhocquery.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.adhocquery.data.AdHocData;
 import org.apache.fineract.adhocquery.domain.ReportRunFrequency;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
@@ -25,30 +26,20 @@ import org.apache.fineract.infrastructure.jobs.service.JobName;
 import org.joda.time.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.sql.DataSource;
 import java.util.Collection;
 import java.util.Date;
 
 @Service(value = "adHocScheduledJobRunnerService")
+@RequiredArgsConstructor
 public class AdHocScheduledJobRunnerServiceImpl implements AdHocScheduledJobRunnerService {
 
     private final static Logger logger = LoggerFactory.getLogger(AdHocScheduledJobRunnerServiceImpl.class);
     private final AdHocReadPlatformService adHocReadPlatformService;
     private final JdbcTemplate jdbcTemplate;
-    
-    @Autowired
-    public AdHocScheduledJobRunnerServiceImpl(final DataSource dataSource,
-    		final AdHocReadPlatformService adHocReadPlatformService
-            ) {
-    	this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.adHocReadPlatformService = adHocReadPlatformService;
-       
-    }
 
     @Transactional
     @Override

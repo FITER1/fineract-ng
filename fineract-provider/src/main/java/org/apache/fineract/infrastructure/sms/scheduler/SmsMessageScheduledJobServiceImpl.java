@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.sms.scheduler;
 
 import com.google.gson.Gson;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.campaigns.helper.SmsConfigUtils;
 import org.apache.fineract.infrastructure.campaigns.sms.constants.SmsCampaignConstants;
 import org.apache.fineract.infrastructure.campaigns.sms.domain.SmsCampaign;
@@ -36,7 +37,6 @@ import org.apache.fineract.infrastructure.sms.domain.SmsMessageStatusType;
 import org.apache.fineract.infrastructure.sms.service.SmsReadPlatformService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.core.ParameterizedTypeReference;
@@ -61,6 +61,7 @@ import java.util.concurrent.Executors;
  * the sent SMS messages
  **/
 @Service
+@RequiredArgsConstructor
 public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJobService {
 
     private final SmsMessageRepository smsMessageRepository;
@@ -73,19 +74,6 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
     private final NotificationSenderService notificationSenderService;
     private final FineractProperties fineractProperties;
     
-    /**
-     * SmsMessageScheduledJobServiceImpl constructor
-     **/
-    @Autowired
-    public SmsMessageScheduledJobServiceImpl(SmsMessageRepository smsMessageRepository, SmsReadPlatformService smsReadPlatformService,
-            final SmsConfigUtils smsConfigUtils, final NotificationSenderService notificationSenderService, final FineractProperties fineractProperties) {
-        this.smsMessageRepository = smsMessageRepository;
-        this.smsReadPlatformService = smsReadPlatformService;
-        this.smsConfigUtils = smsConfigUtils ;
-        this.notificationSenderService = notificationSenderService;
-        this.fineractProperties = fineractProperties;
-    }
-
     @PostConstruct
     public void initializeExecutorService() {
         genericExecutorService = Executors.newSingleThreadExecutor();

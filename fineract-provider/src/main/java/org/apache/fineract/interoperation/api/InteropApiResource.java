@@ -18,13 +18,8 @@
  */
 package org.apache.fineract.interoperation.api;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
 import org.apache.fineract.infrastructure.core.api.ApiRequestParameterHelper;
@@ -36,7 +31,6 @@ import org.apache.fineract.interoperation.data.*;
 import org.apache.fineract.interoperation.domain.InteropIdentifierType;
 import org.apache.fineract.interoperation.domain.InteropTransferActionType;
 import org.apache.fineract.interoperation.service.InteropService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -44,18 +38,16 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.apache.fineract.interoperation.util.InteropUtil.ENTITY_NAME_QUOTE;
-import static org.apache.fineract.interoperation.util.InteropUtil.ENTITY_NAME_REQUEST;
-import static org.apache.fineract.interoperation.util.InteropUtil.ROOT_PATH;
+import static org.apache.fineract.interoperation.util.InteropUtil.*;
 
 @Path("interoperation") //api/v1/
 @Component
 @Scope
 @Api(value = ROOT_PATH, description = "")
+@RequiredArgsConstructor
 public class InteropApiResource {
 
     private PlatformSecurityContext context;
@@ -65,19 +57,6 @@ public class InteropApiResource {
 
     private InteropService interopService;
     private PortfolioCommandSourceWritePlatformService commandsSourceService;
-
-    @Autowired
-    public InteropApiResource(PlatformSecurityContext context,
-                              ApiRequestParameterHelper apiRequestParameterHelper,
-                              DefaultToApiJsonSerializer<CommandProcessingResult> defaultToApiJsonSerializer,
-                              InteropService interopService,
-                              PortfolioCommandSourceWritePlatformService portfolioCommandSourceWritePlatformService) {
-        this.context = context;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.jsonSerializer = defaultToApiJsonSerializer;
-        this.interopService = interopService;
-        this.commandsSourceService = portfolioCommandSourceWritePlatformService;
-    }
 
     @GET
     @Consumes({MediaType.APPLICATION_JSON})

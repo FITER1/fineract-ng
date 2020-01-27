@@ -18,13 +18,13 @@
  */
 package org.apache.fineract.accounting.journalentry.service;
 
-import java.util.Date;
-
 import org.apache.fineract.accounting.journalentry.data.JournalEntryAssociationParametersData;
 import org.apache.fineract.accounting.journalentry.data.JournalEntryData;
 import org.apache.fineract.accounting.journalentry.data.OfficeOpeningBalancesData;
 import org.apache.fineract.infrastructure.core.service.Page;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
+
+import java.util.Date;
 
 public interface JournalEntryReadPlatformService {
 

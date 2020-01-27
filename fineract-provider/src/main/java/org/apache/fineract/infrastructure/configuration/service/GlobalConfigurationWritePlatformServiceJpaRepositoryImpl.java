@@ -18,8 +18,7 @@
  */
 package org.apache.fineract.infrastructure.configuration.service;
 
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.configuration.data.GlobalConfigurationDataValidator;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.configuration.domain.GlobalConfigurationProperty;
@@ -31,12 +30,14 @@ import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityEx
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class GlobalConfigurationWritePlatformServiceJpaRepositoryImpl implements GlobalConfigurationWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(GlobalConfigurationWritePlatformServiceJpaRepositoryImpl.class);
@@ -45,17 +46,6 @@ public class GlobalConfigurationWritePlatformServiceJpaRepositoryImpl implements
     private final GlobalConfigurationRepositoryWrapper repository;
     private final GlobalConfigurationDataValidator globalConfigurationDataValidator;
     private final ConfigurationDomainService configurationDomainService;
-
-    @Autowired
-    public GlobalConfigurationWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final GlobalConfigurationRepositoryWrapper codeRepository, final GlobalConfigurationDataValidator dataValidator,
-            final ConfigurationDomainService configurationDomainService) {
-        this.context = context;
-        this.repository = codeRepository;
-        this.globalConfigurationDataValidator = dataValidator;
-        this.configurationDomainService = configurationDomainService;
-
-    }
 
     @Transactional
     @Override

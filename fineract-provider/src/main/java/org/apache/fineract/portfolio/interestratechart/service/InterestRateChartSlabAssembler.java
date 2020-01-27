@@ -18,24 +18,10 @@
  */
 package org.apache.fineract.portfolio.interestratechart.service;
 
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.chartSlabs;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.descriptionParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.INTERESTRATE_CHART_SLAB_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.amountRangeFromParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.amountRangeToParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.annualInterestRateParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.currencyCodeParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.fromPeriodParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.periodTypeParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.toPeriodParamName;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -47,27 +33,22 @@ import org.apache.fineract.portfolio.interestratechart.domain.InterestRateChartS
 import org.apache.fineract.portfolio.interestratechart.domain.InterestRateChartSlabFields;
 import org.apache.fineract.portfolio.interestratechart.exception.InterestRateChartSlabNotFoundException;
 import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.chartSlabs;
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.descriptionParamName;
+import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.*;
 
 @Service
+@RequiredArgsConstructor
 public class InterestRateChartSlabAssembler {
 
     private final FromJsonHelper fromApiJsonHelper;
     private final InterestRateChartRepositoryWrapper interestRateChartRepositoryWrapper;
     private final InterestIncentiveAssembler incentiveAssembler;
-
-    @Autowired
-    public InterestRateChartSlabAssembler(final FromJsonHelper fromApiJsonHelper,
-            final InterestRateChartRepositoryWrapper interestRateChartRepositoryWrapper, final InterestIncentiveAssembler incentiveAssembler) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.interestRateChartRepositoryWrapper = interestRateChartRepositoryWrapper;
-        this.incentiveAssembler = incentiveAssembler;
-    }
 
     /**
      * Assembles a new {@link InterestRateChartSlab} from JSON Slabs passed in

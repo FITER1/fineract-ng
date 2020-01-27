@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.hooks.serialization;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -27,13 +28,13 @@ import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.hooks.api.HookApiConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class HookCommandFromApiJsonDeserializer {
 
     /**
@@ -43,12 +44,6 @@ public class HookCommandFromApiJsonDeserializer {
             Arrays.asList("name", "displayName", "isActive", "events",
                     "config", "templateId"));
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public HookCommandFromApiJsonDeserializer(
-            final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validateForCreate(final String json) {
         if (StringUtils.isBlank(json)) {

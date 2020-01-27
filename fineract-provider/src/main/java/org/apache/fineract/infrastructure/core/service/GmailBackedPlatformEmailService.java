@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.core.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
@@ -25,19 +26,14 @@ import org.apache.commons.mail.SimpleEmail;
 import org.apache.fineract.infrastructure.configuration.data.SMTPCredentialsData;
 import org.apache.fineract.infrastructure.configuration.service.ExternalServicesPropertiesReadPlatformService;
 import org.apache.fineract.infrastructure.core.domain.EmailDetail;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class GmailBackedPlatformEmailService implements PlatformEmailService {
 	
 	private final ExternalServicesPropertiesReadPlatformService externalServicesReadPlatformService;
 	
-	@Autowired
-	public GmailBackedPlatformEmailService(final ExternalServicesPropertiesReadPlatformService externalServicesReadPlatformService){
-		this.externalServicesReadPlatformService = externalServicesReadPlatformService;
-	}
-
     @Override
     public void sendToUserAccount(String organisationName, String contactName,
                                   String address, String username, String unencodedPassword) {

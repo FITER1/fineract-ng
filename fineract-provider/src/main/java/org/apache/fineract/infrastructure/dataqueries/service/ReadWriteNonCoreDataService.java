@@ -18,13 +18,13 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.service;
 
-import java.util.List;
-
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.dataqueries.data.DatatableData;
 import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.List;
 
 public interface ReadWriteNonCoreDataService {
 

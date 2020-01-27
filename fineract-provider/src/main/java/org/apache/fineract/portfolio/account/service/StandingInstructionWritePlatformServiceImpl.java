@@ -18,23 +18,13 @@
  */
 package org.apache.fineract.portfolio.account.service;
 
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromAccountTypeParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.fromClientIdParamName;
-import static org.apache.fineract.portfolio.account.AccountDetailConstants.toAccountTypeParamName;
-import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.statusParamName;
-
-import java.math.BigDecimal;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.AbstractPlatformServiceUnavailableException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
@@ -44,14 +34,7 @@ import org.apache.fineract.portfolio.account.data.AccountTransferDTO;
 import org.apache.fineract.portfolio.account.data.StandingInstructionData;
 import org.apache.fineract.portfolio.account.data.StandingInstructionDataValidator;
 import org.apache.fineract.portfolio.account.data.StandingInstructionDuesData;
-import org.apache.fineract.portfolio.account.domain.AccountTransferDetailRepository;
-import org.apache.fineract.portfolio.account.domain.AccountTransferDetails;
-import org.apache.fineract.portfolio.account.domain.AccountTransferRecurrenceType;
-import org.apache.fineract.portfolio.account.domain.AccountTransferStandingInstruction;
-import org.apache.fineract.portfolio.account.domain.StandingInstructionAssembler;
-import org.apache.fineract.portfolio.account.domain.StandingInstructionRepository;
-import org.apache.fineract.portfolio.account.domain.StandingInstructionStatus;
-import org.apache.fineract.portfolio.account.domain.StandingInstructionType;
+import org.apache.fineract.portfolio.account.domain.*;
 import org.apache.fineract.portfolio.account.exception.StandingInstructionNotFoundException;
 import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.DefaultScheduledDateGenerator;
@@ -61,13 +44,21 @@ import org.apache.fineract.portfolio.savings.exception.InsufficientAccountBalanc
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.apache.fineract.portfolio.account.AccountDetailConstants.*;
+import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.statusParamName;
+
 @Service
+@RequiredArgsConstructor
 public class StandingInstructionWritePlatformServiceImpl implements StandingInstructionWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(StandingInstructionWritePlatformServiceImpl.class);
@@ -79,22 +70,6 @@ public class StandingInstructionWritePlatformServiceImpl implements StandingInst
     private final StandingInstructionReadPlatformService standingInstructionReadPlatformService;
     private final AccountTransfersWritePlatformService accountTransfersWritePlatformService;
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public StandingInstructionWritePlatformServiceImpl(final StandingInstructionDataValidator standingInstructionDataValidator,
-            final StandingInstructionAssembler standingInstructionAssembler,
-            final AccountTransferDetailRepository accountTransferDetailRepository,
-            final StandingInstructionRepository standingInstructionRepository,
-            final StandingInstructionReadPlatformService standingInstructionReadPlatformService,
-            final AccountTransfersWritePlatformService accountTransfersWritePlatformService, final DataSource dataSource) {
-        this.standingInstructionDataValidator = standingInstructionDataValidator;
-        this.standingInstructionAssembler = standingInstructionAssembler;
-        this.accountTransferDetailRepository = accountTransferDetailRepository;
-        this.standingInstructionRepository = standingInstructionRepository;
-        this.standingInstructionReadPlatformService = standingInstructionReadPlatformService;
-        this.accountTransfersWritePlatformService = accountTransfersWritePlatformService;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     @Transactional
     @Override

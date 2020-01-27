@@ -18,15 +18,6 @@
  */
 package org.apache.fineract.portfolio.shareaccounts.domain;
 
-import java.math.BigDecimal;
-import java.math.MathContext;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
@@ -35,6 +26,10 @@ import org.apache.fineract.organisation.monetary.domain.MoneyHelper;
 import org.apache.fineract.portfolio.charge.domain.Charge;
 import org.apache.fineract.portfolio.charge.domain.ChargeCalculationType;
 import org.apache.fineract.portfolio.charge.domain.ChargeTimeType;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.math.MathContext;
 
 @Entity
 @Table(name = "m_share_account_charge")

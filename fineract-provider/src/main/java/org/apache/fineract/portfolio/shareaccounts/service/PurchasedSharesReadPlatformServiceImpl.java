@@ -18,31 +18,27 @@
  */
 package org.apache.fineract.portfolio.shareaccounts.service;
 
+import lombok.RequiredArgsConstructor;
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
+import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountTransactionData;
+import org.joda.time.LocalDate;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Service;
+
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import javax.sql.DataSource;
-import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountTransactionData;
-import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Service;
-
 @Service
+@RequiredArgsConstructor
 public class PurchasedSharesReadPlatformServiceImpl implements
 		PurchasedSharesReadPlatformService {
 
 	private final JdbcTemplate jdbcTemplate;
-	
-	@Autowired
-	public PurchasedSharesReadPlatformServiceImpl(final DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource) ;
-	}
+
 	@Override
 	public Collection<ShareAccountTransactionData> retrievePurchasedShares(
 			Long accountId) {

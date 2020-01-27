@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.loanproduct.service;
 
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.portfolio.loanproduct.data.TransactionProcessingStrategyData;
+
+import java.util.Collection;
+import java.util.List;
 
 public interface LoanDropdownReadPlatformService {
 

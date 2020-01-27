@@ -18,15 +18,7 @@
  */
 package org.apache.fineract.portfolio.loanproduct.productmix.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -41,13 +33,15 @@ import org.apache.fineract.portfolio.loanproduct.productmix.exception.ProductMix
 import org.apache.fineract.portfolio.loanproduct.productmix.serialization.ProductMixDataValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class ProductMixWritePlatformServiceJpaRepositoryImpl implements ProductMixWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(ProductMixWritePlatformServiceJpaRepositoryImpl.class);
@@ -55,16 +49,6 @@ public class ProductMixWritePlatformServiceJpaRepositoryImpl implements ProductM
     private final ProductMixDataValidator fromApiJsonDeserializer;
     private final ProductMixRepository productMixRepository;
     private final LoanProductRepository productRepository;
-
-    @Autowired
-    public ProductMixWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final ProductMixDataValidator fromApiJsonDeserializer, final ProductMixRepository productMixRepository,
-            final LoanProductRepository productRepository) {
-        this.context = context;
-        this.fromApiJsonDeserializer = fromApiJsonDeserializer;
-        this.productMixRepository = productMixRepository;
-        this.productRepository = productRepository;
-    }
 
     @Transactional
     @Override

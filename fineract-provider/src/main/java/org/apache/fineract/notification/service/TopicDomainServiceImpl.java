@@ -18,12 +18,7 @@
  */
 package org.apache.fineract.notification.service;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.notification.domain.Topic;
 import org.apache.fineract.notification.domain.TopicRepository;
 import org.apache.fineract.notification.domain.TopicSubscriber;
@@ -34,28 +29,20 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.useradministration.domain.Role;
 import org.apache.fineract.useradministration.domain.RoleRepository;
 import org.apache.fineract.useradministration.exception.RoleNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.util.*;
+
 @Service
+@RequiredArgsConstructor
 public class TopicDomainServiceImpl implements TopicDomainService {
 
 	private final RoleRepository roleRepository;
 	private final TopicRepository topicRepository;
     private final OfficeRepository officeRepository;
     private final TopicSubscriberRepository topicSubscriberRepository;
-	
-	@Autowired
-	public TopicDomainServiceImpl(RoleRepository roleRepository, TopicRepository topicRepository,
-			OfficeRepository officeRepository, TopicSubscriberRepository topicSubscriberRepository) {
-		
-		this.roleRepository = roleRepository;
-		this.topicRepository = topicRepository;
-		this.officeRepository = officeRepository;
-		this.topicSubscriberRepository = topicSubscriberRepository;
-	}
-	
+
 	@Override
 	public void createTopic( Office newOffice ) {
 		

@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.accounting.journalentry.data;
 
+import org.apache.fineract.infrastructure.core.data.EnumOptionData;
+import org.apache.fineract.portfolio.client.domain.ClientTransactionType;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.portfolio.client.domain.ClientTransactionType;
 
 public class ClientTransactionDTO {
 

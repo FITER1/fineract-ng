@@ -18,27 +18,22 @@
  */
 package org.apache.fineract.portfolio.meeting.attendance.service;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Collection;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import javax.sql.DataSource;
 import org.apache.fineract.portfolio.meeting.attendance.data.ClientAttendanceData;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Collection;
+
 @Service
+@RequiredArgsConstructor
 public class ClientAttendanceReadPlatformServiceImpl implements ClientAttendanceReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public ClientAttendanceReadPlatformServiceImpl(final DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-    }
 
     private static final class ClientAttendanceDataMapper implements RowMapper<ClientAttendanceData> {
 

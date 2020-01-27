@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.infrastructure.sms.service;
 
-import javax.sql.DataSource;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
@@ -29,7 +29,6 @@ import org.apache.fineract.infrastructure.sms.data.SmsData;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageEnumerations;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageStatusType;
 import org.apache.fineract.infrastructure.sms.exception.SmsNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -45,20 +44,13 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class SmsReadPlatformServiceImpl implements SmsReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-    private final SmsMapper smsRowMapper;
+    private final SmsMapper smsRowMapper = new SmsMapper();
     private final PaginationHelper<SmsData> paginationHelper = new PaginationHelper<>();
     private final ColumnValidator columnValidator;
-
-    @Autowired
-    public SmsReadPlatformServiceImpl(final DataSource dataSource,
-    		final ColumnValidator columnValidator) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.smsRowMapper = new SmsMapper();
-        this.columnValidator = columnValidator;
-    }
 
     private static final class SmsMapper implements RowMapper<SmsData> {
 

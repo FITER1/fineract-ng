@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.notification.eventandlistener;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.notification.data.NotificationData;
 import org.apache.fineract.notification.service.NotificationWritePlatformService;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.useradministration.domain.AppUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.listener.SessionAwareMessageListener;
 import org.springframework.stereotype.Service;
 
@@ -35,18 +35,12 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class NotificationEventListener implements SessionAwareMessageListener {
 
     private final NotificationWritePlatformService notificationWritePlatformService;
 
     private final AppUserRepository appUserRepository;
-
-    @Autowired
-    public NotificationEventListener(NotificationWritePlatformService notificationWritePlatformService,
-                                     AppUserRepository appUserRepository) {
-        this.notificationWritePlatformService = notificationWritePlatformService;
-        this.appUserRepository = appUserRepository;
-    }
 
     @Override
     public void onMessage(Message message, Session session) throws JMSException {

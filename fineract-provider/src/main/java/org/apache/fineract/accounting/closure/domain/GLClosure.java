@@ -18,19 +18,6 @@
  */
 package org.apache.fineract.accounting.closure.domain;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.UniqueConstraint;
-
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.closure.api.GLClosureJsonInputParams;
@@ -38,6 +25,11 @@ import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.useradministration.domain.AppUser;
+
+import javax.persistence.*;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Builder
 @Data

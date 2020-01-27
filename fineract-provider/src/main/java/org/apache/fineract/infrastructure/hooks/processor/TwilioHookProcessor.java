@@ -18,12 +18,10 @@
  */
 package org.apache.fineract.infrastructure.hooks.processor;
 
-import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.apiKeyName;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.hooks.domain.Hook;
 import org.apache.fineract.infrastructure.hooks.domain.HookConfiguration;
@@ -34,33 +32,24 @@ import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
 import org.apache.fineract.template.service.TemplateMergeService;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.apiKeyName;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TwilioHookProcessor implements HookProcessor {
 
     private final HookConfigurationRepository hookConfigurationRepository;
     private final TemplateMergeService templateMergeService;
     private final ClientRepositoryWrapper clientRepositoryWrapper;
-
-    @Autowired
-    public TwilioHookProcessor(
-            final HookConfigurationRepository hookConfigurationRepository,
-            final TemplateMergeService templateMergeService,
-            final ClientRepositoryWrapper clientRepositoryWrapper) {
-        this.hookConfigurationRepository = hookConfigurationRepository;
-        this.templateMergeService = templateMergeService;
-        this.clientRepositoryWrapper = clientRepositoryWrapper;
-    }
 
     @Override
     public void process(final Hook hook,

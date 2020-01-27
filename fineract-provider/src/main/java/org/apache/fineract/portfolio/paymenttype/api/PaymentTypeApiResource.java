@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.paymenttype.api;
 
 import io.swagger.annotations.*;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
@@ -30,7 +31,6 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 import org.apache.fineract.portfolio.paymenttype.domain.PaymentTypeRepositoryWrapper;
 import org.apache.fineract.portfolio.paymenttype.service.PaymentTypeReadPlatformService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
@@ -42,6 +42,7 @@ import java.util.Collection;
 @Path("paymenttypes")
 @Component
 @Api(value = "Payment Type", description = "This defines the payment type")
+@RequiredArgsConstructor
 public class PaymentTypeApiResource {
 
     private final PlatformSecurityContext securityContext;
@@ -54,19 +55,6 @@ public class PaymentTypeApiResource {
 
     // private final Set<String> RESPONSE_DATA_PARAMETERS = new
     // HashSet<>(Arrays.asList("id", "value", "description", "isCashPayment"));
-
-    @Autowired
-    public PaymentTypeApiResource(PlatformSecurityContext securityContext, DefaultToApiJsonSerializer<PaymentTypeData> jsonSerializer,
-            PaymentTypeReadPlatformService readPlatformService, PaymentTypeRepositoryWrapper paymentTypeRepositoryWrapper,
-            ApiRequestParameterHelper apiRequestParameterHelper, PortfolioCommandSourceWritePlatformService commandWritePlatformService) {
-        super();
-        this.securityContext = securityContext;
-        this.jsonSerializer = jsonSerializer;
-        this.readPlatformService = readPlatformService;
-        this.paymentTypeRepositoryWrapper = paymentTypeRepositoryWrapper;
-        this.apiRequestParameterHelper = apiRequestParameterHelper;
-        this.commandWritePlatformService = commandWritePlatformService;
-    }
 
     @GET
     @Consumes({ MediaType.TEXT_HTML, MediaType.APPLICATION_JSON })

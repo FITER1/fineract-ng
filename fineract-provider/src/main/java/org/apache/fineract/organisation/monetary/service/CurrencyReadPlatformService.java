@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.organisation.monetary.service;
 
-import java.util.Collection;
-
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
+
+import java.util.Collection;
 
 public interface CurrencyReadPlatformService {
 

@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.notification.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.notification.domain.Notification;
 import org.apache.fineract.notification.domain.NotificationMapper;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.useradministration.domain.AppUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -31,6 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class NotificationWritePlatformServiceImpl implements NotificationWritePlatformService {
 
     private final NotificationGeneratorWritePlatformService notificationGeneratorWritePlatformService;
@@ -40,18 +41,6 @@ public class NotificationWritePlatformServiceImpl implements NotificationWritePl
     private final AppUserRepository appUserRepository;
 
     private final NotificationMapperWritePlatformService notificationMapperWritePlatformService;
-
-    @Autowired
-    public NotificationWritePlatformServiceImpl(
-            final NotificationGeneratorWritePlatformService notificationGeneratorWritePlatformService,
-            final NotificationGeneratorReadRepositoryWrapper notificationGeneratorReadRepositoryWrapper,
-            final AppUserRepository appUserRepository,
-            final NotificationMapperWritePlatformService notificationMapperWritePlatformService) {
-        this.notificationGeneratorWritePlatformService = notificationGeneratorWritePlatformService;
-        this.notificationGeneratorReadRepositoryWrapper = notificationGeneratorReadRepositoryWrapper;
-        this.appUserRepository = appUserRepository;
-        this.notificationMapperWritePlatformService = notificationMapperWritePlatformService;
-    }
 
 
     @Override

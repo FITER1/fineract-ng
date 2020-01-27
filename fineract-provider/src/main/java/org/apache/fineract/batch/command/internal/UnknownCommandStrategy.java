@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.batch.command.internal;
 
-import javax.ws.rs.core.UriInfo;
-
 import org.apache.fineract.batch.command.CommandStrategy;
 import org.apache.fineract.batch.domain.BatchRequest;
 import org.apache.fineract.batch.domain.BatchResponse;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.core.UriInfo;
 
 /**
  * Provides a default CommandStrategy by implementing

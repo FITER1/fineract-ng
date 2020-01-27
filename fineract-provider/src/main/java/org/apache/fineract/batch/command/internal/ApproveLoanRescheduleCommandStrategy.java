@@ -18,26 +18,22 @@
  */
 package org.apache.fineract.batch.command.internal;
 
-import javax.ws.rs.core.UriInfo;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.batch.command.CommandStrategy;
 import org.apache.fineract.batch.domain.BatchRequest;
 import org.apache.fineract.batch.domain.BatchResponse;
 import org.apache.fineract.batch.exception.ErrorHandler;
 import org.apache.fineract.batch.exception.ErrorInfo;
 import org.apache.fineract.portfolio.loanaccount.rescheduleloan.api.RescheduleLoansApiResource;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.ws.rs.core.UriInfo;
+
 @Component
+@RequiredArgsConstructor
 public class ApproveLoanRescheduleCommandStrategy implements CommandStrategy {
 
     private final RescheduleLoansApiResource rescheduleLoansApiResource;
-
-    @Autowired
-    public ApproveLoanRescheduleCommandStrategy(final RescheduleLoansApiResource rescheduleLoansApiResource) {
-        this.rescheduleLoansApiResource = rescheduleLoansApiResource;
-    }
 
     @Override
     public BatchResponse execute(BatchRequest request, UriInfo uriInfo) {

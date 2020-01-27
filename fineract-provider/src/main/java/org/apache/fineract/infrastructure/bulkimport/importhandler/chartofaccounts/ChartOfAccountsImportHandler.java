@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.bulkimport.importhandler.chartofaccounts;
 
 import com.google.gson.GsonBuilder;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountUsage;
@@ -35,25 +36,19 @@ import org.apache.fineract.infrastructure.bulkimport.importhandler.helper.EnumOp
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.infrastructure.core.exception.*;
 import org.apache.poi.ss.usermodel.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class ChartOfAccountsImportHandler implements ImportHandler {
     private  List<GLAccountData> glAccounts;
     private  Workbook workbook;
 
     private final PortfolioCommandSourceWritePlatformService commandsSourceWritePlatformService;
-
-    @Autowired
-    public ChartOfAccountsImportHandler(final PortfolioCommandSourceWritePlatformService
-            commandsSourceWritePlatformService) {
-        this.commandsSourceWritePlatformService = commandsSourceWritePlatformService;
-    }
 
     @Override
     public Count process(Workbook workbook, String locale, String dateFormat) {

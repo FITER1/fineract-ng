@@ -18,8 +18,7 @@
  */
 package org.apache.fineract.adhocquery.service;
 
-import java.util.Map;
-
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.adhocquery.domain.AdHoc;
 import org.apache.fineract.adhocquery.domain.AdHocRepository;
 import org.apache.fineract.adhocquery.exception.AdHocNotFoundException;
@@ -30,12 +29,14 @@ import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityEx
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
+
 @Service
+@RequiredArgsConstructor
 public class AdHocWritePlatformServiceJpaRepositoryImpl implements AdHocWritePlatformService {
 
     private final static Logger logger = LoggerFactory.getLogger(AdHocWritePlatformServiceJpaRepositoryImpl.class);
@@ -43,16 +44,6 @@ public class AdHocWritePlatformServiceJpaRepositoryImpl implements AdHocWritePla
     private final AdHocRepository adHocRepository;
     private final AdHocDataValidator adHocCommandFromApiJsonDeserializer;
    
-
-    @Autowired
-    public AdHocWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context, final AdHocRepository adHocRepository,
-             final AdHocDataValidator adHocCommandFromApiJsonDeserializer) {
-        this.context = context;
-        this.adHocRepository = adHocRepository;
-        this.adHocCommandFromApiJsonDeserializer = adHocCommandFromApiJsonDeserializer;
-       
-    }
-
     @Transactional
     @Override
     public CommandProcessingResult createAdHocQuery(final JsonCommand command) {

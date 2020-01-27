@@ -18,14 +18,13 @@
  */
 package org.apache.fineract.portfolio.loanaccount.domain;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.joda.time.LocalDate;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A wrapper around loan schedule related data exposing needed behaviour by

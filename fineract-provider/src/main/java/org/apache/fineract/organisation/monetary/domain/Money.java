@@ -20,12 +20,11 @@ package org.apache.fineract.organisation.monetary.domain;
 
 import lombok.*;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Iterator;
-
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
 
 @Builder
 @Data

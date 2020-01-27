@@ -18,26 +18,20 @@
  */
 package org.apache.fineract.portfolio.interestratechart.domain;
 
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.amountParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.attributeNameParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.attributeValueParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.conditionTypeParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.entityTypeParamName;
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.incentiveTypeparamName;
-
-import java.math.BigDecimal;
-import java.util.Locale;
-import java.util.Map;
-
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.portfolio.common.domain.ConditionType;
 import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncentiveAttributeName;
 import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncentiveEntityType;
 import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncentiveType;
+
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import java.math.BigDecimal;
+import java.util.Locale;
+import java.util.Map;
+
+import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.*;
 
 @Embeddable
 public class InterestIncentivesFields {

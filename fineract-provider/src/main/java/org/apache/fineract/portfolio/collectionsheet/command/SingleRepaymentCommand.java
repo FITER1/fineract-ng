@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.collectionsheet.command;
 
-import java.math.BigDecimal;
-
 import org.apache.fineract.portfolio.paymentdetail.domain.PaymentDetail;
 import org.joda.time.LocalDate;
+
+import java.math.BigDecimal;
 
 /**
  * Immutable command for Single loan repayment.

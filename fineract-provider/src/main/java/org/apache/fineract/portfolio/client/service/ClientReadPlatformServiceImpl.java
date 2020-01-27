@@ -18,12 +18,12 @@
  */
 package org.apache.fineract.portfolio.client.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.service.CodeValueReadPlatformService;
 import org.apache.fineract.infrastructure.configuration.data.GlobalConfigurationPropertyData;
 import org.apache.fineract.infrastructure.configuration.service.ConfigurationReadPlatformService;
-import javax.sql.DataSource;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.service.Page;
@@ -55,7 +55,6 @@ import org.apache.fineract.portfolio.savings.data.SavingsProductData;
 import org.apache.fineract.portfolio.savings.service.SavingsProductReadPlatformService;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -67,6 +66,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ClientReadPlatformServiceImpl implements ClientReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
@@ -87,28 +87,6 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
     private final ConfigurationReadPlatformService configurationReadPlatformService;
     private final EntityDatatableChecksReadService entityDatatableChecksReadService;
     private final ColumnValidator columnValidator;
-
-    @Autowired
-    public ClientReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final OfficeReadPlatformService officeReadPlatformService, final StaffReadPlatformService staffReadPlatformService,
-            final CodeValueReadPlatformService codeValueReadPlatformService,
-            final SavingsProductReadPlatformService savingsProductReadPlatformService,
-            final AddressReadPlatformService addressReadPlatformService,final ClientFamilyMembersReadPlatformService clientFamilyMembersReadPlatformService,
-            final ConfigurationReadPlatformService configurationReadPlatformService,
-            final EntityDatatableChecksReadService entityDatatableChecksReadService,
-			final ColumnValidator columnValidator) {
-		this.context = context;
-        this.officeReadPlatformService = officeReadPlatformService;
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        this.staffReadPlatformService = staffReadPlatformService;
-        this.codeValueReadPlatformService = codeValueReadPlatformService;
-        this.savingsProductReadPlatformService = savingsProductReadPlatformService;
-        this.addressReadPlatformService=addressReadPlatformService;
-        this.clientFamilyMembersReadPlatformService=clientFamilyMembersReadPlatformService;
-        this.configurationReadPlatformService=configurationReadPlatformService;
-        this.entityDatatableChecksReadService = entityDatatableChecksReadService;
-        this.columnValidator = columnValidator;
-	}
 
     @Override
     public ClientData retrieveTemplate(final Long officeId, final boolean staffInSelectedOfficeOnly) {

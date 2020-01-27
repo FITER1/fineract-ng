@@ -18,18 +18,8 @@
  */
 package org.apache.fineract.portfolio.savings.service;
 
-import static org.apache.fineract.portfolio.savings.DepositsApiConstants.RECURRING_DEPOSIT_PRODUCT_RESOURCE_NAME;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.accountingRuleParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.chargesParamName;
-import static org.apache.fineract.portfolio.savings.SavingsApiConstants.taxGroupIdParamName;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.persistence.PersistenceException;
-
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.accounting.producttoaccountmapping.service.ProductToGLAccountMappingWritePlatformService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -49,38 +39,30 @@ import org.apache.fineract.portfolio.savings.domain.RecurringDepositProduct;
 import org.apache.fineract.portfolio.savings.domain.RecurringDepositProductRepository;
 import org.apache.fineract.portfolio.savings.exception.RecurringDepositProductNotFoundException;
 import org.apache.fineract.portfolio.tax.domain.TaxGroup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.PersistenceException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.apache.fineract.portfolio.savings.DepositsApiConstants.RECURRING_DEPOSIT_PRODUCT_RESOURCE_NAME;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
+
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class RecurringDepositProductWritePlatformServiceJpaRepositoryImpl implements RecurringDepositProductWritePlatformService {
 
-    private final Logger logger;
     private final PlatformSecurityContext context;
     private final RecurringDepositProductRepository recurringDepositProductRepository;
     private final DepositProductDataValidator fromApiJsonDataValidator;
     private final DepositProductAssembler depositProductAssembler;
     private final ProductToGLAccountMappingWritePlatformService accountMappingWritePlatformService;
     private final InterestRateChartAssembler chartAssembler;
-
-    @Autowired
-    public RecurringDepositProductWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final RecurringDepositProductRepository recurringDepositProductRepository,
-            final DepositProductDataValidator fromApiJsonDataValidator, final DepositProductAssembler depositProductAssembler,
-            final ProductToGLAccountMappingWritePlatformService accountMappingWritePlatformService,
-            final InterestRateChartAssembler chartAssembler) {
-        this.context = context;
-        this.recurringDepositProductRepository = recurringDepositProductRepository;
-        this.fromApiJsonDataValidator = fromApiJsonDataValidator;
-        this.depositProductAssembler = depositProductAssembler;
-        this.logger = LoggerFactory.getLogger(RecurringDepositProductWritePlatformServiceJpaRepositoryImpl.class);
-        this.accountMappingWritePlatformService = accountMappingWritePlatformService;
-        this.chartAssembler = chartAssembler;
-    }
 
     @Transactional
     @Override
@@ -209,6 +191,6 @@ public class RecurringDepositProductWritePlatformServiceJpaRepositoryImpl implem
     }
 
     private void logAsErrorUnexpectedDataIntegrityException(final Exception dae) {
-        this.logger.error(dae.getMessage(), dae);
+        log.error(dae.getMessage(), dae);
     }
 }

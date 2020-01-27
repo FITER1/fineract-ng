@@ -18,12 +18,6 @@
  */
 package org.apache.fineract.portfolio.loanaccount.data;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import javax.persistence.Transient;
-
-import org.apache.fineract.infrastructure.bulkimport.constants.TemplatePopulateImportConstants;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.dataqueries.data.DatatableData;
@@ -49,6 +43,10 @@ import org.apache.fineract.portfolio.loanproduct.domain.LoanProductValueConditio
 import org.apache.fineract.portfolio.note.data.NoteData;
 import org.joda.time.LocalDate;
 import org.springframework.util.CollectionUtils;
+
+import javax.persistence.Transient;
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * Immutable data object representing loan account data.

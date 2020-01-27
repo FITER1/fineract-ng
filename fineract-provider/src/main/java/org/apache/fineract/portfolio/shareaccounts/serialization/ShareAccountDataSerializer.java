@@ -18,18 +18,11 @@
  */
 package org.apache.fineract.portfolio.shareaccounts.serialization;
 
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -55,26 +48,21 @@ import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepositoryWrapper;
 import org.apache.fineract.portfolio.savings.exception.SavingsAccountNotFoundException;
 import org.apache.fineract.portfolio.savings.service.SavingsAccountReadPlatformService;
-import org.apache.fineract.portfolio.shareaccounts.domain.ShareAccount;
-import org.apache.fineract.portfolio.shareaccounts.domain.ShareAccountCharge;
-import org.apache.fineract.portfolio.shareaccounts.domain.ShareAccountChargePaidBy;
-import org.apache.fineract.portfolio.shareaccounts.domain.ShareAccountStatusType;
-import org.apache.fineract.portfolio.shareaccounts.domain.ShareAccountTransaction;
+import org.apache.fineract.portfolio.shareaccounts.domain.*;
 import org.apache.fineract.portfolio.shareproducts.domain.ShareProduct;
 import org.apache.fineract.portfolio.shareproducts.domain.ShareProductRepositoryWrapper;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class ShareAccountDataSerializer {
 
     private final PlatformSecurityContext platformSecurityContext;
@@ -109,21 +97,6 @@ public class ShareAccountDataSerializer {
                     .locale_paramname,
             ShareAccountApiConstants.requesteddate_paramname, ShareAccountApiConstants.requestedshares_paramname,
             ShareAccountApiConstants.purchasedprice_paramname, ShareAccountApiConstants.dateformat_paramname));
-
-    
-    @Autowired
-    public ShareAccountDataSerializer(final PlatformSecurityContext platformSecurityContext, final FromJsonHelper fromApiJsonHelper,
-            final ChargeRepositoryWrapper chargeRepository, final SavingsAccountRepositoryWrapper savingsAccountRepositoryWrapper,
-            final ClientRepositoryWrapper clientRepositoryWrapper, final ShareProductRepositoryWrapper shareProductRepository,
-            final SavingsAccountReadPlatformService savingsAccountReadPlatformService) {
-        this.platformSecurityContext = platformSecurityContext;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.chargeRepository = chargeRepository;
-        this.savingsAccountRepositoryWrapper = savingsAccountRepositoryWrapper;
-        this.clientRepositoryWrapper = clientRepositoryWrapper;
-        this.shareProductRepository = shareProductRepository;
-        this.savingsAccountReadPlatformService = savingsAccountReadPlatformService ;
-    }
 
     public ShareAccount validateAndCreate(JsonCommand jsonCommand) {
 
