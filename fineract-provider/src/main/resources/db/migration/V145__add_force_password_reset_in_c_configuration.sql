@@ -22,7 +22,7 @@ INSERT INTO `c_configuration` (`id`, `name`, `value`, `enabled`) VALUES (NULL, '
 ALTER TABLE  `m_appuser` ADD  `last_time_password_updated` DATE NOT NULL DEFAULT '1970-01-01',
 ADD INDEX (  `last_time_password_updated` ) ;
 
-UPDATE  `m_appuser` SET  `last_time_password_updated` =  NOW() WHERE  `m_appuser`.`last_time_password_updated` ='1970-01-01';
+UPDATE  `m_appuser` SET  `last_time_password_updated` =  CURDATE() WHERE  `m_appuser`.`last_time_password_updated` ='1970-01-01';
 
 CREATE TABLE IF NOT EXISTS `m_appuser_previous_password` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
