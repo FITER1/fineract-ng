@@ -54,7 +54,7 @@ services:
       - "1883:1883"
       - "61614:61614"
   fineract:
-    image: fineract:latest
+    image: docker.pkg.github.com/fiter1/fineract-ng/fineract:latest
     environment:
       - FINERACT_SERVER_PORT=8443
       - FINERACT_DB_URL=jdbc:mysql://mysql:3306/mifostenant-default

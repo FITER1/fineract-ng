@@ -153,8 +153,8 @@ bootJar {
 task fatJarTar(type: Tar, dependsOn: "bootJar") { with distributionsCopySpec }
 
 docker {
-    name "fineract:latest"
-    tag "build", "fineract:${project.version}"
+    name "docker.pkg.github.com/fiter1/fineract-ng/fineract:latest"
+    tag "build", "docker.pkg.github.com/fiter1/fineract-ng/fineract:${project.version}"
     dependsOn fatJarTar
     files tasks.fatJarTar.outputs
 }
