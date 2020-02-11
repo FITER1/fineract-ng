@@ -21,11 +21,10 @@ package org.apache.fineract.template.service;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.template.domain.Template;
 import org.apache.fineract.template.domain.TemplateFunctions;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -38,10 +37,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+@Slf4j
 @Service
 public class TemplateMergeService {
-	private final static Logger logger = LoggerFactory.getLogger(TemplateMergeService.class);
-	
 
     // private final FromJsonHelper fromApiJsonHelper;
     private Map<String, Object> scopes;
@@ -91,7 +89,7 @@ public class TemplateMergeService {
                 try {
                     this.scopes.put(entry.getKey(), getMapFromUrl(url));
                 } catch (final IOException e) {
-                	logger.error("getCompiledMapFromMappers() failed", e);
+                	log.error("getCompiledMapFromMappers() failed", e);
                 }
             }
         }
@@ -136,7 +134,7 @@ public class TemplateMergeService {
             connection.setDoInput(true);
 
         } catch (IOException | KeyManagementException | NoSuchAlgorithmException | KeyStoreException e) {
-        	logger.error("getConnection() failed, return null", e);
+        	log.error("getConnection() failed, return null", e);
         }
 
         return connection;
@@ -156,7 +154,7 @@ public class TemplateMergeService {
             }
 
         } catch (final IOException e) {
-        	logger.error("getStringFromInputStream() failed", e);
+        	log.error("getStringFromInputStream() failed", e);
         } finally {
             if (br != null) {
                 try {

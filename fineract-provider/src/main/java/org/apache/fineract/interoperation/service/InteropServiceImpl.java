@@ -19,6 +19,7 @@
 package org.apache.fineract.interoperation.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -48,8 +49,6 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -70,11 +69,10 @@ import java.util.function.Predicate;
 import static org.apache.fineract.interoperation.util.InteropUtil.DEFAULT_LOCALE;
 import static org.apache.fineract.interoperation.util.InteropUtil.DEFAULT_ROUTING_CODE;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InteropServiceImpl implements InteropService {
-
-    private final static Logger LOG = LoggerFactory.getLogger(InteropServiceImpl.class);
 
     private final PlatformSecurityContext securityContext;
     private final InteropDataValidator dataValidator;

@@ -22,6 +22,7 @@ import com.jayway.restassured.builder.ResponseSpecBuilder;
 import com.jayway.restassured.internal.path.ObjectConverter;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.specification.ResponseSpecification;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.BaseIntegrationTest;
 import org.apache.fineract.integrationtests.common.ClientHelper;
 import org.apache.fineract.integrationtests.common.accounting.Account;
@@ -40,8 +41,6 @@ import org.apache.fineract.portfolio.savings.SavingsApiConstants;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -53,9 +52,8 @@ import java.util.UUID;
 import static org.apache.fineract.integrationtests.common.savings.SavingsAccountHelper.ACCOUNT_TYPE_INDIVIDUAL;
 import static org.apache.fineract.integrationtests.interoperation.InteropHelper.PARAM_ACCOUNT_BALANCE;
 
+@Slf4j
 public class InteropTest extends BaseIntegrationTest {
-
-    private final static Logger log = LoggerFactory.getLogger(InteropTest.class);
 
     private final static String MIN_INTEREST_CALCULATON_BALANCE = null;
     private final static String MIN_REQUIRED_BALANCE = null;

@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.survey.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -27,8 +28,6 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.infrastructure.survey.data.LikelihoodDataValidator;
 import org.apache.fineract.infrastructure.survey.domain.Likelihood;
 import org.apache.fineract.infrastructure.survey.domain.LikelihoodRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -37,11 +36,11 @@ import java.util.List;
 /**
  * Created by Cieyou on 3/12/14.
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class WriteLikelihoodServiceImpl implements WriteLikelihoodService {
 
-    private final static Logger logger = LoggerFactory.getLogger(PovertyLineService.class);
     private final PlatformSecurityContext context;
     private final LikelihoodDataValidator likelihoodDataValidator;
     private final LikelihoodRepository repository;
@@ -88,7 +87,7 @@ public class WriteLikelihoodServiceImpl implements WriteLikelihoodService {
     private void handleDataIntegrityIssues(final DataIntegrityViolationException dve) {
 
         final Throwable realCause = dve.getMostSpecificCause();
-        logger.error(dve.getMessage(), dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.likelihood.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource: " + realCause.getMessage());
     }

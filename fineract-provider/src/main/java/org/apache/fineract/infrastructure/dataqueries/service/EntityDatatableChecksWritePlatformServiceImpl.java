@@ -22,6 +22,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -40,8 +41,6 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.portfolio.loanproduct.service.LoanProductReadPlatformService;
 import org.apache.fineract.portfolio.savings.service.SavingsProductReadPlatformService;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,11 +49,10 @@ import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EntityDatatableChecksWritePlatformServiceImpl implements EntityDatatableChecksWritePlatformService {
-
-    private final static Logger logger = LoggerFactory.getLogger(EntityDatatableChecksWritePlatformServiceImpl.class);
 
     private final PlatformSecurityContext context;
     private final EntityDatatableChecksDataValidator fromApiJsonDeserializer;
@@ -85,7 +83,7 @@ public class EntityDatatableChecksWritePlatformServiceImpl implements EntityData
             final String foreignKeyColumnName = EntityTables.getForeignKeyColumnNameOnDatatable(entity);
             final boolean columnExist = datatableData.hasColumn(foreignKeyColumnName);
 
-            logger.info(datatableData.getRegisteredTableName() + "has column " + foreignKeyColumnName + " ? " + columnExist);
+            log.info(datatableData.getRegisteredTableName() + "has column " + foreignKeyColumnName + " ? " + columnExist);
 
             if (!columnExist) { throw new EntityDatatableCheckNotSupportedException(datatableData.getRegisteredTableName(), entity); }
 
@@ -143,7 +141,7 @@ public class EntityDatatableChecksWritePlatformServiceImpl implements EntityData
                 final String datatableName = t.getDatatableName();
                 final Long countEntries = readWriteNonCoreDataService.countDatatableEntries(datatableName, entityId, foreignKeyColumn);
 
-                logger.info("The are " + countEntries + " entries in the table " + datatableName);
+                log.info("The are " + countEntries + " entries in the table " + datatableName);
                 if (countEntries.intValue() == 0) {
                     reqDatatables.add(datatableName);
                 }
@@ -169,7 +167,7 @@ public class EntityDatatableChecksWritePlatformServiceImpl implements EntityData
                 final String datatableName = t.getDatatableName();
                 final Long countEntries = readWriteNonCoreDataService.countDatatableEntries(datatableName, entityId, foreignKeyColumn);
 
-                logger.info("The are " + countEntries + " entries in the table " + datatableName);
+                log.info("The are " + countEntries + " entries in the table " + datatableName);
                 if (countEntries.intValue() == 0) {
                     reqDatatables.add(datatableName);
                 }
@@ -269,7 +267,7 @@ public class EntityDatatableChecksWritePlatformServiceImpl implements EntityData
             throw new EntityDatatableCheckAlreadyExistsException(entity, status, datatableName, productId);
         }
 
-        logger.error(dae.getMessage(), dae);
+        log.error(dae.getMessage(), dae);
         throw new PlatformDataIntegrityException("error.msg.report.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource: " + realCause.getMessage());
     }

@@ -19,16 +19,13 @@
 package org.apache.fineract.integrationtests;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static org.junit.Assert.assertEquals;
 
 import java.util.HashMap;
 
-public class ClientStatusChecker {
-    private static final Logger log = LoggerFactory.getLogger(ClientStatusChecker.class);
+import static org.junit.Assert.assertEquals;
 
+@Slf4j
+public class ClientStatusChecker {
     public static void verifyClientIsActive(final HashMap<String, Object> clientStatusHashMap) {
         assertEquals((int) clientStatusHashMap.get("id"), 300);
     }

@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.group.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandProcessingService;
@@ -76,11 +77,10 @@ import org.springframework.util.ObjectUtils;
 import javax.persistence.PersistenceException;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements GroupingTypesWritePlatformService {
-
-    private final static Logger logger = LoggerFactory.getLogger(GroupingTypesWritePlatformServiceJpaRepositoryImpl.class);
 
     private final PlatformSecurityContext context;
     private final GroupRepositoryWrapper groupRepository;
@@ -555,7 +555,7 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
                     .build();
         } catch (DataIntegrityViolationException dve) {
             Throwable throwable = ExceptionUtils.getRootCause(dve.getCause());
-            logger.error(throwable.getMessage());
+            log.error(throwable.getMessage());
             throw new PlatformDataIntegrityException("error.msg.group.unknown.data.integrity.issue",
                     "Unknown data integrity issue with resource.");
         }
@@ -750,7 +750,7 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
                     name);
         }
 
-        logger.error(dve.getMessage(), dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.group.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource.");
     }

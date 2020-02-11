@@ -19,6 +19,7 @@
 package org.apache.fineract.accounting.journalentry.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.accounting.common.AccountingEnumerations;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountType;
 import org.apache.fineract.accounting.journalentry.api.JournalEntryJsonInputParams;
@@ -34,8 +35,6 @@ import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
 import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -46,11 +45,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JournalEntryRunningBalanceUpdateServiceImpl implements JournalEntryRunningBalanceUpdateService {
-
-    private final static Logger logger = LoggerFactory.getLogger(JournalEntryRunningBalanceUpdateServiceImpl.class);
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -91,7 +89,7 @@ public class JournalEntryRunningBalanceUpdateServiceImpl implements JournalEntry
             Date entityDate = this.jdbcTemplate.queryForObject(dateFinder, Date.class);
             updateOrganizationRunningBalance(entityDate);
         } catch (EmptyResultDataAccessException e) {
-            logger.debug("No results found for updation of running balance ");
+            log.debug("No results found for updation of running balance ");
         }
     }
 
@@ -112,7 +110,7 @@ public class JournalEntryRunningBalanceUpdateServiceImpl implements JournalEntry
                 Date entityDate = this.jdbcTemplate.queryForObject(dateFinder, Date.class, officeId);
                 updateRunningBalance(officeId, entityDate);
             } catch (EmptyResultDataAccessException e) {
-                logger.debug("No results found for updation of office running balance with office id:" + officeId);
+                log.debug("No results found for updation of office running balance with office id:" + officeId);
             }
             commandProcessingResultBuilder.withOfficeId(officeId);
         }

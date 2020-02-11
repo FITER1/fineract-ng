@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.sms.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -27,19 +28,16 @@ import org.apache.fineract.infrastructure.sms.data.SmsDataValidator;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessage;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageAssembler;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SmsWritePlatformServiceJpaRepositoryImpl implements SmsWritePlatformService {
-
-    private final static Logger logger = LoggerFactory.getLogger(SmsWritePlatformServiceJpaRepositoryImpl.class);
 
     private final SmsMessageAssembler assembler;
     private final SmsMessageRepository repository;
@@ -120,7 +118,7 @@ public class SmsWritePlatformServiceJpaRepositoryImpl implements SmsWritePlatfor
         if (realCause.getMessage().contains("mobile_no")) { throw new PlatformDataIntegrityException("error.msg.sms.no.mobile.no.exists",
                 "The group, client or staff provided has no mobile no.", "id"); }
 
-        logger.error(dve.getMessage(), dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.sms.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource: " + realCause.getMessage());
     }

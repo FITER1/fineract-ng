@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.useradministration.domain;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
@@ -30,8 +31,6 @@ import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.useradministration.service.AppUserConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -39,11 +38,10 @@ import org.springframework.security.core.userdetails.User;
 import javax.persistence.*;
 import java.util.*;
 
+@Slf4j
 @Entity
 @Table(name = "m_appuser", uniqueConstraints = @UniqueConstraint(columnNames = { "username" }, name = "username_org"))
 public class AppUser extends AbstractPersistableCustom<Long> implements PlatformUser {
-
-    private final static Logger logger = LoggerFactory.getLogger(AppUser.class);
 
     @Column(name = "email", nullable = false, length = 100)
     private String email;
@@ -554,10 +552,10 @@ public class AppUser extends AbstractPersistableCustom<Long> implements Platform
         }
     }
 
-    public void validateHasPermissionTo(final String function) {
-        if (hasNotPermissionTo(function)) {
-            final String authorizationMessage = "User has no authority to: " + function;
-            logger.info("Unauthorized access: userId: " + getId() + " action: " + function + " allowed: " + getAuthorities());
+    public void validateHasPermissionTo(final String fn) {
+        if (hasNotPermissionTo(fn)) {
+            final String authorizationMessage = "User has no authority to: " + fn;
+            log.error("Unauthorized access: userId: {} action: {} allowed: {}", getId(), fn, getAuthorities());
             throw new NoAuthorizationException(authorizationMessage);
         }
     }

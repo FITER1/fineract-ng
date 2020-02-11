@@ -18,16 +18,11 @@
  */
 package org.apache.fineract.integrationtests.common;
 
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.http.conn.HttpHostConnectException;
+import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.text.DateFormat;
@@ -40,18 +35,14 @@ import java.util.TimeZone;
 
 import static com.jayway.restassured.RestAssured.given;
 import static com.jayway.restassured.path.json.JsonPath.from;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
 /**
  * Util for RestAssured tests. This class here in src/integrationTest is
  * copy/pasted to src/test; please keep them in sync.
  */
 @SuppressWarnings("unchecked")
+@Slf4j
 public class Utils {
-    private static final Logger log = LoggerFactory.getLogger(Utils.class);
-
     public static final String TENANT_PARAM_NAME = "tenantIdentifier";
     public static final String DEFAULT_TENANT = "default";
     public static final String TENANT_IDENTIFIER = TENANT_PARAM_NAME + '=' + DEFAULT_TENANT;

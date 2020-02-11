@@ -19,6 +19,7 @@
 package org.apache.fineract.accounting.financialactivityaccount.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.accounting.common.AccountingConstants.FINANCIAL_ACTIVITY;
 import org.apache.fineract.accounting.financialactivityaccount.api.FinancialActivityAccountsJsonInputParams;
@@ -33,8 +34,6 @@ import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -42,6 +41,7 @@ import javax.persistence.PersistenceException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FinancialActivityAccountWritePlatformServiceImpl implements FinancialActivityAccountWritePlatformService {
@@ -49,7 +49,6 @@ public class FinancialActivityAccountWritePlatformServiceImpl implements Financi
     private final FinancialActivityAccountRepositoryWrapper financialActivityAccountRepository;
     private final FinancialActivityAccountDataValidator fromApiJsonDeserializer;
     private final GLAccountRepositoryWrapper glAccountRepositoryWrapper;
-    private final static Logger logger = LoggerFactory.getLogger(FinancialActivityAccountWritePlatformServiceImpl.class);
 
     @Override
     public CommandProcessingResult createFinancialActivityAccountMapping(JsonCommand command) {
@@ -147,7 +146,7 @@ public class FinancialActivityAccountWritePlatformServiceImpl implements Financi
             throw new DuplicateFinancialActivityAccountFoundException(financialActivityId);
         }
 
-        logger.error(dve.getMessage(), dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.glAccount.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource GL Account: " + realCause.getMessage());
     }

@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.savings.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.accounting.producttoaccountmapping.service.ProductToGLAccountMappingWritePlatformService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -52,11 +53,11 @@ import java.util.Set;
 
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SavingsProductWritePlatformServiceJpaRepositoryImpl implements SavingsProductWritePlatformService {
 
-    private final Logger logger;
     private final PlatformSecurityContext context;
     private final SavingsProductRepository savingProductRepository;
     private final SavingsProductDataValidator fromApiJsonDataValidator;
@@ -82,13 +83,9 @@ public class SavingsProductWritePlatformServiceJpaRepositoryImpl implements Savi
                     + shortName + "` already exists", "shortName", shortName);
         }
 
-        logAsErrorUnexpectedDataIntegrityException(dae);
+        log.error(dae.getMessage(), dae);
         throw new PlatformDataIntegrityException("error.msg.savingsproduct.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource.");
-    }
-
-    private void logAsErrorUnexpectedDataIntegrityException(final Exception dae) {
-        this.logger.error(dae.getMessage(), dae);
     }
 
     @Transactional

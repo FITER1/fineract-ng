@@ -19,13 +19,12 @@
 package org.apache.fineract.adhocquery.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.adhocquery.data.AdHocData;
 import org.apache.fineract.adhocquery.domain.ReportRunFrequency;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
 import org.joda.time.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,11 +32,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.Date;
 
+@Slf4j
 @Service(value = "adHocScheduledJobRunnerService")
 @RequiredArgsConstructor
 public class AdHocScheduledJobRunnerServiceImpl implements AdHocScheduledJobRunnerService {
 
-    private final static Logger logger = LoggerFactory.getLogger(AdHocScheduledJobRunnerServiceImpl.class);
     private final AdHocReadPlatformService adHocReadPlatformService;
     private final JdbcTemplate jdbcTemplate;
 
@@ -92,16 +91,16 @@ public class AdHocScheduledJobRunnerServiceImpl implements AdHocScheduledJobRunn
                             .append(adhoc.getQuery());
                     if (insertSqlBuilder.length() > 0) {
                         final int result = this.jdbcTemplate.update(insertSqlBuilder.toString());
-                        logger.info("Results affected by inserted: {}", result);
+                        log.info("Results affected by inserted: {}", result);
 
                         this.jdbcTemplate.update("UPDATE m_adhoc SET last_run=? WHERE id=?", new Date(), adhoc.getId());
                     }
                 } else {
-                    logger.info("Skipping execution of {}, scheduled for execution on {}", adhoc.getName(), next);
+                    log.info("Skipping execution of {}, scheduled for execution on {}", adhoc.getName(), next);
                 }
             });	
         }else{
-        	logger.info("Nothing to update ");
+        	log.info("Nothing to update ");
         }
     }
 }

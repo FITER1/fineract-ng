@@ -18,22 +18,20 @@
  */
 package org.apache.fineract.notification;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.TestWithJmsConfiguration;
 import org.apache.fineract.notification.data.NotificationData;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+@Slf4j
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestWithJmsConfiguration.class)
 public class SenderTest {
-
-    private static final Logger logger = LoggerFactory.getLogger(SenderTest.class);
 
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -61,7 +59,7 @@ public class SenderTest {
         );
 
         jmsTemplate.send(session -> {
-            logger.info("Message send successfully");
+            log.info("Message send successfully");
             return session.createObjectMessage(notificationData);
         });
     }

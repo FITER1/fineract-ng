@@ -23,6 +23,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -52,8 +53,6 @@ import org.apache.fineract.infrastructure.security.utils.SQLInjectionValidator;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -71,6 +70,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataService {
@@ -79,7 +79,6 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
 
     private final static String CODE_VALUES_TABLE = "m_code_value";
 
-    private final static Logger logger = LoggerFactory.getLogger(ReadWriteNonCoreDataServiceImpl.class);
     private final static HashMap<String, String> apiTypeToMySQL = new HashMap<String, String>() {
 
         {
@@ -175,10 +174,6 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
         return datatableData;
     }
 
-    private void logAsErrorUnexpectedDataIntegrityException(final Exception dve) {
-        logger.error(dve.getMessage(), dve);
-    }
-
     @Transactional
     @Override
     public void registerDatatable(final String dataTableName, final String applicationTableName) {
@@ -254,7 +249,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
             	throw new PlatformDataIntegrityException("error.msg.datatable.registered",
                             "Datatable `" + dataTableName + "` is already registered against an application table.", "dataTableName",
                             dataTableName); }
-            logAsErrorUnexpectedDataIntegrityException(dve);
+            log.error(dve.getMessage(), dve);
             throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue",
                     "Unknown data integrity issue with resource.");
         }catch (final PersistenceException dve) {
@@ -264,7 +259,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
         		throw new PlatformDataIntegrityException("error.msg.datatable.registered",
                             "Datatable `" + dataTableName + "` is already registered against an application table.", "dataTableName",
                             dataTableName); }
-            logAsErrorUnexpectedDataIntegrityException(dve);
+            log.error(dve.getMessage(), dve);
             throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue",
                     "Unknown data integrity issue with resource.");
         }
@@ -376,7 +371,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
                     "error.msg.datatable.no.value.provided.for.required.fields", "No values provided for the datatable `" + dataTableName
                             + "` and application table with identifier `" + appTableId + "`.", "dataTableName", dataTableName, appTableId); }
 
-            logAsErrorUnexpectedDataIntegrityException(dve);
+            log.error(dve.getMessage(), dve);
             throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue",
                     "Unknown data integrity issue with resource.");
         } catch (final PersistenceException e) {
@@ -389,7 +384,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
                     "error.msg.datatable.no.value.provided.for.required.fields", "No values provided for the datatable `" + dataTableName
                             + "` and application table with identifier `" + appTableId + "`.", "dataTableName", dataTableName, appTableId); }
 
-            logAsErrorUnexpectedDataIntegrityException(e);
+            log.error(e.getMessage(), e);
             throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue",
                     "Unknown data integrity issue with resource.");
 
@@ -424,7 +419,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
                                     + "` and application table with identifier `" + appTableId + "`.",
                             "dataTableName", dataTableName, appTableId); }
 
-            logAsErrorUnexpectedDataIntegrityException(dve);
+            log.error(dve.getMessage(), dve);
             throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue",
                     "Unknown data integrity issue with resource.");
         }catch (final PersistenceException dve) {
@@ -435,7 +430,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
                                     + "` and application table with identifier `" + appTableId + "`.",
                             "dataTableName", dataTableName, appTableId); }
 
-            logAsErrorUnexpectedDataIntegrityException(dve);
+            log.error(dve.getMessage(), dve);
             throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue",
                     "Unknown data integrity issue with resource.");
         }
@@ -719,7 +714,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
         try {
             codeId = this.jdbcTemplate.queryForObject(checkColumnCodeMapping.toString(), Integer.class);
         } catch (final EmptyResultDataAccessException e) {
-            logger.info(e.getMessage());
+            log.info(e.getMessage());
         }
         return ObjectUtils.defaultIfNull(codeId, 0);
     }
@@ -1103,13 +1098,13 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
                 pkValue = datatableId;
             }
             final String sql = getUpdateSql(grs.getColumnHeaders(), dataTableName, pkName, pkValue, changes);
-            logger.info("Update sql: " + sql);
+            log.info("Update sql: " + sql);
             if (StringUtils.isNotBlank(sql)) {
                 this.jdbcTemplate.update(sql);
                 changes.put("locale", dataParams.get("locale"));
                 changes.put("dateFormat", "yyyy-MM-dd");
             } else {
-                logger.info("No Changes");
+                log.info("No Changes");
             }
         }
 
@@ -1210,7 +1205,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
     private CommandProcessingResult checkMainResourceExistsWithinScope(final String appTable, final Long appTableId) {
 
         final String sql = dataScopedSQL(appTable, appTableId);
-        logger.info("data scoped sql: " + sql);
+        log.info("data scoped sql: " + sql);
         final SqlRowSet rs = this.jdbcTemplate.queryForRowSet(sql);
 
         if (!rs.next()) { throw new DatatableNotFoundException(appTable, appTableId); }
@@ -1402,7 +1397,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
         addSql = "insert into `" + datatable + "` (`" + fkName + "` " + insertColumns + ")" + " select " + appTableId + " as id"
                 + selectColumns;
 
-        logger.info(addSql);
+        log.info(addSql);
 
         return addSql;
     }
@@ -1453,7 +1448,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
                 + " as id" + selectColumns + " , ( SELECT SUM( code_score ) FROM m_code_value WHERE m_code_value.id IN (" + scoresId
                 + " ) ) as score";
 
-        logger.info(vaddSql);
+        log.info(vaddSql);
 
         return vaddSql;
     }

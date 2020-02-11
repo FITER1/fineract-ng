@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.reportmailingjob.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -49,8 +50,6 @@ import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -68,11 +67,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJobWritePlatformService {
     
-    private final static Logger logger = LoggerFactory.getLogger(ReportMailingJobWritePlatformServiceImpl.class);
     private final ReportRepositoryWrapper reportRepositoryWrapper;
     private final ReportMailingJobValidator reportMailingJobValidator;
     private final ReportMailingJobRepositoryWrapper reportMailingJobRepositoryWrapper;
@@ -382,7 +381,7 @@ public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJo
                     ReportMailingJobConstants.NAME_PARAM_NAME, name);
         }
 
-        logger.error(dve.getMessage(), dve);
+        log.error(dve.getMessage(), dve);
         
         throw new PlatformDataIntegrityException("error.msg.charge.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource: " + realCause.getMessage());

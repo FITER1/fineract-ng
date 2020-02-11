@@ -18,6 +18,7 @@
  */
 package org.apache.fineract;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.slf4j.Logger;
@@ -33,16 +34,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 
+@Slf4j
 @Configuration
 @PropertySource("classpath:application-test.properties")
 @EnableAutoConfiguration
 @ComponentScan("org.apache.fineract")
 @ContextConfiguration(initializers = { TestWithDatabaseConfiguration.Initializer.class })
 public class TestWithDatabaseConfiguration {
-    private static final Logger logger = LoggerFactory.getLogger(TestWithDatabaseConfiguration.class);
-
     @ClassRule
-    public static MySQLContainer mysql = (MySQLContainer) new MySQLContainer("mysql:5.7").withLogConsumer(new Slf4jLogConsumer(logger));
+    public static MySQLContainer mysql = (MySQLContainer) new MySQLContainer("mysql:5.7").withLogConsumer(new Slf4jLogConsumer(log));
 
     static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override

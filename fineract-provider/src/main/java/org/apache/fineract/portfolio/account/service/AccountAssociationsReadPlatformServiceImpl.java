@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.account.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.portfolio.account.data.AccountAssociationsData;
 import org.apache.fineract.portfolio.account.data.PortfolioAccountData;
@@ -38,11 +39,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountAssociationsReadPlatformServiceImpl implements AccountAssociationsReadPlatformService {
 
-    private final static Logger logger = LoggerFactory.getLogger(AccountAssociationsReadPlatformServiceImpl.class);
     private final JdbcTemplate jdbcTemplate;
 
     @Override
@@ -57,7 +58,7 @@ public class AccountAssociationsReadPlatformServiceImpl implements AccountAssoci
                 linkedAccount = accountAssociationsData.linkedAccount();
             }
         } catch (final EmptyResultDataAccessException e) {
-            logger.debug("Linking account is not configured");
+            log.debug("Linking account is not configured");
         }
         return linkedAccount;
     }
@@ -86,7 +87,7 @@ public class AccountAssociationsReadPlatformServiceImpl implements AccountAssoci
                 linkedAccount = accountAssociationsData.linkedAccount();
             }
         } catch (final EmptyResultDataAccessException e) {
-            logger.debug("Linking account is not configured");
+            log.debug("Linking account is not configured");
         }
         return linkedAccount;
     }

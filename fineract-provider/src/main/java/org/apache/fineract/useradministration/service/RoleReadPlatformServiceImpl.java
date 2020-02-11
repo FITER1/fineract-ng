@@ -37,7 +37,7 @@ import java.util.Collection;
 public class RoleReadPlatformServiceImpl implements RoleReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RoleMapper roleRowMapper;
+    private final RoleMapper roleRowMapper = new RoleMapper();
 
     @Override
     public Collection<RoleData> retrieveAll() {

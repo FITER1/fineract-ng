@@ -18,17 +18,15 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.data;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+@Slf4j
 public class FileData {
-
-    private static final Logger logger = LoggerFactory.getLogger(FileData.class);
 
     private final File file;
     private final String fileName;
@@ -62,7 +60,7 @@ public class FileData {
             if (this.inputStream == null) { return new FileInputStream(this.file); }
             return this.inputStream;
         } catch (final FileNotFoundException e) {
-            logger.error(e.toString());
+            log.error(e.toString());
             return null;
         }
     }

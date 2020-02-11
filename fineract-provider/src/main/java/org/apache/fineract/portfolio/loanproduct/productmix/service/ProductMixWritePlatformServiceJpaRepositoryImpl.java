@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.loanproduct.productmix.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -31,8 +32,6 @@ import org.apache.fineract.portfolio.loanproduct.productmix.domain.ProductMix;
 import org.apache.fineract.portfolio.loanproduct.productmix.domain.ProductMixRepository;
 import org.apache.fineract.portfolio.loanproduct.productmix.exception.ProductMixNotFoundException;
 import org.apache.fineract.portfolio.loanproduct.productmix.serialization.ProductMixDataValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,11 +39,11 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductMixWritePlatformServiceJpaRepositoryImpl implements ProductMixWritePlatformService {
 
-    private final static Logger logger = LoggerFactory.getLogger(ProductMixWritePlatformServiceJpaRepositoryImpl.class);
     private final PlatformSecurityContext context;
     private final ProductMixDataValidator fromApiJsonDeserializer;
     private final ProductMixRepository productMixRepository;
@@ -173,13 +172,9 @@ public class ProductMixWritePlatformServiceJpaRepositoryImpl implements ProductM
     }
 
     private void handleDataIntegrityIssues(final DataIntegrityViolationException dve) {
-        logAsErrorUnexpectedDataIntegrityException(dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.product.loan.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource.");
-    }
-
-    private void logAsErrorUnexpectedDataIntegrityException(final DataIntegrityViolationException dve) {
-        logger.error(dve.getMessage(), dve);
     }
 
     private List<ProductMix> updateRestrictedIds(final Set<String> restrictedIds, final List<ProductMix> existedProductMixes) {

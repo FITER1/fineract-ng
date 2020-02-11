@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.loanaccount.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
 import org.slf4j.Logger;
@@ -32,12 +33,11 @@ import java.util.Collection;
 import java.util.Random;
 
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 @Scope("prototype")
 public class RecalculateInterestPoster implements Runnable {
-    private final static Logger logger = LoggerFactory.getLogger(" recalculate interest poster");
-
     private Collection<Long> loanIds;
 
     private final LoanWritePlatformService loanWritePlatformService;
@@ -58,7 +58,7 @@ public class RecalculateInterestPoster implements Runnable {
         if (!loanIds.isEmpty()) {
             final StringBuilder sb = new StringBuilder();
             for (Long loanId : loanIds) {
-                logger.info("Loan ID " + loanId);
+                log.info("Loan ID " + loanId);
                 Integer numberOfRetries = 0;
                 while (numberOfRetries <= maxNumberOfRetries) {
                     try {
@@ -66,14 +66,14 @@ public class RecalculateInterestPoster implements Runnable {
                         numberOfRetries = maxNumberOfRetries + 1;
                     } catch (CannotAcquireLockException
                             | ObjectOptimisticLockingFailureException exception) {
-                        logger.info("Recalulate interest job has been retried  "
+                        log.info("Recalulate interest job has been retried  "
                                 + numberOfRetries + " time(s)");
                         /***
                          * Fail if the transaction has been retired for
                          * maxNumberOfRetries
                          **/
                         if (numberOfRetries >= maxNumberOfRetries) {
-                            logger.warn("Recalulate interest job has been retried for the max allowed attempts of "
+                            log.warn("Recalulate interest job has been retried for the max allowed attempts of "
                                     + numberOfRetries
                                     + " and will be rolled back");
                             sb.append("Recalulate interest job has been retried for the max allowed attempts of "
@@ -100,24 +100,22 @@ public class RecalculateInterestPoster implements Runnable {
                         if (e.getCause() != null) {
                             realCause = e.getCause();
                         }
-                        logger.error("Interest recalculation for loans failed for account:"	+ loanId + " with message " + realCause.getMessage(), e);
+                        log.error("Interest recalculation for loans failed for account:"	+ loanId + " with message " + realCause.getMessage(), e);
                         sb.append("Interest recalculation for loans failed for account:").append(loanId).append(" with message ")
                                 .append(realCause.getMessage());
                         numberOfRetries = maxNumberOfRetries + 1;
                     }
                     i++;
                 }
-                logger.info("Loans count " + i);
+                log.info("Loans count " + i);
             }
             if (sb.length() > 0) {
                 try {
                     throw new JobExecutionException(sb.toString());
                 } catch (JobExecutionException e) {
-                    logger.info("JobExecutionException occured :", e);
+                    log.info("JobExecutionException occured :", e);
                 }
             }
         }
-
-
     }
 }

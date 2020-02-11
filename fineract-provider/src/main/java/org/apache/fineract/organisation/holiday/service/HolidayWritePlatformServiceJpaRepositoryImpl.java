@@ -21,6 +21,7 @@ package org.apache.fineract.organisation.holiday.service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -39,8 +40,6 @@ import org.apache.fineract.organisation.workingdays.domain.WorkingDays;
 import org.apache.fineract.organisation.workingdays.domain.WorkingDaysRepositoryWrapper;
 import org.apache.fineract.organisation.workingdays.service.WorkingDaysUtil;
 import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,11 +51,10 @@ import java.util.Set;
 
 import static org.apache.fineract.organisation.holiday.api.HolidayApiConstants.officesParamName;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class HolidayWritePlatformServiceJpaRepositoryImpl implements HolidayWritePlatformService {
-
-    private final static Logger logger = LoggerFactory.getLogger(HolidayWritePlatformServiceJpaRepositoryImpl.class);
 
     private final HolidayDataValidator fromApiJsonDeserializer;
     private final HolidayRepositoryWrapper holidayRepository;
@@ -172,7 +170,7 @@ public class HolidayWritePlatformServiceJpaRepositoryImpl implements HolidayWrit
                     "name", name);
         }
 
-        logger.error(dve.getMessage(), dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.office.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource.");
     }

@@ -20,6 +20,7 @@
 package org.apache.fineract.infrastructure.campaigns.sms.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.campaigns.sms.constants.SmsCampaignTriggerType;
 import org.apache.fineract.infrastructure.campaigns.sms.domain.SmsCampaign;
 import org.apache.fineract.infrastructure.campaigns.sms.domain.SmsCampaignRepository;
@@ -47,8 +48,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -56,12 +55,11 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
 
-	private static final Logger logger = LoggerFactory.getLogger(SmsCampaignDomainServiceImpl.class);
-	
 	//private final static int POOL_SIZE = 5 ;
 	
     private final SmsCampaignRepository smsCampaignRepository;
@@ -214,9 +212,9 @@ public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
 						}
 					}
 				} catch (final IOException e) {
-					logger.error("smsParams does not contain the key: " + e.getMessage());
+					log.error("smsParams does not contain the key: " + e.getMessage());
 				} catch (final RuntimeException e) {
-					logger.debug("Client Office Id and SMS Campaign Office id doesn't match");
+					log.debug("Client Office Id and SMS Campaign Office id doesn't match");
 				}
 			}
 		}
@@ -272,9 +270,9 @@ public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
 						this.smsMessageScheduledJobService.sendTriggeredMessages(smsDataMap);
 					}
 				} catch (final IOException e) {
-					logger.error("smsParams does not contain the key: " + e.getMessage());
+					log.error("smsParams does not contain the key: " + e.getMessage());
 				} catch (final RuntimeException e) {
-					logger.debug("Client Office Id and SMS Campaign Office id doesn't match");
+					log.debug("Client Office Id and SMS Campaign Office id doesn't match");
 				}
 			}
 		}

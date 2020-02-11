@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.codes.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.codes.domain.*;
 import org.apache.fineract.infrastructure.codes.exception.CodeNotFoundException;
 import org.apache.fineract.infrastructure.codes.serialization.CodeValueCommandFromApiJsonDeserializer;
@@ -36,11 +37,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CodeValueWritePlatformServiceJpaRepositoryImpl implements CodeValueWritePlatformService {
-
-    private final static Logger logger = LoggerFactory.getLogger(CodeValueWritePlatformServiceJpaRepositoryImpl.class);
 
     private final PlatformSecurityContext context;
     private final CodeValueRepositoryWrapper codeValueRepositoryWrapper;
@@ -89,7 +89,7 @@ public class CodeValueWritePlatformServiceJpaRepositoryImpl implements CodeValue
                     + "' already exists", "name", name);
         }
 
-        logger.error(dve.getMessage(), dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.code.value.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource: " + realCause.getMessage());
     }
@@ -148,7 +148,7 @@ public class CodeValueWritePlatformServiceJpaRepositoryImpl implements CodeValue
                     .withSubEntityId(codeValueId)//
                     .build();
         } catch (final DataIntegrityViolationException dve) {
-            logger.error(dve.getMessage(), dve);
+            log.error(dve.getMessage(), dve);
             final Throwable realCause = dve.getMostSpecificCause();
             if (realCause.getMessage().contains("code_value")) { throw new PlatformDataIntegrityException("error.msg.codeValue.in.use",
                     "This code value is in use", codeValueId); }

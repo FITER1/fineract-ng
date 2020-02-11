@@ -19,6 +19,7 @@
 package org.apache.fineract.accounting.rule.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.closure.api.GLClosureJsonInputParams;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
@@ -49,11 +50,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountingRuleWritePlatformServiceJpaRepositoryImpl implements AccountingRuleWritePlatformService {
-
-    private final static Logger logger = LoggerFactory.getLogger(AccountingRuleWritePlatformServiceJpaRepositoryImpl.class);
 
     private final AccountingRuleRepositoryWrapper accountingRuleRepositoryWrapper;
     private final AccountingRuleRepository accountingRuleRepository;
@@ -72,7 +72,7 @@ public class AccountingRuleWritePlatformServiceJpaRepositoryImpl implements Acco
             throw new AccountingRuleDuplicateException(command.stringValueOfParameterNamed(AccountingRuleJsonInputParams.NAME.getValue()));
         } else if (realCause.getMessage().contains("UNIQUE_ACCOUNT_RULE_TAGS")) { throw new AccountingRuleDuplicateException(); }
 
-        logger.error(dve.getMessage(), dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.accounting.rule.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource Accounting Rule: " + realCause.getMessage());
     }

@@ -19,6 +19,7 @@
 package org.apache.fineract.scheduledjobs.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.accounting.glaccount.domain.TrialBalance;
 import org.apache.fineract.accounting.glaccount.domain.TrialBalanceRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -58,11 +59,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service(value = "scheduledJobRunnerService")
 @RequiredArgsConstructor
 public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService {
 
-    private final static Logger logger = LoggerFactory.getLogger(ScheduledJobRunnerServiceImpl.class);
     private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     private final DateTimeFormatter formatterWithTime = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -155,7 +156,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
 
         final int result = jdbcTemplate.update(updateSqlBuilder.toString());
 
-        logger.info("Results affected by update: {}", result);
+        log.info("Results affected by update: {}", result);
     }
 
     @Transactional
@@ -190,7 +191,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
 
         final int result = jdbcTemplate.update(updateSqlBuilder.toString());
 
-        logger.info("Results affected by update: {}", result);
+        log.info("Results affected by update: {}", result);
     }
 
     @Override
@@ -207,7 +208,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
             } catch (final PlatformApiDataValidationException e) {
                 final List<ApiParameterError> errors = e.getErrors();
                 for (final ApiParameterError error : errors) {
-                    logger.error("Apply annual fee failed for account:" + savingsAccountReference.getAccountNo() + " with message "
+                    log.error("Apply annual fee failed for account:" + savingsAccountReference.getAccountNo() + " with message "
                             + error.getDeveloperMessage());
                 }
             } catch (final Exception ex) {
@@ -215,7 +216,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
             }
         }
 
-        logger.info("Savings accounts affected by update: {}", annualFeeData.size());
+        log.info("Savings accounts affected by update: {}", annualFeeData.size());
     }
 
     @Override
@@ -232,7 +233,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
             } catch (final PlatformApiDataValidationException e) {
                 final List<ApiParameterError> errors = e.getErrors();
                 for (final ApiParameterError error : errors) {
-                    logger.error("Apply Charges due for savings failed for account:" + savingsAccountReference.getAccountNo()
+                    log.error("Apply Charges due for savings failed for account:" + savingsAccountReference.getAccountNo()
                             + " with message " + error.getDeveloperMessage());
                     errorMsg.append("Apply Charges due for savings failed for account:").append(savingsAccountReference.getAccountNo())
                             .append(" with message ").append(error.getDeveloperMessage());
@@ -240,7 +241,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
             }
         }
 
-        logger.info("Savings accounts affected by update: {}", chargesDueData.size());
+        log.info("Savings accounts affected by update: {}", chargesDueData.size());
 
         /*
          * throw exception if any charge payment fails.
@@ -280,7 +281,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
 
         final int result = jdbcTemplate.update(updateSqlBuilder.toString());
 
-        logger.info("Results affected by update: {}", result);
+        log.info("Results affected by update: {}", result);
     }
 
     @Override
@@ -296,7 +297,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
             } catch (final PlatformApiDataValidationException e) {
                 final List<ApiParameterError> errors = e.getErrors();
                 for (final ApiParameterError error : errors) {
-                    logger.error("Update maturity details failed for account:" + depositAccount.accountNo() + " with message "
+                    log.error("Update maturity details failed for account:" + depositAccount.accountNo() + " with message "
                             + error.getDeveloperMessage());
                 }
             } catch (final Exception ex) {
@@ -304,7 +305,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
             }
         }
 
-        logger.info("Deposit accounts affected by update: {}", depositAccounts.size());
+        log.info("Deposit accounts affected by update: {}", depositAccounts.size());
     }
 
     @Override
@@ -383,13 +384,13 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
             } catch (final PlatformApiDataValidationException e) {
                 final List<ApiParameterError> errors = e.getErrors();
                 for (final ApiParameterError error : errors) {
-                    logger.error("Post Dividends to savings failed for Divident detail Id:" + id + " and savings Id: " + savingsId
+                    log.error("Post Dividends to savings failed for Divident detail Id:" + id + " and savings Id: " + savingsId
                             + " with message " + error.getDeveloperMessage());
                     errorMsg.append("Post Dividends to savings failed for Divident detail Id:").append(id).append(" and savings Id:")
                             .append(savingsId).append(" with message ").append(error.getDeveloperMessage());
                 }
             } catch (final Exception e) {
-                logger.error("Post Dividends to savings failed for Divident detail Id:" + id + " and savings Id: " + savingsId
+                log.error("Post Dividends to savings failed for Divident detail Id:" + id + " and savings Id: " + savingsId
                         + " with message " + e.getLocalizedMessage());
                 errorMsg.append("Post Dividends to savings failed for Divident detail Id:").append(id).append(" and savings Id:")
                         .append(savingsId).append(" with message ").append(e.getLocalizedMessage());
@@ -425,7 +426,7 @@ public class ScheduledJobRunnerServiceImpl implements ScheduledJobRunnerService 
             final int result = jdbcTemplate.update(sqlBuilder.toString(), new Object[] {
                     formattedDate
             });
-            logger.info("Results affected by update: {}", result);
+            log.info("Results affected by update: {}", result);
         }
 
         // Updating closing balance

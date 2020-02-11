@@ -19,7 +19,7 @@
 package org.apache.fineract.infrastructure.entityaccess.service;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.fineract.infrastructure.dataqueries.service.GenericDataServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityAccessData;
 import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityRelationData;
 import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityToEntityMappingData;
@@ -27,8 +27,6 @@ import org.apache.fineract.infrastructure.entityaccess.domain.*;
 import org.apache.fineract.infrastructure.entityaccess.exception.FineractEntityMappingConfigurationException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -38,13 +36,13 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FineractEntityAccessReadServiceImpl implements FineractEntityAccessReadService {
 
     private final PlatformSecurityContext context;
     private final JdbcTemplate jdbcTemplate;
-    private final static Logger logger = LoggerFactory.getLogger(GenericDataServiceImpl.class);
     private final FineractEntityRelationRepositoryWrapper fineractEntityRelationRepository;
 
     /*
@@ -96,7 +94,7 @@ public class FineractEntityAccessReadServiceImpl implements FineractEntityAccess
         if (accessListCSVStrBuf != null) {
             returnIdListStr = accessListCSVStrBuf.toString();
         }
-        logger.debug("List of IDs applicable:" + returnIdListStr);
+        log.debug("List of IDs applicable:" + returnIdListStr);
         return returnIdListStr;
     }
 
@@ -133,7 +131,7 @@ public class FineractEntityAccessReadServiceImpl implements FineractEntityAccess
     	        str.append("from  m_entity_to_entity_mapping eem ");
     	        str.append("where eem.rel_id = ? ");
     	        str.append("and eem.from_id = ? ");
-        logger.debug(str.toString());
+        log.debug(str.toString());
         return str.toString();
     }
 

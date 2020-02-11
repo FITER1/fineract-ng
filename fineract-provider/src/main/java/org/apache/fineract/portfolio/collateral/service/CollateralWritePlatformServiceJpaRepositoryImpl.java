@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.collateral.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -41,19 +42,16 @@ import org.apache.fineract.portfolio.collateral.exception.CollateralNotFoundExce
 import org.apache.fineract.portfolio.collateral.serialization.CollateralCommandFromApiJsonDeserializer;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanRepositoryWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CollateralWritePlatformServiceJpaRepositoryImpl implements CollateralWritePlatformService {
-
-    private final static Logger logger = LoggerFactory.getLogger(CollateralWritePlatformServiceJpaRepositoryImpl.class);
 
     private final PlatformSecurityContext context;
     private final LoanRepositoryWrapper loanRepositoryWrapper;
@@ -162,13 +160,8 @@ public class CollateralWritePlatformServiceJpaRepositoryImpl implements Collater
     }
 
     private void handleCollateralDataIntegrityViolation(final DataIntegrityViolationException dve) {
-        logAsErrorUnexpectedDataIntegrityException(dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.collateral.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource.");
     }
-
-    private void logAsErrorUnexpectedDataIntegrityException(final DataIntegrityViolationException dve) {
-        logger.error(dve.getMessage(), dve);
-    }
-
 }

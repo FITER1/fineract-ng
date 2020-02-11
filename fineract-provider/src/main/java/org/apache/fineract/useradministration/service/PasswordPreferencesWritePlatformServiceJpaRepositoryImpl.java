@@ -19,6 +19,7 @@
 package org.apache.fineract.useradministration.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -28,8 +29,6 @@ import org.apache.fineract.useradministration.data.PasswordPreferencesDataValida
 import org.apache.fineract.useradministration.domain.PasswordValidationPolicy;
 import org.apache.fineract.useradministration.domain.PasswordValidationPolicyRepository;
 import org.apache.fineract.useradministration.exception.PasswordValidationPolicyNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,11 +37,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PasswordPreferencesWritePlatformServiceJpaRepositoryImpl implements PasswordPreferencesWritePlatformService {
 
-    private final static Logger logger = LoggerFactory.getLogger(PasswordPreferencesWritePlatformServiceJpaRepositoryImpl.class);
     private final PasswordValidationPolicyRepository validationRepository;
     private final PasswordPreferencesDataValidator dataValidator;
 
@@ -82,7 +81,7 @@ public class PasswordPreferencesWritePlatformServiceJpaRepositoryImpl implements
                     .with(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
-            logger.error(dve.getMessage(), dve);
+            log.error(dve.getMessage(), dve);
             throw new PlatformDataIntegrityException("error.msg.password.validation.policy.unknown.data.integrity.issue",
                     "Unknown data integrity issue with resource.");
         }

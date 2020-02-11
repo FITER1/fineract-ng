@@ -18,21 +18,19 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.data;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.documentmanagement.contentrepository.ContentRepositoryUtils;
 import org.apache.fineract.infrastructure.documentmanagement.domain.StorageType;
 import org.apache.poi.util.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
+@Slf4j
 public class ImageData {
-
-    private final static Logger logger = LoggerFactory.getLogger(ImageData.class);
 
     @SuppressWarnings("unused")
     private final Long imageId;
@@ -60,7 +58,7 @@ public class ImageData {
                 return IOUtils.toByteArray(fileInputStream);
             }
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
         }
         return null;
     }
@@ -105,7 +103,7 @@ public class ImageData {
                 out = resizeImage(this.inputStream, maxWidth != null ? maxWidth : Integer.MAX_VALUE,
                         maxHeight != null ? maxHeight : Integer.MAX_VALUE);
             } catch (IOException e) {
-                logger.error(e.getMessage());
+                log.error(e.getMessage());
             }
         } else if (this.storageType.equals(StorageType.FILE_SYSTEM.getValue()) && this.file != null) {
             FileInputStream fis = null;
@@ -113,13 +111,13 @@ public class ImageData {
                 fis = new FileInputStream(this.file);
                 out = resizeImage(fis, maxWidth != null ? maxWidth : Integer.MAX_VALUE, maxHeight != null ? maxHeight : Integer.MAX_VALUE);
             } catch (IOException ex) {
-                logger.error(ex.getMessage());
+                log.error(ex.getMessage());
             } finally {
                 if (fis != null) {
                     try {
                         fis.close();
                     } catch (IOException ex) {
-                        logger.error(ex.getMessage());
+                        log.error(ex.getMessage());
                     }
                 }
             }
@@ -174,7 +172,7 @@ public class ImageData {
             try {
                 available = this.inputStream.available();
             } catch (IOException e) {
-                logger.error(e.getMessage());
+                log.error(e.getMessage());
             }
         } else if (this.storageType.equals(StorageType.FILE_SYSTEM.getValue()) && this.file != null) {
             FileInputStream fileInputStream = null;
@@ -183,9 +181,9 @@ public class ImageData {
                 available = fileInputStream.available();
                 fileInputStream.close();
             } catch (FileNotFoundException e) {
-                logger.error(e.getMessage());
+                log.error(e.getMessage());
             } catch (IOException e) {
-                logger.error(e.getMessage());
+                log.error(e.getMessage());
             } finally {
                 if (fileInputStream != null) {
                     try {

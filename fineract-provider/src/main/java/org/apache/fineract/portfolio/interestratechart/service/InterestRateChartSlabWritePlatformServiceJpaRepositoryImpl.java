@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.interestratechart.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -28,8 +29,6 @@ import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartSla
 import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartSlabRepository;
 import org.apache.fineract.portfolio.interestratechart.domain.InterestRateChartSlab;
 import org.apache.fineract.portfolio.savings.domain.SavingsProductRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,22 +36,17 @@ import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class InterestRateChartSlabWritePlatformServiceJpaRepositoryImpl implements InterestRateChartSlabWritePlatformService {
 
-    @SuppressWarnings("unused")
-    private final static Logger logger = LoggerFactory.getLogger(InterestRateChartSlabWritePlatformServiceJpaRepositoryImpl.class);
-    @SuppressWarnings("unused")
     private final PlatformSecurityContext context;
     private final InterestRateChartSlabDataValidator interestRateChartSlabDataValidator;
-    @SuppressWarnings("unused")
     private final InterestRateChartAssembler interestRateChartAssembler;
     private final InterestRateChartSlabAssembler interestRateChartSlabAssembler;
-    @SuppressWarnings("unused")
     private final InterestRateChartRepositoryWrapper interestRateChartRepository;
     private final InterestRateChartSlabRepository chartSlabRepository;
-    @SuppressWarnings("unused")
     private final SavingsProductRepository savingsProductRepository;
 
     @Override

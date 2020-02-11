@@ -22,25 +22,18 @@ import com.google.gson.Gson;
 import com.jayway.restassured.path.json.JsonPath;
 import com.jayway.restassured.specification.RequestSpecification;
 import com.jayway.restassured.specification.ResponseSpecification;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.integrationtests.common.Utils;
-import org.apache.fineract.interoperation.domain.InteropAmountType;
-import org.apache.fineract.interoperation.domain.InteropIdentifierType;
-import org.apache.fineract.interoperation.domain.InteropInitiatorType;
-import org.apache.fineract.interoperation.domain.InteropTransactionRole;
-import org.apache.fineract.interoperation.domain.InteropTransactionScenario;
-import org.apache.fineract.interoperation.domain.InteropTransferActionType;
+import org.apache.fineract.interoperation.domain.*;
 import org.apache.fineract.interoperation.util.InteropUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.UUID;
 
 @SuppressWarnings({ "rawtypes" })
+@Slf4j
 public class InteropHelper {
-
-    private final static Logger log = LoggerFactory.getLogger(InteropTest.class);
 
     private static final String BASE_URL = "/interoperation";
     private static final String HEALTH_URL = BASE_URL + "/health";

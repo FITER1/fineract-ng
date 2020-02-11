@@ -22,6 +22,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.data.AuditData;
 import org.apache.fineract.commands.data.AuditSearchData;
@@ -54,8 +55,6 @@ import org.apache.fineract.useradministration.data.AppUserData;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.useradministration.service.AppUserReadPlatformService;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -65,11 +64,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
 
-    private final static Logger logger = LoggerFactory.getLogger(AuditReadPlatformServiceImpl.class);
     private final static Set<String> supportedOrderByValues = new HashSet<>(
             Arrays.asList("id", "actionName", "entityName", "resourceId", "subresourceId", "madeOnDate", "checkedOnDate", "officeName",
                     "groupName", "clientName", "loanAccountNo", "savingsAccountNo", "clientId", "loanId"));
@@ -199,7 +198,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
             this.columnValidator.validateSqlInjection(sqlBuilder.toString(), parameters.limitSql());
         }
 
-        logger.info("sql: " + sqlBuilder.toString());
+        log.info("sql: " + sqlBuilder.toString());
 
         final String sqlCountRows = "SELECT FOUND_ROWS()";
         return this.paginationHelper.fetchPage(this.jdbcTemplate, sqlCountRows, sqlBuilder.toString(), new Object[] {}, rm);
@@ -247,7 +246,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
         if(isExtraCritereaIncluded){
         	this.columnValidator.validateSqlInjection(sql, extraCriteria);
         }        
-        logger.info("sql: " + sql);
+        log.info("sql: " + sql);
 
         return this.jdbcTemplate.query(sql, rm, new Object[] {});
     }

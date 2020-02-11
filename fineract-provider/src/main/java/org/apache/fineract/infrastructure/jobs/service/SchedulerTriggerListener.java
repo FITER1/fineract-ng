@@ -19,24 +19,22 @@
 package org.apache.fineract.infrastructure.jobs.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobKey;
 import org.quartz.Trigger;
 import org.quartz.Trigger.CompletedExecutionInstruction;
 import org.quartz.TriggerListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class SchedulerTriggerListener implements TriggerListener {
 
-    private final static Logger logger = LoggerFactory.getLogger(SchedulerTriggerListener.class);
-    
     private final String name = "Global trigger Listner";
 
     private final SchedularWritePlatformService schedularService;
@@ -72,7 +70,7 @@ public class SchedulerTriggerListener implements TriggerListener {
                 proceedJob = this.schedularService.processJobDetailForExecution(jobKey, triggerType);
                 numberOfRetries = maxNumberOfRetries + 1;
             } catch (Exception exception) { //Adding generic exception as it depends on JPA provider
-                logger.debug("Not able to acquire the lock to update job running status for JobKey: " + jobKey);
+                log.debug("Not able to acquire the lock to update job running status for JobKey: " + jobKey);
                 try {
                     Random random = new Random();
                     int randomNum = random.nextInt(maxIntervalBetweenRetries + 1);

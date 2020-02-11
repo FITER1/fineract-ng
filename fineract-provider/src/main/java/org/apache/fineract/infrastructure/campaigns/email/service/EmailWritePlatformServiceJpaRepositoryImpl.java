@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.campaigns.email.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.campaigns.email.data.EmailDataValidator;
 import org.apache.fineract.infrastructure.campaigns.email.domain.EmailMessage;
 import org.apache.fineract.infrastructure.campaigns.email.domain.EmailMessageAssembler;
@@ -27,19 +28,16 @@ import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailWritePlatformServiceJpaRepositoryImpl implements EmailWritePlatformService {
-
-    private final static Logger logger = LoggerFactory.getLogger(EmailWritePlatformServiceJpaRepositoryImpl.class);
 
     private final EmailMessageAssembler assembler;
     private final EmailMessageRepository repository;
@@ -120,7 +118,7 @@ public class EmailWritePlatformServiceJpaRepositoryImpl implements EmailWritePla
         if (realCause.getMessage().contains("email_address")) { throw new PlatformDataIntegrityException("error.msg.email.no.email.address.exists",
                 "The group, client or staff provided has no email address.", "id"); }
 
-        logger.error(dve.getMessage(), dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.email.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource: " + realCause.getMessage());
     }

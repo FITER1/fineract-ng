@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.security.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
@@ -42,12 +43,10 @@ import java.util.List;
  * current authenticated {@link AppUser}.
  */
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SpringSecurityPlatformSecurityContext implements PlatformSecurityContext {
-
-    // private final static Logger logger =
-    // LoggerFactory.getLogger(SpringSecurityPlatformSecurityContext.class);
 
     private final ConfigurationDomainService configurationDomainService;
 

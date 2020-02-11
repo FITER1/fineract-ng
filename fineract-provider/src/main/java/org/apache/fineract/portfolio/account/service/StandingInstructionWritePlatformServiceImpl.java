@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.account.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -57,11 +58,10 @@ import java.util.Map;
 import static org.apache.fineract.portfolio.account.AccountDetailConstants.*;
 import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.statusParamName;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class StandingInstructionWritePlatformServiceImpl implements StandingInstructionWritePlatformService {
-
-    private final static Logger logger = LoggerFactory.getLogger(StandingInstructionWritePlatformServiceImpl.class);
 
     private final StandingInstructionDataValidator standingInstructionDataValidator;
     private final StandingInstructionAssembler standingInstructionAssembler;
@@ -120,7 +120,7 @@ public class StandingInstructionWritePlatformServiceImpl implements StandingInst
             throw new PlatformDataIntegrityException("error.msg.standinginstruction.duplicate.name", "Standinginstruction with name `"
                     + name + "` already exists", "name", name);
         }
-        logger.error(dve.getMessage(), dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.client.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource.");
     }

@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.jobs.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.exception.PlatformInternalServerException;
 import org.apache.fineract.infrastructure.jobs.annotation.CronMethodParser;
@@ -29,8 +30,6 @@ import org.apache.fineract.infrastructure.jobs.domain.ScheduledJobDetail;
 import org.apache.fineract.infrastructure.jobs.domain.SchedulerDetail;
 import org.apache.fineract.infrastructure.jobs.exception.JobNotFoundException;
 import org.quartz.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
@@ -48,11 +47,10 @@ import java.util.*;
  * {@link SchedulerFactoryBean} ,{@link MethodInvokingJobDetailFactoryBean} and
  * {@link CronTriggerFactoryBean}
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JobRegisterServiceImpl implements JobRegisterService, ApplicationListener<ContextClosedEvent> {
-
-    private final static Logger logger = LoggerFactory.getLogger(JobRegisterServiceImpl.class);
 
     // MIFOSX-1184: This class cannot use constructor injection, because one of
     // its dependencies (SchedulerStopListener) has a circular dependency to
@@ -111,7 +109,7 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
 
         } catch (final Exception e) {
             final String msg = "Job execution failed for job with id:" + scheduledJobDetail.getId();
-            logger.error(msg, e);
+            log.error(msg, e);
             throw new PlatformInternalServerException("error.msg.sheduler.job.execution.failed", msg, scheduledJobDetail.getId());
         }
 
@@ -170,7 +168,7 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
                                     }
                                 }
                             } catch (final SchedulerException e) {
-                                logger.error(e.getMessage(), e);
+                                log.error(e.getMessage(), e);
                             }
                         }
                         jobDetail.setTriggerMisfired(false);
@@ -228,7 +226,7 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
             scheduledJobDetails.setNextRunTime(null);
             final String stackTrace = getStackTraceAsString(throwable);
             scheduledJobDetails.setErrorLog(stackTrace);
-            logger.error("Could not schedule job: " + scheduledJobDetails.getName(), throwable);
+            log.error("Could not schedule job: " + scheduledJobDetails.getName(), throwable);
         }
         scheduledJobDetails.setCurrentlyRunning(false);
     }
@@ -239,7 +237,7 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
             try {
                 scheduler.shutdown();
             } catch (final SchedulerException e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         }
     }
@@ -264,7 +262,7 @@ public class JobRegisterServiceImpl implements JobRegisterService, ApplicationLi
         try {
             scheduler.shutdown();
         } catch (final SchedulerException e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 

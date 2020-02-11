@@ -36,7 +36,7 @@ public class CurrencyReadPlatformServiceImpl implements CurrencyReadPlatformServ
 
     private final JdbcTemplate jdbcTemplate;
     private final PlatformSecurityContext context;
-    private final CurrencyMapper currencyRowMapper;
+    private final CurrencyMapper currencyRowMapper = new CurrencyMapper();
 
     @Override
     public Collection<CurrencyData> retrieveAllowedCurrencies() {

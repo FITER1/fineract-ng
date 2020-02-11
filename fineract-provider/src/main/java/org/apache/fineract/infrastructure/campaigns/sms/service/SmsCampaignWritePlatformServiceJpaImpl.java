@@ -23,6 +23,7 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.campaigns.sms.constants.SmsCampaignStatus;
 import org.apache.fineract.infrastructure.campaigns.sms.constants.SmsCampaignTriggerType;
@@ -74,8 +75,6 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,11 +84,10 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWritePlatformService {
-
-    private final static Logger logger = LoggerFactory.getLogger(SmsCampaignWritePlatformServiceJpaImpl.class);
 
     private final PlatformSecurityContext context;
 
@@ -214,7 +212,7 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
                 }
             }
         } catch (final IOException e) {
-        	logger.error(e.getMessage());
+        	log.error(e.getMessage());
         }
 
     }
@@ -276,9 +274,9 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
                 }
             }
         } catch (final IOException e) {
-        	logger.error(e.getMessage()) ;
+        	log.error(e.getMessage()) ;
         } catch (final RuntimeException e) {
-        	logger.error(e.getMessage()) ;
+        	log.error(e.getMessage()) ;
         }
     }
 
@@ -321,9 +319,9 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
 				}
 			}
         } catch (final IOException e) {
-        	logger.error(e.getMessage()) ;
+        	log.error(e.getMessage()) ;
         } catch (final RuntimeException e) {
-        	logger.error(e.getMessage()) ;
+        	log.error(e.getMessage()) ;
         }
     }
     
@@ -365,9 +363,9 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
 				}
 			}
         } catch (final IOException e) {
-        	logger.error(e.getMessage()) ;
+        	log.error(e.getMessage()) ;
         } catch (final RuntimeException e) {
-        	logger.error(e.getMessage()) ;
+        	log.error(e.getMessage()) ;
         }
     }
     
@@ -511,7 +509,7 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
             final String response = this.genericDataService.generateJsonFromGenericResultsetData(results);
             resultList = new ObjectMapper().readValue(response, new TypeReference<List<HashMap<String, Object>>>() {});
         } catch (JsonParseException e) {
-            logger.info("Conversion of report query results to JSON failed: " + e.getMessage() + " - Location: " + e.getLocation());
+            log.info("Conversion of report query results to JSON failed: " + e.getMessage() + " - Location: " + e.getLocation());
             return resultList;
         }
         // loop changes array date to string date
@@ -630,7 +628,7 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
                 LocalDateTime tenantDateNow = tenantDateTime();
                 LocalDateTime nextTriggerDate = smsCampaign.getNextTriggerDate();
 
-                logger.info("tenant time " + tenantDateNow.toString() + " trigger time " + nextTriggerDate.toString() + JobName.UPDATE_SMS_OUTBOUND_WITH_CAMPAIGN_MESSAGE.name());
+                log.info("tenant time " + tenantDateNow.toString() + " trigger time " + nextTriggerDate.toString() + JobName.UPDATE_SMS_OUTBOUND_WITH_CAMPAIGN_MESSAGE.name());
                 if (nextTriggerDate.isBefore(tenantDateNow)) {
                     insertDirectCampaignIntoSmsOutboundTable(smsCampaign);
                     this.updateTriggerDates(smsCampaign.getId());
@@ -669,7 +667,7 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
 //        }
 //
 //        catch (Exception e) {
-//            logger.error("Invalid phone number or country calling code, must contain only numbers", e);
+//            log.error("Invalid phone number or country calling code, must contain only numbers", e);
 //        }
 //
 //        return formatedPhoneNumber.toString();

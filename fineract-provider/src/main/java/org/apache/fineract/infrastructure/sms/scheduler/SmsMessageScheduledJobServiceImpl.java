@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.sms.scheduler;
 
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.campaigns.helper.SmsConfigUtils;
 import org.apache.fineract.infrastructure.campaigns.sms.constants.SmsCampaignConstants;
 import org.apache.fineract.infrastructure.campaigns.sms.domain.SmsCampaign;
@@ -35,8 +36,6 @@ import org.apache.fineract.infrastructure.sms.domain.SmsMessage;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageRepository;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageStatusType;
 import org.apache.fineract.infrastructure.sms.service.SmsReadPlatformService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.core.ParameterizedTypeReference;
@@ -60,13 +59,13 @@ import java.util.concurrent.Executors;
  * Scheduled job services that send SMS messages and get delivery reports for
  * the sent SMS messages
  **/
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJobService {
 
     private final SmsMessageRepository smsMessageRepository;
     private final SmsReadPlatformService smsReadPlatformService;
-    private static final Logger logger = LoggerFactory.getLogger(SmsMessageScheduledJobServiceImpl.class);
     private final RestTemplate restTemplate = new RestTemplate();
     private  ExecutorService genericExecutorService ;
     private ExecutorService triggeredExecutorService ;
@@ -148,7 +147,7 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
         @Override
         public void onApplicationEvent(ContextClosedEvent event) {
             genericExecutorService.shutdown();
-            logger.info("Shutting down the ExecutorService");
+            log.info("Shutting down the ExecutorService");
         }
     }
 
@@ -161,7 +160,7 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
         if (responseOne != null) {
 //            String smsResponse = responseOne.getBody();
             if (!responseOne.getStatusCode().equals(HttpStatus.ACCEPTED)) {
-            	logger.debug(responseOne.getStatusCode().name());
+            	log.debug(responseOne.getStatusCode().name());
                 throw new ConnectionFailureException(SmsCampaignConstants.SMS);
             }
         }
@@ -203,7 +202,7 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
                 }
             }
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -222,10 +221,10 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
             }
             this.smsMessageRepository.saveAll(smsMessages);
             request.append(SmsMessageApiQueueResourceData.toJsonString(apiQueueResourceDatas));
-            logger.info("Sending triggered SMS to specific provider with request - " + request.toString());
+            log.info("Sending triggered SMS to specific provider with request - " + request.toString());
             this.triggeredExecutorService.execute(new SmsTask(apiQueueResourceDatas));
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
     }
 
@@ -299,20 +298,20 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
                             this.smsMessageRepository.save(smsMessage);
 
                             if (statusChanged) {
-                                logger.info("Status of SMS message id: " + smsMessage.getId() + " successfully changed to " + statusType);
+                                log.info("Status of SMS message id: " + smsMessage.getId() + " successfully changed to " + statusType);
                             }
                         }
                     }
 
                     if (smsMessageDeliveryReportDatas.size() > 0) {
-                        logger.info(smsMessageDeliveryReportDatas.size() + " "
+                        log.info(smsMessageDeliveryReportDatas.size() + " "
                                 + "delivery report(s) successfully received from the intermediate gateway - sms");
                     }
                 }
             }
 
             catch (Exception e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
             page ++;
             totalRecords = smsMessageInternalIds.getTotalFilteredRecords();

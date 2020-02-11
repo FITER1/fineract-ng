@@ -185,12 +185,8 @@ public class FixedDepositProductWritePlatformServiceJpaRepositoryImpl implements
                     + shortName + "` already exists", "shortName", shortName);
         }
 
-        logAsErrorUnexpectedDataIntegrityException(dae);
+        log.error(dae.getMessage(), dae);
         throw new PlatformDataIntegrityException("error.msg.savingsproduct.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource.");
-    }
-
-    private void logAsErrorUnexpectedDataIntegrityException(final Exception dae) {
-        log.error(dae.getMessage(), dae);
     }
 }

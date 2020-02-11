@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.accountnumberformat.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.accountnumberformat.data.AccountNumberFormatDataValidator;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormat;
@@ -29,8 +30,6 @@ import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,11 +38,11 @@ import javax.persistence.PersistenceException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AccountNumberFormatWritePlatformServiceJpaRepositoryImpl implements AccountNumberFormatWritePlatformService {
 
-    private final static Logger logger = LoggerFactory.getLogger(AccountNumberFormatWritePlatformServiceJpaRepositoryImpl.class);
     private final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository;
     private final AccountNumberFormatDataValidator accountNumberFormatDataValidator;
 
@@ -144,7 +143,7 @@ public class AccountNumberFormatWritePlatformServiceJpaRepositoryImpl implements
                     "Account Format preferences for Account type `" + entityAccountType.getCode() + "` already exists", "externalId",
                     entityAccountType.getValue(), entityAccountType.getCode());
         }
-        logger.error(dve.getMessage(), dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.account.number.format.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource.");
     }

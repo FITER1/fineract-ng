@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.client.service;
 
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandProcessingService;
@@ -80,11 +81,10 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.PersistenceException;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWritePlatformService {
-
-    private final static Logger logger = LoggerFactory.getLogger(ClientWritePlatformServiceJpaRepositoryImpl.class);
 
     private final PlatformSecurityContext context;
     private final ClientRepositoryWrapper clientRepository;
@@ -132,7 +132,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     .build();
         } catch (DataIntegrityViolationException dve) {
             Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
-            logger.error(throwable.getMessage());
+            log.error(throwable.getMessage());
             throw new PlatformDataIntegrityException("error.msg.client.unknown.data.integrity.issue",
                     "Unknown data integrity issue with resource.");
         }
@@ -159,7 +159,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     + "` already exists", "mobileNo", mobileNo);
         }
 
-        logAsErrorUnexpectedDataIntegrityException(dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.client.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource.");
     }
@@ -558,10 +558,6 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             }
         }
         return commandProcessingResult;
-    }
-
-    private void logAsErrorUnexpectedDataIntegrityException(final Exception dve) {
-        logger.error(dve.getMessage(), dve);
     }
 
     @Transactional

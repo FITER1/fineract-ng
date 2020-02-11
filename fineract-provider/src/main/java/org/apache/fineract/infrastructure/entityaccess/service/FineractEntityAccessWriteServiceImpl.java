@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.entityaccess.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -29,8 +30,6 @@ import org.apache.fineract.infrastructure.entityaccess.api.FineractEntityApiReso
 import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityDataValidator;
 import org.apache.fineract.infrastructure.entityaccess.domain.*;
 import org.apache.fineract.infrastructure.entityaccess.exception.FineractEntityToEntityMappingDateException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,11 +38,11 @@ import javax.persistence.PersistenceException;
 import java.util.Date;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FineractEntityAccessWriteServiceImpl implements FineractEntityAccessWriteService {
 
-    private final static Logger logger = LoggerFactory.getLogger(FineractEntityAccessWriteServiceImpl.class);
     private final FineractEntityAccessRepository entityAccessRepository;
     private final FineractEntityRelationRepositoryWrapper fineractEntityRelationRepositoryWrapper;
     private final FineractEntityToEntityMappingRepository fineractEntityToEntityMappingRepository;
@@ -156,22 +155,7 @@ public class FineractEntityAccessWriteServiceImpl implements FineractEntityAcces
                     "EntityMapping from " + fromId + " to " + toId + " already exist");
         }
 
-        logAsErrorUnexpectedDataIntegrityException(dve);
+        log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.entity.mapping", "Unknown data integrity issue with resource.");
     }
-
-    private void logAsErrorUnexpectedDataIntegrityException(final Exception dve) {
-        logger.error(dve.getMessage(), dve);
-    }
-
-    /*
-     * @Override public CommandProcessingResult updateEntityAccess(Long
-     * entityAccessId, JsonCommand command) { // TODO Auto-generated method stub
-     * return null; }
-     * 
-     * @Override public CommandProcessingResult removeEntityAccess(String
-     * entityType, Long entityId, Long accessType, String secondEntityType, Long
-     * secondEntityId) { // TODO Auto-generated method stub return null; }
-     */
-
 }

@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.floatingrates.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -29,8 +30,6 @@ import org.apache.fineract.portfolio.floatingrates.domain.FloatingRate;
 import org.apache.fineract.portfolio.floatingrates.domain.FloatingRateRepositoryWrapper;
 import org.apache.fineract.portfolio.floatingrates.serialization.FloatingRateDataValidator;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,12 +37,11 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.PersistenceException;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FloatingRateWritePlatformServiceImpl implements FloatingRateWritePlatformService {
 
-	private final static Logger logger = LoggerFactory
-			.getLogger(FloatingRateWritePlatformServiceImpl.class);
 	private final PlatformSecurityContext context;
 	private final FloatingRateDataValidator fromApiJsonDeserializer;
 	private final FloatingRateRepositoryWrapper floatingRateRepository;
@@ -121,16 +119,9 @@ public class FloatingRateWritePlatformServiceImpl implements FloatingRateWritePl
 					"fromdate", "");
 		}
 
-		logAsErrorUnexpectedDataIntegrityException(dve);
+		log.error(dve.getMessage(), dve);
 		throw new PlatformDataIntegrityException(
 				"error.msg.floatingrates.unknown.data.integrity.issue",
 				"Unknown data integrity issue with resource.");
 	}
-
-	private void logAsErrorUnexpectedDataIntegrityException(
-			Exception dve) {
-		logger.error(dve.getMessage(), dve);
-
-	}
-
 }

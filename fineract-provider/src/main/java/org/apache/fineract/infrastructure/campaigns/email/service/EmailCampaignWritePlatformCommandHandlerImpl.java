@@ -23,6 +23,7 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
 import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.campaigns.email.data.EmailCampaignData;
 import org.apache.fineract.infrastructure.campaigns.email.data.EmailCampaignValidator;
@@ -79,11 +80,10 @@ import javax.mail.internet.InternetAddress;
 import java.io.*;
 import java.util.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampaignWritePlatformService {
-
-    private final static Logger logger = LoggerFactory.getLogger(EmailCampaignWritePlatformCommandHandlerImpl.class);
 
     private final PlatformSecurityContext context;
 
@@ -255,7 +255,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
                 LocalDateTime tenantDateNow = tenantDateTime();
                 LocalDateTime nextTriggerDate = emailCampaignData.getNextTriggerDate().toLocalDateTime();
 
-                logger.info("tenant time " + tenantDateNow.toString() + " trigger time " + nextTriggerDate.toString());
+                log.info("tenant time " + tenantDateNow.toString() + " trigger time " + nextTriggerDate.toString());
                 if (nextTriggerDate.isBefore(tenantDateNow)) {
                     insertDirectCampaignIntoEmailOutboundTable(emailCampaignData.getParamValue(), emailCampaignData.getEmailSubject(),
                             emailCampaignData.getMessage(), emailCampaignData.getCampaignName(), emailCampaignData.getId());

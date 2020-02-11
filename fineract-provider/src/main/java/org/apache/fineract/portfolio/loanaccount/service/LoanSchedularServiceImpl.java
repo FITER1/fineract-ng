@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.loanaccount.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -31,8 +32,6 @@ import org.apache.fineract.organisation.office.data.OfficeData;
 import org.apache.fineract.organisation.office.exception.OfficeNotFoundException;
 import org.apache.fineract.organisation.office.service.OfficeReadPlatformService;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.data.OverdueLoanScheduleData;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
@@ -41,11 +40,11 @@ import org.springframework.util.CollectionUtils;
 import java.util.*;
 import java.util.concurrent.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class LoanSchedularServiceImpl implements LoanSchedularService {
 
-    private final static Logger logger = LoggerFactory.getLogger(LoanSchedularServiceImpl.class);
     private final ConfigurationDomainService configurationDomainService;
     private final LoanReadPlatformService loanReadPlatformService;
     private final LoanWritePlatformService loanWritePlatformService;
@@ -82,13 +81,13 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 				} catch (final PlatformApiDataValidationException e) {
 					final List<ApiParameterError> errors = e.getErrors();
 					for (final ApiParameterError error : errors) {
-						logger.error("Apply Charges due for overdue loans failed for account:" + loanId + " with message "
+						log.error("Apply Charges due for overdue loans failed for account:" + loanId + " with message "
 								+ error.getDeveloperMessage());
 						sb.append("Apply Charges due for overdue loans failed for account:").append(loanId).append(" with message ")
 								.append(error.getDeveloperMessage());
 					}
 				} catch (final AbstractPlatformDomainRuleException ex) {
-					logger.error("Apply Charges due for overdue loans failed for account:" + loanId + " with message "
+					log.error("Apply Charges due for overdue loans failed for account:" + loanId + " with message "
 							+ ex.getDefaultUserMessage());
 					sb.append("Apply Charges due for overdue loans failed for account:").append(loanId).append(" with message ")
 							.append(ex.getDefaultUserMessage());
@@ -97,7 +96,7 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 					if (e.getCause() != null) {
 						realCause = e.getCause();
 					}
-					logger.error("Apply Charges due for overdue loans failed for account:" + loanId + " with message "
+					log.error("Apply Charges due for overdue loans failed for account:" + loanId + " with message "
 							+ realCause.getMessage());
 					sb.append("Apply Charges due for overdue loans failed for account:").append(loanId).append(" with message ")
 							.append(realCause.getMessage());
@@ -120,7 +119,7 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 		if (!loanIds.isEmpty()) {
 			final StringBuilder sb = new StringBuilder();
 			for (Long loanId : loanIds) {
-				logger.info("Loan ID " + loanId);
+				log.info("Loan ID " + loanId);
 				Integer numberOfRetries = 0;
 				while (numberOfRetries <= maxNumberOfRetries) {
 					try {
@@ -129,14 +128,14 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 						numberOfRetries = maxNumberOfRetries + 1;
 					} catch (CannotAcquireLockException
 							| ObjectOptimisticLockingFailureException exception) {
-						logger.info("Recalulate interest job has been retried  "
+						log.info("Recalulate interest job has been retried  "
 								+ numberOfRetries + " time(s)");
 						/***
 						 * Fail if the transaction has been retired for
 						 * maxNumberOfRetries
 						 **/
 						if (numberOfRetries >= maxNumberOfRetries) {
-							logger.warn("Recalulate interest job has been retried for the max allowed attempts of "
+							log.warn("Recalulate interest job has been retried for the max allowed attempts of "
 									+ numberOfRetries
 									+ " and will be rolled back");
 							sb.append("Recalulate interest job has been retried for the max allowed attempts of "
@@ -163,7 +162,7 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 						if (e.getCause() != null) {
 							realCause = e.getCause();
 						}
-						logger.error("Interest recalculation for loans failed for account:"	+ loanId + " with message "
+						log.error("Interest recalculation for loans failed for account:"	+ loanId + " with message "
 								+ realCause.getMessage());
 						sb.append("Interest recalculation for loans failed for account:").append(loanId).append(" with message ")
 								.append(realCause.getMessage());
@@ -171,7 +170,7 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 					}
 					i++;
 				}
-				logger.info("Loans count " + i);
+				log.info("Loans count " + i);
 			}
 			if (sb.length() > 0) {
 				throw new JobExecutionException(sb.toString());
@@ -185,7 +184,7 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 	public void recalculateInterest(Map<String, String> jobParameters) {
 		//gets the officeId
 		final String officeId = jobParameters.get("officeId");
-		logger.info(officeId);
+		log.info(officeId);
 		Long officeIdLong=Long.valueOf(officeId);
 		//gets the Office object
 		final OfficeData office = this.officeReadPlatformService.retrieveOffice(officeIdLong);
@@ -215,7 +214,7 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 		// gets the loanIds data set iteratively and call addAccuruals for that paginated dataset
 		do {
 			int totalFilteredRecords = loanIds.size();
-			logger.info("Starting accrual - total filtered records - " + totalFilteredRecords);
+			log.info("Starting accrual - total filtered records - " + totalFilteredRecords);
 			recalculateInterest(loanIds, threadPoolSize, batchSize,
 					executorService);
 			maxLoanIdInList+= pageSize+1;
@@ -269,7 +268,7 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 			List<Future<Object>> responses = executorService.invokeAll(posters);
 			checkCompletion(responses);
 		} catch (InterruptedException e1) {
-			logger.error("Interrupted while recalculateInterest", e1);
+			log.error("Interrupted while recalculateInterest", e1);
 		}
 	}
 
@@ -300,11 +299,11 @@ public class LoanSchedularServiceImpl implements LoanSchedularService {
 			}
 			allThreadsExecuted = noOfThreadsExecuted == responses.size();
 			if(!allThreadsExecuted)
-				logger.error("All threads could not execute.");
+				log.error("All threads could not execute.");
 		} catch (InterruptedException e1) {
-			logger.error("Interrupted while posting IR entries", e1);
+			log.error("Interrupted while posting IR entries", e1);
 		}  catch (ExecutionException e2) {
-			logger.error("Execution exception while posting IR entries", e2);
+			log.error("Execution exception while posting IR entries", e2);
 		}
 	}
 }

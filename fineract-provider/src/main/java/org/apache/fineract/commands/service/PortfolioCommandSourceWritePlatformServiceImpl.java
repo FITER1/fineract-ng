@@ -20,6 +20,7 @@ package org.apache.fineract.commands.service;
 
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.commands.domain.CommandSource;
 import org.apache.fineract.commands.domain.CommandSourceRepository;
 import org.apache.fineract.commands.domain.CommandWrapper;
@@ -43,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PortfolioCommandSourceWritePlatformServiceImpl implements PortfolioCommandSourceWritePlatformService {
@@ -53,7 +55,6 @@ public class PortfolioCommandSourceWritePlatformServiceImpl implements Portfolio
     private final CommandProcessingService processAndLogCommandService;
     private final SchedulerJobRunnerReadService schedulerJobRunnerReadService;
     private final FineractProperties fineractProperties;
-    private final static Logger logger = LoggerFactory.getLogger(PortfolioCommandSourceWritePlatformServiceImpl.class);
 
     @Override
     public CommandProcessingResult logCommandSource(final CommandWrapper wrapper) {
@@ -88,13 +89,13 @@ public class PortfolioCommandSourceWritePlatformServiceImpl implements Portfolio
                 result = this.processAndLogCommandService.processAndLogCommand(wrapper, command, isApprovedByChecker);
                 numberOfRetries = maxNumberOfRetries + 1;
             } catch (CannotAcquireLockException | ObjectOptimisticLockingFailureException exception) {
-                logger.info("The following command " + command.json() + " has been retried  " + numberOfRetries + " time(s)");
+                log.info("The following command " + command.json() + " has been retried  " + numberOfRetries + " time(s)");
                 /***
                  * Fail if the transaction has been retired for
                  * maxNumberOfRetries
                  **/
                 if (numberOfRetries >= maxNumberOfRetries) {
-                    logger.warn("The following command " + command.json() + " has been retried for the max allowed attempts of "
+                    log.warn("The following command " + command.json() + " has been retried for the max allowed attempts of "
                             + numberOfRetries + " and will be rolled back");
                     throw (exception);
                 }

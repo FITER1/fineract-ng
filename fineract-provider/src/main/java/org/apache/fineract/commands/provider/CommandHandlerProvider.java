@@ -20,13 +20,12 @@ package org.apache.fineract.commands.provider;
 
 import com.google.common.base.Preconditions;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.annotation.CommandType;
 import org.apache.fineract.commands.exception.UnsupportedCommandException;
 import org.apache.fineract.commands.handler.NewCommandSourceHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -47,12 +46,11 @@ import java.util.HashMap;
  * @see NewCommandSourceHandler
  * @see CommandType
  */
+@Slf4j
 @Component
 @Scope("singleton")
 @RequiredArgsConstructor
 public class CommandHandlerProvider {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(CommandHandlerProvider.class);
 
     private final ApplicationContext applicationContext;
     private HashMap<String, String> registeredHandlers;
@@ -84,12 +82,12 @@ public class CommandHandlerProvider {
             final String[] commandHandlerBeans = this.applicationContext.getBeanNamesForAnnotation(CommandType.class);
             if (ArrayUtils.isNotEmpty(commandHandlerBeans)) {
                 for (final String commandHandlerName : commandHandlerBeans) {
-                    LOGGER.debug("Register command handler '" + commandHandlerName + "' ...");
+                    log.debug("Register command handler '" + commandHandlerName + "' ...");
                     final CommandType commandType = this.applicationContext.findAnnotationOnBean(commandHandlerName, CommandType.class);
                     try {
                         this.registeredHandlers.put(commandType.entity() + "|" + commandType.action(), commandHandlerName);
                     } catch (final Throwable th) {
-                        LOGGER.error("Unable to register command handler '" + commandHandlerName + "'!", th);
+                        log.error("Unable to register command handler '" + commandHandlerName + "'!", th);
                     }
                 }
             }

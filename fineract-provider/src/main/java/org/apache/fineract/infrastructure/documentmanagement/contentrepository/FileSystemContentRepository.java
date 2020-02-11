@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.documentmanagement.contentrepository;
 
 import com.lowagie.text.pdf.codec.Base64;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.domain.Base64EncodedImage;
 import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCommand;
@@ -27,15 +28,12 @@ import org.apache.fineract.infrastructure.documentmanagement.data.FileData;
 import org.apache.fineract.infrastructure.documentmanagement.data.ImageData;
 import org.apache.fineract.infrastructure.documentmanagement.domain.StorageType;
 import org.apache.fineract.infrastructure.documentmanagement.exception.ContentManagementException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 
+@Slf4j
 public class FileSystemContentRepository implements ContentRepository {
-
-    private final static Logger logger = LoggerFactory.getLogger(FileSystemContentRepository.class);
 
     public static final String FINERACT_BASE_DIR = System.getProperty("user.home") + File.separator + ".fineract";
 
@@ -94,7 +92,7 @@ public class FileSystemContentRepository implements ContentRepository {
         final boolean fileDeleted = deleteFile(location);
         if (!fileDeleted) {
             // no need to throw an Error, simply log a warning
-            logger.warn("Unable to delete image associated with clients with Id " + resourceId);
+            log.warn("Unable to delete image associated with clients with Id " + resourceId);
         }
     }
 
