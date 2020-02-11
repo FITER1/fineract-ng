@@ -1,4 +1,4 @@
-name: Fineract develop Build
+name: Fineract ibanera Build
 
 on:
   push:
