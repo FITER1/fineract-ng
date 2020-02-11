@@ -1,0 +1,32 @@
+name: Fineract develop Build
+
+on:
+  push:
+    branches:
+      - ibanera
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+      - uses: kamiazya/setup-graphviz@v1
+
+      - name: Set up JDK 12
+        uses: actions/setup-java@v1
+        with:
+          java-version: 12
+
+      - name: Login to Github Packages Docker
+        uses: azure/docker-login@v1
+        with:
+          login-server: 'docker.pkg.github.com'
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build with Gradle
+        run: ./gradlew clean build docker dockerTag dockerTagsPush -x test
+        env:
+          GPR_USERNAME: ${{ secrets.GPR_USERNAME }}
+          GPR_PASSWORD: ${{ secrets.GPR_PASSWORD }}
