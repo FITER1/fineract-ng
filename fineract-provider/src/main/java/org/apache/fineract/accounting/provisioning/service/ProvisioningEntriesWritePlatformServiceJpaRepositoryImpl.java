@@ -197,10 +197,10 @@ public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements
             LoanProduct loanProduct = this.loanProductRepository.findById(data.getProductId()).get();
             Office office = this.officeRepositoryWrapper.findOneWithNotFoundDetection(data.getOfficeId());
             ProvisioningCategory provisioningCategory = provisioningCategoryRepository.findById(data.getCategoryId()).get();
-            GLAccount liabilityAccount = glAccountRepository.findById(data.getLiablityAccount()).get();
+            GLAccount liabilityAccount = glAccountRepository.findById(data.getLiabilityAccount()).get();
             GLAccount expenseAccount = glAccountRepository.findById(data.getExpenseAccount()).get();
             MonetaryCurrency currency = loanProduct.getPrincipalAmount().getCurrency();
-            Money money = Money.of(currency, data.getOutstandingBalance());
+            Money money = Money.of(currency, data.getBalance());
             Money amountToReserve = money.percentageOf(data.getPercentage(), MoneyHelper.getRoundingMode());
             Long criteraId = data.getCriteriaId();
             LoanProductProvisioningEntry entry = new LoanProductProvisioningEntry(loanProduct, office, data.getCurrencyCode(),

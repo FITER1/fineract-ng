@@ -90,8 +90,19 @@ public class ProvisioningEntriesReadPlatformServiceImpl implements ProvisioningE
             Long criteriaId = rs.getLong("criteriaid");
             Long historyId = null;
 
-            return new LoanProductProvisioningEntryData(historyId, officeId, currentcyCode, productId, categoryId, overdueDays, percentage,
-                    outstandingBalance, liabilityAccountCode, expenseAccountCode, criteriaId);
+            return LoanProductProvisioningEntryData.builder()
+                .historyId(historyId)
+                .officeId(officeId)
+                .currencyCode(currentcyCode)
+                .productId(productId)
+                .categoryId(categoryId)
+                .overdueInDays(overdueDays)
+                .percentage(percentage)
+                .balance(outstandingBalance)
+                .liabilityAccount(liabilityAccountCode)
+                .expenseAccount(expenseAccountCode)
+                .criteriaId(criteriaId)
+                .build();
         }
 
         public String schema() {
@@ -168,9 +179,26 @@ public class ProvisioningEntriesReadPlatformServiceImpl implements ProvisioningE
             Long criteriaId = rs.getLong("criteriaid");
             String liabilityAccountName = rs.getString("liabilityname");
             String expenseAccountName = rs.getString("expensename");
-            return new LoanProductProvisioningEntryData(historyId, officeId, officeName, currentcyCode, productId, productName, categoryId,
-                    categoryName, overdueDays, amountreserved, liabilityAccountCode, liabilityAccountglCode, liabilityAccountName,
-                    expenseAccountCode, expenseAccountglCode, expenseAccountName, criteriaId);
+
+            return LoanProductProvisioningEntryData.builder()
+                .historyId(historyId)
+                .officeId(officeId)
+                .officeName(officeName)
+                .currencyCode(currentcyCode)
+                .productId(productId)
+                .productName(productName)
+                .categoryId(categoryId)
+                .categoryName(categoryName)
+                .overdueInDays(overdueDays)
+                .amountreserved(amountreserved)
+                .liabilityAccount(liabilityAccountCode)
+                .liabilityAccountCode(liabilityAccountglCode)
+                .liabilityAccountName(liabilityAccountName)
+                .expenseAccount(expenseAccountCode)
+                .expenseAccountCode(expenseAccountglCode)
+                .expenseAccountName(expenseAccountName)
+                .criteriaId(criteriaId)
+                .build();
         }
 
         public String getSchema() {

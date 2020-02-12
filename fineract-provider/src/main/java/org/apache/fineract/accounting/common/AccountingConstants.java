@@ -301,8 +301,11 @@ public class AccountingConstants {
         }
 
         private static FinancialActivityData convertToFinancialActivityData(final FINANCIAL_ACTIVITY type) {
-            FinancialActivityData financialActivityData = new FinancialActivityData(type.value, type.code, type.getMappedGLAccountType());
-            return financialActivityData;
+            return FinancialActivityData.builder()
+                .id(type.value)
+                .name(type.code)
+                .mappedGLAccountType(type.getMappedGLAccountType())
+                .build();
         }
     }
 

@@ -408,23 +408,33 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
             ClientTransaction clientTransaction = null;
             final Long shareTransactionId = null;
 
-            final JournalEntry debitJournalEntry = JournalEntry.createNew(cashierOffice, null, // payment
-                                                                                               // detail
-                    debitAccount, cashierTxn.getCurrencyCode(), 
-                                         
-                    transactionId, false, // manual entry
-                    cashierTxn.getTxnDate(), JournalEntryType.DEBIT, cashierTxn.getTxnAmount(), cashierTxn.getTxnNote(), // Description
-                    null, null, null, // entity Type, entityId, reference number
-                    null, null, clientTransaction, shareTransactionId); // Loan and Savings Txn
+            final JournalEntry debitJournalEntry = JournalEntry.builder()
+                .office(cashierOffice)
+                .glAccount(debitAccount)
+                .currencyCode(cashierTxn.getCurrencyCode())
+                .transactionId(transactionId)
+                .manualEntry(false)
+                .transactionDate(cashierTxn.getTxnDate())
+                .type(JournalEntryType.DEBIT.getValue())
+                .amount(cashierTxn.getTxnAmount())
+                .description(cashierTxn.getTxnNote())
+                .clientTransaction(clientTransaction)
+                .shareTransactionId(shareTransactionId)
+                .build();
 
-            final JournalEntry creditJournalEntry = JournalEntry.createNew(cashierOffice, null, // payment
-                                                                                                // detail
-                    creditAccount, cashierTxn.getCurrencyCode(), 
-                                          
-                    transactionId, false, // manual entry
-                    cashierTxn.getTxnDate(), JournalEntryType.CREDIT, cashierTxn.getTxnAmount(), cashierTxn.getTxnNote(), // Description
-                    null, null, null, // entity Type, entityId, reference number
-                    null, null, clientTransaction, shareTransactionId); // Loan and Savings Txn
+            final JournalEntry creditJournalEntry = JournalEntry.builder()
+                .office(cashierOffice)
+                .glAccount(debitAccount)
+                .currencyCode(cashierTxn.getCurrencyCode())
+                .transactionId(transactionId)
+                .manualEntry(false)
+                .transactionDate(cashierTxn.getTxnDate())
+                .type(JournalEntryType.CREDIT.getValue())
+                .amount(cashierTxn.getTxnAmount())
+                .description(cashierTxn.getTxnNote())
+                .clientTransaction(clientTransaction)
+                .shareTransactionId(shareTransactionId)
+                .build();
 
             this.glJournalEntryRepository.saveAndFlush(debitJournalEntry);
             this.glJournalEntryRepository.saveAndFlush(creditJournalEntry);

@@ -18,36 +18,18 @@
  */
 package org.apache.fineract.accounting.journalentry.data;
 
+import lombok.*;
 import org.apache.fineract.portfolio.note.data.NoteData;
 import org.apache.fineract.portfolio.paymentdetail.data.PaymentDetailData;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class TransactionDetailData {
-
-    @SuppressWarnings("unused")
-    private final Long transactionId;
-
-    @SuppressWarnings("unused")
-    private final PaymentDetailData paymentDetails;
-
-    @SuppressWarnings("unused")
-    private final NoteData noteData;
-
-    @SuppressWarnings("unused")
-    private final TransactionTypeEnumData transactionType;
-
-    public TransactionDetailData(final Long transactionId, final PaymentDetailData paymentDetails, final NoteData noteData) {
-        this.transactionId = transactionId;
-        this.paymentDetails = paymentDetails;
-        this.noteData = noteData;
-        this.transactionType = null;
-
-    }
-
-    public TransactionDetailData(final Long transactionId, final PaymentDetailData paymentDetails, final NoteData noteData,
-            final TransactionTypeEnumData transactionType) {
-        this.transactionId = transactionId;
-        this.paymentDetails = paymentDetails;
-        this.noteData = noteData;
-        this.transactionType = transactionType;
-    }
+    private Long transactionId;
+    private PaymentDetailData paymentDetails;
+    private NoteData noteData;
+    private TransactionTypeEnumData transactionType;
 }

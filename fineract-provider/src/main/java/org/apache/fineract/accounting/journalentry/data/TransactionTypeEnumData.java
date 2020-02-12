@@ -18,24 +18,15 @@
  */
 package org.apache.fineract.accounting.journalentry.data;
 
-/**
- * Immutable data object represent loan and Savings status enumerations.
- */
-@SuppressWarnings("unused")
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class TransactionTypeEnumData {
-
-    private final Long id;
-    private final String code;
-    private final String value;
-
-    public TransactionTypeEnumData(final Long id, final String code, final String value) {
-        this.id = id;
-        this.code = code;
-        this.value = value;
-    }
-
-    public Long id() {
-        return this.id;
-    }
-
+    private Long id;
+    private String code;
+    private String value;
 }

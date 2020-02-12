@@ -18,14 +18,16 @@
  */
 package org.apache.fineract.accounting.journalentry.data;
 
+import lombok.*;
+
 import java.math.BigDecimal;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class CreditDebit {
-    private final Long glAccountId;
-    private final BigDecimal amount;
-
-    public CreditDebit(Long glAccountId, BigDecimal amount) {
-        this.glAccountId = glAccountId;
-        this.amount = amount;
-    }
+    private Long glAccountId;
+    private BigDecimal amount;
 }

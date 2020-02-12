@@ -73,7 +73,7 @@ public class FinancialActivityAccountReadPlatformServiceImpl implements Financia
 
     @Override
     public FinancialActivityAccountData getFinancialActivityAccountTemplate() {
-        FinancialActivityAccountData financialActivityAccountData = new FinancialActivityAccountData(null, null, null);
+        FinancialActivityAccountData financialActivityAccountData = new FinancialActivityAccountData();
         return addTemplateDetails(financialActivityAccountData);
     }
 
@@ -101,12 +101,18 @@ public class FinancialActivityAccountReadPlatformServiceImpl implements Financia
             final String glAccountName = rs.getString("glAccountName");
             final String glCode = rs.getString("glCode");
 
-            final GLAccountData glAccountData = new GLAccountData(glAccountId, glAccountName, glCode);
+            final GLAccountData glAccountData = GLAccountData.builder()
+                .id(glAccountId)
+                .name(glAccountName)
+                .glCode(glCode)
+                .build();
             final FinancialActivityData financialActivityData = FINANCIAL_ACTIVITY.toFinancialActivityData(financialActivityId);
 
-            final FinancialActivityAccountData financialActivityAccountData = new FinancialActivityAccountData(id, financialActivityData, glAccountData);
-            return financialActivityAccountData;
+            return FinancialActivityAccountData.builder()
+                .id(id)
+                .financialActivityData(financialActivityData)
+                .glAccountData(glAccountData)
+                .build();
         }
     }
-
 }

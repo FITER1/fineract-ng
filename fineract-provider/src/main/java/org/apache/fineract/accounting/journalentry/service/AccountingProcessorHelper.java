@@ -117,7 +117,12 @@ public class AccountingProcessorHelper {
                     final Long loanChargeId = (Long) loanChargePaid.get("loanChargeId");
                     final boolean isPenalty = (Boolean) loanChargePaid.get("isPenalty");
                     final BigDecimal chargeAmountPaid = (BigDecimal) loanChargePaid.get("amount");
-                    final ChargePaymentDTO chargePaymentDTO = new ChargePaymentDTO(chargeId, loanChargeId, chargeAmountPaid);
+                    final ChargePaymentDTO chargePaymentDTO = ChargePaymentDTO.builder()
+                        .chargeId(chargeId)
+                        .loanChargeId(loanChargeId)
+                        .amount(chargeAmountPaid)
+                        .build();
+
                     if (isPenalty) {
                         penaltyPaymentDetails.add(chargePaymentDTO);
                     } else {
@@ -130,21 +135,38 @@ public class AccountingProcessorHelper {
                 isAccountTransfer = this.accountTransfersReadPlatformService.isAccountTransfer(Long.parseLong(transactionId),
                         PortfolioAccountType.LOAN);
             }
-            final LoanTransactionDTO transaction = new LoanTransactionDTO(transactionOfficeId, paymentTypeId, transactionId,
-                    transactionDate, transactionType, amount, principal, interest, fees, penalties, overPayments, reversed,
-                    feePaymentDetails, penaltyPaymentDetails, isAccountTransfer);
-            Boolean isLoanToLoanTransfer = (Boolean) accountingBridgeData.get("isLoanToLoanTransfer");
-            if(isLoanToLoanTransfer != null && isLoanToLoanTransfer){
-                transaction.setIsLoanToLoanTransfer(true);
-            } else {
-                transaction.setIsLoanToLoanTransfer(false);
-            }
-            newLoanTransactions.add(transaction);
+            final LoanTransactionDTO transaction = LoanTransactionDTO.builder()
+                    .officeId(transactionOfficeId)
+                    .paymentTypeId(paymentTypeId)
+                    .transactionId(transactionId)
+                    .transactionDate(transactionDate)
+                    .transactionType(transactionType)
+                    .amount(amount)
+                    .principal(principal)
+                    .interest(interest)
+                    .fees(fees)
+                    .penalties(penalties)
+                    .overPayment(overPayments)
+                    .reversed(reversed)
+                    .feePayments(feePaymentDetails)
+                    .penaltyPayments(penaltyPaymentDetails)
+                    .isAccountTransfer(isAccountTransfer)
+                    .isLoanToLoanTransfer(Boolean.TRUE.equals(accountingBridgeData.get("isLoanToLoanTransfer")))
+                    .build();
 
+            newLoanTransactions.add(transaction);
         }
 
-        return new LoanDTO(loanId, loanProductId, officeId, currencyData.code(), cashBasedAccountingEnabled,
-                upfrontAccrualBasedAccountingEnabled, periodicAccrualBasedAccountingEnabled, newLoanTransactions);
+        return LoanDTO.builder()
+            .loanId(loanId)
+            .loanProductId(loanProductId)
+            .officeId(officeId)
+            .currencyCode(currencyData.code())
+            .cashBasedAccountingEnabled(cashBasedAccountingEnabled)
+            .upfrontAccrualBasedAccountingEnabled(upfrontAccrualBasedAccountingEnabled)
+            .periodicAccrualBasedAccountingEnabled(periodicAccrualBasedAccountingEnabled)
+            .newLoanTransactions(newLoanTransactions)
+            .build();
     }
 
     public SavingsDTO populateSavingsDtoFromMap(final Map<String, Object> accountingBridgeData, final boolean cashBasedAccountingEnabled,
@@ -180,7 +202,12 @@ public class AccountingProcessorHelper {
                     final Long loanChargeId = (Long) loanChargePaid.get("savingsChargeId");
                     final boolean isPenalty = (Boolean) loanChargePaid.get("isPenalty");
                     final BigDecimal chargeAmountPaid = (BigDecimal) loanChargePaid.get("amount");
-                    final ChargePaymentDTO chargePaymentDTO = new ChargePaymentDTO(chargeId, loanChargeId, chargeAmountPaid);
+                    final ChargePaymentDTO chargePaymentDTO = ChargePaymentDTO.builder()
+                        .chargeId(chargeId)
+                        .loanChargeId(loanChargeId)
+                        .amount(chargeAmountPaid)
+                        .build();
+
                     if (isPenalty) {
                         penaltyPayments.add(chargePaymentDTO);
                     } else {
@@ -197,7 +224,11 @@ public class AccountingProcessorHelper {
                     final BigDecimal taxAmount = (BigDecimal) taxData.get("amount");
                     final Long creditAccountId = (Long) taxData.get("creditAccountId");
                     final Long debitAccountId = (Long) taxData.get("debitAccountId");
-                    taxPayments.add(new TaxPaymentDTO(debitAccountId, creditAccountId, taxAmount));
+                    taxPayments.add(TaxPaymentDTO.builder()
+                        .debitAccountId(debitAccountId)
+                        .creditAccountId(creditAccountId)
+                        .amount(taxAmount)
+                        .build());
                 }
             }
 
@@ -205,16 +236,33 @@ public class AccountingProcessorHelper {
                 isAccountTransfer = this.accountTransfersReadPlatformService.isAccountTransfer(Long.parseLong(transactionId),
                         PortfolioAccountType.SAVINGS);
             }
-            final SavingsTransactionDTO transaction = new SavingsTransactionDTO(transactionOfficeId, paymentTypeId, transactionId,
-                    transactionDate, transactionType, amount, reversed, feePayments, penaltyPayments, overdraftAmount, isAccountTransfer,
-                    taxPayments);
+            final SavingsTransactionDTO transaction = SavingsTransactionDTO.builder()
+                .officeId(transactionOfficeId)
+                .paymentTypeId(paymentTypeId)
+                .transactionId(transactionId)
+                .transactionDate(transactionDate)
+                .transactionType(transactionType)
+                .amount(amount)
+                .reversed(reversed)
+                .feePayments(feePayments)
+                .penaltyPayments(penaltyPayments)
+                .overdraftAmount(overdraftAmount)
+                .isAccountTransfer(isAccountTransfer)
+                .taxPayments(taxPayments)
+                .build();
 
             newSavingsTransactions.add(transaction);
-
         }
 
-        return new SavingsDTO(loanId, loanProductId, officeId, currencyData.code(), cashBasedAccountingEnabled,
-                accrualBasedAccountingEnabled, newSavingsTransactions);
+        return SavingsDTO.builder()
+            .savingsId(loanId)
+            .savingsProductId(loanProductId)
+            .officeId(officeId)
+            .currencyCode(currencyData.code())
+            .cashBasedAccountingEnabled(cashBasedAccountingEnabled)
+            .accrualBasedAccountingEnabled(accrualBasedAccountingEnabled)
+            .newSavingsTransactions(newSavingsTransactions)
+            .build();
     }
 
     public SharesDTO populateSharesDtoFromMap(final Map<String, Object> accountingBridgeData, final boolean cashBasedAccountingEnabled,
@@ -247,19 +295,40 @@ public class AccountingProcessorHelper {
                     final Long chargeId = (Long) chargePaid.get("chargeId");
                     final Long loanChargeId = (Long) chargePaid.get("sharesChargeId");
                     final BigDecimal chargeAmountPaid = (BigDecimal) chargePaid.get("amount");
-                    final ChargePaymentDTO chargePaymentDTO = new ChargePaymentDTO(chargeId, loanChargeId, chargeAmountPaid);
+                    final ChargePaymentDTO chargePaymentDTO = ChargePaymentDTO.builder()
+                        .chargeId(chargeId)
+                        .loanChargeId(loanChargeId)
+                        .amount(chargeAmountPaid)
+                        .build();
+
                     feePayments.add(chargePaymentDTO);
                 }
             }
-            final SharesTransactionDTO transaction = new SharesTransactionDTO(transactionOfficeId, paymentTypeId, transactionId,
-                    transactionDate, transactionType, transactionStatus, amount, chargeAmount, feePayments);
+            final SharesTransactionDTO transaction = SharesTransactionDTO.builder()
+                .officeId(transactionOfficeId)
+                .paymentTypeId(paymentTypeId)
+                .transactionId(transactionId)
+                .transactionDate(transactionDate)
+                .transactionType(transactionType)
+                .transactionStatus(transactionStatus)
+                .amount(amount)
+                .chargeAmount(chargeAmount)
+                .feePayments(feePayments)
+                .build();
 
             newTransactions.add(transaction);
 
         }
 
-        return new SharesDTO(shareAccountId, shareProductId, officeId, currencyData.code(), cashBasedAccountingEnabled,
-                accrualBasedAccountingEnabled, newTransactions);
+        return SharesDTO.builder()
+            .shareAccountId(shareAccountId)
+            .shareProductId(shareProductId)
+            .officeId(officeId)
+            .currencyCode(currencyData.code())
+            .cashBasedAccountingEnabled(cashBasedAccountingEnabled)
+            .accrualBasedAccountingEnabled(accrualBasedAccountingEnabled)
+            .newTransactions(newTransactions)
+            .build();
     }
 
     public ClientTransactionDTO populateClientTransactionDtoFromMap(final Map<String, Object> accountingBridgeData) {
@@ -287,17 +356,30 @@ public class AccountingProcessorHelper {
                 final boolean isPenalty = (Boolean) clientChargePaid.get("isPenalty");
                 final BigDecimal chargeAmountPaid = (BigDecimal) clientChargePaid.get("amount");
                 final Long incomeAccountId = (Long) clientChargePaid.get("incomeAccountId");
-                final ClientChargePaymentDTO clientChargePaymentDTO = new ClientChargePaymentDTO(chargeId, chargeAmountPaid,
-                        clientChargeId, isPenalty, incomeAccountId);
+                final ClientChargePaymentDTO clientChargePaymentDTO = ClientChargePaymentDTO.builder()
+                    .chargeId(chargeId)
+                    .amount(chargeAmountPaid)
+                    .clientChargeId(clientChargeId)
+                    .isPenalty(isPenalty)
+                    .incomeAccountId(incomeAccountId)
+                    .build();
                 clientChargePaymentDTOs.add(clientChargePaymentDTO);
             }
         }
 
-        final ClientTransactionDTO clientTransactionDTO = new ClientTransactionDTO(clientId, transactionOfficeId, paymentTypeId,
-                transactionId, transactionDate, transactionType, currencyCode, amount, reversed, accountingEnabled, clientChargePaymentDTOs);
-
-        return clientTransactionDTO;
-
+        return ClientTransactionDTO.builder()
+            .clientId(clientId)
+            .officeId(transactionOfficeId)
+            .paymentTypeId(paymentTypeId)
+            .transactionId(transactionId)
+            .transactionDate(transactionDate)
+            .transactionType(transactionType)
+            .currencyCode(currencyCode)
+            .amount(amount)
+            .reversed(reversed)
+            .accountingEnabled(accountingEnabled)
+            .chargePayments(clientChargePaymentDTOs)
+            .build();
     }
 
     /**
@@ -774,9 +856,24 @@ public class AccountingProcessorHelper {
 
         String modifiedTransactionId = transactionId.toString();
         modifiedTransactionId = CLIENT_TRANSACTION_IDENTIFIER + transactionId;
-        final JournalEntry journalEntry = JournalEntry.createNew(office, paymentDetail, account, currencyCode, modifiedTransactionId,
-                manualEntry, transactionDate, JournalEntryType.CREDIT, amount, null, PortfolioProductType.CLIENT.getValue(), clientId,
-                null, loanTransaction, savingsAccountTransaction, clientTransaction, shareTransactionId);
+        final JournalEntry journalEntry = JournalEntry.builder()
+            .office(office)
+            .paymentDetail(paymentDetail)
+            .glAccount(account)
+            .currencyCode(currencyCode)
+            .transactionId(modifiedTransactionId)
+            .manualEntry(manualEntry)
+            .transactionDate(transactionDate)
+            .type(JournalEntryType.CREDIT.getValue())
+            .amount(amount)
+            .entityType(PortfolioProductType.CLIENT.getValue())
+            .entityId(clientId)
+            .loanTransaction(loanTransaction)
+            .savingsTransaction(savingsAccountTransaction)
+            .clientTransaction(clientTransaction)
+            .shareTransactionId(shareTransactionId)
+            .build();
+
         this.glJournalEntryRepository.saveAndFlush(journalEntry);
     }
 
@@ -794,9 +891,23 @@ public class AccountingProcessorHelper {
             savingsAccountTransaction = this.savingsAccountTransactionRepository.findById(id).orElse(null);
             modifiedTransactionId = SAVINGS_TRANSACTION_IDENTIFIER + transactionId;
         }
-        final JournalEntry journalEntry = JournalEntry.createNew(office, paymentDetail, account, currencyCode, modifiedTransactionId,
-                manualEntry, transactionDate, JournalEntryType.CREDIT, amount, null, PortfolioProductType.SAVING.getValue(), savingsId,
-                null, loanTransaction, savingsAccountTransaction, clientTransaction, shareTransactionId);
+        final JournalEntry journalEntry = JournalEntry.builder()
+            .office(office)
+            .paymentDetail(paymentDetail)
+            .glAccount(account)
+            .currencyCode(currencyCode)
+            .transactionId(modifiedTransactionId)
+            .manualEntry(manualEntry)
+            .transactionDate(transactionDate)
+            .type(JournalEntryType.CREDIT.getValue())
+            .amount(amount)
+            .entityType(PortfolioProductType.SAVING.getValue())
+            .entityId(savingsId)
+            .loanTransaction(loanTransaction)
+            .savingsTransaction(savingsAccountTransaction)
+            .clientTransaction(clientTransaction)
+            .shareTransactionId(shareTransactionId)
+            .build();
         this.glJournalEntryRepository.saveAndFlush(journalEntry);
     }
 
@@ -814,9 +925,23 @@ public class AccountingProcessorHelper {
             loanTransaction = this.loanTransactionRepository.findById(id).orElse(null);
             modifiedTransactionId = LOAN_TRANSACTION_IDENTIFIER + transactionId;
         }
-        final JournalEntry journalEntry = JournalEntry.createNew(office, paymentDetail, account, currencyCode, modifiedTransactionId,
-                manualEntry, transactionDate, JournalEntryType.CREDIT, amount, null, PortfolioProductType.LOAN.getValue(), loanId, null,
-                loanTransaction, savingsAccountTransaction, clientTransaction, shareTransactionId);
+        final JournalEntry journalEntry = JournalEntry.builder()
+            .office(office)
+            .paymentDetail(paymentDetail)
+            .glAccount(account)
+            .currencyCode(currencyCode)
+            .transactionId(modifiedTransactionId)
+            .manualEntry(manualEntry)
+            .transactionDate(transactionDate)
+            .type(JournalEntryType.CREDIT.getValue())
+            .amount(amount)
+            .entityType(PortfolioProductType.LOAN.getValue())
+            .entityId(loanId)
+            .loanTransaction(loanTransaction)
+            .savingsTransaction(savingsAccountTransaction)
+            .clientTransaction(clientTransaction)
+            .shareTransactionId(shareTransactionId)
+            .build();
         this.glJournalEntryRepository.saveAndFlush(journalEntry);
     }
 
@@ -829,9 +954,24 @@ public class AccountingProcessorHelper {
         final Long shareTransactionId = null;
         final boolean manualEntry = false;
         String modifiedTransactionId = PROVISIONING_TRANSACTION_IDENTIFIER + provisioningentryId;
-        final JournalEntry journalEntry = JournalEntry.createNew(office, paymentDetail, account, currencyCode, modifiedTransactionId,
-                manualEntry, transactionDate, JournalEntryType.DEBIT, amount, null, PortfolioProductType.PROVISIONING.getValue(),
-                provisioningentryId, null, loanTransaction, savingsAccountTransaction, clientTransaction, shareTransactionId);
+
+        final JournalEntry journalEntry = JournalEntry.builder()
+            .office(office)
+            .paymentDetail(paymentDetail)
+            .glAccount(account)
+            .currencyCode(currencyCode)
+            .transactionId(modifiedTransactionId)
+            .manualEntry(manualEntry)
+            .transactionDate(transactionDate)
+            .type(JournalEntryType.DEBIT.getValue())
+            .amount(amount)
+            .entityType(PortfolioProductType.PROVISIONING.getValue())
+            .entityId(provisioningentryId)
+            .loanTransaction(loanTransaction)
+            .savingsTransaction(savingsAccountTransaction)
+            .clientTransaction(clientTransaction)
+            .shareTransactionId(shareTransactionId)
+            .build();
         this.glJournalEntryRepository.saveAndFlush(journalEntry);
     }
 
@@ -844,9 +984,23 @@ public class AccountingProcessorHelper {
         final Long shareTransactionId = null;
         final boolean manualEntry = false;
         String modifiedTransactionId = PROVISIONING_TRANSACTION_IDENTIFIER + provisioningentryId;
-        final JournalEntry journalEntry = JournalEntry.createNew(office, paymentDetail, account, currencyCode, modifiedTransactionId,
-                manualEntry, transactionDate, JournalEntryType.CREDIT, amount, null, PortfolioProductType.PROVISIONING.getValue(),
-                provisioningentryId, null, loanTransaction, savingsAccountTransaction, clientTransaction, shareTransactionId);
+        final JournalEntry journalEntry = JournalEntry.builder()
+            .office(office)
+            .paymentDetail(paymentDetail)
+            .glAccount(account)
+            .currencyCode(currencyCode)
+            .transactionId(modifiedTransactionId)
+            .manualEntry(manualEntry)
+            .transactionDate(transactionDate)
+            .type(JournalEntryType.CREDIT.getValue())
+            .amount(amount)
+            .entityType(PortfolioProductType.PROVISIONING.getValue())
+            .entityId(provisioningentryId)
+            .loanTransaction(loanTransaction)
+            .savingsTransaction(savingsAccountTransaction)
+            .clientTransaction(clientTransaction)
+            .shareTransactionId(shareTransactionId)
+            .build();
         this.glJournalEntryRepository.saveAndFlush(journalEntry);
     }
 
@@ -864,9 +1018,24 @@ public class AccountingProcessorHelper {
             loanTransaction = this.loanTransactionRepository.findById(id).orElse(null);
             modifiedTransactionId = LOAN_TRANSACTION_IDENTIFIER + transactionId;
         }
-        final JournalEntry journalEntry = JournalEntry.createNew(office, paymentDetail, account, currencyCode, modifiedTransactionId,
-                manualEntry, transactionDate, JournalEntryType.DEBIT, amount, null, PortfolioProductType.LOAN.getValue(), loanId, null,
-                loanTransaction, savingsAccountTransaction, clientTransaction, shareTransactionId);
+
+        final JournalEntry journalEntry = JournalEntry.builder()
+            .office(office)
+            .paymentDetail(paymentDetail)
+            .glAccount(account)
+            .currencyCode(currencyCode)
+            .transactionId(modifiedTransactionId)
+            .manualEntry(manualEntry)
+            .transactionDate(transactionDate)
+            .type(JournalEntryType.DEBIT.getValue())
+            .amount(amount)
+            .entityType(PortfolioProductType.LOAN.getValue())
+            .entityId(loanId)
+            .loanTransaction(loanTransaction)
+            .savingsTransaction(savingsAccountTransaction)
+            .clientTransaction(clientTransaction)
+            .shareTransactionId(shareTransactionId)
+            .build();
         this.glJournalEntryRepository.saveAndFlush(journalEntry);
     }
 
@@ -884,9 +1053,24 @@ public class AccountingProcessorHelper {
             savingsAccountTransaction = this.savingsAccountTransactionRepository.findById(id).orElse(null);
             modifiedTransactionId = SAVINGS_TRANSACTION_IDENTIFIER + transactionId;
         }
-        final JournalEntry journalEntry = JournalEntry.createNew(office, paymentDetail, account, currencyCode, modifiedTransactionId,
-                manualEntry, transactionDate, JournalEntryType.DEBIT, amount, null, PortfolioProductType.SAVING.getValue(), savingsId,
-                null, loanTransaction, savingsAccountTransaction, clientTransaction, shareTransactionId);
+
+        final JournalEntry journalEntry = JournalEntry.builder()
+            .office(office)
+            .paymentDetail(paymentDetail)
+            .glAccount(account)
+            .currencyCode(currencyCode)
+            .transactionId(modifiedTransactionId)
+            .manualEntry(manualEntry)
+            .transactionDate(transactionDate)
+            .type(JournalEntryType.DEBIT.getValue())
+            .amount(amount)
+            .entityType(PortfolioProductType.SAVING.getValue())
+            .entityId(savingsId)
+            .loanTransaction(loanTransaction)
+            .savingsTransaction(savingsAccountTransaction)
+            .clientTransaction(clientTransaction)
+            .shareTransactionId(shareTransactionId)
+            .build();
         this.glJournalEntryRepository.saveAndFlush(journalEntry);
     }
 
@@ -900,12 +1084,25 @@ public class AccountingProcessorHelper {
         final Long shareTransactionId = null;
 
         clientTransaction = this.clientTransactionRepository.findOneWithNotFoundDetection(clientId, transactionId);
-        String modifiedTransactionId = transactionId.toString();
-        modifiedTransactionId = CLIENT_TRANSACTION_IDENTIFIER + transactionId;
+        String modifiedTransactionId = CLIENT_TRANSACTION_IDENTIFIER + transactionId;
 
-        final JournalEntry journalEntry = JournalEntry.createNew(office, paymentDetail, account, currencyCode, modifiedTransactionId,
-                manualEntry, transactionDate, JournalEntryType.DEBIT, amount, null, PortfolioProductType.CLIENT.getValue(), clientId, null,
-                loanTransaction, savingsAccountTransaction, clientTransaction, shareTransactionId);
+        final JournalEntry journalEntry = JournalEntry.builder()
+            .office(office)
+            .paymentDetail(paymentDetail)
+            .glAccount(account)
+            .currencyCode(currencyCode)
+            .transactionId(modifiedTransactionId)
+            .manualEntry(manualEntry)
+            .transactionDate(transactionDate)
+            .type(JournalEntryType.DEBIT.getValue())
+            .amount(amount)
+            .entityType(PortfolioProductType.CLIENT.getValue())
+            .entityId(clientId)
+            .loanTransaction(loanTransaction)
+            .savingsTransaction(savingsAccountTransaction)
+            .clientTransaction(clientTransaction)
+            .shareTransactionId(shareTransactionId)
+            .build();
         this.glJournalEntryRepository.saveAndFlush(journalEntry);
     }
 
@@ -1018,9 +1215,24 @@ public class AccountingProcessorHelper {
             shareTransactionId = Long.parseLong(transactionId);
             modifiedTransactionId = SHARE_TRANSACTION_IDENTIFIER + transactionId;
         }
-        final JournalEntry journalEntry = JournalEntry.createNew(office, paymentDetail, account, currencyCode, modifiedTransactionId,
-                manualEntry, transactionDate, JournalEntryType.DEBIT, amount, null, PortfolioProductType.SHARES.getValue(), shareAccountId,
-                null, loanTransaction, savingsAccountTransaction, clientTransaction, shareTransactionId);
+
+        final JournalEntry journalEntry = JournalEntry.builder()
+            .office(office)
+            .paymentDetail(paymentDetail)
+            .glAccount(account)
+            .currencyCode(currencyCode)
+            .transactionId(modifiedTransactionId)
+            .manualEntry(manualEntry)
+            .transactionDate(transactionDate)
+            .type(JournalEntryType.DEBIT.getValue())
+            .amount(amount)
+            .entityType(PortfolioProductType.SHARES.getValue())
+            .entityId(shareAccountId)
+            .loanTransaction(loanTransaction)
+            .savingsTransaction(savingsAccountTransaction)
+            .clientTransaction(clientTransaction)
+            .shareTransactionId(shareTransactionId)
+            .build();
         this.glJournalEntryRepository.save(journalEntry);
     }
 
@@ -1037,9 +1249,24 @@ public class AccountingProcessorHelper {
             shareTransactionId = Long.parseLong(transactionId);
             modifiedTransactionId = SHARE_TRANSACTION_IDENTIFIER + transactionId;
         }
-        final JournalEntry journalEntry = JournalEntry.createNew(office, paymentDetail, account, currencyCode, modifiedTransactionId,
-                manualEntry, transactionDate, JournalEntryType.CREDIT, amount, null, PortfolioProductType.SHARES.getValue(),
-                shareAccountId, null, loanTransaction, savingsAccountTransaction, clientTransaction, shareTransactionId);
+
+        final JournalEntry journalEntry = JournalEntry.builder()
+            .office(office)
+            .paymentDetail(paymentDetail)
+            .glAccount(account)
+            .currencyCode(currencyCode)
+            .transactionId(modifiedTransactionId)
+            .manualEntry(manualEntry)
+            .transactionDate(transactionDate)
+            .type(JournalEntryType.CREDIT.getValue())
+            .amount(amount)
+            .entityType(PortfolioProductType.SHARES.getValue())
+            .entityId(shareAccountId)
+            .loanTransaction(loanTransaction)
+            .savingsTransaction(savingsAccountTransaction)
+            .clientTransaction(clientTransaction)
+            .shareTransactionId(shareTransactionId)
+            .build();
         this.glJournalEntryRepository.save(journalEntry);
     }
 

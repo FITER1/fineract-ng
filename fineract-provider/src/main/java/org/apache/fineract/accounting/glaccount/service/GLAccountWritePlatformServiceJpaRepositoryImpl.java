@@ -130,7 +130,7 @@ public class GLAccountWritePlatformServiceJpaRepositoryImpl implements GLAccount
                 if (tagIdLongValue != null) {
                     tagID = retrieveTagId(tagIdLongValue, accountType);
                 }
-                glAccount.updateTagId(tagID);
+                glAccount.setTagId(tagID);
             }
 
             /**

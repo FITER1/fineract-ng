@@ -99,21 +99,20 @@ public class GLAccountReadPlatformServiceImpl implements GLAccountReadPlatformSe
             if (associationParametersData.isRunningBalanceRequired()) {
                 organizationRunningBalance = rs.getLong("organizationRunningBalance");
             }
-            return new GLAccountData(
-                id,
-                name,
-                parentId,
-                glCode,
-                disabled,
-                manualEntriesAllowed,
-                accountType,
-                usage,
-                description,
-                nameDecorated,
-                tagId,
-                organizationRunningBalance,
-                null, null, null, null, null, null, null, null, null, null, null, null
-            );
+            return GLAccountData.builder()
+                .id(id)
+                .name(name)
+                .parentId(parentId)
+                .glCode(glCode)
+                .disabled(disabled)
+                .manualEntriesAllowed(manualEntriesAllowed)
+                .type(accountType)
+                .usage(usage)
+                .description(description)
+                .nameDecorated(nameDecorated)
+                .tagId(tagId)
+                .organizationRunningBalance(organizationRunningBalance)
+                .build();
         }
     }
 

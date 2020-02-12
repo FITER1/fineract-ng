@@ -471,7 +471,11 @@ public class Charge extends AbstractPersistableCustom<Long> {
         final EnumOptionData feeFrequencyType = ChargeEnumerations.chargePaymentMode(this.feeFrequency);
         GLAccountData accountData = null;
         if (account != null) {
-            accountData = new GLAccountData(account.getId(), account.getName(), account.getGlCode());
+            accountData = GLAccountData.builder()
+                .id(account.getId())
+                .name(account.getName())
+                .glCode(account.getGlCode())
+                .build();
         }
         TaxGroupData taxGroupData = null;
         if (this.taxGroup != null) {

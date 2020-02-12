@@ -18,21 +18,21 @@
  */
 package org.apache.fineract.accounting.financialactivityaccount.data;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 
 import java.util.List;
 import java.util.Map;
 
+@Builder
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class FinancialActivityAccountData {
-    private final Long id;
-    private final FinancialActivityData financialActivityData;
-    private final GLAccountData glAccountData;
+    private Long id;
+    private FinancialActivityData financialActivityData;
+    private GLAccountData glAccountData;
     private Map<String, List<GLAccountData>> glAccountOptions;
     private List<FinancialActivityData> financialActivityOptions;
 }

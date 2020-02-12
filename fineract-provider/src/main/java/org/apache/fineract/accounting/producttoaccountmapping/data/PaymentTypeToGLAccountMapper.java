@@ -18,19 +18,16 @@
  */
 package org.apache.fineract.accounting.producttoaccountmapping.data;
 
+import lombok.*;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class PaymentTypeToGLAccountMapper {
-
-    @SuppressWarnings("unused")
-    private final PaymentTypeData paymentType;
-    @SuppressWarnings("unused")
-    private final GLAccountData fundSourceAccount;
-
-    public PaymentTypeToGLAccountMapper(final PaymentTypeData paymentType, final GLAccountData fundSourceAccount) {
-        this.paymentType = paymentType;
-        this.fundSourceAccount = fundSourceAccount;
-    }
-
+    private PaymentTypeData paymentType;
+    private GLAccountData fundSourceAccount;
 }

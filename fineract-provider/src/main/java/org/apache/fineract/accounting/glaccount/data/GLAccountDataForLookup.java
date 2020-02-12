@@ -18,17 +18,17 @@
  */
 package org.apache.fineract.accounting.glaccount.data;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
+@Builder
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class GLAccountDataForLookup {
-    private final Long id;
+    private Long id;
 
-    private final String name;
+    private String name;
 
-    private final String glCode;
+    private String glCode;
 }

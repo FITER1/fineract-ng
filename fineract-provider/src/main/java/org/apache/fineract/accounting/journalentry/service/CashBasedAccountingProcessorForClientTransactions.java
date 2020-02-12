@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.closure.domain.GLClosure;
 import org.apache.fineract.accounting.journalentry.data.ClientTransactionDTO;
 import org.apache.fineract.organisation.office.domain.Office;
+import org.apache.fineract.portfolio.client.domain.ClientTransactionType;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -42,7 +43,7 @@ public class CashBasedAccountingProcessorForClientTransactions implements Accoun
             this.helper.checkForBranchClosures(latestGLClosure, transactionDate);
 
             /** Handle client payments **/
-            if (clientTransactionDTO.isChargePayment()) {
+            if (ClientTransactionType.PAY_CHARGE.getValue().equals(clientTransactionDTO.getTransactionType().getId().intValue())) {
                 createJournalEntriesForChargePayments(clientTransactionDTO, office);
             }
         }
