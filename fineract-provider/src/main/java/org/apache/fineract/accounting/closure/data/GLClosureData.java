@@ -18,9 +18,7 @@
  */
 package org.apache.fineract.accounting.closure.data;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.apache.fineract.organisation.office.data.OfficeData;
 import org.joda.time.LocalDate;
 
@@ -33,34 +31,36 @@ import java.util.Collection;
  * Note: no getter/setters required as google-gson will produce json from fields
  * of object.
  */
+@Builder
 @Data
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode
 public class GLClosureData {
 
-    private final Long id;
+    private Long id;
 
-    private final Long officeId;
+    private Long officeId;
 
-    private final String officeName;
+    private String officeName;
 
-    private final LocalDate closingDate;
+    private LocalDate closingDate;
 
-    private final boolean deleted;
+    private boolean deleted;
 
-    private final LocalDate createdDate;
+    private LocalDate createdDate;
 
-    private final LocalDate lastUpdatedDate;
+    private LocalDate lastUpdatedDate;
 
-    private final Long createdByUserId;
+    private Long createdByUserId;
 
-    private final String createdByUsername;
+    private String createdByUsername;
 
-    private final Long lastUpdatedByUserId;
+    private Long lastUpdatedByUserId;
 
-    private final String lastUpdatedByUsername;
+    private String lastUpdatedByUsername;
 
-    private final String comments;
+    private String comments;
 
     private Collection<OfficeData> allowedOffices = new ArrayList<>();
 }

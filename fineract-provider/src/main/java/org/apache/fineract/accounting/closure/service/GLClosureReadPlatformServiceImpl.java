@@ -47,37 +47,40 @@ public class GLClosureReadPlatformServiceImpl implements GLClosureReadPlatformSe
             glClosures = glClosureRepository.findAllByDeleted(false, Sort.by(Sort.Direction.ASC, "closingDate"));
         }
 
-        return glClosures.stream().map(glClosure -> new GLClosureData(
-            glClosure.getId(),
-            glClosure.getOffice().getId(),
-            glClosure.getOffice().getName(),
-            new LocalDate(glClosure.getClosingDate().getTime()),
-            glClosure.isDeleted(),
-            glClosure.getCreatedDate().isPresent() ? new LocalDate(glClosure.getCreatedDate().get().toEpochMilli()) : null,
-            glClosure.getLastModifiedDate().isPresent() ? new LocalDate(glClosure.getLastModifiedDate().get().toEpochMilli()) : null,
-            glClosure.getCreatedBy().isPresent() ? glClosure.getCreatedBy().get().getId() : null,
-            glClosure.getCreatedBy().isPresent() ? glClosure.getCreatedBy().get().getUsername() : null,
-            glClosure.getLastModifiedBy().isPresent() ? glClosure.getLastModifiedBy().get().getId() : null,
-            glClosure.getLastModifiedBy().get().getUsername(),
-            glClosure.getComments())).collect(Collectors.toList());
+        // TODO: use Mapstruct!
+        return glClosures.stream().map(glClosure -> GLClosureData.builder()
+            .id(glClosure.getId())
+            .officeId(glClosure.getOffice().getId())
+            .officeName(glClosure.getOffice().getName())
+            .closingDate(new LocalDate(glClosure.getClosingDate().getTime()))
+            .deleted(glClosure.isDeleted())
+            .createdDate(glClosure.getCreatedDate().isPresent() ? new LocalDate(glClosure.getCreatedDate().get().toEpochMilli()) : null)
+            .lastUpdatedDate(glClosure.getLastModifiedDate().isPresent() ? new LocalDate(glClosure.getLastModifiedDate().get().toEpochMilli()) : null)
+            .createdByUserId(glClosure.getCreatedBy().isPresent() ? glClosure.getCreatedBy().get().getId() : null)
+            .createdByUsername(glClosure.getCreatedBy().isPresent() ? glClosure.getCreatedBy().get().getUsername() : null)
+            .lastUpdatedByUserId(glClosure.getLastModifiedBy().isPresent() ? glClosure.getLastModifiedBy().get().getId() : null)
+            .lastUpdatedByUsername(glClosure.getLastModifiedBy().get().getUsername())
+            .comments(glClosure.getComments()).build())
+            .collect(Collectors.toList());
     }
 
     @Override
     public GLClosureData retrieveGLClosureById(final long glClosureId) {
         try {
-            return glClosureRepository.findById(glClosureId).map(glClosure -> new GLClosureData(
-                glClosure.getId(),
-                glClosure.getOffice().getId(),
-                glClosure.getOffice().getName(),
-                new LocalDate(glClosure.getClosingDate().getTime()),
-                glClosure.isDeleted(),
-                glClosure.getCreatedDate().isPresent() ? new LocalDate(glClosure.getCreatedDate().get().toEpochMilli()) : null,
-                glClosure.getLastModifiedDate().isPresent() ? new LocalDate(glClosure.getLastModifiedDate().get().toEpochMilli()) : null,
-                glClosure.getCreatedBy().isPresent() ? glClosure.getCreatedBy().get().getId() : null,
-                glClosure.getCreatedBy().isPresent() ? glClosure.getCreatedBy().get().getUsername() : null,
-                glClosure.getLastModifiedBy().isPresent() ? glClosure.getLastModifiedBy().get().getId() : null,
-                glClosure.getLastModifiedBy().isPresent() ? glClosure.getLastModifiedBy().get().getUsername() : null,
-                glClosure.getComments())).orElse(null);
+            // TODO: use Mapstruct!
+            return glClosureRepository.findById(glClosureId).map(glClosure -> GLClosureData.builder()
+                .id(glClosure.getId())
+                .officeId(glClosure.getOffice().getId())
+                .officeName(glClosure.getOffice().getName())
+                .closingDate(new LocalDate(glClosure.getClosingDate().getTime()))
+                .deleted(glClosure.isDeleted())
+                .createdDate(glClosure.getCreatedDate().isPresent() ? new LocalDate(glClosure.getCreatedDate().get().toEpochMilli()) : null)
+                .lastUpdatedDate(glClosure.getLastModifiedDate().isPresent() ? new LocalDate(glClosure.getLastModifiedDate().get().toEpochMilli()) : null)
+                .createdByUserId(glClosure.getCreatedBy().isPresent() ? glClosure.getCreatedBy().get().getId() : null)
+                .createdByUsername(glClosure.getCreatedBy().isPresent() ? glClosure.getCreatedBy().get().getUsername() : null)
+                .lastUpdatedByUserId(glClosure.getLastModifiedBy().isPresent() ? glClosure.getLastModifiedBy().get().getId() : null)
+                .lastUpdatedByUsername(glClosure.getLastModifiedBy().get().getUsername())
+                .comments(glClosure.getComments()).build()).orElse(null);
         } catch (final EmptyResultDataAccessException e) {
             throw new GLClosureNotFoundException(glClosureId);
         }

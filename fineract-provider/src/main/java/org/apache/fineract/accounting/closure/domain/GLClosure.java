@@ -19,7 +19,6 @@
 package org.apache.fineract.accounting.closure.domain;
 
 import lombok.*;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.closure.api.GLClosureJsonInputParams;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
@@ -55,28 +54,27 @@ public class GLClosure extends AbstractAuditableCustom<AppUser, Long> {
     @Column(name = "comments", nullable = true, length = 500)
     private String comments;
 
-    public GLClosure(final Office office, final Date closingDate, final String comments) {
-        this.office = office;
-        this.deleted = false;
-        this.closingDate = closingDate;
-        this.comments = StringUtils.defaultIfEmpty(comments, null);
-        if (this.comments != null) {
-            this.comments = this.comments.trim();
-        }
-    }
-
+    @Deprecated
     public static GLClosure fromJson(final Office office, final JsonCommand command) {
         final Date closingDate = command.DateValueOfParameterNamed(GLClosureJsonInputParams.CLOSING_DATE.getValue());
         final String comments = command.stringValueOfParameterNamed(GLClosureJsonInputParams.COMMENTS.getValue());
-        return new GLClosure(office, closingDate, comments);
+
+        // TODO: use Mapstruct!
+        return GLClosure.builder()
+            .office(office)
+            .closingDate(closingDate)
+            .comments(comments)
+            .build();
     }
 
+    @Deprecated
     public Map<String, Object> update(final JsonCommand command) {
         final Map<String, Object> actualChanges = new LinkedHashMap<>(5);
         handlePropertyUpdate(command, actualChanges, GLClosureJsonInputParams.COMMENTS.getValue(), this.comments);
         return actualChanges;
     }
 
+    @Deprecated
     private void handlePropertyUpdate(final JsonCommand command, final Map<String, Object> actualChanges, final String paramName, final String propertyToBeUpdated) {
         if (command.isChangeInStringParameterNamed(paramName, propertyToBeUpdated)) {
             final String newValue = command.stringValueOfParameterNamed(paramName);

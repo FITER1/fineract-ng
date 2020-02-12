@@ -55,14 +55,4 @@ public class TrialBalance extends AbstractPersistableCustom<Long> {
 
     @Column(name = "closing_balance", nullable = false)
     private BigDecimal closingBalance;
-
-    public static TrialBalance getInstance(final Long officeId, final Long glAccountId, final BigDecimal amount, final Date entryDate, final Date transactionDate) {
-        return TrialBalance.builder()
-            .officeId(officeId)
-            .glAccountId(glAccountId)
-            .amount(amount)
-            .entryDate(entryDate)
-            .transactionDate(transactionDate)
-            .build();
-    }
 }

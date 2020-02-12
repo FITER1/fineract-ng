@@ -40,18 +40,11 @@ public class FinancialActivityAccount extends AbstractPersistableCustom<Long> {
     @Column(name = "financial_activity_type", nullable = false)
     private Integer financialActivityType;
 
+    @Deprecated
     public static FinancialActivityAccount createNew(final GLAccount glAccount, final Integer financialAccountType) {
         return FinancialActivityAccount.builder()
             .glAccount(glAccount)
             .financialActivityType(financialAccountType)
             .build();
-    }
-
-    public void updateGlAccount(final GLAccount glAccount) {
-        this.glAccount = glAccount;
-    }
-
-    public void updateFinancialActivityType(final Integer financialActivityType) {
-        this.financialActivityType = financialActivityType;
     }
 }

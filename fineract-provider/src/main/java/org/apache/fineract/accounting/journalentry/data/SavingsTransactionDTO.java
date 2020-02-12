@@ -18,101 +18,35 @@
  */
 package org.apache.fineract.accounting.journalentry.data;
 
+import lombok.*;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountTransactionEnumData;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class SavingsTransactionDTO {
-
-    private final Long officeId;
-    private final String transactionId;
-    private final Date transactionDate;
-    private final Long paymentTypeId;
-    private final SavingsAccountTransactionEnumData transactionType;
-
-    private final BigDecimal amount;
-    private final BigDecimal overdraftAmount;
-
+    private Long officeId;
+    private String transactionId;
+    private Date transactionDate;
+    private Long paymentTypeId;
+    private SavingsAccountTransactionEnumData transactionType;
+    private BigDecimal amount;
+    private BigDecimal overdraftAmount;
     /*** Boolean values determines if the transaction is reversed ***/
-    private final boolean reversed;
-
+    private boolean reversed;
     /** Breakdowns of fees and penalties this Transaction pays **/
-    private final List<ChargePaymentDTO> penaltyPayments;
-    private final List<ChargePaymentDTO> feePayments;
-    private final List<TaxPaymentDTO> taxPayments;
-
-    private final boolean isAccountTransfer;
-
-    public SavingsTransactionDTO(final Long officeId, final Long paymentTypeId, final String transactionId, final Date transactionDate,
-            final SavingsAccountTransactionEnumData transactionType, final BigDecimal amount, final boolean reversed,
-            final List<ChargePaymentDTO> feePayments, final List<ChargePaymentDTO> penaltyPayments, final BigDecimal overdraftAmount,
-            boolean isAccountTransfer, final List<TaxPaymentDTO> taxPayments) {
-        this.paymentTypeId = paymentTypeId;
-        this.transactionId = transactionId;
-        this.transactionDate = transactionDate;
-        this.amount = amount;
-        this.reversed = reversed;
-        this.transactionType = transactionType;
-        this.feePayments = feePayments;
-        this.penaltyPayments = penaltyPayments;
-        this.officeId = officeId;
-        this.overdraftAmount = overdraftAmount;
-        this.isAccountTransfer = isAccountTransfer;
-        this.taxPayments = taxPayments;
-    }
-
-    public Long getOfficeId() {
-        return this.officeId;
-    }
-
-    public String getTransactionId() {
-        return this.transactionId;
-    }
-
-    public Date getTransactionDate() {
-        return this.transactionDate;
-    }
-
-    public Long getPaymentTypeId() {
-        return this.paymentTypeId;
-    }
-
-    public SavingsAccountTransactionEnumData getTransactionType() {
-        return this.transactionType;
-    }
-
-    public BigDecimal getAmount() {
-        return this.amount;
-    }
-
-    public boolean isReversed() {
-        return this.reversed;
-    }
-
-    public List<ChargePaymentDTO> getPenaltyPayments() {
-        return this.penaltyPayments;
-    }
-
-    public List<ChargePaymentDTO> getFeePayments() {
-        return this.feePayments;
-    }
-
-    public BigDecimal getOverdraftAmount() {
-        return this.overdraftAmount;
-    }
+    private List<ChargePaymentDTO> penaltyPayments;
+    private List<ChargePaymentDTO> feePayments;
+    private List<TaxPaymentDTO> taxPayments;
+    private boolean isAccountTransfer;
 
     public boolean isOverdraftTransaction() {
         return this.overdraftAmount != null && this.overdraftAmount.doubleValue() > 0;
     }
-
-    public boolean isAccountTransfer() {
-        return this.isAccountTransfer;
-    }
-
-    public List<TaxPaymentDTO> getTaxPayments() {
-        return this.taxPayments;
-    }
-
 }

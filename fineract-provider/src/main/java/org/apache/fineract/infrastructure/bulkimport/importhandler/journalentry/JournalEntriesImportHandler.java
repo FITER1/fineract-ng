@@ -98,13 +98,11 @@ public class JournalEntriesImportHandler implements ImportHandler {
 
                         if (creditGLAcct!=null) {
 
-                            CreditDebit credit = new CreditDebit(
-                                    glAccountIdCredit, creditAmt);
+                            CreditDebit credit = new CreditDebit(glAccountIdCredit, creditAmt);
                             journalEntry.addCredits(credit);
                         }
                         if (debitGLAcct!=null) {
-                            CreditDebit debit = new CreditDebit(
-                                    glAccountIdDebit, debitAmount);
+                            CreditDebit debit = new CreditDebit(glAccountIdDebit, debitAmount);
 
                             journalEntry.addDebits(debit);
                         }
@@ -175,9 +173,23 @@ public class JournalEntriesImportHandler implements ImportHandler {
         String bankNo=ImportHandlerUtils.readAsString(JournalEntryConstants.BANK_NO_COL,row);
         String comments=ImportHandlerUtils.readAsString(JournalEntryConstants.COMMENTS_COL,row);
 
-        return JournalEntryData.importInstance(officeId, transactionDate, currencyCode,
-                paymentTypeId, row.getRowNum(), credits, debits,accountNo,chequeNo,routingCode,receiptNo,bankNo,comments,locale,dateFormat);
-
+        return JournalEntryData.builder()
+            .officeId(officeId)
+            .transactionDate(transactionDate)
+            .currencyCode(currencyCode)
+            .paymentTypeId(paymentTypeId)
+            .rowIndex(row.getRowNum())
+            .credits(credits)
+            .debits(debits)
+            .accountNumber(accountNo)
+            .checkNumber(chequeNo)
+            .routingCode(routingCode)
+            .receiptNumber(receiptNo)
+            .bankNumber(bankNo)
+            .comments(comments)
+            .locale(locale)
+            .dateFormat(dateFormat)
+            .build();
     }
 
     public Count importEntity(String dateFormat) {

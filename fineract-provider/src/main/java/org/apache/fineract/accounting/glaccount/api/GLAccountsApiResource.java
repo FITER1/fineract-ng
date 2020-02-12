@@ -208,9 +208,32 @@ public class GLAccountsApiResource {
         final Collection<CodeValueData> allowedExpensesTagOptions = this.codeValueReadPlatformService
                 .retrieveCodeValuesByCode(AccountingConstants.EXPENSES_TAG_OPTION_CODE_NAME);
 
-        return new GLAccountData(glAccountData, accountTypeOptions, usageOptions, assetHeaderAccountOptions, liabilityHeaderAccountOptions,
-                equityHeaderAccountOptions, incomeHeaderAccountOptions, expenseHeaderAccountOptions, allowedAssetsTagOptions,
-                allowedLiabilitiesTagOptions, allowedEquityTagOptions, allowedIncomeTagOptions, allowedExpensesTagOptions);
+        return GLAccountData.builder()
+            .id(glAccountData.getId())
+            .name(glAccountData.getName())
+            .parentId(glAccountData.getParentId())
+            .glCode(glAccountData.getGlCode())
+            .disabled(glAccountData.getDisabled())
+            .manualEntriesAllowed(glAccountData.getManualEntriesAllowed())
+            .type(glAccountData.getType())
+            .usage(glAccountData.getUsage())
+            .description(glAccountData.getDescription())
+            .nameDecorated(glAccountData.getNameDecorated())
+            .tagId(glAccountData.getTagId())
+            .organizationRunningBalance(glAccountData.getOrganizationRunningBalance())
+            .accountTypeOptions(accountTypeOptions)
+            .usageOptions(usageOptions)
+            .assetHeaderAccountOptions(assetHeaderAccountOptions)
+            .liabilityHeaderAccountOptions(liabilityHeaderAccountOptions)
+            .equityHeaderAccountOptions(equityHeaderAccountOptions)
+            .incomeHeaderAccountOptions(incomeHeaderAccountOptions)
+            .expenseHeaderAccountOptions(expenseHeaderAccountOptions)
+            .allowedAssetsTagOptions(allowedAssetsTagOptions)
+            .allowedLiabilitiesTagOptions(allowedLiabilitiesTagOptions)
+            .allowedEquityTagOptions(allowedEquityTagOptions)
+            .allowedIncomeTagOptions(allowedIncomeTagOptions)
+            .allowedExpensesTagOptions(allowedExpensesTagOptions)
+            .build();
     }
 
     private List<GLAccountData> defaultIfEmpty(final List<GLAccountData> list) {

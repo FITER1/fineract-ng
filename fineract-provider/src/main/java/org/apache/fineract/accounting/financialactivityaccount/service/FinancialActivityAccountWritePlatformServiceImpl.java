@@ -100,13 +100,13 @@ public class FinancialActivityAccountWritePlatformServiceImpl implements Financi
             if (changes.containsKey(FinancialActivityAccountsJsonInputParams.GL_ACCOUNT_ID.getValue())) {
                 final Long accountId = command.longValueOfParameterNamed(FinancialActivityAccountsJsonInputParams.GL_ACCOUNT_ID.getValue());
                 final GLAccount glAccount = glAccountRepositoryWrapper.findOneWithNotFoundDetection(accountId);
-                financialActivityAccount.updateGlAccount(glAccount);
+                financialActivityAccount.setGlAccount(glAccount);
             }
 
             if (changes.containsKey(FinancialActivityAccountsJsonInputParams.FINANCIAL_ACTIVITY_ID.getValue())) {
                 final Integer financialActivityId = command
                         .integerValueSansLocaleOfParameterNamed(FinancialActivityAccountsJsonInputParams.FINANCIAL_ACTIVITY_ID.getValue());
-                financialActivityAccount.updateFinancialActivityType(financialActivityId);
+                financialActivityAccount.setFinancialActivityType(financialActivityId);
             }
 
             if (!changes.isEmpty()) {

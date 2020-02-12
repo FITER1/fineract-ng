@@ -276,8 +276,14 @@ public class JournalEntryRunningBalanceUpdateServiceImpl implements JournalEntry
             final int entryTypeId = JdbcSupport.getInteger(rs, "entryType");
             final EnumOptionData entryType = AccountingEnumerations.journalEntryType(entryTypeId);
 
-            return new JournalEntryData(id, officeId, null, null, glAccountId, null, accountType, null, entryType, amount, null, null,
-                    null, null, null, null, null, null, null, null, null, null, null, null, null);
+            return JournalEntryData.builder()
+                .id(id)
+                .glAccountId(glAccountId)
+                .officeId(officeId)
+                .glAccountType(accountType)
+                .entryType(entryType)
+                .amount(amount)
+                .build();
         }
     }
 

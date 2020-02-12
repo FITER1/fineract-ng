@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.accounting.journalentry.domain;
 
-import org.apache.commons.lang3.StringUtils;
+import lombok.*;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
 import org.apache.fineract.organisation.office.domain.Office;
@@ -32,6 +32,11 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "acc_gl_journal_entry")
 public class JournalEntry extends AbstractAuditableCustom<AppUser, Long> {
@@ -101,120 +106,7 @@ public class JournalEntry extends AbstractAuditableCustom<AppUser, Long> {
     @Column(name = "ref_num")
     private String referenceNumber;
 
-    public static JournalEntry createNew(final Office office, final PaymentDetail paymentDetail, final GLAccount glAccount,
-            final String currencyCode, final String transactionId, final boolean manualEntry, final Date transactionDate,
-            final JournalEntryType journalEntryType, final BigDecimal amount, final String description, final Integer entityType,
-            final Long entityId, final String referenceNumber, final LoanTransaction loanTransaction,
-            final SavingsAccountTransaction savingsTransaction, final ClientTransaction clientTransaction, Long shareTransactionId) {
-        return new JournalEntry(office, paymentDetail, glAccount, currencyCode, transactionId, manualEntry, transactionDate,
-                journalEntryType.getValue(), amount, description, entityType, entityId, referenceNumber, loanTransaction,
-                savingsTransaction, clientTransaction, shareTransactionId);
-    }
-
-    protected JournalEntry() {
-        //
-    }
-
-    public JournalEntry(final Office office, final PaymentDetail paymentDetail, final GLAccount glAccount, final String currencyCode,
-            final String transactionId, final boolean manualEntry, final Date transactionDate, final Integer type, final BigDecimal amount,
-            final String description, final Integer entityType, final Long entityId, final String referenceNumber,
-            final LoanTransaction loanTransaction, final SavingsAccountTransaction savingsTransaction,
-            final ClientTransaction clientTransaction, final Long shareTransactionId) {
-        this.office = office;
-        this.glAccount = glAccount;
-        this.reversalJournalEntry = null;
-        this.transactionId = transactionId;
-        this.reversed = false;
-        this.manualEntry = manualEntry;
-        this.transactionDate = transactionDate;
-        this.type = type;
-        this.amount = amount;
-        this.description = StringUtils.defaultIfEmpty(description, null);
-        this.entityType = entityType;
-        this.entityId = entityId;
-        this.referenceNumber = referenceNumber;
-        this.currencyCode = currencyCode;
-        this.loanTransaction = loanTransaction;
-        this.savingsTransaction = savingsTransaction;
-        this.clientTransaction = clientTransaction;
-        this.paymentDetail = paymentDetail;
-        this.shareTransactionId = shareTransactionId;
-    }
-
     public boolean isDebitEntry() {
         return JournalEntryType.DEBIT.getValue().equals(this.type);
     }
-
-    public Integer getType() {
-        return this.type;
-    }
-
-    public Office getOffice() {
-        return this.office;
-    }
-
-    public GLAccount getGlAccount() {
-        return this.glAccount;
-    }
-
-    public Date getTransactionDate() {
-        return this.transactionDate;
-    }
-
-    public BigDecimal getAmount() {
-        return this.amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-    public void setReversalJournalEntry(final JournalEntry reversalJournalEntry) {
-        this.reversalJournalEntry = reversalJournalEntry;
-    }
-
-    public void setReversed(final boolean reversed) {
-        this.reversed = reversed;
-    }
-
-    public String getReferenceNumber() {
-        return this.referenceNumber;
-    }
-
-    public String getCurrencyCode() {
-        return this.currencyCode;
-    }
-
-    public LoanTransaction getLoanTransaction() {
-        return this.loanTransaction;
-    }
-
-    public SavingsAccountTransaction getSavingsTransaction() {
-        return this.savingsTransaction;
-    }
-
-    public PaymentDetail getPaymentDetails() {
-        return this.paymentDetail;
-    }
-
-    public String getTransactionId() {
-        return transactionId;
-    }
-
-    public ClientTransaction getClientTransaction() {
-        return this.clientTransaction;
-    }
-
-    public Long getEntityId() {
-        return this.entityId;
-    }
-
-    public Integer getEntityType() {
-        return this.entityType;
-    }
-
-    
-    public Long getShareTransactionId() {
-        return this.shareTransactionId;
-    }
-
 }

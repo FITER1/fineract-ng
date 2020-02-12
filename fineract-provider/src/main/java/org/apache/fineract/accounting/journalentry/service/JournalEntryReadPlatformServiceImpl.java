@@ -220,12 +220,41 @@ public class JournalEntryReadPlatformServiceImpl implements JournalEntryReadPlat
                             savingsTransactionType.getValue());
                 }
 
-                transactionDetailData = new TransactionDetailData(transaction, paymentDetailData, noteData, transactionTypeEnumData);
+                transactionDetailData = TransactionDetailData.builder()
+                    .transactionId(transaction)
+                    .paymentDetails(paymentDetailData)
+                    .noteData(noteData)
+                    .transactionType(transactionTypeEnumData)
+                    .build();
             }
-            return new JournalEntryData(id, officeId, officeName, glAccountName, glAccountId, glCode, accountType, transactionDate,
-                    entryType, amount, transactionId, manualEntry, entityType, entityId, createdByUserId, createdDate, createdByUserName,
-                    comments, reversed, referenceNumber, officeRunningBalance, organizationRunningBalance, runningBalanceComputed,
-                    transactionDetailData, currency);
+
+            return JournalEntryData.builder()
+                .id(id)
+                .officeId(officeId)
+                .officeName(officeName)
+                .glAccountName(glAccountName)
+                .glAccountId(glAccountId)
+                .glAccountCode(glCode)
+                .glAccountType(accountType)
+                .transactionDate(transactionDate)
+                .entryType(entryType)
+                .amount(amount)
+                .transactionId(transactionId)
+                .manualEntry(manualEntry)
+                .entityType(entityType)
+                .entityId(entityId)
+                .createdByUserId(createdByUserId)
+                .createdDate(createdDate)
+                .createdByUserName(createdByUserName)
+                .comments(comments)
+                .reversed(reversed)
+                .referenceNumber(referenceNumber)
+                .officeRunningBalance(officeRunningBalance)
+                .organizationRunningBalance(organizationRunningBalance)
+                .runningBalanceComputed(runningBalanceComputed)
+                .transactionDetails(transactionDetailData)
+                .currency(currency)
+                .build();
         }
     }
 
@@ -430,10 +459,17 @@ public class JournalEntryReadPlatformServiceImpl implements JournalEntryReadPlat
 
         final LocalDate transactionDate = DateUtils.getLocalDateOfTenant();
 
-        final OfficeOpeningBalancesData officeOpeningBalancesData = OfficeOpeningBalancesData.createNew(officeId, officeData.name(),
-                transactionDate, contraAccount, assetAccountOpeningBalances, liabityAccountOpeningBalances, incomeAccountOpeningBalances,
-                equityAccountOpeningBalances, expenseAccountOpeningBalances);
-        return officeOpeningBalancesData;
+        return OfficeOpeningBalancesData.builder()
+            .officeId(officeId)
+            .officeName(officeData.name())
+            .transactionDate(transactionDate)
+            .contraAccount(contraAccount)
+            .assetAccountOpeningBalances(assetAccountOpeningBalances)
+            .liabityAccountOpeningBalances(liabityAccountOpeningBalances)
+            .incomeAccountOpeningBalances(incomeAccountOpeningBalances)
+            .equityAccountOpeningBalances(equityAccountOpeningBalances)
+            .expenseAccountOpeningBalances(expenseAccountOpeningBalances)
+            .build();
     }
 
     private List<JournalEntryData> populateOpeningBalances(final List<JournalEntryData> existingOpeningBalanceTransactions,
@@ -461,7 +497,12 @@ public class JournalEntryReadPlatformServiceImpl implements JournalEntryReadPlat
 
         for (final GLAccountData glAccountData : glAccounts) {
             if (!contraId.equals(glAccountData.getId())) {
-                final JournalEntryData openingBalanceTransaction = JournalEntryData.fromGLAccountData(glAccountData);
+                final JournalEntryData openingBalanceTransaction = JournalEntryData.builder()
+                    .glAccountName(glAccountData.getName())
+                    .glAccountId(glAccountData.getId())
+                    .glAccountCode(glAccountData.getGlCode())
+                    .glAccountType(glAccountData.getType())
+                    .build();
                 openingBalanceTransactions.add(openingBalanceTransaction);
             }
         }

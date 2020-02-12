@@ -18,96 +18,30 @@
  */
 package org.apache.fineract.accounting.journalentry.data;
 
+import lombok.*;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.apache.fineract.portfolio.client.domain.ClientTransactionType;
 
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ClientTransactionDTO {
-
-    private final Long officeId;
-    private final Long clientId;
+    private Long officeId;
+    private Long clientId;
     private String currencyCode;
-
-    private final Long transactionId;
-    private final Date transactionDate;
-    private final Long paymentTypeId;
-    private final EnumOptionData transactionType;
-
-    private final BigDecimal amount;
-
-    private final Boolean accountingEnabled;
-
+    private Long transactionId;
+    private Date transactionDate;
+    private Long paymentTypeId;
+    private EnumOptionData transactionType;
+    private BigDecimal amount;
+    private Boolean accountingEnabled;
     /*** Boolean values determines if the transaction is reversed ***/
-    private final boolean reversed;
-
+    private boolean reversed;
     /** Breakdowns of fees this Transaction pays **/
-    private final List<ClientChargePaymentDTO> chargePayments;
-
-    public ClientTransactionDTO(final Long clientId, final Long officeId, final Long paymentTypeId, final Long transactionId,
-            final Date transactionDate, final EnumOptionData transactionType, final String currencyCode, final BigDecimal amount,
-            final boolean reversed, final boolean accountingEnabled, final List<ClientChargePaymentDTO> clientChargePayments) {
-        this.clientId = clientId;
-        this.paymentTypeId = paymentTypeId;
-        this.transactionId = transactionId;
-        this.transactionDate = transactionDate;
-        this.amount = amount;
-        this.reversed = reversed;
-        this.transactionType = transactionType;
-        this.chargePayments = clientChargePayments;
-        this.officeId = officeId;
-        this.accountingEnabled = accountingEnabled;
-        this.currencyCode = currencyCode;
-    }
-
-    public Long getOfficeId() {
-        return this.officeId;
-    }
-
-    public Date getTransactionDate() {
-        return this.transactionDate;
-    }
-
-    public BigDecimal getAmount() {
-        return this.amount;
-    }
-
-    public boolean isReversed() {
-        return this.reversed;
-    }
-
-    public Long getPaymentTypeId() {
-        return this.paymentTypeId;
-    }
-
-    public EnumOptionData getTransactionType() {
-        return transactionType;
-    }
-
-    public boolean isChargePayment() {
-        return ClientTransactionType.PAY_CHARGE.getValue().equals(new Integer(this.transactionType.getId().intValue()));
-    }
-
-    public String getCurrencyCode() {
-        return this.currencyCode;
-    }
-
-    public List<ClientChargePaymentDTO> getChargePayments() {
-        return this.chargePayments;
-    }
-
-    public Long getTransactionId() {
-        return this.transactionId;
-    }
-
-    public Boolean getAccountingEnabled() {
-        return this.accountingEnabled;
-    }
-
-    public Long getClientId() {
-        return this.clientId;
-    }
-
+    private List<ClientChargePaymentDTO> chargePayments;
 }

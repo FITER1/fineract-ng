@@ -337,7 +337,11 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
             final String glCode = rs.getString("glCode");
             GLAccountData glAccountData = null;
             if (glAccountId != null) {
-                glAccountData = new GLAccountData(glAccountId, glAccountName, glCode);
+                glAccountData = GLAccountData.builder()
+                    .id(glAccountId)
+                    .name(glAccountName)
+                    .glCode(glCode)
+                    .build();
             }
 
             final Long taxGroupId = JdbcSupport.getLong(rs, "taxGroupId");

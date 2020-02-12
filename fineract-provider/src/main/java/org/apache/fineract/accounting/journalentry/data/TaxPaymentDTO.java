@@ -18,30 +18,17 @@
  */
 package org.apache.fineract.accounting.journalentry.data;
 
+import lombok.*;
+
 import java.math.BigDecimal;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class TaxPaymentDTO {
-
-    private final Long creditAccountId;
-    private final Long debitAccountId;
-    private final BigDecimal amount;
-
-    public TaxPaymentDTO(final Long debitAccountId, final Long creditAccountId, final BigDecimal amount) {
-        this.debitAccountId = debitAccountId;
-        this.creditAccountId = creditAccountId;
-        this.amount = amount;
-    }
-
-    public Long getCreditAccountId() {
-        return this.creditAccountId;
-    }
-
-    public Long getDebitAccountId() {
-        return this.debitAccountId;
-    }
-
-    public BigDecimal getAmount() {
-        return this.amount;
-    }
-
+    private Long creditAccountId;
+    private Long debitAccountId;
+    private BigDecimal amount;
 }

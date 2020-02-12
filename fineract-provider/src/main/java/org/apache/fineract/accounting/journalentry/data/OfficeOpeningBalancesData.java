@@ -18,52 +18,25 @@
  */
 package org.apache.fineract.accounting.journalentry.data;
 
+import lombok.*;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.joda.time.LocalDate;
 
 import java.util.List;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class OfficeOpeningBalancesData {
-
-    @SuppressWarnings("unused")
-    private final Long officeId;
-    @SuppressWarnings("unused")
-    private final String officeName;
-    @SuppressWarnings("unused")
-    private final LocalDate transactionDate;
-    @SuppressWarnings("unused")
-    private final GLAccountData contraAccount;
-    @SuppressWarnings("unused")
-    private final List<JournalEntryData> assetAccountOpeningBalances;
-    @SuppressWarnings("unused")
-    private final List<JournalEntryData> liabityAccountOpeningBalances;
-    @SuppressWarnings("unused")
-    private final List<JournalEntryData> incomeAccountOpeningBalances;
-    @SuppressWarnings("unused")
-    private final List<JournalEntryData> equityAccountOpeningBalances;
-    @SuppressWarnings("unused")
-    private final List<JournalEntryData> expenseAccountOpeningBalances;
-
-    private OfficeOpeningBalancesData(final Long officeId, final String officeName, final LocalDate transactionDate,
-            final GLAccountData contraAccount, final List<JournalEntryData> assetAccountOpeningBalances,
-            final List<JournalEntryData> liabityAccountOpeningBalances, final List<JournalEntryData> incomeAccountOpeningBalances,
-            final List<JournalEntryData> equityAccountOpeningBalances, final List<JournalEntryData> expenseAccountOpeningBalances) {
-        this.officeId = officeId;
-        this.officeName = officeName;
-        this.transactionDate = transactionDate;
-        this.contraAccount = contraAccount;
-        this.assetAccountOpeningBalances = assetAccountOpeningBalances;
-        this.liabityAccountOpeningBalances = liabityAccountOpeningBalances;
-        this.incomeAccountOpeningBalances = incomeAccountOpeningBalances;
-        this.equityAccountOpeningBalances = equityAccountOpeningBalances;
-        this.expenseAccountOpeningBalances = expenseAccountOpeningBalances;
-    }
-
-    public static OfficeOpeningBalancesData createNew(final Long officeId, final String officeName, final LocalDate transactionDate,
-            final GLAccountData contraAccount, final List<JournalEntryData> assetAccountOpeningBalances,
-            final List<JournalEntryData> liabityAccountOpeningBalances, final List<JournalEntryData> incomeAccountOpeningBalances,
-            final List<JournalEntryData> equityAccountOpeningBalances, final List<JournalEntryData> expenseAccountOpeningBalances) {
-        return new OfficeOpeningBalancesData(officeId, officeName, transactionDate, contraAccount, assetAccountOpeningBalances,
-                liabityAccountOpeningBalances, incomeAccountOpeningBalances, equityAccountOpeningBalances, expenseAccountOpeningBalances);
-    }
+    private Long officeId;
+    private String officeName;
+    private LocalDate transactionDate;
+    private GLAccountData contraAccount;
+    private List<JournalEntryData> assetAccountOpeningBalances;
+    private List<JournalEntryData> liabityAccountOpeningBalances;
+    private List<JournalEntryData> incomeAccountOpeningBalances;
+    private List<JournalEntryData> equityAccountOpeningBalances;
+    private List<JournalEntryData> expenseAccountOpeningBalances;
 }

@@ -18,19 +18,16 @@
  */
 package org.apache.fineract.accounting.producttoaccountmapping.data;
 
+import lombok.*;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.portfolio.charge.data.ChargeData;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ChargeToGLAccountMapper {
-
-    @SuppressWarnings("unused")
-    private final ChargeData charge;
-    @SuppressWarnings("unused")
-    private final GLAccountData incomeAccount;
-
-    public ChargeToGLAccountMapper(final ChargeData charge, final GLAccountData incomeAccount) {
-        this.charge = charge;
-        this.incomeAccount = incomeAccount;
-    }
-
+    private ChargeData charge;
+    private GLAccountData incomeAccount;
 }
