@@ -69,11 +69,11 @@ public class OrganisationCurrency extends AbstractPersistableCustom<Long> {
         this.displaySymbol = displaySymbol;
     }
 
-    public final String getCode() {
+    public String getCode() {
         return code;
     }
 
-    public final MonetaryCurrency toMonetaryCurrency() {
+    public MonetaryCurrency toMonetaryCurrency() {
         return new MonetaryCurrency(this.code, this.decimalPlaces, this.inMultiplesOf);
     }
 }

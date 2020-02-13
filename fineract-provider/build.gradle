@@ -20,7 +20,7 @@ apply plugin: "org.springframework.boot"
 apply plugin: "distribution"
 apply plugin: "com.palantir.docker"
 apply plugin: "com.gorylenko.gradle-git-properties"
-apply plugin: "openjpa"
+// apply plugin: "openjpa"
 // apply plugin: "com.ewerk.gradle.plugins.querydsl"
 
 description = "Fineract"
@@ -40,12 +40,13 @@ springBoot {
     }
 }
 
-openjpa {
-    includes = ['**/AbstractPersistableCustom.class', '**/domain/*.class']
-    enhance {
-        enforcePropertyRestrictions true
-    }
-}
+// openjpa {
+//     persistenceXml 'tmp/persistence.xml'
+//     includes = ['**/AbstractPersistableCustom.class', '**/domain/*.class']
+//     enhance {
+//         enforcePropertyRestrictions true
+//     }
+// }
 
 /*
 querydsl {
@@ -75,7 +76,9 @@ dependencies {
     implementation "org.glassfish.jersey.ext:jersey-spring5"
     implementation "org.ow2.asm:asm-all"
     implementation "org.springframework.security.oauth:spring-security-oauth2"
-    implementation "org.apache.openjpa:openjpa"
+    // TODO: use Hibernate for now, but needs to be migrated to Eclipse Link before merging back to upstream
+    // implementation "org.apache.openjpa:openjpa"
+    // implementation "org.apache.openjpa:openjpa-all"
     implementation "com.squareup.retrofit2:retrofit"
     implementation "com.squareup.retrofit2:converter-gson"
     implementation "com.squareup.retrofit2:converter-jackson"
@@ -90,7 +93,6 @@ dependencies {
     implementation "org.apache.poi:poi"
     implementation "org.apache.poi:poi-ooxml"
     implementation "org.apache.poi:poi-ooxml-schemas"
-    implementation "org.apache.openjpa:openjpa-all"
     implementation "com.lowagie:itext"
     implementation "org.mnode.ical4j:ical4j"
     implementation "org.flywaydb:flyway-core"
@@ -131,7 +133,7 @@ dependencies {
     integrationTestImplementation "org.apache.poi:poi-ooxml-schemas"
     integrationTestImplementation "javax.ws.rs:javax.ws.rs-api"
     integrationTestImplementation "joda-time:joda-time"
-    integrationTestImplementation "org.apache.openjpa:openjpa"
+    // integrationTestImplementation "org.apache.openjpa:openjpa"
     integrationTestImplementation "mysql:mysql-connector-java"
 }
 
