@@ -19,6 +19,8 @@
 package org.apache.fineract.spm.domain;
 
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 
@@ -34,7 +36,8 @@ public class Survey extends AbstractPersistableCustom<Long> {
     @OrderBy("sequenceNo")
     private List<Component> components;
 
-    @OneToMany(mappedBy = "survey", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(mappedBy = "survey", cascade = CascadeType.ALL, orphanRemoval=true)
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OrderBy("sequenceNo")
     private List<Question> questions;
 
