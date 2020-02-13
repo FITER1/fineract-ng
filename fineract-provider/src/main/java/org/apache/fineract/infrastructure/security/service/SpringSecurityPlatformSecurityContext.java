@@ -18,11 +18,6 @@
  */
 package org.apache.fineract.infrastructure.security.service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
@@ -30,12 +25,18 @@ import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.security.exception.NoAuthorizationException;
 import org.apache.fineract.infrastructure.security.exception.ResetPasswordException;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.apache.fineract.useradministration.domain.AppUserRepository;
 import org.apache.fineract.useradministration.exception.UnAuthenticatedUserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Wrapper around spring security's {@link SecurityContext} for extracted the
@@ -50,6 +51,8 @@ public class SpringSecurityPlatformSecurityContext implements PlatformSecurityCo
 
     private final ConfigurationDomainService configurationDomainService;
 
+    private final AppUserRepository appUserRepository;
+
     protected static final List<CommandWrapper> EXEMPT_FROM_PASSWORD_RESET_CHECK = new ArrayList<CommandWrapper>() {
 
         {
@@ -58,8 +61,9 @@ public class SpringSecurityPlatformSecurityContext implements PlatformSecurityCo
     };
 
     @Autowired
-    public SpringSecurityPlatformSecurityContext(final ConfigurationDomainService configurationDomainService) {
+    public SpringSecurityPlatformSecurityContext(final ConfigurationDomainService configurationDomainService, final AppUserRepository appUserRepository) {
         this.configurationDomainService = configurationDomainService;
+        this.appUserRepository = appUserRepository;
     }
 
     @Override
@@ -90,6 +94,11 @@ public class SpringSecurityPlatformSecurityContext implements PlatformSecurityCo
             final Authentication auth = context.getAuthentication();
             if (auth != null) {
                 currentUser = (AppUser) auth.getPrincipal();
+
+                // TODO: @Aleks this is a workaround to avoid detached entity exceptions
+                if(currentUser!=null) {
+                    currentUser = appUserRepository.findById(currentUser.getId()).orElse(null);
+                }
             }
         }
 
