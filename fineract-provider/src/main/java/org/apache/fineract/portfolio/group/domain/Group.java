@@ -34,6 +34,8 @@ import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.group.api.GroupingTypesApiConstants;
 import org.apache.fineract.portfolio.group.exception.*;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.joda.time.LocalDate;
 
 import javax.persistence.*;
@@ -82,7 +84,8 @@ public final class Group extends AbstractPersistableCustom<Long> {
     @Column(name = "hierarchy", length = 100)
     private String hierarchy;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "parent_id")
     private List<Group> groupMembers = new LinkedList<>();
 

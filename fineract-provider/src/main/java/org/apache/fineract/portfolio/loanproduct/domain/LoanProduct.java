@@ -36,6 +36,8 @@ import org.apache.fineract.portfolio.floatingrates.domain.FloatingRate;
 import org.apache.fineract.portfolio.fund.domain.Fund;
 import org.apache.fineract.portfolio.loanaccount.loanschedule.domain.AprCalculator;
 import org.apache.fineract.portfolio.loanproduct.LoanProductConstants;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.joda.time.LocalDate;
 
 import javax.persistence.*;
@@ -74,7 +76,8 @@ public class LoanProduct extends AbstractPersistableCustom<Long> {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany
+    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "m_product_loan_charge", joinColumns = @JoinColumn(name = "product_loan_id"), inverseJoinColumns = @JoinColumn(name = "charge_id"))
     private List<Charge> charges;
 
@@ -158,8 +161,9 @@ public class LoanProduct extends AbstractPersistableCustom<Long> {
 
     @Column(name = "can_use_for_topup", nullable = false)
     private boolean canUseForTopup = false;
-    
-    @Column(name = "is_equal_amortization", nullable = false)
+
+    // TODO: @Aleks verify that this is still working as expected
+    @Column(name = "is_equal_amortization", nullable = false, insertable = false, updatable = false)
     private boolean isEqualAmortization = false;
 
     public static LoanProduct assembleFromJson(final Fund fund, final LoanTransactionProcessingStrategy loanTransactionProcessingStrategy,

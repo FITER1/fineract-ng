@@ -18,18 +18,11 @@
  */
 package org.apache.fineract.infrastructure.core.boot;
 
-import org.apache.fineract.infrastructure.openjpa.OpenJpaVendorAdapter;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.orm.jpa.JpaVendorAdapter;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-
-import javax.sql.DataSource;
-import java.util.Properties;
-
-@Configuration
+// @Configuration
+@Deprecated
 public class OpenJpaConfiguration {
 
+    /*
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
@@ -38,11 +31,13 @@ public class OpenJpaConfiguration {
 
         JpaVendorAdapter vendorAdapter = new OpenJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
-        em.setJpaProperties(additionalProperties());
+        // em.setJpaProperties(additionalProperties());
 
         return em;
     }
+    */
 
+    /*
     private Properties additionalProperties() {
         Properties properties = new Properties();
         properties.put("openjpa.Compatibility", "QuotedNumbersInQueries=true");
@@ -54,4 +49,5 @@ public class OpenJpaConfiguration {
 
         return properties;
     }
+    */
 }
