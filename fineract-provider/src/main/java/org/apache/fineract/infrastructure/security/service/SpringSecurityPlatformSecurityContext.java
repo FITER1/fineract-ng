@@ -27,6 +27,7 @@ import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.security.exception.NoAuthorizationException;
 import org.apache.fineract.infrastructure.security.exception.ResetPasswordException;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.apache.fineract.useradministration.domain.AppUserRepository;
 import org.apache.fineract.useradministration.exception.UnAuthenticatedUserException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -49,6 +50,8 @@ import java.util.List;
 public class SpringSecurityPlatformSecurityContext implements PlatformSecurityContext {
 
     private final ConfigurationDomainService configurationDomainService;
+
+    private final AppUserRepository appUserRepository;
 
     protected static final List<CommandWrapper> EXEMPT_FROM_PASSWORD_RESET_CHECK = new ArrayList<CommandWrapper>() {
 
@@ -85,6 +88,11 @@ public class SpringSecurityPlatformSecurityContext implements PlatformSecurityCo
             final Authentication auth = context.getAuthentication();
             if (auth != null) {
                 currentUser = (AppUser) auth.getPrincipal();
+
+                // TODO: @Aleks this is a workaround to avoid detached entity exceptions
+                if(currentUser!=null) {
+                    currentUser = appUserRepository.findById(currentUser.getId()).orElse(null);
+                }
             }
         }
 
