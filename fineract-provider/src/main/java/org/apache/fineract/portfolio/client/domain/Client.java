@@ -26,19 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
-import javax.persistence.Transient;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -159,7 +147,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     @Temporal(TemporalType.DATE)
     private Date rejectionDate;
 
-    @ManyToOne(optional = true, fetch=FetchType.LAZY)
+    @ManyToOne(optional = true, fetch=FetchType.LAZY, cascade=CascadeType.REFRESH)
     @JoinColumn(name = "rejectedon_userid", nullable = true)
     private AppUser rejectedBy;
 
@@ -192,7 +180,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private Date submittedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "submittedon_userid", nullable = true)
+    @JoinColumn(name = "submittedon_userid", nullable = true, updatable = false, insertable = false)
     private AppUser submittedBy;
 
     @Column(name = "updated_on", nullable = true)
@@ -229,7 +217,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private Date reopenedDate;
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "reopened_by_userid", nullable = true)
+    @JoinColumn(name = "reopened_by_userid", nullable = true, updatable = false, insertable = false)
     private AppUser reopenedBy;
     
     @Column(name = "proposed_transfer_date", nullable = true)
