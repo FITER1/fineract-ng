@@ -147,7 +147,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     @Temporal(TemporalType.DATE)
     private Date rejectionDate;
 
-    @ManyToOne(optional = true, fetch=FetchType.LAZY, cascade=CascadeType.REFRESH)
+    @ManyToOne(optional = true, fetch=FetchType.LAZY)
     @JoinColumn(name = "rejectedon_userid", nullable = true)
     private AppUser rejectedBy;
 
@@ -180,7 +180,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private Date submittedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "submittedon_userid", nullable = true, updatable = false, insertable = false)
+    @JoinColumn(name = "submittedon_userid", nullable = true)
     private AppUser submittedBy;
 
     @Column(name = "updated_on", nullable = true)
@@ -217,7 +217,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private Date reopenedDate;
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "reopened_by_userid", nullable = true, updatable = false, insertable = false)
+    @JoinColumn(name = "reopened_by_userid", nullable = true)
     private AppUser reopenedBy;
     
     @Column(name = "proposed_transfer_date", nullable = true)
