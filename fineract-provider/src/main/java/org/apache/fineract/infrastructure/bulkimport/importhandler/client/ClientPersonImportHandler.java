@@ -188,7 +188,7 @@ public class ClientPersonImportHandler implements ImportHandler {
         ImportHandlerUtils.writeString(ClientPersonConstants.STATUS_COL, clientSheet.
                 getRow(TemplatePopulateImportConstants.ROWHEADER_INDEX), TemplatePopulateImportConstants.STATUS_COLUMN_HEADER);
 
-        return Count.instance(successCount,errorCount);
+        return new Count(successCount,errorCount);
     }
 
 

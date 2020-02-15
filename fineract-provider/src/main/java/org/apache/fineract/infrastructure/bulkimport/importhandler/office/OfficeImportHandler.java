@@ -106,7 +106,7 @@ public class OfficeImportHandler implements ImportHandler {
         }
         officeSheet.setColumnWidth(OfficeConstants.STATUS_COL, TemplatePopulateImportConstants.SMALL_COL_SIZE);
         ImportHandlerUtils.writeString(OfficeConstants.STATUS_COL, officeSheet.getRow(0), TemplatePopulateImportConstants.STATUS_COL_REPORT_HEADER);
-        return Count.instance(successCount, errorCount);
+        return new Count(successCount, errorCount);
     }
 
     public List<OfficeData> getOffices() {

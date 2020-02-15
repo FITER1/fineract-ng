@@ -147,7 +147,7 @@ public class RecurringDepositTransactionImportHandler implements ImportHandler {
         }
         savingsTransactionSheet.setColumnWidth(TransactionConstants.STATUS_COL, TemplatePopulateImportConstants.SMALL_COL_SIZE);
         ImportHandlerUtils.writeString(TransactionConstants.STATUS_COL, savingsTransactionSheet.getRow(TransactionConstants.STATUS_COL), TemplatePopulateImportConstants.STATUS_COL_REPORT_HEADER);
-        return  Count.instance(successCount,errorCount);
+        return  new Count(successCount,errorCount);
     }
 
 

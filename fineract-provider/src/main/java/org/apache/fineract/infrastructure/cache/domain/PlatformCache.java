@@ -34,27 +34,10 @@ import javax.persistence.Table;
 @Table(name = "c_cache")
 @Deprecated
 public class PlatformCache extends AbstractPersistableCustom<Long> {
-
     @Column(name = "cache_type_enum")
     private Integer cacheType;
 
-    public PlatformCache(final CacheType cacheType) {
-        this.cacheType = cacheType.getValue();
-    }
-
-    public boolean isNoCachedEnabled() {
-        return CacheType.fromInt(this.cacheType).isNoCache();
-    }
-
     public boolean isEhcacheEnabled() {
         return CacheType.fromInt(this.cacheType).isEhcache();
-    }
-
-    public boolean isDistributedCacheEnabled() {
-        return CacheType.fromInt(this.cacheType).isDistributedCache();
-    }
-
-    public void update(final CacheType cacheType) {
-        this.cacheType = cacheType.getValue();
     }
 }

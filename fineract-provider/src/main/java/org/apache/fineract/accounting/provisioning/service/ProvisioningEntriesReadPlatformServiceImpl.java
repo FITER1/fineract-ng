@@ -137,8 +137,16 @@ public class ProvisioningEntriesReadPlatformServiceImpl implements ProvisioningE
             Long modifiedById = rs.getLong("lastmodifiedby_id");
             String modifieUser = rs.getString("modifieduser");
             BigDecimal totalReservedAmount = null;
-            return new ProvisioningEntryData(id, journalEntry, createdById, createdUser, createdDate, modifiedById, modifieUser,
-                    totalReservedAmount);
+            return ProvisioningEntryData.builder()
+                .id(id)
+                .journalEntry(journalEntry)
+                .createdById(createdById)
+                .createdUser(createdUser)
+                .createdDate(createdDate)
+                .modifiedById(modifiedById)
+                .modifiedUser(modifieUser)
+                .reservedAmount(totalReservedAmount)
+                .build();
         }
 
         public String getSchema() {
@@ -150,7 +158,8 @@ public class ProvisioningEntriesReadPlatformServiceImpl implements ProvisioningE
     private static final class LoanProductProvisioningEntryRowMapper implements RowMapper<LoanProductProvisioningEntryData> {
 
         private final StringBuilder sqlQuery = new StringBuilder()
-                .append(" entry.id, entry.history_id as historyId, office_id, entry.criteria_id as criteriaid, office.name as officename, product.name as productname, entry.product_id, ")
+                .append(" entry.id, " +
+                "entry.history_id as historyId, office_id, entry.criteria_id as criteriaid, office.name as officename, product.name as productname, entry.product_id, ")
                 .append("category_id, category.category_name, liability.id as liabilityid, liability.gl_code as liabilitycode, liability.name as liabilityname, ")
                 .append("expense.id as expenseid, expense.gl_code as expensecode, expense.name as expensename, entry.currency_code, entry.overdue_in_days, entry.reseve_amount from m_loanproduct_provisioning_entry entry ")
                 .append("left join m_office office ON office.id = entry.office_id ")
@@ -227,8 +236,16 @@ public class ProvisioningEntriesReadPlatformServiceImpl implements ProvisioningE
             Long modifiedById = rs.getLong("lastmodifiedby_id");
             String modifieUser = rs.getString("modifieduser");
             BigDecimal totalReservedAmount = rs.getBigDecimal("totalreserved");
-            return new ProvisioningEntryData(id, journalEntry, createdById, createdUser, createdDate, modifiedById, modifieUser,
-                    totalReservedAmount);
+            return ProvisioningEntryData.builder()
+                .id(id)
+                .journalEntry(journalEntry)
+                .createdById(createdById)
+                .createdUser(createdUser)
+                .createdDate(createdDate)
+                .modifiedById(modifiedById)
+                .modifiedUser(modifieUser)
+                .reservedAmount(totalReservedAmount)
+                .build();
         }
 
         public String getSchema() {
@@ -283,7 +300,7 @@ public class ProvisioningEntriesReadPlatformServiceImpl implements ProvisioningE
             ProvisioningEntryDataMapper mapper1 = new ProvisioningEntryDataMapper();
             final String sql1 = "select " + mapper1.getSchema() + " where entry.id = ?";
             data = this.jdbcTemplate.queryForObject(sql1, mapper1, new Object[] { entryId });
-            data.setEntries(entries);
+            data.setProvisioningEntries(entries);
         }
         return data;
     }
@@ -307,18 +324,15 @@ public class ProvisioningEntriesReadPlatformServiceImpl implements ProvisioningE
                 .append("where history2.journal_entry_created='1')");
 
         @Override
-        @SuppressWarnings("unused")
         public ProvisioningEntryData mapRow(ResultSet rs, int rowNum) throws SQLException {
             Map<String, Object> map = new HashMap<>();
             Long id = rs.getLong("id");
             Date createdDate = rs.getDate("created_date");
-            Long createdBy = null;
-            String createdName = null;
-            Long modifiedBy = null;
-            String modifiedName = null;
-            BigDecimal totalReservedAmount = null;
-            return new ProvisioningEntryData(id, Boolean.TRUE, createdBy, createdName, createdDate, modifiedBy, modifiedName,
-                    totalReservedAmount);
+            return ProvisioningEntryData.builder()
+                .id(id)
+                .journalEntry(true)
+                .createdDate(createdDate)
+                .build();
         }
 
         public String schema() {

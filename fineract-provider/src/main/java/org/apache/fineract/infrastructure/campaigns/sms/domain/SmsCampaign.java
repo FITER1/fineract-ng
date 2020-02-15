@@ -121,31 +121,6 @@ public class SmsCampaign extends AbstractPersistableCustom<Long> {
     @Column(name = "is_notification", nullable = true)
     private boolean isNotification;
 
-    private SmsCampaign(final String campaignName, final Integer campaignType,
-            final Integer triggerType, final Report businessRuleId, final Long providerId, final String paramValue,
-            final String message, final LocalDate submittedOnDate, final AppUser submittedBy, final String recurrence,
-            final LocalDateTime localDateTime, final boolean isNotification) {
-        this.campaignName = campaignName;
-        this.campaignType = campaignType;
-        this.triggerType = SmsCampaignTriggerType.fromInt(triggerType).getValue();
-        this.businessRuleId = businessRuleId;
-        this.providerId = providerId;
-        this.paramValue = paramValue;
-        this.status = SmsCampaignStatus.PENDING.getValue();
-        this.message = message;
-        this.submittedOnDate = submittedOnDate.toDate();
-        this.submittedBy = submittedBy;
-        this.recurrence = recurrence;
-        LocalDateTime recurrenceStartDate = new LocalDateTime();
-        this.isVisible = true;
-        if (localDateTime != null) {
-            this.recurrenceStartDate = localDateTime.toDate();
-        } else {
-            this.recurrenceStartDate = recurrenceStartDate.toDate();
-        }
-        this.isNotification = isNotification;
-    }
-
     public static SmsCampaign instance(final AppUser submittedBy, final Report report, final JsonCommand command) {
 
         final String campaignName = command.stringValueOfParameterNamed(SmsCampaignValidator.campaignName);
@@ -187,8 +162,20 @@ public class SmsCampaign extends AbstractPersistableCustom<Long> {
             recurrenceStartDate = null;
         }
 
-        return new SmsCampaign(campaignName, campaignType.intValue(), triggerType.intValue(), report,
-                providerId, paramValue, message, submittedOnDate, submittedBy, recurrence, recurrenceStartDate, isNotification);
+        return SmsCampaign.builder()
+            .campaignName(campaignName)
+            .campaignType(campaignType.intValue())
+            .triggerType(triggerType.intValue())
+            .businessRuleId(report)
+            .providerId(providerId)
+            .paramValue(paramValue)
+            .message(message)
+            .submittedOnDate(submittedOnDate.toDate())
+            .submittedBy(submittedBy)
+            .recurrence(recurrence)
+            .recurrenceStartDate(recurrenceStartDate.toDate())
+            .isNotification(isNotification)
+            .build();
     }
 
     public Map<String, Object> update(JsonCommand command) {

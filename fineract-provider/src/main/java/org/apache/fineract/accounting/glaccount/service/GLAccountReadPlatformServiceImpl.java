@@ -94,7 +94,12 @@ public class GLAccountReadPlatformServiceImpl implements GLAccountReadPlatformSe
             final String nameDecorated = rs.getString("nameDecorated");
             final Long codeId = rs.wasNull() ? null : rs.getLong("codeId");
             final String codeValue = rs.getString("codeValue");
-            final CodeValueData tagId = CodeValueData.instance(codeId, codeValue);
+            final CodeValueData tagId = CodeValueData.builder()
+                .id(codeId)
+                .name(codeValue)
+                .active(false)
+                .mandatory(false)
+                .build();
             Long organizationRunningBalance = null;
             if (associationParametersData.isRunningBalanceRequired()) {
                 organizationRunningBalance = rs.getLong("organizationRunningBalance");

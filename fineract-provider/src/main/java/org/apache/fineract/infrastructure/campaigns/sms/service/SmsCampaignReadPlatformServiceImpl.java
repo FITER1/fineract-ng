@@ -114,9 +114,17 @@ public class SmsCampaignReadPlatformServiceImpl implements SmsCampaignReadPlatfo
         final Collection<EnumOptionData> frequencyTypeOptions = this.calendarDropdownReadPlatformService
                 .retrieveCalendarFrequencyTypeOptions();
         final Collection<EnumOptionData> periodFrequencyOptions = this.smsCampaignDropdownReadPlatformService.retrivePeriodFrequencyTypes();
-        //final Collection<TriggerTypeWithSubTypesData> triggerTypeSubTypeOptions = this.smsCampaignDropdownReadPlatformService.getTriggerTypeAndSubTypes();
-        return SmsCampaignData.template(smsProviderOptions, campaignTypeOptions, businessRulesOptions, campaignTriggerTypeOptions, months,
-                weekDays, frequencyTypeOptions, periodFrequencyOptions);
+        return SmsCampaignData.builder()
+            .smsProviderOptions(smsProviderOptions)
+            .campaignTypeOptions(campaignTypeOptions)
+            .businessRulesOptions(businessRulesOptions)
+            .triggerTypeOptions(campaignTriggerTypeOptions)
+            .months(months)
+            .weekDays(weekDays)
+            .frequencyTypeOptions(frequencyTypeOptions)
+            .periodFrequencyOptions(periodFrequencyOptions)
+            .notification(false)
+            .build();
     }
 
     @Override
@@ -171,7 +179,14 @@ public class SmsCampaignReadPlatformServiceImpl implements SmsCampaignReadPlatfo
 
                     Map<String, Object> hashMap = new HashMap<String, Object>();
                     hashMap.put(paramLabel, paramName);
-                    smsBusinessRulesData = SmsBusinessRulesData.instance(id, reportName, reportType, reportSubType, hashMap, description);
+                    smsBusinessRulesData = SmsBusinessRulesData.builder()
+                        .reportId(id)
+                        .reportName(reportName)
+                        .reportType(reportType)
+                        .reportSubType(reportSubType)
+                        .reportParamName(hashMap)
+                        .reportDescription(description)
+                        .build();
                     mapOfSameObjects.put(id, smsBusinessRulesData);
                     // add to the list
                     smsBusinessRulesDataList.add(smsBusinessRulesData);
@@ -258,13 +273,35 @@ public class SmsCampaignReadPlatformServiceImpl implements SmsCampaignReadPlatfo
             final String activatedByUsername = rs.getString("activatedByUsername");
             final String recurrence = rs.getString("recurrence");
             final DateTime recurrenceStartDate = JdbcSupport.getDateTime(rs, "recurrenceStartDate");
-            final SmsCampaignTimeLine smsCampaignTimeLine = new SmsCampaignTimeLine(submittedOnDate, submittedByUsername, activatedOnDate,
-                    activatedByUsername, closedOnDate, closedByUsername);
+            final SmsCampaignTimeLine smsCampaignTimeLine = SmsCampaignTimeLine.builder()
+                .submittedOnDate(submittedOnDate)
+                .submittedByUsername(submittedByUsername)
+                .activatedOnDate(activatedOnDate)
+                .activatedByUsername(activatedByUsername)
+                .closedOnDate(closedOnDate)
+                .closedByUsername(closedByUsername)
+                .build();
             final String reportName = rs.getString("reportName");
             final Long providerId = rs.getLong("providerId");
             final Boolean isNotification = rs.getBoolean("isNotification");
-            return SmsCampaignData.instance(id, campaignName, campaignTypeEnum, triggerTypeEnum, runReportId, reportName, paramValue, status, message, nextTriggerDate, lastTriggerDate,
-                    smsCampaignTimeLine, recurrenceStartDate, recurrence, providerId, isNotification);
+            return SmsCampaignData.builder()
+                .id(id)
+                .campaignName(campaignName)
+                .campaignType(campaignTypeEnum)
+                .triggerType(triggerTypeEnum)
+                .runReportId(runReportId)
+                .reportName(reportName)
+                .paramValue(paramValue)
+                .campaignStatus(status)
+                .campaignMessage(message)
+                .nextTriggerDate(nextTriggerDate)
+                .lastTriggerDate(lastTriggerDate)
+                .smsCampaignTimeLine(smsCampaignTimeLine)
+                .recurrenceStartDate(recurrenceStartDate)
+                .recurrence(recurrence)
+                .providerId(providerId)
+                .notification(isNotification)
+                .build();
         }
     }
 

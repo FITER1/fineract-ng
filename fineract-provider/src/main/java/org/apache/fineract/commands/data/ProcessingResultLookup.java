@@ -18,25 +18,14 @@
  */
 package org.apache.fineract.commands.data;
 
-/**
- * Immutable data object for application user data.
- */
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ProcessingResultLookup {
-
-    private final Long id;
-    private final String processingResult;
-
-    public ProcessingResultLookup(final Long id, final String processingResult) {
-        this.id = id;
-        this.processingResult = processingResult;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public String getProcessingResult() {
-        return this.processingResult;
-    }
-
+    private Long id;
+    private String processingResult;
 }

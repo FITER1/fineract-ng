@@ -138,7 +138,7 @@ public class GuarantorImportHandler implements ImportHandler {
                 addGuarantorSheet.setColumnWidth(GuarantorConstants.STATUS_COL, TemplatePopulateImportConstants.SMALL_COL_SIZE);
                 ImportHandlerUtils.writeString(GuarantorConstants.STATUS_COL, addGuarantorSheet.getRow(TemplatePopulateImportConstants.ROWHEADER_INDEX),
                 TemplatePopulateImportConstants.STATUS_COL_REPORT_HEADER);
-                return  Count.instance(successCount,errorCount);
+                return  new Count(successCount,errorCount);
     }
 
 

@@ -285,7 +285,7 @@ public class RecurringDepositImportHandler implements ImportHandler {
             }
         }
         setReportHeaders(savingsSheet);
-        return Count.instance(successCount,errorCount);
+        return new Count(successCount,errorCount);
     }
 
     private void writeRecurringDepositErrorMessage(Long savingsId,String errorMessage,int progressLevel,Cell statusCell,Cell errorReportCell,Row row){

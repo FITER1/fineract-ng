@@ -26,7 +26,6 @@ import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Set;
 
 @Builder
 @Data
@@ -59,12 +58,4 @@ public class ProvisioningEntry extends AbstractPersistableCustom<Long> {
     @Column(name = "lastmodified_date")
     @Temporal(TemporalType.DATE)
     private Date lastModifiedDate;
-
-    public ProvisioningEntry(AppUser createdBy, Date createdDate, AppUser lastModifiedBy, Date lastModifiedDate, Set<LoanProductProvisioningEntry> provisioningEntries ) {
-        this.provisioningEntries = provisioningEntries ;
-        this.createdBy = createdBy ;
-        this.createdDate = createdDate ;
-        this.lastModifiedBy = lastModifiedBy ;
-        this.lastModifiedDate = lastModifiedDate ;
-    }
 }

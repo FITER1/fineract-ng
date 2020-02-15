@@ -22,7 +22,6 @@ import lombok.*;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.documentmanagement.domain.Document;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.joda.time.LocalDateTime;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -52,7 +51,7 @@ public class ImportDocument extends AbstractPersistableCustom<Long>{
     private Boolean completed;
 
     @Column(name = "entity_type")
-    private Integer entity_type;
+    private Integer entityType;
 
     @ManyToOne
     @JoinColumn(name = "createdby_id")
@@ -66,28 +65,4 @@ public class ImportDocument extends AbstractPersistableCustom<Long>{
 
     @Column(name = "failure_count", nullable = true)
     private Integer failureCount;
-
-    public static ImportDocument instance(final Document document, final LocalDateTime importTime,
-            final Integer entity_type, final AppUser createdBy, final Integer totalRecords) {
-
-        return ImportDocument.builder()
-            .document(document)
-            .importTime(importTime.toDate())
-            .completed(Boolean.FALSE)
-            .entity_type(entity_type)
-            .createdBy(createdBy)
-            .totalRecords(totalRecords)
-            .successCount(0)
-            .failureCount(0)
-            .endTime(LocalDateTime.now().toDate())
-            .build();
-    }
-
-    public void update(final LocalDateTime endTime, final Integer successCount,
-            final Integer errorCount) {
-        this.endTime = endTime.toDate();
-        this.completed = Boolean.TRUE;
-        this.successCount = successCount;
-        this.failureCount = errorCount;
-    }
 }

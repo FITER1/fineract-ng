@@ -163,7 +163,7 @@ public class SharedAccountImportHandler implements ImportHandler {
         sharedAccountsSheet.setColumnWidth(SharedAccountsConstants.STATUS_COL, TemplatePopulateImportConstants.SMALL_COL_SIZE);
         ImportHandlerUtils.writeString(SharedAccountsConstants.STATUS_COL, sharedAccountsSheet.getRow(TemplatePopulateImportConstants.ROW_HEADER_HEIGHT),
                 TemplatePopulateImportConstants.STATUS_COL_REPORT_HEADER);
-        return Count.instance(successCount,errorCount);
+        return new Count(successCount,errorCount);
     }
 
 

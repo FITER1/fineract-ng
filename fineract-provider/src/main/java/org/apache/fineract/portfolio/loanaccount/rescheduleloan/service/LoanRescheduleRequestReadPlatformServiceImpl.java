@@ -128,7 +128,12 @@ public class LoanRescheduleRequestReadPlatformServiceImpl implements LoanResched
             final LocalDate rescheduleFromDate = JdbcSupport.getLocalDate(rs, "rescheduleFromDate");
             final Long rescheduleReasonCvId = JdbcSupport.getLong(rs, "rescheduleReasonCvId");
             final String rescheduleReasonCvValue = rs.getString("rescheduleReasonCvValue");
-            final CodeValueData rescheduleReasonCodeValue = CodeValueData.instance(rescheduleReasonCvId, rescheduleReasonCvValue);
+            final CodeValueData rescheduleReasonCodeValue = CodeValueData.builder()
+                .id(rescheduleReasonCvId)
+                .name(rescheduleReasonCvValue)
+                .active(false)
+                .mandatory(false)
+                .build();
             final String rescheduleReasonComment = rs.getString("rescheduleReasonComment");
             final Boolean recalculateInterest = rs.getBoolean("recalculateInterest");
 
@@ -212,7 +217,12 @@ public class LoanRescheduleRequestReadPlatformServiceImpl implements LoanResched
             final LocalDate rescheduleFromDate = JdbcSupport.getLocalDate(rs, "rescheduleFromDate");
             final Long rescheduleReasonCvId = JdbcSupport.getLong(rs, "rescheduleReasonCvId");
             final String rescheduleReasonCvValue = rs.getString("rescheduleReasonCvValue");
-            final CodeValueData rescheduleReasonCodeValue = CodeValueData.instance(rescheduleReasonCvId, rescheduleReasonCvValue);
+            final CodeValueData rescheduleReasonCodeValue = CodeValueData.builder()
+                .id(rescheduleReasonCvId)
+                .name(rescheduleReasonCvValue)
+                .active(false)
+                .mandatory(false)
+                .build();
             return LoanRescheduleRequestData.instance(id, loanId, statusEnum, clientName, loanAccountNumber, clientId, rescheduleFromDate,
                     rescheduleReasonCodeValue);
         }

@@ -43,7 +43,7 @@ public class AccountNumberFormatEnumerations {
         private final Integer value;
         private final String code;
 
-        private AccountNumberPrefixType(final Integer value, final String code) {
+        AccountNumberPrefixType(final Integer value, final String code) {
             this.value = value;
             this.code = code;
         }
@@ -126,10 +126,4 @@ public class AccountNumberFormatEnumerations {
                 accountNumberPrefixType.getCode(), accountNumberPrefixType.toString());
         return optionData;
     }
-
-    public static List<EnumOptionData> accountNumberPrefixType(Object[] array) {
-        AccountNumberPrefixType[] accountNumberPrefixTypes = Arrays.copyOf(array, array.length, AccountNumberPrefixType[].class);
-        return accountNumberPrefixType(accountNumberPrefixTypes);
-    }
-
 }

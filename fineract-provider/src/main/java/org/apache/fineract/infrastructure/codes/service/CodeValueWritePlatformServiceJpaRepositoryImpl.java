@@ -138,7 +138,7 @@ public class CodeValueWritePlatformServiceJpaRepositoryImpl implements CodeValue
 
             final CodeValue codeValueToDelete = this.codeValueRepositoryWrapper.findOneWithNotFoundDetection(codeValueId);
 
-            final boolean removed = code.remove(codeValueToDelete);
+            final boolean removed = code.getValues().remove(codeValueToDelete);
             if (removed) {
                 this.codeRepository.saveAndFlush(code);
             }

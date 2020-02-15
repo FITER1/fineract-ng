@@ -21,7 +21,6 @@ package org.apache.fineract.infrastructure.codes.domain;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.codes.CodeConstants.CODEVALUE_JSON_INPUT_PARAMS;
-import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
@@ -56,18 +55,6 @@ public class CodeValue extends AbstractPersistableCustom<Long> {
     
     @Column(name = "is_mandatory")
     private boolean mandatory;
-
-    public static CodeValue createNew(final Code code, final String label, final int position, final String description,
-            final boolean isActive, final boolean mandatory) {
-        return CodeValue.builder()
-            .code(code)
-            .label(label)
-            .position(position)
-            .description(description)
-            .isActive(isActive)
-            .mandatory(mandatory)
-            .build();
-    }
 
     public static CodeValue fromJson(final Code code, final JsonCommand command) {
 
@@ -134,9 +121,5 @@ public class CodeValue extends AbstractPersistableCustom<Long> {
         }
 
         return actualChanges;
-    }
-
-    public CodeValueData toData() {
-        return CodeValueData.instance(getId(), this.label, this.position, this.isActive, this.mandatory);
     }
 }

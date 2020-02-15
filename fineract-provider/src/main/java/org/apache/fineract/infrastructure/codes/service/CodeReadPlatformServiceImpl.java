@@ -46,13 +46,17 @@ public class CodeReadPlatformServiceImpl implements CodeReadPlatformService {
         }
 
         @Override
-        public CodeData mapRow(final ResultSet rs, @SuppressWarnings("unused") final int rowNum) throws SQLException {
+        public CodeData mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 
             final Long id = rs.getLong("id");
-            final String code_name = rs.getString("code_name");
+            final String codeName = rs.getString("code_name");
             final boolean systemDefined = rs.getBoolean("systemDefined");
 
-            return CodeData.instance(id, code_name, systemDefined);
+            return CodeData.builder()
+                .id(id)
+                .name(codeName)
+                .systemDefined(systemDefined)
+                .build();
         }
     }
 

@@ -142,14 +142,33 @@ public class EmailCampaignReadPlatformServiceImpl implements EmailCampaignReadPl
             final String activatedByUsername = rs.getString("activatedByUsername");
             final String recurrence  =rs.getString("recurrence");
             final DateTime recurrenceStartDate = JdbcSupport.getDateTime(rs, "recurrenceStartDate");
-            final EmailCampaignTimeLine emailCampaignTimeLine = new EmailCampaignTimeLine(submittedOnDate,submittedByUsername,
-                    activatedOnDate,activatedByUsername,closedOnDate,closedByUsername);
+            final EmailCampaignTimeLine emailCampaignTimeLine = EmailCampaignTimeLine.builder()
+                .submittedOnDate(submittedOnDate)
+                .submittedByUsername(submittedByUsername)
+                .activatedOnDate(activatedOnDate)
+                .activatedByUsername(activatedByUsername)
+                .closedOnDate(closedOnDate)
+                .closedByUsername(closedByUsername)
+                .build();
 
-
-
-            return EmailCampaignData.instance(id,campaignName,campaignType,businessRuleId,paramValue,status,emailSubject,emailMessage,
-                    emailAttachmentFileFormatString,reportId,stretchyReportParamMap,nextTriggerDate,lastTriggerDate,emailCampaignTimeLine,
-                    recurrenceStartDate,recurrence);
+            return EmailCampaignData.builder()
+                .id(id)
+                .campaignName(campaignName)
+                .campaignType(campaignType)
+                .businessRuleId(businessRuleId)
+                .paramValue(paramValue)
+                .campaignStatus(status)
+                .emailSubject(emailSubject)
+                .emailMessage(emailMessage)
+                .emailAttachmentFileFormat(emailAttachmentFileFormatString)
+                .stretchyReportId(reportId)
+                .stretchyReportParamMap(stretchyReportParamMap)
+                .nextTriggerDate(nextTriggerDate)
+                .lastTriggerDate(lastTriggerDate)
+                .emailCampaignTimeLine(emailCampaignTimeLine)
+                .recurrenceStartDate(recurrenceStartDate)
+                .recurrence(recurrence)
+                .build();
         }
     }
 
@@ -201,7 +220,14 @@ public class EmailCampaignReadPlatformServiceImpl implements EmailCampaignReadPl
 
                     Map<String,Object> hashMap = new HashMap<String, Object>();
                     hashMap.put(paramLabel,paramName);
-                    emailBusinessRulesData = EmailBusinessRulesData.instance(id,reportName,reportType,hashMap,reportSubType,description);
+                    emailBusinessRulesData = EmailBusinessRulesData.builder()
+                        .reportId(id)
+                        .reportName(reportName)
+                        .reportType(reportType)
+                        .reportParamName(hashMap)
+                        .reportSubType(reportSubType)
+                        .reportDescription(description)
+                        .build();
                     mapOfSameObjects.put(id,emailBusinessRulesData);
                     //add to the list
                     emailBusinessRulesDataList.add(emailBusinessRulesData);

@@ -45,6 +45,7 @@ import org.apache.tika.io.IOUtils;
 import org.apache.tika.io.TikaInputStream;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -185,13 +186,18 @@ public class BulkImportWorkbookServiceImpl implements BulkImportWorkbookService 
                 URLConnection.guessContentTypeFromName(fileName), fileName, null, fileName);
         final Document document = this.documentRepository.findById(documentId).orElse(null);
 
-        final ImportDocument importDocument = ImportDocument.instance(document,
-                DateUtils.getLocalDateTimeOfTenant(), entityType.getValue(),
-                this.securityContext.authenticatedUser(),
-                ImportHandlerUtils.getNumberOfRows(workbook.getSheetAt(0),
-                        primaryColumn));
+        final ImportDocument importDocument = ImportDocument.builder()
+            .document(document)
+            .importTime(DateUtils.getLocalDateTimeOfTenant().toDate())
+            .entityType(entityType.getValue())
+            .createdBy(this.securityContext.authenticatedUser())
+            .totalRecords(ImportHandlerUtils.getNumberOfRows(workbook.getSheetAt(0), primaryColumn))
+            .successCount(0)
+            .failureCount(0)
+            .endTime(LocalDateTime.now().toDate())
+            .build();
         this.importDocumentRepository.saveAndFlush(importDocument);
-        BulkImportEvent event = BulkImportEvent.instance(fineractProperties.getTenantId(), workbook, importDocument.getId(), locale, dateFormat);
+        BulkImportEvent event = new BulkImportEvent(fineractProperties.getTenantId(), workbook, importDocument.getId(), locale, dateFormat);
         applicationContext.publishEvent(event);
         return importDocument.getId();
     }
@@ -233,8 +239,18 @@ public class BulkImportWorkbookServiceImpl implements BulkImportWorkbookService 
             final Integer failureCount = JdbcSupport.getInteger(rs, "failureCount");
             final Long createdBy = rs.getLong("createdBy");
 
-            return ImportData.instance(id, documentId, importTime, endTime, completed,
-                    name, createdBy, totalRecords, successCount, failureCount);
+            return ImportData.builder()
+                .importId(id)
+                .documentId(documentId)
+                .importTime(importTime)
+                .endTime(endTime)
+                .completed(completed)
+                .name(name)
+                .createdBy(createdBy)
+                .totalRecords(totalRecords)
+                .successCount(successCount)
+                .failureCount(failureCount)
+                .build();
         }
     }
 

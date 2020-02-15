@@ -413,7 +413,13 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
             final String subStatusValue = rs.getString("subStatusValue");
             final String subStatusDesc = rs.getString("subStatusDesc");
             final boolean isActive = false;
-            final CodeValueData subStatus = CodeValueData.instance(subStatusId, subStatusValue, subStatusDesc, isActive);
+            final CodeValueData subStatus = CodeValueData.builder()
+                .id(subStatusId)
+                .name(subStatusValue)
+                .description(subStatusDesc)
+                .active(isActive)
+                .mandatory(false)
+                .build();
 
             final Long officeId = JdbcSupport.getLong(rs, "officeId");
             final String officeName = rs.getString("officeName");
@@ -434,15 +440,30 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
             final LocalDate dateOfBirth = JdbcSupport.getLocalDate(rs, "dateOfBirth");
             final Long genderId = JdbcSupport.getLong(rs, "genderId");
             final String genderValue = rs.getString("genderValue");
-            final CodeValueData gender = CodeValueData.instance(genderId, genderValue);
+            final CodeValueData gender = CodeValueData.builder()
+                .id(genderId)
+                .name(genderValue)
+                .active(false)
+                .mandatory(false)
+                .build();
 
             final Long clienttypeId = JdbcSupport.getLong(rs, "clienttypeId");
             final String clienttypeValue = rs.getString("clienttypeValue");
-            final CodeValueData clienttype = CodeValueData.instance(clienttypeId, clienttypeValue);
+            final CodeValueData clienttype = CodeValueData.builder()
+                .id(clienttypeId)
+                .name(clienttypeValue)
+                .active(false)
+                .mandatory(false)
+                .build();
 
             final Long classificationId = JdbcSupport.getLong(rs, "classificationId");
             final String classificationValue = rs.getString("classificationValue");
-            final CodeValueData classification = CodeValueData.instance(classificationId, classificationValue);
+            final CodeValueData classification = CodeValueData.builder()
+                .id(classificationId)
+                .name(classificationValue)
+                .active(false)
+                .mandatory(false)
+                .build();
 
             final LocalDate activationDate = JdbcSupport.getLocalDate(rs, "activationDate");
             final Long imageId = JdbcSupport.getLong(rs, "imageId");
@@ -475,12 +496,22 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
 
             final Long constitutionId = JdbcSupport.getLong(rs, "constitutionId");
             final String constitutionValue = rs.getString("constitutionValue");
-            final CodeValueData constitution = CodeValueData.instance(constitutionId, constitutionValue);
+            final CodeValueData constitution = CodeValueData.builder()
+                .id(constitutionId)
+                .name(constitutionValue)
+                .active(false)
+                .mandatory(false)
+                .build();
             final String incorpNo = rs.getString("incorpNo");
             final LocalDate incorpValidityTill = JdbcSupport.getLocalDate(rs, "incorpValidityTill");
             final Long mainBusinessLineId = JdbcSupport.getLong(rs, "mainBusinessLineId");
             final String mainBusinessLineValue = rs.getString("mainBusinessLineValue");
-            final CodeValueData mainBusinessLine = CodeValueData.instance(mainBusinessLineId, mainBusinessLineValue);
+            final CodeValueData mainBusinessLine = CodeValueData.builder()
+                .id(mainBusinessLineId)
+                .name(mainBusinessLineValue)
+                .active(false)
+                .mandatory(false)
+                .build();
             final String remarks = rs.getString("remarks");
 
             final ClientNonPersonData clientNonPerson = new ClientNonPersonData(constitution, incorpNo, incorpValidityTill, mainBusinessLine, remarks);
@@ -598,7 +629,13 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
             final String subStatusValue = rs.getString("subStatusValue");
             final String subStatusDesc = rs.getString("subStatusDesc");
             final boolean isActive = false;
-            final CodeValueData subStatus = CodeValueData.instance(subStatusId, subStatusValue, subStatusDesc, isActive);
+            final CodeValueData subStatus = CodeValueData.builder()
+                .id(subStatusId)
+                .name(subStatusValue)
+                .description(subStatusDesc)
+                .active(isActive)
+                .mandatory(false)
+                .build();
 
             final Long officeId = JdbcSupport.getLong(rs, "officeId");
             final String officeName = rs.getString("officeName");
@@ -619,15 +656,30 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
             final LocalDate dateOfBirth = JdbcSupport.getLocalDate(rs, "dateOfBirth");
             final Long genderId = JdbcSupport.getLong(rs, "genderId");
             final String genderValue = rs.getString("genderValue");
-            final CodeValueData gender = CodeValueData.instance(genderId, genderValue);
+            final CodeValueData gender = CodeValueData.builder()
+                .id(genderId)
+                .name(genderValue)
+                .active(false)
+                .mandatory(false)
+                .build();
 
             final Long clienttypeId = JdbcSupport.getLong(rs, "clienttypeId");
             final String clienttypeValue = rs.getString("clienttypeValue");
-            final CodeValueData clienttype = CodeValueData.instance(clienttypeId, clienttypeValue);
+            final CodeValueData clienttype = CodeValueData.builder()
+                .id(clienttypeId)
+                .name(clienttypeValue)
+                .active(false)
+                .mandatory(false)
+                .build();
 
             final Long classificationId = JdbcSupport.getLong(rs, "classificationId");
             final String classificationValue = rs.getString("classificationValue");
-            final CodeValueData classification = CodeValueData.instance(classificationId, classificationValue);
+            final CodeValueData classification = CodeValueData.builder()
+                .id(classificationId)
+                .name(classificationValue)
+                .active(false)
+                .mandatory(false)
+                .build();
 
             final LocalDate activationDate = JdbcSupport.getLocalDate(rs, "activationDate");
             final Long imageId = JdbcSupport.getLong(rs, "imageId");
@@ -659,12 +711,22 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
 
             final Long constitutionId = JdbcSupport.getLong(rs, "constitutionId");
             final String constitutionValue = rs.getString("constitutionValue");
-            final CodeValueData constitution = CodeValueData.instance(constitutionId, constitutionValue);
+            final CodeValueData constitution = CodeValueData.builder()
+                .id(constitutionId)
+                .name(constitutionValue)
+                .active(false)
+                .mandatory(false)
+                .build();
             final String incorpNo = rs.getString("incorpNo");
             final LocalDate incorpValidityTill = JdbcSupport.getLocalDate(rs, "incorpValidityTill");
             final Long mainBusinessLineId = JdbcSupport.getLong(rs, "mainBusinessLineId");
             final String mainBusinessLineValue = rs.getString("mainBusinessLineValue");
-            final CodeValueData mainBusinessLine = CodeValueData.instance(mainBusinessLineId, mainBusinessLineValue);
+            final CodeValueData mainBusinessLine = CodeValueData.builder()
+                .id(mainBusinessLineId)
+                .name(mainBusinessLineValue)
+                .active(false)
+                .mandatory(false)
+                .build();
             final String remarks = rs.getString("remarks");
 
             final ClientNonPersonData clientNonPerson = new ClientNonPersonData(constitution, incorpNo, incorpValidityTill, mainBusinessLine, remarks);

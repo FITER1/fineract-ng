@@ -181,7 +181,7 @@ public class GroupImportHandler implements ImportHandler {
             }
         }
         setReportHeaders(groupSheet);
-        return Count.instance(successCount,errorCount);
+        return new Count(successCount,errorCount);
     }
     private void writeGroupErrorMessage(String groupId,String errorMessage,int progressLevel,Cell statusCell,Cell errorReportCell,Row row){
         String status = "";

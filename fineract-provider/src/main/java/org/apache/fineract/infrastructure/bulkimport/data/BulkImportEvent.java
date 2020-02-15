@@ -18,23 +18,25 @@
  */
 package org.apache.fineract.infrastructure.bulkimport.data;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.context.ApplicationEvent;
 
+@Builder
+@Data
+// @NoArgsConstructor
+// @AllArgsConstructor
+@EqualsAndHashCode
 public class BulkImportEvent extends ApplicationEvent {
+    private String tenantIdentifier;
+    private Workbook workbook;
+    private Long importId;
+    private String locale;
+    private String dateFormat;
 
-    private final String tenantIdentifier;
-
-    private final Workbook workbook;
-
-    private final Long importId;
-
-    private final String locale;
-
-    private final String dateFormat;
-
-    private BulkImportEvent(final String tenantIdentifier, final Workbook workbook,
-            final Long importId, final String locale, final String dateFormat) {
+    public BulkImportEvent(String tenantIdentifier, Workbook workbook, Long importId, String locale, String dateFormat) {
         super(BulkImportEvent.class);
         this.tenantIdentifier = tenantIdentifier;
         this.workbook = workbook;
@@ -42,30 +44,4 @@ public class BulkImportEvent extends ApplicationEvent {
         this.locale = locale;
         this.dateFormat = dateFormat;
     }
-
-    public static BulkImportEvent instance(final String tenantIdentifier, final Workbook workbook,
-            final Long importId, final String locale, final String dateFormat) {
-        return new BulkImportEvent(tenantIdentifier, workbook, importId, locale, dateFormat);
-    }
-
-    public String getTenantIdentifier() {
-        return tenantIdentifier;
-    }
-
-    public Workbook getWorkbook() {
-        return workbook;
-    }
-
-    public Long getImportId() {
-        return importId;
-    }
-
-    public String getDateFormat() {
-        return dateFormat;
-    }
-
-    public String getLocale() {
-        return locale;
-    }
-
 }

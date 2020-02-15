@@ -18,39 +18,36 @@
  */
 package org.apache.fineract.commands.domain;
 
+import lombok.*;
 import org.apache.fineract.useradministration.api.PasswordPreferencesApiConstants;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class CommandWrapper {
-
-    private final Long commandId;
-    @SuppressWarnings("unused")
-    private final Long officeId;
-    private final Long groupId;
-    private final Long clientId;
-    private final Long loanId;
-    private final Long savingsId;
-    private final String actionName;
-    private final String entityName;
-    private final String taskPermissionName;
-    private final Long entityId;
-    private final Long subentityId;
-    private final String href;
-    private final String json;
-    private final String transactionId;
-    private final Long productId;
-    private final Long creditBureauId;
-    private final Long organisationCreditBureauId;
-
-    @SuppressWarnings("unused")
+    private Long commandId;
+    private Long officeId;
+    private Long groupId;
+    private Long clientId;
+    private Long loanId;
+    private Long savingsId;
+    private String actionName;
+    private String entityName;
+    private String taskPermissionName;
+    private Long entityId;
+    private Long subentityId;
+    private String href;
+    private String json;
+    private String transactionId;
+    private Long productId;
+    private Long creditBureauId;
+    private Long organisationCreditBureauId;
     private Long templateId;
 
     public static CommandWrapper wrap(final String actionName, final String entityName, final Long resourceId, final Long subresourceId) {
         return new CommandWrapper(null, actionName, entityName, resourceId, subresourceId, null, null);
-    }
-
-    public static CommandWrapper fromExistingCommand(final Long commandId, final String actionName, final String entityName,
-            final Long resourceId, final Long subresourceId, final String resourceGetUrl, final Long productId) {
-        return new CommandWrapper(commandId, actionName, entityName, resourceId, subresourceId, resourceGetUrl, productId);
     }
 
     public static CommandWrapper fromExistingCommand(final Long commandId, final String actionName, final String entityName,
@@ -130,22 +127,6 @@ public class CommandWrapper {
         this.creditBureauId=creditBureauId;
         this.organisationCreditBureauId=organisationCreditBureauId;
     }
-    
-    public Long getCreditBureauId() {
-        return this.creditBureauId;
-    }
-    
-    public Long getOrganisationCreditBureauId() {
-        return this.organisationCreditBureauId;
-    }
-
-    public String getHref() {
-        return this.href;
-    }
-
-    public String getJson() {
-        return this.json;
-    }
 
     public boolean isCreate() {
         return this.actionName.equalsIgnoreCase("CREATE");
@@ -213,22 +194,6 @@ public class CommandWrapper {
         return this.entityName.equalsIgnoreCase("CACHE");
     }
 
-    public Long getSubentityId() {
-        return this.subentityId;
-    }
-
-    public String getTransactionId() {
-        return this.transactionId;
-    }
-
-    public String getEntityName() {
-        return this.entityName;
-    }
-
-    public Long getEntityId() {
-        return this.entityId;
-    }
-
     public boolean isUpdateOperation() {
         return this.actionName.equalsIgnoreCase("UPDATE");
     }
@@ -259,10 +224,6 @@ public class CommandWrapper {
 
     public boolean isPasswordPreferencesResource() {
         return this.entityName.equalsIgnoreCase(PasswordPreferencesApiConstants.ENTITY_NAME);
-    }
-
-    public Long commandId() {
-        return this.commandId;
     }
 
     public String actionName() {

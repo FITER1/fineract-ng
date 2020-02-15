@@ -94,7 +94,10 @@ public class ChartOfAccountsImportHandler implements ImportHandler {
         Long tagId=null;
         if(ImportHandlerUtils.readAsString(ChartOfAcountsConstants.TAG_ID_COL,row)!=null)
             tagId=Long.parseLong(ImportHandlerUtils.readAsString(ChartOfAcountsConstants.TAG_ID_COL,row));
-        CodeValueData tagIdCodeValueData=new CodeValueData(tagId);
+        CodeValueData tagIdCodeValueData=CodeValueData.builder().id(tagId)
+            .mandatory(false)
+            .active(false)
+            .build();
         String description=ImportHandlerUtils.readAsString(ChartOfAcountsConstants.DESCRIPTION_COL,row);
 
         return new GLAccountData(
@@ -157,7 +160,7 @@ public class ChartOfAccountsImportHandler implements ImportHandler {
         chartOfAccountsSheet.setColumnWidth(ChartOfAcountsConstants.STATUS_COL, TemplatePopulateImportConstants.SMALL_COL_SIZE);
         ImportHandlerUtils.writeString(ChartOfAcountsConstants.STATUS_COL, chartOfAccountsSheet.getRow(TemplatePopulateImportConstants.ROWHEADER_INDEX),
                 TemplatePopulateImportConstants.STATUS_COLUMN_HEADER);
-        return Count.instance(successCount,errorCount);
+        return new Count(successCount,errorCount);
     }
 
 

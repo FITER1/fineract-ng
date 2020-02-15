@@ -74,10 +74,14 @@ public class RuntimeDelegatingCacheManager /*implements CacheManager*/ {
         // final EnumOptionData multiNodeCacheType =
         // CacheEnumerations.cacheType(CacheType.MULTI_NODE);
 
-        final CacheData noCache = CacheData.instance(noCacheType, noCacheEnabled);
-        final CacheData singleNodeCache = CacheData.instance(singleNodeCacheType, ehcacheEnabled);
-        // final CacheData distributedCache =
-        // CacheData.instance(multiNodeCacheType, distributedCacheEnabled);
+        final CacheData noCache = CacheData.builder()
+            .cacheType(noCacheType)
+            .enabled(noCacheEnabled)
+            .build();
+        final CacheData singleNodeCache = CacheData.builder()
+            .cacheType(singleNodeCacheType)
+            .enabled(ehcacheEnabled)
+            .build();
 
         final Collection<CacheData> caches = Arrays.asList(noCache, singleNodeCache);
         return caches;

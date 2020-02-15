@@ -103,11 +103,11 @@ public class CommandSource extends AbstractPersistableCustom<Long> {
 
     public static CommandSource fullEntryFrom(final CommandWrapper wrapper, final JsonCommand command, final AppUser maker) {
         return CommandSource.builder()
-            .actionName(wrapper.actionName())
-            .entityName(wrapper.entityName())
+            .actionName(wrapper.getActionName())
+            .entityName(wrapper.getEntityName())
             .resourceGetUrl(wrapper.getHref())
             .resourceId(wrapper.getEntityId())
-            .subresourceId(command.subentityId())
+            .subresourceId(command.getSubresourceId())
             .commandAsJson(command.json())
             .maker(maker)
             .madeOnDate(DateTime.now().toDate())

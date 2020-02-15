@@ -164,7 +164,13 @@ public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements
         AppUser lastModifiedBy = null;
         Date lastModifiedDate = null;
         Set<LoanProductProvisioningEntry> nullEntries = null;
-        ProvisioningEntry requestedEntry = new ProvisioningEntry(currentUser, date, lastModifiedBy, lastModifiedDate, nullEntries);
+        ProvisioningEntry requestedEntry = ProvisioningEntry.builder()
+            .createdBy(currentUser)
+            .createdDate(date)
+            .lastModifiedBy(lastModifiedBy)
+            .lastModifiedDate(lastModifiedDate)
+            .provisioningEntries(nullEntries)
+            .build();
         Collection<LoanProductProvisioningEntry> entries = generateLoanProvisioningEntry(requestedEntry, date);
         requestedEntry.setProvisioningEntries(entries);
         if (addJournalEntries) {
@@ -202,9 +208,18 @@ public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements
             MonetaryCurrency currency = loanProduct.getPrincipalAmount().getCurrency();
             Money money = Money.of(currency, data.getBalance());
             Money amountToReserve = money.percentageOf(data.getPercentage(), MoneyHelper.getRoundingMode());
-            Long criteraId = data.getCriteriaId();
-            LoanProductProvisioningEntry entry = new LoanProductProvisioningEntry(loanProduct, office, data.getCurrencyCode(),
-                    provisioningCategory, data.getOverdueInDays(), amountToReserve.getAmount(), liabilityAccount, expenseAccount, criteraId);
+            Long criteriaId = data.getCriteriaId();
+            LoanProductProvisioningEntry entry = LoanProductProvisioningEntry.builder()
+                .loanProduct(loanProduct)
+                .office(office)
+                .currencyCode(data.getCurrencyCode())
+                .provisioningCategory(provisioningCategory)
+                .overdueInDays(data.getOverdueInDays())
+                .reservedAmount(amountToReserve.getAmount())
+                .liabilityAccount(liabilityAccount)
+                .expenseAccount(expenseAccount)
+                .criteriaId(criteriaId)
+                .build();
             entry.setEntry(parent);
             if (!provisioningEntries.containsKey(entry)) {
                 provisioningEntries.put(entry, entry);

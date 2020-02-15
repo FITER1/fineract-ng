@@ -63,7 +63,11 @@ public class EmailConfigurationReadPlatformServiceImpl implements EmailConfigura
 			final String name = rs.getString("name");
 			final String value = rs.getString("value");
 			
-			return EmailConfigurationData.instance(id, name, value);
+			return EmailConfigurationData.builder()
+				.id(id)
+				.name(name)
+				.value(value)
+				.build();
 		}
 		
 	}

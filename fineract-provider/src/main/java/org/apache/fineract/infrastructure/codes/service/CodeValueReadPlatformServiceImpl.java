@@ -56,7 +56,14 @@ public class CodeValueReadPlatformServiceImpl implements CodeValueReadPlatformSe
             final boolean isActive = rs.getBoolean("isActive");
             final boolean mandatory = rs.getBoolean("mandatory");
             
-            return CodeValueData.instance(id, value, position, description, isActive, mandatory);
+            return CodeValueData.builder()
+                .id(id)
+                .name(value)
+                .position(position)
+                .description(description)
+                .active(isActive)
+                .mandatory(mandatory)
+                .build();
         }
     }
 

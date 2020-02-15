@@ -304,9 +304,6 @@ public class EmailCampaign extends AbstractPersistableCustom<Long> {
         this.isVisible = false;
     }
 
-
-
-
     public boolean isActive(){
         return EmailCampaignStatus.fromInt(this.status).isActive();
     }
@@ -403,10 +400,6 @@ public class EmailCampaign extends AbstractPersistableCustom<Long> {
     public LocalDateTime getNextTriggerDate() {
         return ObjectUtils.defaultIfNull(new LocalDateTime(this.nextTriggerDate), null);
 
-    }
-
-    public void updateBusinessRuleId(final Report report) {
-        this.businessRuleId = report;
     }
 
     private void validateReactivationDate(final List<ApiParameterError> dataValidationErrors) {

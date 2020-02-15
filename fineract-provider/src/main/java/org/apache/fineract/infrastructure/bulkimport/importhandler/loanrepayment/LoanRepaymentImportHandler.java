@@ -124,7 +124,7 @@ public class LoanRepaymentImportHandler implements ImportHandler {
         ImportHandlerUtils.writeString(LoanRepaymentConstants.STATUS_COL,
                 loanRepaymentSheet.getRow(TemplatePopulateImportConstants.ROWHEADER_INDEX),
                 TemplatePopulateImportConstants.STATUS_COL_REPORT_HEADER);
-        return Count.instance(successCount,errorCount);
+        return new Count(successCount,errorCount);
     }
 
 

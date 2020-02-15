@@ -67,7 +67,12 @@ public class CollateralReadPlatformServiceImpl implements CollateralReadPlatform
             final BigDecimal value = JdbcSupport.getBigDecimalDefaultToNullIfZero(rs, "value");
             final String typeName = rs.getString("typeName");
 
-            final CodeValueData type = CodeValueData.instance(typeId, typeName);
+            final CodeValueData type = CodeValueData.builder()
+                .id(typeId)
+                .name(typeName)
+                .active(false)
+                .mandatory(false)
+                .build();
 
             final String currencyCode = rs.getString("currencyCode");
             final String currencyName = rs.getString("currencyName");

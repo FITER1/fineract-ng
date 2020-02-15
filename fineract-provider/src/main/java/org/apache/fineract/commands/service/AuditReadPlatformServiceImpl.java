@@ -149,9 +149,28 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
             final String loanAccountNo = rs.getString("loanAccountNo");
             final String savingsAccountNo = rs.getString("savingsAccountNo");
 
-            return new AuditData(id, actionName, entityName, resourceId, subresourceId, maker, madeOnDate, checker, checkedOnDate,
-                    processingResult, commandAsJson, officeName, groupLevelName, groupName, clientName, loanAccountNo, savingsAccountNo,
-                    clientId, loanId, resourceGetUrl);
+            return AuditData.builder()
+                .id(id)
+                .actionName(actionName)
+                .entityName(entityName)
+                .resourceId(resourceId)
+                .subresourceId(subresourceId)
+                .maker(maker)
+                .madeOnDate(madeOnDate)
+                .checker(checker)
+                .checkedOnDate(checkedOnDate)
+                .processingResult(processingResult)
+                .commandAsJson(commandAsJson)
+                .officeName(officeName)
+                .groupLevelName(groupLevelName)
+                .groupName(groupName)
+                .clientName(clientName)
+                .loanAccountNo(loanAccountNo)
+                .savingsAccountNo(savingsAccountNo)
+                .clientId(clientId)
+                .loanId(loanId)
+                .url(resourceGetUrl)
+                .build();
         }
     }
 
@@ -447,7 +466,12 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
             processingResults = this.jdbcTemplate.query(mapper3.schema(), mapper3, new Object[] {});
         }
 
-        return new AuditSearchData(appUsers, actionNames, entityNames, processingResults);
+        return AuditSearchData.builder()
+            .appUsers(appUsers)
+            .actionNames(actionNames)
+            .entityNames(entityNames)
+            .processingResults(processingResults)
+            .build();
     }
 
     private String makercheckerCapabilityOnly(final String useType, final AppUser currentUser) {
@@ -497,7 +521,10 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
             final Long id = JdbcSupport.getLong(rs, "id");
             final String processingResult = rs.getString("processingResult");
 
-            return new ProcessingResultLookup(id, processingResult);
+            return ProcessingResultLookup.builder()
+                .id(id)
+                .processingResult(processingResult)
+                .build();
         }
 
         public String schema() {

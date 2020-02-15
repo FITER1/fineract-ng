@@ -21,6 +21,7 @@ package org.apache.fineract.infrastructure.core.api;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
@@ -38,29 +39,31 @@ import java.math.BigDecimal;
 import java.util.*;
 
 /**
- * Immutable representation of a command.
- * 
  * Wraps the provided JSON with convenience functions for extracting parameter
  * values and checking for changes against an existing value.
  */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public final class JsonCommand {
-
-    private final String jsonCommand;
-    private final JsonElement parsedCommand;
-    private final FromJsonHelper fromApiJsonHelper;
-    private final Long commandId;
-    private final Long resourceId;
-    private final Long subresourceId;
-    private final Long groupId;
-    private final Long clientId;
-    private final Long loanId;
-    private final Long savingsId;
-    private final String entityName;
-    private final String transactionId;
-    private final String url;
-    private final Long productId;
-    private final Long creditBureauId;
-    private final Long organisationCreditBureauId;
+    private String jsonCommand;
+    private JsonElement parsedCommand;
+    private FromJsonHelper fromApiJsonHelper;
+    private Long commandId;
+    private Long resourceId;
+    private Long subresourceId;
+    private Long groupId;
+    private Long clientId;
+    private Long loanId;
+    private Long savingsId;
+    private String entityName;
+    private String transactionId;
+    private String url;
+    private Long productId;
+    private Long creditBureauId;
+    private Long organisationCreditBureauId;
 
     public static JsonCommand from(final String jsonCommand, final JsonElement parsedCommand, final FromJsonHelper fromApiJsonHelper,
             final String entityName, final Long resourceId, final Long subresourceId, final Long groupId, final Long clientId,
@@ -139,14 +142,6 @@ public final class JsonCommand {
         this.creditBureauId=null;
         this.organisationCreditBureauId=null;
     }
-    
-    public Long getOrganisationCreditBureauId() {
-        return this.organisationCreditBureauId;
-    }
-    
-    public Long getCreditBureauId() {
-        return this.creditBureauId;
-    }
 
     public String json() {
         return this.jsonCommand;
@@ -186,34 +181,6 @@ public final class JsonCommand {
 
     public Long subentityId() {
         return this.subresourceId;
-    }
-
-    public Long getGroupId() {
-        return this.groupId;
-    }
-
-    public Long getClientId() {
-        return this.clientId;
-    }
-
-    public Long getLoanId() {
-        return this.loanId;
-    }
-
-    public Long getSavingsId() {
-        return this.savingsId;
-    }
-
-    public String getTransactionId() {
-        return this.transactionId;
-    }
-
-    public String getUrl() {
-        return this.url;
-    }
-
-    public Long getProductId() {
-        return this.productId;
     }
 
     private boolean differenceExistsTime(final LocalDateTime baseValue, final LocalDateTime workingCopyValue) {

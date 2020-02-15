@@ -102,7 +102,12 @@ public class ClientIdentifierReadPlatformServiceImpl implements ClientIdentifier
             final String documentKey = rs.getString("documentKey");
             final String description = rs.getString("description");
             final String documentTypeName = rs.getString("documentType");
-            final CodeValueData documentType = CodeValueData.instance(documentTypeId, documentTypeName);
+            final CodeValueData documentType = CodeValueData.builder()
+                .id(documentTypeId)
+                .name(documentTypeName)
+                .active(false)
+                .mandatory(false)
+                .build();
             final String status = ClientIdentifierStatus.fromInt(rs.getInt("status")).getCode();
             return ClientIdentifierData.singleItem(id, clientId, documentType, documentKey, status, description);
         }

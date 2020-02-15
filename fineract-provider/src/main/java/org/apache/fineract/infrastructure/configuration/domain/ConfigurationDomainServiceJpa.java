@@ -118,7 +118,7 @@ public class ConfigurationDomainServiceJpa implements ConfigurationDomainService
     @Override
     public void updateCache(final CacheType cacheType) {
         final PlatformCache cache = this.cacheTypeRepository.findById(1L).get();
-        cache.update(cacheType);
+        cache.setCacheType(cacheType.getValue());
         this.cacheTypeRepository.save(cache);
     }
 

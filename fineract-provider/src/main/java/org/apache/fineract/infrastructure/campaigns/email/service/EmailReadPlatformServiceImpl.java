@@ -99,8 +99,19 @@ public class EmailReadPlatformServiceImpl implements EmailReadPlatformService {
 
             final EnumOptionData status = EmailMessageEnumerations.status(statusId);
 
-            return EmailData.instance(id,groupId, clientId, staffId, status, emailAddress, emailSubject,
-                    message,null,null,null,null,null,campaignName,sentDate,errorMessage);
+            return EmailData.builder()
+                .id(id)
+                .groupId(groupId)
+                .clientId(clientId)
+                .staffId(staffId)
+                .status(status)
+                .emailAddress(emailAddress)
+                .emailSubject(emailSubject)
+                .emailMessage(message)
+                .campaignName(campaignName)
+                .sentDate(sentDate)
+                .errorMessage(errorMessage)
+                .build();
         }
     }
 

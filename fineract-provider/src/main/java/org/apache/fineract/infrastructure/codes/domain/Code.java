@@ -53,13 +53,6 @@ public class Code extends AbstractPersistableCustom<Long> {
             .systemDefined(false)
             .build();
     }
-    
-    public static Code createNew(final String name) {
-        return Code.builder()
-            .name(name)
-            .systemDefined(false)
-            .build();
-    }
 
     public Map<String, Object> update(final JsonCommand command) {
 
@@ -75,9 +68,5 @@ public class Code extends AbstractPersistableCustom<Long> {
         }
 
         return actualChanges;
-    }
-
-    public boolean remove(final CodeValue codeValueToDelete) {
-        return this.values.remove(codeValueToDelete);
     }
 }

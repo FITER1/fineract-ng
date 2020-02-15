@@ -224,7 +224,7 @@ public class AccountingRuleWritePlatformServiceJpaRepositoryImpl implements Acco
                     accountingRule.updateAccountingRuleForTags(accountingTagRules);
                     accountingRule.updateCreditAccount(null);
                     if (allowMultipleCreditEntries) {
-                        accountingRule.updateAllowMultipleCreditEntries(allowMultipleCreditEntries);
+                        accountingRule.setAllowMultipleCreditEntries(allowMultipleCreditEntries);
                     }
                     changesOnly.put(AccountingRuleJsonInputParams.CREDIT_ACCOUNT_TAGS.getValue(), creditTagsToAdd);
                 }
@@ -241,7 +241,7 @@ public class AccountingRuleWritePlatformServiceJpaRepositoryImpl implements Acco
                     accountingRule.updateAccountingRuleForTags(accountingTagRules);
                     accountingRule.updateDebitAccount(null);
                     if (allowMultipleDebitEntries) {
-                        accountingRule.updateAllowMultipleDebitEntries(allowMultipleDebitEntries);
+                        accountingRule.setAllowMultipleDebitEntries(allowMultipleDebitEntries);
                     }
                     changesOnly.put(AccountingRuleJsonInputParams.DEBIT_ACCOUNT_TAGS.getValue(), debitTagsToAdd);
                 }
@@ -286,7 +286,7 @@ public class AccountingRuleWritePlatformServiceJpaRepositoryImpl implements Acco
         if (!tagsToRemove.isEmpty()) {
             for (final String tagId : tagsToRemove) {
                 for (final AccountingTagRule accountingTagRule : existingTags) {
-                    if (tagId.equals(accountingTagRule.getTagId().toString())) {
+                    if (tagId.equals(accountingTagRule.getTagId().getId() + "")) {
                         accountsToRemove.put(accountingTagRule.getId(), accountingTagRule);
                     }
                 }
@@ -299,7 +299,7 @@ public class AccountingRuleWritePlatformServiceJpaRepositoryImpl implements Acco
     private Set<String> retrieveExistingTagIds(final Set<AccountingTagRule> existingCreditTags) {
         final Set<String> existingCreditTagIds = new HashSet<>();
         for (final AccountingTagRule accountingTagRule : existingCreditTags) {
-            existingCreditTagIds.add(accountingTagRule.getTagId().toString());
+            existingCreditTagIds.add(accountingTagRule.getTagId().getId() + "");
         }
         return existingCreditTagIds;
     }
@@ -319,7 +319,10 @@ public class AccountingRuleWritePlatformServiceJpaRepositoryImpl implements Acco
                 final Long creditOrDebitTagIdLongValue = Long.valueOf(creditOrDebitTag);
                 final CodeValue creditOrDebitAccount = this.codeValueRepository.findById(creditOrDebitTagIdLongValue).orElse(null);
                 if (creditOrDebitAccount == null) { throw new CodeValueNotFoundException(creditOrDebitTagIdLongValue); }
-                final AccountingTagRule accountingTagRule = AccountingTagRule.create(creditOrDebitAccount, transactionType.getValue());
+                final AccountingTagRule accountingTagRule = AccountingTagRule.builder()
+                    .tagId(creditOrDebitAccount)
+                    .accountType(transactionType.getValue())
+                    .build();
                 accountingTagRules.add(accountingTagRule);
             }
         }

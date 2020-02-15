@@ -69,8 +69,6 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -156,7 +154,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
                 final Long newValue = command.longValueOfParameterNamed(EmailCampaignValidator.businessRuleId);
                 final Report reportId = this.reportRepository.findById(newValue)
                         .orElseThrow(() -> new ReportNotFoundException(newValue));
-                emailCampaign.updateBusinessRuleId(reportId);
+                emailCampaign.setBusinessRuleId(reportId);
 
             }
 
@@ -217,8 +215,15 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
                     String emailAddress = client.getEmailAddress();
 
                     if (emailAddress != null && isValidEmail(emailAddress)) {
-                        EmailMessage emailMessage = EmailMessage.pendingEmail(null, client, null, emailCampaign, emailSubject, message,
-                                emailAddress, campaignName);
+                        EmailMessage emailMessage = EmailMessage.builder()
+                            .statusType(EmailMessageStatusType.PENDING.getValue())
+                            .client(client)
+                            .campaignName(campaignName)
+                            .emailCampaign(emailCampaign)
+                            .emailSubject(emailSubject)
+                            .message(message)
+                            .emailAddress(emailAddress)
+                            .build();
                         this.emailMessageRepository.save(emailMessage);
                     }
                 }
@@ -258,7 +263,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
                 log.info("tenant time " + tenantDateNow.toString() + " trigger time " + nextTriggerDate.toString());
                 if (nextTriggerDate.isBefore(tenantDateNow)) {
                     insertDirectCampaignIntoEmailOutboundTable(emailCampaignData.getParamValue(), emailCampaignData.getEmailSubject(),
-                            emailCampaignData.getMessage(), emailCampaignData.getCampaignName(), emailCampaignData.getId());
+                            emailCampaignData.getEmailMessage(), emailCampaignData.getCampaignName(), emailCampaignData.getId());
                     this.updateTriggerDates(emailCampaignData.getId());
                 }
             }
@@ -444,7 +449,10 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
                     String textMessage = this.compileEmailTemplate(textMessageTemplate, "EmailCampaign", entry);
                     if (!textMessage.isEmpty()) {
                         final Integer totalMessage = runReportObject.size();
-                        campaignMessage = new PreviewCampaignMessage(textMessage, totalMessage);
+                        campaignMessage = PreviewCampaignMessage.builder()
+                            .campaignMessage(textMessage)
+                            .totalNumberOfMessages(totalMessage)
+                            .build();
                         break;
                     }
                 }
@@ -641,8 +649,12 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
 
                     }
 
-                    final EmailMessageWithAttachmentData emailMessageWithAttachmentData = EmailMessageWithAttachmentData.createNew(
-                            emailMessage.getEmailAddress(), emailMessage.getMessage(), emailMessage.getEmailSubject(), attachmentList);
+                    final EmailMessageWithAttachmentData emailMessageWithAttachmentData = EmailMessageWithAttachmentData.builder()
+                            .to(emailMessage.getEmailAddress())
+                            .text(emailMessage.getMessage())
+                            .subject(emailMessage.getEmailSubject())
+                            .attachments(attachmentList)
+                            .build();
 
                     if (!attachmentList.isEmpty() && attachmentList.size() > 0) { // only
                                                                                   // send
@@ -662,7 +674,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
 
                         this.emailMessageRepository.save(emailMessage);
                     } else {
-                        emailMessage.updateErrorMessage(errorLog.toString());
+                        emailMessage.setErrorMessage(errorLog.toString());
 
                         emailMessage.setStatusType(EmailMessageStatusType.FAILED.getValue());
 

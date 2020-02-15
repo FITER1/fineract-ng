@@ -556,12 +556,18 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
                     String textMessage = this.compileSmsTemplate(textMessageTemplate, "SmsCampaign", entry);
                     if (!textMessage.isEmpty()) {
                         final Integer totalMessage = runReportObject.size();
-                        campaignMessage = new CampaignPreviewData(textMessage, totalMessage);
+                        campaignMessage = CampaignPreviewData.builder()
+                            .campaignMessage(textMessage)
+                            .totalNumberOfMessages(totalMessage)
+                            .build();
                         break;
                     }
                 }
             } else {
-                campaignMessage = new CampaignPreviewData(textMessageTemplate, 0);
+                campaignMessage = CampaignPreviewData.builder()
+                    .campaignMessage(textMessageTemplate)
+                    .totalNumberOfMessages(0)
+                    .build();
             }
         } catch (final IOException e) {
             // TODO throw something here

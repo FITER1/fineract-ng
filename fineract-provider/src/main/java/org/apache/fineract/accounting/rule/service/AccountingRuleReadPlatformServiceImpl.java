@@ -125,8 +125,20 @@ public class AccountingRuleReadPlatformServiceImpl implements AccountingRuleRead
                                 debitAccountGLCode);
                         debitAccounts = new ArrayList<>(Arrays.asList(debitAccount));
                     }
-                    accountingRuleData = new AccountingRuleData(id, officeId, officeName, name, description, systemDefined,
-                            allowMultipleDebitEntries, allowMultipleCreditEntries, creditTags, debitTags, creditAccounts, debitAccounts);
+                    accountingRuleData = AccountingRuleData.builder()
+                        .id(id)
+                        .officeId(officeId)
+                        .officeName(officeName)
+                        .name(name)
+                        .description(description)
+                        .systemDefined(systemDefined)
+                        .allowMultipleDebitEntries(allowMultipleDebitEntries)
+                        .allowMultipleCreditEntries(allowMultipleCreditEntries)
+                        .creditTags(creditTags)
+                        .debitTags(debitTags)
+                        .creditAccounts(creditAccounts)
+                        .debitAccounts(debitAccounts)
+                        .build();
                 }
 
                 extractedData.put(id, accountingRuleData);
@@ -188,7 +200,12 @@ public class AccountingRuleReadPlatformServiceImpl implements AccountingRuleRead
             final Long tagId = rs.getLong("tagId");
             final Integer transactionType = JdbcSupport.getInteger(rs, "transactionType");
             final String tagName = rs.getString("tagName");
-            final CodeValueData tag = CodeValueData.instance(tagId, tagName);
+            final CodeValueData tag = CodeValueData.builder()
+                .id(tagId)
+                .name(tagName)
+                .active(false)
+                .mandatory(false)
+                .build();
             final EnumOptionData transactionTypeEnum = AccountingEnumerations.journalEntryType(transactionType);
             return new AccountingTagRuleData(id, tag, transactionTypeEnum);
         }

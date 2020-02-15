@@ -204,7 +204,15 @@ public class AccountingRuleApiResource {
             final Collection<CodeValueData> allowedCreditTagOptions = allowedTagOptions;
             final Collection<CodeValueData> allowedDebitTagOptions = allowedTagOptions;
 
-            accountingRuleData = new AccountingRuleData(allowedAccounts, allowedOffices, allowedCreditTagOptions, allowedDebitTagOptions);
+            accountingRuleData = AccountingRuleData.builder()
+                .allowedAccounts(allowedAccounts)
+                .allowedOffices(allowedOffices)
+                .allowedCreditTagOptions(allowedCreditTagOptions)
+                .allowedDebitTagOptions(allowedDebitTagOptions)
+                .systemDefined(false)
+                .allowMultipleDebitEntries(false)
+                .allowMultipleCreditEntries(false)
+                .build();
 
         } else {
 
@@ -223,8 +231,24 @@ public class AccountingRuleApiResource {
                 allowedDebitTagOptions = allowedTagOptions;
             }
 
-            accountingRuleData = new AccountingRuleData(accountingRuleData, allowedAccounts, allowedOffices, allowedCreditTagOptions,
-                    allowedDebitTagOptions);
+            accountingRuleData = AccountingRuleData.builder()
+                .id(accountingRuleData.getId())
+                .officeId(accountingRuleData.getOfficeId())
+                .officeName(accountingRuleData.getOfficeName())
+                .name(accountingRuleData.getName())
+                .description(accountingRuleData.getDescription())
+                .systemDefined(accountingRuleData.isSystemDefined())
+                .allowMultipleDebitEntries(accountingRuleData.isAllowMultipleDebitEntries())
+                .allowMultipleCreditEntries(accountingRuleData.isAllowMultipleCreditEntries())
+                .creditTags(accountingRuleData.getCreditTags())
+                .debitTags(accountingRuleData.getDebitTags())
+                .creditAccounts(accountingRuleData.getCreditAccounts())
+                .debitAccounts(accountingRuleData.getDebitAccounts())
+                .allowedAccounts(allowedAccounts)
+                .allowedOffices(allowedOffices)
+                .allowedCreditTagOptions(allowedCreditTagOptions)
+                .allowedDebitTagOptions(allowedDebitTagOptions)
+                .build();
         }
         return accountingRuleData;
     }

@@ -86,7 +86,24 @@ public class AdHocReadPlatformServiceImpl implements AdHocReadPlatformService {
             final Long reportRunEvery=JdbcSupport.getLong(rs, "report_run_every");
             final DateTime lastRun = JdbcSupport.getDateTime(rs, "last_run");
 
-            return new AdHocData(id,name,query, tableName,tableFields,isActive,createdDate,createdById,updatedById,updatedOn,createdByUsername,email, AdHocData.template().getReportRunFrequencies(), reportRunFrequency, reportRunEvery, lastRun);
+            return AdHocData.builder()
+                .id(id)
+                .name(name)
+                .query(query)
+                .tableName(tableName)
+                .tableFields(tableFields)
+                .active(isActive)
+                .createdOn(createdDate)
+                .createdById(createdById)
+                .updatedById(updatedById)
+                .updatedOn(updatedOn)
+                .createdBy(createdByUsername)
+                .email(email)
+                .reportRunFrequencies(AdHocData.createReportRunFrequencies())
+                .reportRunFrequency(reportRunFrequency)
+                .reportRunEvery(reportRunEvery)
+                .lastRun(lastRun)
+                .build();
         }
 
         public String schema() {
@@ -100,8 +117,8 @@ public class AdHocReadPlatformServiceImpl implements AdHocReadPlatformService {
 
 	@Override
 	public AdHocData retrieveNewAdHocDetails() {
-		 return AdHocData.template();
+        return AdHocData.builder()
+            .reportRunFrequencies(AdHocData.createReportRunFrequencies())
+            .build();
 	}
-
-   
 }

@@ -225,7 +225,7 @@ public class JournalEntriesImportHandler implements ImportHandler {
         }
         addJournalEntriesSheet.setColumnWidth(JournalEntryConstants.STATUS_COL, TemplatePopulateImportConstants.SMALL_COL_SIZE);
         ImportHandlerUtils.writeString(JournalEntryConstants.STATUS_COL, addJournalEntriesSheet.getRow(TemplatePopulateImportConstants.ROWHEADER_INDEX), TemplatePopulateImportConstants.STATUS_COL_REPORT_HEADER);
-        return Count.instance(successCount,errorCount);
+        return new Count(successCount,errorCount);
     }
 
 

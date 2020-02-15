@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.adhocquery.domain;
 
+import lombok.*;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.adhocquery.api.AdHocJsonInputParams;
@@ -33,6 +34,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_adhoc")
 public class AdHoc extends AbstractAuditableCustom<AppUser, Long> {
@@ -45,7 +51,6 @@ public class AdHoc extends AbstractAuditableCustom<AppUser, Long> {
    	
     @Column(name = "table_name", length = 100)
     private  String tableName;
-    
     
     @Column(name = "table_fields", length = 2000)
     private  String tableFields;
@@ -60,19 +65,8 @@ public class AdHoc extends AbstractAuditableCustom<AppUser, Long> {
     private Long reportRunEvery;
 
 	@Column(name = "IsActive", nullable = false)
-    private boolean isActive = false;
+    private boolean active = false;
    	
-    private AdHoc(final String name, final String query,final String tableName,final String tableFields ,final String email, final Long reportRunFrequency, final Long reportRunEvery, final boolean isActive) {
-        this.name = StringUtils.defaultIfEmpty(name, null);
-        this.query=StringUtils.defaultIfEmpty(query,null);
-        this.tableName=StringUtils.defaultIfEmpty(tableName,null);
-        this.tableFields=StringUtils.defaultIfEmpty(tableFields,null);
-        this.email=StringUtils.defaultIfEmpty(email,null);
-        this.reportRunFrequency = reportRunFrequency;
-        this.reportRunEvery = reportRunEvery;
-        this.isActive = BooleanUtils.toBooleanDefaultIfNull(isActive, false);
-       
-    }
     public static AdHoc fromJson(final JsonCommand command) {
         final String name = command.stringValueOfParameterNamed(AdHocJsonInputParams.NAME.getValue());
         
@@ -86,7 +80,17 @@ public class AdHoc extends AbstractAuditableCustom<AppUser, Long> {
         final Long reportRunFrequency = command.longValueOfParameterNamed(AdHocJsonInputParams.REPORT_RUN_FREQUENCY.getValue());
         final Long reportRunEvery = command.longValueOfParameterNamed(AdHocJsonInputParams.REPORT_RUN_EVERY.getValue());
         final boolean isActive = command.booleanPrimitiveValueOfParameterNamed(AdHocJsonInputParams.ISACTIVE.getValue());
-        return new AdHoc(name,query,tableName,tableFields, email, reportRunFrequency, reportRunEvery, isActive);
+
+        return AdHoc.builder()
+            .name(name)
+            .query(query)
+            .tableName(tableName)
+            .tableFields(tableFields)
+            .email(email)
+            .reportRunFrequency(reportRunFrequency)
+            .reportRunEvery(reportRunEvery)
+            .active(isActive)
+            .build();
     }
     
     public Map<String, Object> update(final JsonCommand command) {
@@ -137,42 +141,11 @@ public class AdHoc extends AbstractAuditableCustom<AppUser, Long> {
             this.reportRunEvery = newValue;
         }
         final String paramisActive = "isActive";
-        if (command.isChangeInBooleanParameterNamed(paramisActive, this.isActive)) {
+        if (command.isChangeInBooleanParameterNamed(paramisActive, this.active)) {
         	final Boolean newValue = command.booleanObjectValueOfParameterNamed(paramisActive);
             actualChanges.put(paramisActive, newValue);
-            this.isActive = newValue;
+            this.active = newValue;
         }
         return actualChanges;
-    }
-    
-    public String getName() {
-		return name;
-	}
-	public String getQuery() {
-		return query;
-	}
-	public String getTableName() {
-		return tableName;
-	}
-	public String getTableFields() {
-		return tableFields;
-	}
-    public boolean isActive() {
-        return this.isActive;
-    }
-	public String getEmail() {
-		return email;
-	}
-    public void disableActive() {
-        this.isActive = true;
-    }
-    public void enableActive() {
-    	this.isActive = false;
-    }
-    public Long getReportRunFrequency() {
-        return this.reportRunFrequency;
-    }
-    public Long getReportRunEvery() {
-        return this.reportRunEvery;
     }
 }

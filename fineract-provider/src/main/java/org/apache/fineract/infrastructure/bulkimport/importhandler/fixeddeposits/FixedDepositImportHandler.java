@@ -284,7 +284,7 @@ public class FixedDepositImportHandler implements ImportHandler {
 
         }
         setReportHeaders(savingsSheet);
-        return Count.instance(successCount,errorCount);
+        return new Count(successCount,errorCount);
     }
     private void writeFixedDepositErrorMessage(Long savingsId,String errorMessage,int progressLevel,Cell statusCell,Cell errorReportCell,Row row){
         String status = "";

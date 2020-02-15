@@ -73,20 +73,6 @@ public class LoanProductProvisioningEntry extends AbstractPersistableCustom<Long
     @JoinColumn(name = "expense_account", nullable = false)
     private GLAccount expenseAccount;
 
-    public LoanProductProvisioningEntry(final LoanProduct loanProduct, final Office office, final String currencyCode,
-            final ProvisioningCategory provisioningCategory, final Long overdueInDays, final BigDecimal reservedAmount,
-            final GLAccount liabilityAccount, final GLAccount expenseAccount, Long criteriaId) {
-        this.loanProduct = loanProduct;
-        this.office = office;
-        this.currencyCode = currencyCode;
-        this.provisioningCategory = provisioningCategory;
-        this.overdueInDays = overdueInDays;
-        this.reservedAmount = reservedAmount;
-        this.liabilityAccount = liabilityAccount;
-        this.expenseAccount = expenseAccount;
-        this.criteriaId = criteriaId ;
-    }
-
     public void addReservedAmount(BigDecimal value) {
         this.reservedAmount = this.reservedAmount.add(value) ;
     }

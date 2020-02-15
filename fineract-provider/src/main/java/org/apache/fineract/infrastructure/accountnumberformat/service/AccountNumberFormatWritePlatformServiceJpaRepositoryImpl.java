@@ -61,7 +61,10 @@ public class AccountNumberFormatWritePlatformServiceJpaRepositoryImpl implements
                 accountNumberPrefixType = AccountNumberPrefixType.fromInt(prefixTypeId);
             }
 
-            AccountNumberFormat accountNumberFormat = new AccountNumberFormat(entityAccountType, accountNumberPrefixType);
+            AccountNumberFormat accountNumberFormat = AccountNumberFormat.builder()
+                .accountTypeEnum(entityAccountType!=null ? entityAccountType.getValue() : null)
+                .prefixEnum(accountNumberPrefixType!=null ? accountNumberPrefixType.getValue() : null)
+                .build();
 
             this.accountNumberFormatRepository.save(accountNumberFormat);
 
@@ -85,7 +88,7 @@ public class AccountNumberFormatWritePlatformServiceJpaRepositoryImpl implements
 
             final AccountNumberFormat accountNumberFormatForUpdate = this.accountNumberFormatRepository
                     .findOneWithNotFoundDetection(accountNumberFormatId);
-            EntityAccountType accountType = accountNumberFormatForUpdate.getAccountType();
+            EntityAccountType accountType = EntityAccountType.fromInt(accountNumberFormatForUpdate.getAccountTypeEnum());
 
             this.accountNumberFormatDataValidator.validateForUpdate(command.json(), accountType);
 

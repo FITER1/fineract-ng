@@ -125,7 +125,7 @@ public class UserImportHandler implements ImportHandler{
         userSheet.setColumnWidth(UserConstants.STATUS_COL, TemplatePopulateImportConstants.SMALL_COL_SIZE);
         ImportHandlerUtils.writeString(UserConstants.STATUS_COL, userSheet.getRow(TemplatePopulateImportConstants.ROWHEADER_INDEX),
                 TemplatePopulateImportConstants.STATUS_COL_REPORT_HEADER);
-        return Count.instance(successCount,errorCount);
+        return new Count(successCount,errorCount);
     }
 
 

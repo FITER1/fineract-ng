@@ -184,7 +184,7 @@ public class CenterImportHandler implements ImportHandler {
             }
         }
         setReportHeaders(centerSheet);
-        return Count.instance(successCount, errorCount);
+        return new Count(successCount, errorCount);
     }
 
     private void writeCenterErrorMessage(String centerId,String errorMessage,int progressLevel,Cell statusCell,Cell errorReportCell,Row row){

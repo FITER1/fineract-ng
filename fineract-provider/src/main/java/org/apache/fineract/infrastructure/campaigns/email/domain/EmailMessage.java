@@ -79,37 +79,6 @@ public class EmailMessage extends AbstractPersistableCustom<Long> {
     @Column(name = "error_message")
     private String errorMessage;
 
-
-    public static EmailMessage pendingEmail(final Group group, final Client client, final Staff staff,final EmailCampaign emailCampaign, final String emailSubject, final String message,
-                                        final String emailAddress, final String campaignName) {
-        return EmailMessage.builder()
-            .group(group)
-            .client(client)
-            .staff(staff)
-            .emailCampaign(emailCampaign)
-            .statusType(EmailMessageStatusType.PENDING.getValue())
-            .emailSubject(emailSubject)
-            .message(message)
-            .emailAddress(emailAddress)
-            .campaignName(campaignName)
-            .build();
-    }
-    
-    public static EmailMessage instance(final Group group, final Client client, final Staff staff, final EmailCampaign emailCampaign, final EmailMessageStatusType statusType,
-                                      final String emailSubject, final String message, final String sourceAddress, final String emailAddress, final String campaignName) {
-        return EmailMessage.builder()
-            .group(group)
-            .client(client)
-            .staff(staff)
-            .emailCampaign(emailCampaign)
-            .statusType(statusType.getValue())
-            .emailSubject(emailSubject)
-            .message(message)
-            .emailAddress(emailAddress)
-            .campaignName(campaignName)
-            .build();
-    }
-
     public Map<String, Object> update(final JsonCommand command) {
 
         final Map<String, Object> actualChanges = new LinkedHashMap<>(1);
@@ -122,8 +91,6 @@ public class EmailMessage extends AbstractPersistableCustom<Long> {
 
         return actualChanges;
     }
-
-    public void updateErrorMessage(final String errorMessage) {this.errorMessage = errorMessage;}
 
     public boolean isPending() {
         return EmailMessageStatusType.fromInt(this.statusType).isPending();

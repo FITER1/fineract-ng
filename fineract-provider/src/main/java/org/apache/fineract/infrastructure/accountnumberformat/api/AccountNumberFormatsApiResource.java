@@ -113,7 +113,8 @@ public class AccountNumberFormatsApiResource {
         if (settings.isTemplate()) {
             final AccountNumberFormatData templateData = this.accountNumberFormatReadPlatformService.retrieveTemplate(EntityAccountType
                     .fromInt(accountNumberFormatData.getAccountType().getId().intValue()));
-            accountNumberFormatData.templateOnTop(templateData.getAccountTypeOptions(), templateData.getPrefixTypeOptions());
+            accountNumberFormatData.setAccountTypeOptions(templateData.getAccountTypeOptions());
+            accountNumberFormatData.setPrefixTypeOptions(templateData.getPrefixTypeOptions());
         }
 
 		return this.toApiJsonSerializer.serialize(settings, accountNumberFormatData,

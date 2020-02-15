@@ -157,7 +157,7 @@ public class AccountingRule extends AbstractPersistableCustom<Long> {
 
     public void updateAccountingRuleForTags(final List<AccountingTagRule> debitAccountingTagRules) {
         for (final AccountingTagRule accountingTagRule : debitAccountingTagRules) {
-            accountingTagRule.updateAccountingTagRule(this);
+            accountingTagRule.setAccountingRule(this);
             this.accountingTagRules.add(accountingTagRule);
         }
     }
@@ -170,14 +170,6 @@ public class AccountingRule extends AbstractPersistableCustom<Long> {
     public void updateCreditAccount(final GLAccount accountToCredit) {
         this.accountToCredit = accountToCredit;
         this.allowMultipleCreditEntries = false;
-    }
-
-    public void updateAllowMultipleCreditEntries(final boolean allowMultipleCreditEntries) {
-        this.allowMultipleCreditEntries = allowMultipleCreditEntries;
-    }
-
-    public void updateAllowMultipleDebitEntries(final boolean allowMultipleDebitEntries) {
-        this.allowMultipleDebitEntries = allowMultipleDebitEntries;
     }
 
     public void updateTags(final JournalEntryType type) {

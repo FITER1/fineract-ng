@@ -56,7 +56,7 @@ public class BulkImportEventListener implements ApplicationListener<BulkImportEv
 
         ImportHandler importHandler = null;
         final ImportDocument importDocument = this.importRepository.findById(event.getImportId()).orElse(null);
-        final GlobalEntityType entityType = GlobalEntityType.fromInt(importDocument.getEntity_type());
+        final GlobalEntityType entityType = GlobalEntityType.fromInt(importDocument.getEntityType());
 
         switch(entityType) {
             case OFFICES :
@@ -123,7 +123,10 @@ public class BulkImportEventListener implements ApplicationListener<BulkImportEv
 
         final Workbook workbook = event.getWorkbook();
         final Count count = importHandler.process(workbook, event.getLocale(), event.getDateFormat());
-        importDocument.update(DateUtils.getLocalDateTimeOfTenant(), count.getSuccessCount(), count.getErrorCount());
+        importDocument.setImportTime(DateUtils.getLocalDateTimeOfTenant().toDate());
+        importDocument.setSuccessCount(count.getSuccessCount());
+        importDocument.setFailureCount(count.getErrorCount());
+        importDocument.setCompleted(true);
         this.importRepository.save(importDocument);
 
         final Set<String> modifiedParams = new HashSet<>();

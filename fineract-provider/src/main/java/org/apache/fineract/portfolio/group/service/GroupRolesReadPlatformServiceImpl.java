@@ -74,7 +74,12 @@ public class GroupRolesReadPlatformServiceImpl implements GroupRolesReadPlatform
             final String clientName = rs.getString("clientName");
             final Long roleId = JdbcSupport.getLong(rs, "roleId");
             final String roleName = rs.getString("roleName");
-            final CodeValueData role = CodeValueData.instance(roleId, roleName);
+            final CodeValueData role = CodeValueData.builder()
+                .id(roleId)
+                .name(roleName)
+                .active(false)
+                .mandatory(false)
+                .build();
             return new GroupRoleData(id, role, clientId, clientName);
         }
 

@@ -42,15 +42,4 @@ public class AccountNumberFormat extends AbstractPersistableCustom<Long> {
 
     @Column(name = AccountNumberFormatConstants.PREFIX_TYPE_ENUM_COLUMN_NAME, nullable = true)
     private Integer prefixEnum;
-
-    public AccountNumberFormat(EntityAccountType entityAccountType, AccountNumberPrefixType prefixType) {
-        this.accountTypeEnum = entityAccountType.getValue();
-        if (prefixType != null) {
-            this.prefixEnum = prefixType.getValue();
-        }
-    }
-
-    public EntityAccountType getAccountType() {
-        return EntityAccountType.fromInt(this.accountTypeEnum);
-    }
 }

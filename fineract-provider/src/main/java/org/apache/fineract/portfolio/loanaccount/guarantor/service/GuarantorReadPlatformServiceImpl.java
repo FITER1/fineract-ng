@@ -126,7 +126,12 @@ public class GuarantorReadPlatformServiceImpl implements GuarantorReadPlatformSe
 
             if (clientRelationshipTypeId != null) {
                 final String typeName = rs.getString("typeName");
-                clientRelationshipType = CodeValueData.instance(clientRelationshipTypeId, typeName);
+                clientRelationshipType = CodeValueData.builder()
+                    .id(clientRelationshipTypeId)
+                    .name(typeName)
+                    .active(false)
+                    .mandatory(false)
+                    .build();
             }
 
             final Integer guarantorTypeId = rs.getInt("guarantorType");

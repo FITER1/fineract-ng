@@ -111,7 +111,7 @@ public class StaffImportHandler implements ImportHandler {
         }
         staffSheet.setColumnWidth(StaffConstants.STATUS_COL, TemplatePopulateImportConstants.SMALL_COL_SIZE);
         ImportHandlerUtils.writeString(StaffConstants.STATUS_COL, staffSheet.getRow(0), TemplatePopulateImportConstants.STATUS_COL_REPORT_HEADER);
-        return Count.instance(successCount,errorCount);
+        return new Count(successCount,errorCount);
     }
 
 
