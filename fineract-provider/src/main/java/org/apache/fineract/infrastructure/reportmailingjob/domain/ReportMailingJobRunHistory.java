@@ -19,13 +19,14 @@
 package org.apache.fineract.infrastructure.reportmailingjob.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.joda.time.DateTime;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

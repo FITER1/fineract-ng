@@ -19,6 +19,7 @@
 package org.apache.fineract.accounting.rule.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.accounting.journalentry.domain.JournalEntryType;
 import org.apache.fineract.accounting.rule.api.AccountingRuleJsonInputParams;
@@ -29,7 +30,7 @@ import org.apache.fineract.organisation.office.domain.Office;
 import javax.persistence.*;
 import java.util.*;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

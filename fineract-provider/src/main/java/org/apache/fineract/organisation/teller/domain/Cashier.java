@@ -19,6 +19,7 @@
 package org.apache.fineract.organisation.teller.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.office.domain.Office;
@@ -38,7 +39,7 @@ import java.util.Map;
  * @author Markus Geiss
  * @since 2.0.0
  */
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

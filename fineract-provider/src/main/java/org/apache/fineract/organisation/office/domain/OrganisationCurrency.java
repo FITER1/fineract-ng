@@ -19,6 +19,7 @@
 package org.apache.fineract.organisation.office.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 
@@ -29,7 +30,7 @@ import javax.persistence.Table;
 /**
  * Represents currencies allowed for this MFI/organisation.
  */
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

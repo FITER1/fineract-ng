@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.client.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
@@ -34,7 +35,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.*;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

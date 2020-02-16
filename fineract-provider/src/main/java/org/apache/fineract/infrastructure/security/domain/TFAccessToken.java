@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.security.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.security.data.AccessTokenData;
@@ -29,7 +30,7 @@ import org.joda.time.LocalDateTime;
 import javax.persistence.*;
 import java.util.Date;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

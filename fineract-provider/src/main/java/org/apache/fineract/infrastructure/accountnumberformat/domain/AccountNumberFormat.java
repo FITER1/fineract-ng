@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.accountnumberformat.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormatEnumerations.AccountNumberPrefixType;
 import org.apache.fineract.infrastructure.accountnumberformat.service.AccountNumberFormatConstants;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
@@ -28,7 +29,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

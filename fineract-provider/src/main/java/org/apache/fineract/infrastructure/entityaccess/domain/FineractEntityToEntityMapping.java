@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.entityaccess.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.entityaccess.api.FineractEntityApiResourceConstants;
@@ -29,7 +30,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

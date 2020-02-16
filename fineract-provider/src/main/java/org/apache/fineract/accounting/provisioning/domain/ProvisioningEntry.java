@@ -19,6 +19,7 @@
 package org.apache.fineract.accounting.provisioning.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.useradministration.domain.AppUser;
 
@@ -27,7 +28,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

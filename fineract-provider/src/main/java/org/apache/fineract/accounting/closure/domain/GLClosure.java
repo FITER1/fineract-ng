@@ -19,6 +19,7 @@
 package org.apache.fineract.accounting.closure.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.accounting.closure.api.GLClosureJsonInputParams;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
@@ -30,7 +31,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

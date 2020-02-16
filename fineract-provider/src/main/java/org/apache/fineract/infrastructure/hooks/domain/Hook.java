@@ -21,6 +21,7 @@ package org.apache.fineract.infrastructure.hooks.domain;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
@@ -36,7 +37,7 @@ import java.util.Set;
 
 import static org.apache.fineract.infrastructure.hooks.api.HookApiConstants.*;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

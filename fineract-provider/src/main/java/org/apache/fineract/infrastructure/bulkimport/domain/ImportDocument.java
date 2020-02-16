@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.bulkimport.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.documentmanagement.domain.Document;
 import org.apache.fineract.useradministration.domain.AppUser;
@@ -26,7 +27,7 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import javax.persistence.*;
 import java.util.Date;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

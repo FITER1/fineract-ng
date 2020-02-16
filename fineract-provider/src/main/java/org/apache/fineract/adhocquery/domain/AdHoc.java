@@ -19,6 +19,7 @@
 package org.apache.fineract.adhocquery.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.adhocquery.api.AdHocJsonInputParams;
@@ -34,7 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

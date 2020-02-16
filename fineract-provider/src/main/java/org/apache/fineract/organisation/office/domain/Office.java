@@ -19,6 +19,7 @@
 package org.apache.fineract.organisation.office.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
@@ -29,7 +30,7 @@ import org.joda.time.LocalDate;
 import javax.persistence.*;
 import java.util.*;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -20,6 +20,7 @@ package org.apache.fineract.organisation.teller.domain;
 
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.office.domain.Office;
@@ -31,7 +32,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.configuration.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.configuration.data.GlobalConfigurationPropertyData;
 import org.apache.fineract.infrastructure.configuration.exception.GlobalConfigurationPropertyCannotBeModfied;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -32,7 +33,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

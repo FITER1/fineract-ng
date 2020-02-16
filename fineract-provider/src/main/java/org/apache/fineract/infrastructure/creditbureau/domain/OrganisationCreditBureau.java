@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.creditbureau.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
@@ -26,7 +27,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

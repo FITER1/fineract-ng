@@ -19,6 +19,7 @@
 package org.apache.fineract.accounting.journalentry.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
 import org.apache.fineract.organisation.office.domain.Office;
@@ -32,7 +33,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

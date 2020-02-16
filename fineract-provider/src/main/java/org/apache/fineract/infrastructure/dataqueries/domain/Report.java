@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.dataqueries.domain;
 
 import com.google.gson.JsonArray;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -31,7 +32,7 @@ import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityEx
 import javax.persistence.*;
 import java.util.*;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

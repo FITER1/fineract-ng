@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.campaigns.sms.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.campaigns.constants.CampaignType;
@@ -42,7 +43,7 @@ import org.joda.time.format.DateTimeFormatter;
 import javax.persistence.*;
 import java.util.*;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

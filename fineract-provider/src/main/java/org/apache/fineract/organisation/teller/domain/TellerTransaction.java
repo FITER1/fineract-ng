@@ -19,6 +19,7 @@
 package org.apache.fineract.organisation.teller.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.portfolio.client.domain.Client;
@@ -26,7 +27,7 @@ import org.apache.fineract.portfolio.client.domain.Client;
 import javax.persistence.*;
 import java.util.Date;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

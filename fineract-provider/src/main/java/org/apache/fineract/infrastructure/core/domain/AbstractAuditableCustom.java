@@ -22,6 +22,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -50,6 +51,7 @@ import java.util.Optional;
  * @param <PK>
  *            the type of the auditing type's identifier
  */
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

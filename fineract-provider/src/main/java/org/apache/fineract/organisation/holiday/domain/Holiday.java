@@ -20,6 +20,7 @@ package org.apache.fineract.organisation.holiday.domain;
 
 import com.google.gson.JsonArray;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -37,7 +38,7 @@ import static org.apache.fineract.organisation.holiday.api.HolidayApiConstants.*
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.dateFormatParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.localeParamName;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

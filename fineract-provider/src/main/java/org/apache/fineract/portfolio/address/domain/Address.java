@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.address.domain;
 
 import com.google.gson.JsonObject;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
@@ -34,7 +35,7 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

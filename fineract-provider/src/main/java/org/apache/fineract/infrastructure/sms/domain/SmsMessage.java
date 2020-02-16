@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.sms.domain;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.campaigns.sms.domain.SmsCampaign;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -34,7 +35,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

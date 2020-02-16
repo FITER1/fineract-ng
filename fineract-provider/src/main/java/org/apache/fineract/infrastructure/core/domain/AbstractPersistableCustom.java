@@ -18,10 +18,8 @@
  */
 package org.apache.fineract.infrastructure.core.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.GeneratedValue;
@@ -31,6 +29,7 @@ import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
