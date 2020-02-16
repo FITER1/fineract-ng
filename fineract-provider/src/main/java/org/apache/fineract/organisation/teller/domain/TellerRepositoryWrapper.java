@@ -18,20 +18,16 @@
  */
 package org.apache.fineract.organisation.teller.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.organisation.teller.exception.TellerNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class TellerRepositoryWrapper {
 
     private final TellerRepository repository;
-
-    @Autowired
-    public TellerRepositoryWrapper(final TellerRepository repository) {
-        this.repository = repository;
-    }
 
     @Transactional(readOnly=true)
     public Teller findOneWithNotFoundDetection(final Long id) {

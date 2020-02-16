@@ -20,28 +20,24 @@ package org.apache.fineract.infrastructure.dataqueries.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.dataqueries.api.DataTableApiConstant;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class DataTableValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
 	private final Set<String> REGISTER_PARAMS = new HashSet<>(
 			Arrays.asList(DataTableApiConstant.categoryParamName, DataTableApiConstant.localParamName));
-
-    @Autowired
-    public DataTableValidator(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validateDataTableRegistration(final String json) {
 

@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.savings.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -35,7 +36,6 @@ import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -45,17 +45,13 @@ import java.util.*;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
 
 @Component
+@RequiredArgsConstructor
 public class SavingsAccountTransactionDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
 	private static final Set<String> SAVINGS_ACCOUNT_HOLD_AMOUNT_REQUEST_DATA_PARAMETERS = new HashSet<>(
 			Arrays.asList(transactionDateParamName, SavingsApiConstants.dateFormatParamName,
 					SavingsApiConstants.localeParamName, transactionAmountParamName));
-
-    @Autowired
-    public SavingsAccountTransactionDataValidator(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validate(final JsonCommand command) {
 

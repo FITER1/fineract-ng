@@ -18,20 +18,16 @@
  */
 package org.apache.fineract.portfolio.shareaccounts.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.accounts.exceptions.ShareAccountNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ShareAccountRepositoryWrapper {
 
 	private final ShareAccountRepository shareAccountRepository ;
 
-	@Autowired
-	public ShareAccountRepositoryWrapper(final ShareAccountRepository shareAccountRepository) {
-		this.shareAccountRepository = shareAccountRepository ;
-	}
-	
 	public ShareAccount findOneWithNotFoundDetection(final Long accountId) {
 		return this.shareAccountRepository.findById(accountId)
 				.orElseThrow(() -> new ShareAccountNotFoundException(accountId));

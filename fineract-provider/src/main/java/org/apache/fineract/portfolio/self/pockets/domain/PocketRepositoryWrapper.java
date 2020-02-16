@@ -19,18 +19,14 @@
 
 package org.apache.fineract.portfolio.self.pockets.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.self.pockets.exception.PocketNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PocketRepositoryWrapper {
 	private final PocketRepository pocketRepository;
-
-	@Autowired
-	public PocketRepositoryWrapper(final PocketRepository pocketRepository) {
-		this.pocketRepository = pocketRepository;
-	}
 
 	public void saveAndFlush(final Pocket pocket) {
 		this.pocketRepository.saveAndFlush(pocket);

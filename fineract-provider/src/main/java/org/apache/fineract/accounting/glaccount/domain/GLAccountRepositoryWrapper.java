@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.accounting.glaccount.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.glaccount.exception.GLAccountNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,14 +28,10 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class GLAccountRepositoryWrapper {
 
     private final GLAccountRepository repository;
-
-    @Autowired
-    public GLAccountRepositoryWrapper(final GLAccountRepository repository) {
-        this.repository = repository;
-    }
 
     public GLAccount findOneWithNotFoundDetection(final Long id) {
         return this.repository.findById(id).orElseThrow(() ->  new GLAccountNotFoundException(id));

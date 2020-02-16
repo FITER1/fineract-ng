@@ -21,6 +21,7 @@ package org.apache.fineract.portfolio.savings.domain;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
@@ -30,7 +31,6 @@ import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.organisation.staff.domain.StaffRepositoryWrapper;
-import org.apache.fineract.portfolio.account.service.AccountTransfersReadPlatformService;
 import org.apache.fineract.portfolio.accountdetails.domain.AccountType;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
@@ -53,7 +53,6 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -80,6 +79,7 @@ import static org.apache.fineract.portfolio.savings.SavingsApiConstants.submitte
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
 
 @Service
+@RequiredArgsConstructor
 public class DepositAccountAssembler {
 
     private final PlatformSecurityContext context;
@@ -96,31 +96,7 @@ public class DepositAccountAssembler {
     private final DepositProductAssembler depositProductAssembler;
     private final PaymentDetailAssembler paymentDetailAssembler;
 
-    @Autowired
-    public DepositAccountAssembler(final SavingsAccountTransactionSummaryWrapper savingsAccountTransactionSummaryWrapper,
-            final ClientRepositoryWrapper clientRepository, final GroupRepositoryWrapper groupRepository,
-            final StaffRepositoryWrapper staffRepository, final FixedDepositProductRepository fixedDepositProductRepository,
-            final SavingsAccountRepositoryWrapper savingsAccountRepository,
-            final SavingsAccountChargeAssembler savingsAccountChargeAssembler, final FromJsonHelper fromApiJsonHelper,
-            final DepositProductAssembler depositProductAssembler,
-            final RecurringDepositProductRepository recurringDepositProductRepository,
-            final AccountTransfersReadPlatformService accountTransfersReadPlatformService, final PlatformSecurityContext context,
-            final PaymentDetailAssembler paymentDetailAssembler) {
-
-        this.savingsAccountTransactionSummaryWrapper = savingsAccountTransactionSummaryWrapper;
-        this.clientRepository = clientRepository;
-        this.groupRepository = groupRepository;
-        this.staffRepository = staffRepository;
-        this.fixedDepositProductRepository = fixedDepositProductRepository;
-        this.savingsAccountRepository = savingsAccountRepository;
-        this.savingsAccountChargeAssembler = savingsAccountChargeAssembler;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.depositProductAssembler = depositProductAssembler;
-        this.recurringDepositProductRepository = recurringDepositProductRepository;
-        this.savingsHelper = new SavingsHelper(accountTransfersReadPlatformService);
-        this.context = context;
-        this.paymentDetailAssembler = paymentDetailAssembler;
-    }
+    // this.savingsHelper = new SavingsHelper(accountTransfersReadPlatformService);
 
     /**
      * Assembles a new {@link SavingsAccount} from JSON details passed in

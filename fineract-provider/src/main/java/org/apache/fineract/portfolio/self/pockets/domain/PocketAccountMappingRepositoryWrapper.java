@@ -19,22 +19,18 @@
 
 package org.apache.fineract.portfolio.self.pockets.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.self.pockets.exception.MappingIdNotLinkedToPocketException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PocketAccountMappingRepositoryWrapper {
 
 	private final PocketAccountMappingRepository pocketAccountMappingRepository;
-
-	@Autowired
-	public PocketAccountMappingRepositoryWrapper(final PocketAccountMappingRepository pocketAccountMappingRepository) {
-		this.pocketAccountMappingRepository = pocketAccountMappingRepository;
-	}
 
 	public void save(final PocketAccountMapping pocketAccountMapping) {
 		this.pocketAccountMappingRepository.save(pocketAccountMapping);

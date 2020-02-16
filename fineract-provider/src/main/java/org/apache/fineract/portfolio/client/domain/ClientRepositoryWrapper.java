@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.portfolio.client.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.exception.ClientNotActiveException;
 import org.apache.fineract.portfolio.client.exception.ClientNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,16 +35,11 @@ import java.util.List;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class ClientRepositoryWrapper {
 
     private final ClientRepository repository;
     private final PlatformSecurityContext context;
-
-    @Autowired
-    public ClientRepositoryWrapper(final ClientRepository repository, final PlatformSecurityContext context) {
-        this.repository = repository;
-        this.context = context;
-    }
 
     public Client findOneWithNotFoundDetection(final Long id) {
        return this.findOneWithNotFoundDetection(id, false) ;

@@ -31,7 +31,7 @@ import java.util.Set;
 @Scope("singleton")
 public class AccountEntityServiceFactory {
 
-	 private Map<String, AccountEntityService> accountEntityServiceHashMap = new HashMap<>();
+	 private final Map<String, AccountEntityService> accountEntityServiceHashMap = new HashMap<>();
 
     @Autowired
     public AccountEntityServiceFactory(final Set<AccountEntityService> accountEntityServices) {

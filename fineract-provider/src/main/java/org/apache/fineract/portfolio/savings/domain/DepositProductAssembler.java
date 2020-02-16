@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.savings.domain;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingRuleType;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -35,7 +36,6 @@ import org.apache.fineract.portfolio.loanproduct.exception.InvalidCurrencyExcept
 import org.apache.fineract.portfolio.savings.*;
 import org.apache.fineract.portfolio.tax.domain.TaxGroup;
 import org.apache.fineract.portfolio.tax.domain.TaxGroupRepositoryWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -63,19 +63,12 @@ import static org.apache.fineract.portfolio.savings.SavingsApiConstants.shortNam
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
 
 @Service
+@RequiredArgsConstructor
 public class DepositProductAssembler {
 
     private final ChargeRepositoryWrapper chargeRepository;
     private final InterestRateChartAssembler chartAssembler;
     private final TaxGroupRepositoryWrapper taxGroupRepository;
-
-    @Autowired
-    public DepositProductAssembler(final ChargeRepositoryWrapper chargeRepository, final InterestRateChartAssembler chartAssembler,
-            final TaxGroupRepositoryWrapper taxGroupRepository) {
-        this.chargeRepository = chargeRepository;
-        this.chartAssembler = chartAssembler;
-        this.taxGroupRepository = taxGroupRepository;
-    }
 
     public FixedDepositProduct assembleFixedDepositProduct(final JsonCommand command) {
 

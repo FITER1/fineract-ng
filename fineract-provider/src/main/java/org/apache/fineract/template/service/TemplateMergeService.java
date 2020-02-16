@@ -41,14 +41,8 @@ import java.util.Map.Entry;
 @Service
 public class TemplateMergeService {
 
-    // private final FromJsonHelper fromApiJsonHelper;
     private Map<String, Object> scopes;
     private String authToken;
-
-    // @Autowired
-    // public TemplateMergeService(final FromJsonHelper fromApiJsonHelper) {
-    // this.fromApiJsonHelper = fromApiJsonHelper;
-    //
 
     public void setAuthToken(final String authToken) {
     	this.authToken =  authToken;

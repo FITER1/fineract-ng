@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.campaigns.sms.service;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.campaigns.constants.CampaignType;
 import org.apache.fineract.infrastructure.campaigns.sms.constants.SmsCampaignTriggerType;
@@ -35,7 +36,6 @@ import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.portfolio.calendar.service.CalendarDropdownReadPlatformService;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -43,12 +43,12 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class SmsCampaignReadPlatformServiceImpl implements SmsCampaignReadPlatformService {
 
     private final BusinessRuleMapper businessRuleMapper;
@@ -57,17 +57,6 @@ public class SmsCampaignReadPlatformServiceImpl implements SmsCampaignReadPlatfo
     private final SmsCampaignMapper smsCampaignMapper;
     private final CalendarDropdownReadPlatformService calendarDropdownReadPlatformService;
     private final PaginationHelper<SmsCampaignData> paginationHelper = new PaginationHelper<>();
-
-    @Autowired
-    public SmsCampaignReadPlatformServiceImpl(final DataSource dataSource,
-            SmsCampaignDropdownReadPlatformService smsCampaignDropdownReadPlatformService, 
-            final CalendarDropdownReadPlatformService calendarDropdownReadPlatformService) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
-        businessRuleMapper = new BusinessRuleMapper();
-        this.smsCampaignDropdownReadPlatformService = smsCampaignDropdownReadPlatformService;
-        smsCampaignMapper = new SmsCampaignMapper();
-        this.calendarDropdownReadPlatformService = calendarDropdownReadPlatformService;
-    }
 
     @Override
     public SmsCampaignData retrieveOne(Long campaignId) {

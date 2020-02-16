@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.infrastructure.security.filter;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.security.constants.TwoFactorConstants;
 import org.apache.fineract.infrastructure.security.domain.TFAccessToken;
 import org.apache.fineract.infrastructure.security.service.TwoFactorService;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -61,14 +61,10 @@ import java.util.List;
 // @Service(value = "twoFactorAuthFilter")
 // @Profile("twofactor")
 @Deprecated
+@RequiredArgsConstructor
 public class TwoFactorAuthenticationFilter extends GenericFilterBean {
 
     private final TwoFactorService twoFactorService;
-
-    @Autowired
-    public TwoFactorAuthenticationFilter(TwoFactorService twoFactorService) {
-        this.twoFactorService = twoFactorService;
-    }
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)

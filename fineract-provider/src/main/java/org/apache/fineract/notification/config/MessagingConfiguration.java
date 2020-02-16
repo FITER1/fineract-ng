@@ -18,27 +18,24 @@
  */
 package org.apache.fineract.notification.config;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.notification.eventandlistener.NotificationEventListener;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.listener.DefaultMessageListenerContainer;
 
 import javax.jms.ConnectionFactory;
 
+@Slf4j
 @Configuration
+@RequiredArgsConstructor
 public class MessagingConfiguration {
 
-	private Logger logger = LoggerFactory.getLogger(MessagingConfiguration.class);
-
-	@Autowired
-	private FineractProperties settings;
+	private final FineractProperties settings;
 	
-	@Autowired
-	private NotificationEventListener notificationEventListener;
+	private final NotificationEventListener notificationEventListener;
 
     @Bean
     public DefaultMessageListenerContainer messageListenerContainer(ConnectionFactory connectionFactory) {
@@ -48,10 +45,9 @@ public class MessagingConfiguration {
     	messageListenerContainer.setDestinationName("NotificationQueue");
     	messageListenerContainer.setMessageListener(notificationEventListener);
     	messageListenerContainer.setExceptionListener(jmse -> {
-			logger.error("Network Error: ActiveMQ Broker Unavailable.");
+			log.error("Network Error: ActiveMQ Broker Unavailable.");
 			messageListenerContainer.shutdown();
 		});
     	return messageListenerContainer;
     }
-    
 }

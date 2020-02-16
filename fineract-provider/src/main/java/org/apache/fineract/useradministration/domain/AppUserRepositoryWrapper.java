@@ -18,20 +18,16 @@
  */
 package org.apache.fineract.useradministration.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.useradministration.exception.UserNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AppUserRepositoryWrapper {
 
     private final AppUserRepository appUserRepository ;
-    
-    @Autowired
-    public AppUserRepositoryWrapper(final AppUserRepository appUserRepository) {
-        this.appUserRepository = appUserRepository ;
-    }
-    
+
     public AppUser fetchSystemUser() {
         String userName = "system" ;
         AppUser user = this.appUserRepository.findAppUserByName(userName);

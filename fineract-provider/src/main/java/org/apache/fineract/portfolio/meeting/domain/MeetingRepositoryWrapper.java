@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.portfolio.meeting.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.meeting.exception.MeetingNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,14 +35,10 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class MeetingRepositoryWrapper {
 
     private final MeetingRepository repository;
-
-    @Autowired
-    public MeetingRepositoryWrapper(final MeetingRepository repository) {
-        this.repository = repository;
-    }
 
     public Meeting findOneWithNotFoundDetection(final Long meetingId) {
         return this.repository.findById(meetingId)

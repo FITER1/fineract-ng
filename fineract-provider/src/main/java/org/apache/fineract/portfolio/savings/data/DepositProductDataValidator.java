@@ -22,6 +22,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.common.AccountingConstants.SAVINGS_PRODUCT_ACCOUNTING_PARAMS;
 import org.apache.fineract.accounting.common.AccountingRuleType;
@@ -33,7 +34,6 @@ import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartDataValidator;
 import org.apache.fineract.portfolio.savings.*;
 import org.joda.time.MonthDay;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -63,16 +63,11 @@ import static org.apache.fineract.portfolio.savings.SavingsApiConstants.shortNam
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
 
 @Component
+@RequiredArgsConstructor
 public class DepositProductDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
     private final InterestRateChartDataValidator chartDataValidator;
-
-    @Autowired
-    public DepositProductDataValidator(FromJsonHelper fromApiJsonHelper, InterestRateChartDataValidator chartDataValidator) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.chartDataValidator = chartDataValidator;
-    }
 
     public void validateForFixedDepositCreate(final String json) {
         if (StringUtils.isBlank(json)) { throw new InvalidJsonException(); }

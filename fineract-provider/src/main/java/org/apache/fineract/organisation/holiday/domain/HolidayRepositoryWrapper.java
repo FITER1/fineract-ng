@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.organisation.holiday.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.organisation.holiday.exception.HolidayNotFoundException;
 import org.apache.fineract.organisation.holiday.service.HolidayUtil;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -34,14 +34,10 @@ import java.util.List;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class HolidayRepositoryWrapper {
 
     private final HolidayRepository repository;
-
-    @Autowired
-    public HolidayRepositoryWrapper(final HolidayRepository repository) {
-        this.repository = repository;
-    }
 
     public Holiday findOneWithNotFoundDetection(final Long id) {
         return this.repository.findById(id)

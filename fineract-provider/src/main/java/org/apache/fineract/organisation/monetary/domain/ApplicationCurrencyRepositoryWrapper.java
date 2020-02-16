@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.organisation.monetary.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.organisation.monetary.exception.CurrencyNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -36,14 +36,10 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class ApplicationCurrencyRepositoryWrapper {
 
     private final ApplicationCurrencyRepository repository;
-
-    @Autowired
-    public ApplicationCurrencyRepositoryWrapper(final ApplicationCurrencyRepository repository) {
-        this.repository = repository;
-    }
 
     public ApplicationCurrency findOneWithNotFoundDetection(final MonetaryCurrency currency) {
 

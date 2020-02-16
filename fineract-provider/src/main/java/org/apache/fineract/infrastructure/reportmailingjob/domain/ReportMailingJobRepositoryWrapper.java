@@ -18,20 +18,16 @@
  */
 package org.apache.fineract.infrastructure.reportmailingjob.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.reportmailingjob.exception.ReportMailingJobNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ReportMailingJobRepositoryWrapper {
     private final ReportMailingJobRepository reportMailingJobRepository;
     
-    @Autowired
-    public ReportMailingJobRepositoryWrapper(final ReportMailingJobRepository reportMailingJobRepository) {
-        this.reportMailingJobRepository = reportMailingJobRepository;
-    }
-    
-    /** 
+    /**
      * find report mailing job by ID, throw a "entity not found" exception if the job does not exist
      * 
      * @param id -- the identifier of the report mailing job to be found

@@ -18,20 +18,15 @@
  */
 package org.apache.fineract.infrastructure.gcm.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.gcm.exception.DeviceRegistrationNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class DeviceRegistrationRepositoryWrapper {
 
 	private final DeviceRegistrationRepository repository;
-
-	@Autowired
-	public DeviceRegistrationRepositoryWrapper(
-			DeviceRegistrationRepository repository) {
-		this.repository = repository;
-	}
 
 	public DeviceRegistration findOneWithNotFoundDetection(
 			final Long deviceRegistrationId) {

@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.entityaccess.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -36,7 +37,6 @@ import org.apache.fineract.portfolio.savings.exception.SavingsProductNotFoundExc
 import org.apache.fineract.useradministration.domain.RoleRepository;
 import org.apache.fineract.useradministration.exception.RoleNotFoundException;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -45,6 +45,7 @@ import java.util.*;
 
 
 @Component
+@RequiredArgsConstructor
 public class FineractEntityDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
@@ -63,18 +64,6 @@ public class FineractEntityDataValidator {
 					FineractEntityApiResourceConstants.toEntityType, FineractEntityApiResourceConstants.startDate,
 					FineractEntityApiResourceConstants.LOCALE, FineractEntityApiResourceConstants.DATE_FORMAT,
 					FineractEntityApiResourceConstants.endDate));
-
-    @Autowired
-    public FineractEntityDataValidator(final FromJsonHelper fromApiJsonHelper, final OfficeRepositoryWrapper officeRepositoryWrapper,
-            final LoanProductRepository loanProductRepository, final SavingsProductRepository savingsProductRepository,
-            final ChargeRepositoryWrapper chargeRepositoryWrapper, final RoleRepository roleRepository) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.officeRepositoryWrapper = officeRepositoryWrapper;
-        this.loanProductRepository = loanProductRepository;
-        this.savingsProductRepository = savingsProductRepository;
-        this.chargeRepositoryWrapper = chargeRepositoryWrapper;
-        this.roleRepository = roleRepository;
-    }
 
     public void validateForCreate(final String json) {
 

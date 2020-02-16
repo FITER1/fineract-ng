@@ -22,6 +22,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -31,7 +32,6 @@ import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.common.domain.PeriodFrequencyType;
 import org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants;
 import org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -41,6 +41,7 @@ import java.util.*;
 import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.*;
 
 @Component
+@RequiredArgsConstructor
 public class InterestRateChartSlabDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
@@ -56,13 +57,6 @@ public class InterestRateChartSlabDataValidator {
 					InterestRateChartSlabApiConstants.idParamName, descriptionParamName, periodTypeParamName,
 					fromPeriodParamName, toPeriodParamName, amountRangeFromParamName, amountRangeToParamName,
 					annualInterestRateParamName, currencyCodeParamName, incentivesParamName));
-
-    @Autowired
-    public InterestRateChartSlabDataValidator(final FromJsonHelper fromApiJsonHelper,
-            final InterestIncentiveDataValidator interestIncentiveDataValidator) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.interestIncentiveDataValidator = interestIncentiveDataValidator;
-    }
 
     public void validateCreate(final String json) {
         if (StringUtils.isBlank(json)) { throw new InvalidJsonException(); }

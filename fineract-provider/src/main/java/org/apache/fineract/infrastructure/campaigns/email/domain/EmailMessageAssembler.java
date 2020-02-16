@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.campaigns.email.domain;
 
 import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.campaigns.email.EmailApiConstants;
 import org.apache.fineract.infrastructure.campaigns.email.exception.EmailNotFoundException;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -29,10 +30,10 @@ import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
 import org.apache.fineract.portfolio.group.domain.Group;
 import org.apache.fineract.portfolio.group.domain.GroupRepositoryWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class EmailMessageAssembler {
 
     private final EmailMessageRepository emailMessageRepository;
@@ -40,17 +41,6 @@ public class EmailMessageAssembler {
     private final ClientRepositoryWrapper clientRepository;
     private final StaffRepositoryWrapper staffRepository;
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public EmailMessageAssembler(final EmailMessageRepository emailMessageRepository, final GroupRepositoryWrapper groupRepositoryWrapper,
-                               final ClientRepositoryWrapper clientRepository, final StaffRepositoryWrapper staffRepository,
-                               final FromJsonHelper fromApiJsonHelper) {
-        this.emailMessageRepository = emailMessageRepository;
-        this.groupRepository = groupRepositoryWrapper;
-        this.clientRepository = clientRepository;
-        this.staffRepository = staffRepository;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public EmailMessage assembleFromJson(final JsonCommand command) {
 

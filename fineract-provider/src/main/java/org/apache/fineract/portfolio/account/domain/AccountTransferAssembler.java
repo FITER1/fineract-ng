@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.portfolio.account.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.portfolio.account.data.AccountTransferDTO;
@@ -26,7 +27,6 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanTransaction;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -34,14 +34,10 @@ import java.math.BigDecimal;
 import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.*;
 
 @Service
+@RequiredArgsConstructor
 public class AccountTransferAssembler {
 
     private final AccountTransferDetailAssembler accountTransferDetailAssembler;
-
-    @Autowired
-    public AccountTransferAssembler(final AccountTransferDetailAssembler accountTransferDetailAssembler) {
-        this.accountTransferDetailAssembler = accountTransferDetailAssembler;
-    }
 
     public AccountTransferDetails assembleSavingsToSavingsTransfer(final JsonCommand command, final SavingsAccount fromSavingsAccount,
             final SavingsAccount toSavingsAccount, final SavingsAccountTransaction withdrawal, final SavingsAccountTransaction deposit) {

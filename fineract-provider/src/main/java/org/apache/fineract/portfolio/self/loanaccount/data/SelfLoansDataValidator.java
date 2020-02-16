@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.self.loanaccount.data;
 
 import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.ApiParameterHelper;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -27,13 +28,13 @@ import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.UnsupportedParameterException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.ws.rs.core.UriInfo;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class SelfLoansDataValidator {
 	private static final Set<String> allowedAssociationParameters = new HashSet<>(
 			Arrays.asList("repaymentSchedule", "futureSchedule",
@@ -41,12 +42,7 @@ public class SelfLoansDataValidator {
 					"guarantors", "collateral", "linkedAccount",
 					"multiDisburseDetails"));
 	private final FromJsonHelper fromApiJsonHelper;
-	
-	@Autowired
-	public SelfLoansDataValidator(final FromJsonHelper fromApiJsonHelper){
-		this.fromApiJsonHelper = fromApiJsonHelper;
-	}
-	
+
 	public void validateRetrieveLoan(final UriInfo uriInfo) {
 		List<String> unsupportedParams = new ArrayList<>();
 

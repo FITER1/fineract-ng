@@ -19,13 +19,13 @@
 package org.apache.fineract.interoperation.handler;
 
 import com.google.common.base.Strings;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.annotation.CommandType;
 import org.apache.fineract.commands.handler.NewCommandSourceHandler;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.interoperation.domain.InteropIdentifierType;
 import org.apache.fineract.interoperation.service.InteropService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -34,14 +34,10 @@ import static org.apache.fineract.interoperation.util.InteropUtil.ENTITY_NAME_ID
 
 @Service
 @CommandType(entity = ENTITY_NAME_IDENTIFIER, action = "CREATE")
+@RequiredArgsConstructor
 public class CreateInteropIdentifierHandler implements NewCommandSourceHandler {
 
     private final InteropService interopService;
-
-    @Autowired
-    public CreateInteropIdentifierHandler(InteropService interopService) {
-        this.interopService = interopService;
-    }
 
     @Transactional
     @Override

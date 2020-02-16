@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.configuration.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.cache.domain.CacheType;
 import org.apache.fineract.infrastructure.cache.domain.PlatformCache;
@@ -26,7 +27,6 @@ import org.apache.fineract.infrastructure.configuration.data.GlobalConfiguration
 import org.apache.fineract.useradministration.domain.Permission;
 import org.apache.fineract.useradministration.domain.PermissionRepository;
 import org.apache.fineract.useradministration.exception.PermissionNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,20 +35,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
+@RequiredArgsConstructor
 public class ConfigurationDomainServiceJpa implements ConfigurationDomainService {
 
     private final PermissionRepository permissionRepository;
     private final GlobalConfigurationRepositoryWrapper globalConfigurationRepository;
     private final PlatformCacheRepository cacheTypeRepository;
     private static Map<String, GlobalConfigurationPropertyData> configurations = new HashMap<>();
-
-    @Autowired
-    public ConfigurationDomainServiceJpa(final PermissionRepository permissionRepository,
-            final GlobalConfigurationRepositoryWrapper globalConfigurationRepository, final PlatformCacheRepository cacheTypeRepository) {
-        this.permissionRepository = permissionRepository;
-        this.globalConfigurationRepository = globalConfigurationRepository;
-        this.cacheTypeRepository = cacheTypeRepository;
-    }
 
     @Override
     public boolean isMakerCheckerEnabledForTask(final String taskPermissionCode) {

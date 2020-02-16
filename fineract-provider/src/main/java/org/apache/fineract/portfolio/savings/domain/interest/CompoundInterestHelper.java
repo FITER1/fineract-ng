@@ -18,13 +18,17 @@
  */
 package org.apache.fineract.portfolio.savings.domain.interest;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.joda.time.LocalDate;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@Slf4j
+@Component
 public class CompoundInterestHelper {
 
     /**

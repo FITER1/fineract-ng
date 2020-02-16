@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.campaigns.email.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.campaigns.email.domain.EmailCampaignType;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -28,17 +29,14 @@ import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class EmailCampaignValidator {
-
-   
-
     public static final String RESOURCE_NAME = "email";
     public static final String campaignName  = "campaignName";
     public static final String campaignType = "campaignType";
@@ -59,9 +57,7 @@ public class EmailCampaignValidator {
     public static final String localeParamName = "locale";
     public static final String dateFormatParamName = "dateFormat";
 
-
     private final FromJsonHelper fromApiJsonHelper;
-
 
     public static final Set<String> supportedParams = new HashSet<String>(Arrays.asList(campaignName, campaignType,localeParamName,dateFormatParamName,
             businessRuleId,paramValue,emailMessage,recurrenceStartDate,activationDateParamName,submittedOnDateParamName,closureDateParamName,recurrenceParamName,
@@ -77,12 +73,6 @@ public class EmailCampaignValidator {
             dateFormatParamName, closureDateParamName));
 
     public static final Set<String> PREVIEW_REQUEST_DATA_PARAMETERS= new HashSet<String>(Arrays.asList(paramValue,emailMessage));
-
-    @Autowired
-    public EmailCampaignValidator(FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
-
 
     public void validateCreate(String json){
         if (StringUtils.isBlank(json)) { throw new InvalidJsonException(); }

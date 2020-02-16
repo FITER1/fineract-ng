@@ -22,6 +22,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.accounting.common.AccountingConstants.SAVINGS_PRODUCT_ACCOUNTING_PARAMS;
 import org.apache.fineract.accounting.common.AccountingRuleType;
@@ -33,7 +34,6 @@ import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.savings.*;
 import org.apache.fineract.portfolio.savings.domain.SavingsProduct;
 import org.joda.time.MonthDay;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -43,6 +43,7 @@ import java.util.*;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
 
 @Component
+@RequiredArgsConstructor
 public class SavingsProductDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
@@ -74,11 +75,6 @@ public class SavingsProductDataValidator {
 					minOverdraftForInterestCalculationParamName, SavingsApiConstants.minRequiredBalanceParamName,
 					SavingsApiConstants.enforceMinRequiredBalanceParamName, minBalanceForInterestCalculationParamName,
 					withHoldTaxParamName, taxGroupIdParamName));
-
-    @Autowired
-    public SavingsProductDataValidator(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validateForCreate(final String json) {
 

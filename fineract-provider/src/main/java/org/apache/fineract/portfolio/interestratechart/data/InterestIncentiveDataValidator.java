@@ -21,6 +21,7 @@ package org.apache.fineract.portfolio.interestratechart.data;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -32,7 +33,6 @@ import org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConst
 import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncentiveAttributeName;
 import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncentiveEntityType;
 import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncentiveType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -43,6 +43,7 @@ import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveA
 import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.descriptionParamName;
 
 @Component
+@RequiredArgsConstructor
 public class InterestIncentiveDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
@@ -54,11 +55,6 @@ public class InterestIncentiveDataValidator {
 	private static final Set<String> INTERESTRATE_INCENTIVE_UPDATE_REQUEST_DATA_PARAMETERS = new HashSet<>(
 			Arrays.asList(InterestIncentiveApiConstants.idParamName, entityTypeParamName, attributeNameParamName,
 					conditionTypeParamName, attributeValueParamName, incentiveTypeparamName, amountParamName));
-
-    @Autowired
-    public InterestIncentiveDataValidator(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validateCreate(final String json) {
         if (StringUtils.isBlank(json)) { throw new InvalidJsonException(); }

@@ -18,26 +18,19 @@
  */
 package org.apache.fineract.useradministration.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.service.PlatformEmailService;
 import org.apache.fineract.infrastructure.security.service.PlatformPasswordEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class JpaUserDomainService implements UserDomainService {
 
     private final AppUserRepository userRepository;
     private final PlatformPasswordEncoder applicationPasswordEncoder;
     private final PlatformEmailService emailService;
-
-    @Autowired
-    public JpaUserDomainService(final AppUserRepository userRepository, final PlatformPasswordEncoder applicationPasswordEncoder,
-            final PlatformEmailService emailService) {
-        this.userRepository = userRepository;
-        this.applicationPasswordEncoder = applicationPasswordEncoder;
-        this.emailService = emailService;
-    }
 
     @Transactional
     @Override

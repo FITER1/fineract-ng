@@ -18,11 +18,11 @@
  */
 package org.apache.fineract.portfolio.account.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.joda.time.LocalDate;
 import org.joda.time.MonthDay;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,15 +30,10 @@ import java.math.BigDecimal;
 import static org.apache.fineract.portfolio.account.api.StandingInstructionApiConstants.*;
 
 @Service
+@RequiredArgsConstructor
 public class StandingInstructionAssembler {
 
     private final AccountTransferDetailAssembler accountTransferDetailAssembler;
-
-    @Autowired
-    public StandingInstructionAssembler(final AccountTransferDetailAssembler accountTransferDetailAssembler) {
-
-        this.accountTransferDetailAssembler = accountTransferDetailAssembler;
-    }
 
     public AccountTransferDetails assembleSavingsToSavingsTransfer(final JsonCommand command) {
         final AccountTransferDetails accountTransferDetails = this.accountTransferDetailAssembler.assembleSavingsToSavingsTransfer(command);

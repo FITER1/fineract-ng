@@ -18,19 +18,15 @@
  */
 package org.apache.fineract.portfolio.group.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.group.exception.GroupRoleNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class GroupRoleRepositoryWrapper {
 
     private final GroupRoleRepository repository;
-
-    @Autowired
-    public GroupRoleRepositoryWrapper(final GroupRoleRepository rRepository) {
-        this.repository = rRepository;
-    }
 
     public GroupRole findOneWithNotFoundDetection(final Long id) {
         return this.repository.findById(id)

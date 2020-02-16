@@ -21,13 +21,13 @@ package org.apache.fineract.batch.service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.fineract.batch.domain.BatchRequest;
 import org.apache.fineract.batch.domain.BatchResponse;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -45,8 +45,9 @@ import java.util.regex.Pattern;
  * @author Rishabh Shukla
  * @see BatchApiServiceImpl
  */
-@Component
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class ResolutionHelper {
 
     /**
@@ -82,12 +83,7 @@ public class ResolutionHelper {
 
     }
 
-    private FromJsonHelper fromJsonHelper;
-
-    @Autowired
-    public ResolutionHelper(final FromJsonHelper fromJsonHelper) {
-        this.fromJsonHelper = fromJsonHelper;
-    }
+    private final FromJsonHelper fromJsonHelper;
 
     /**
      * Returns a map containing requests that are divided in accordance of

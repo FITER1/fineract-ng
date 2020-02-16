@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.infrastructure.entityaccess.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.entityaccess.exception.FineractEntityAccessNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,14 +29,10 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class FineractEntityAccessRepositoryWrapper {
 
     private final FineractEntityAccessRepository repository;
-
-    @Autowired
-    public FineractEntityAccessRepositoryWrapper(final FineractEntityAccessRepository repository) {
-        this.repository = repository;
-    }
 
     public FineractEntityAccess findOneWithNotFoundDetection(final Long id) {
         return this.repository.findById(id)

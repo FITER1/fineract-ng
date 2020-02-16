@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -36,7 +37,6 @@ import org.apache.fineract.portfolio.savings.exception.DepositAccountTransaction
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,6 +45,7 @@ import java.math.MathContext;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class SavingsAccountDomainServiceJpa implements SavingsAccountDomainService {
 
     private final PlatformSecurityContext context;
@@ -55,24 +56,6 @@ public class SavingsAccountDomainServiceJpa implements SavingsAccountDomainServi
     private final ConfigurationDomainService configurationDomainService;
     private final DepositAccountOnHoldTransactionRepository depositAccountOnHoldTransactionRepository;
     private final BusinessEventNotifierService businessEventNotifierService;
-
-    @Autowired
-    public SavingsAccountDomainServiceJpa(final SavingsAccountRepositoryWrapper savingsAccountRepository,
-            final SavingsAccountTransactionRepository savingsAccountTransactionRepository,
-            final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepositoryWrapper,
-            final JournalEntryWritePlatformService journalEntryWritePlatformService,
-            final ConfigurationDomainService configurationDomainService, final PlatformSecurityContext context,
-            final DepositAccountOnHoldTransactionRepository depositAccountOnHoldTransactionRepository, 
-            final BusinessEventNotifierService businessEventNotifierService) {
-        this.savingsAccountRepository = savingsAccountRepository;
-        this.savingsAccountTransactionRepository = savingsAccountTransactionRepository;
-        this.applicationCurrencyRepositoryWrapper = applicationCurrencyRepositoryWrapper;
-        this.journalEntryWritePlatformService = journalEntryWritePlatformService;
-        this.configurationDomainService = configurationDomainService;
-        this.context = context;
-        this.depositAccountOnHoldTransactionRepository = depositAccountOnHoldTransactionRepository;
-        this.businessEventNotifierService = businessEventNotifierService;
-    }
 
     @Transactional
     @Override

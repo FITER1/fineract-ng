@@ -19,6 +19,7 @@
 package org.apache.fineract.accounting.producttoaccountmapping.service;
 
 import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingConstants.ACCRUAL_ACCOUNTS_FOR_LOAN;
 import org.apache.fineract.accounting.common.AccountingConstants.CASH_ACCOUNTS_FOR_LOAN;
 import org.apache.fineract.accounting.common.AccountingConstants.LOAN_PRODUCT_ACCOUNTING_PARAMS;

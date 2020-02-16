@@ -22,6 +22,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -33,7 +34,6 @@ import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.portfolio.collectionsheet.CollectionSheetConstants;
 import org.apache.fineract.portfolio.paymentdetail.PaymentDetailConstants;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -41,6 +41,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class CollectionSheetTransactionDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
@@ -69,12 +70,7 @@ public class CollectionSheetTransactionDataValidator {
 					PaymentDetailConstants.routingCodeParamName, PaymentDetailConstants.receiptNumberParamName,
 					PaymentDetailConstants.bankNumberParamName));
 
-    @Autowired
-    public CollectionSheetTransactionDataValidator(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
-
-    public void validateTransaction(final JsonCommand command) {
+     public void validateTransaction(final JsonCommand command) {
         final String json = command.json();
         if (StringUtils.isBlank(json)) { throw new InvalidJsonException(); }
 

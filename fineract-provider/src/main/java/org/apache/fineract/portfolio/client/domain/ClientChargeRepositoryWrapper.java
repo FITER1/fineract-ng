@@ -18,23 +18,17 @@
  */
 package org.apache.fineract.portfolio.client.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.organisation.office.domain.OrganisationCurrencyRepositoryWrapper;
 import org.apache.fineract.portfolio.charge.exception.ChargeNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
+@RequiredArgsConstructor
 public class ClientChargeRepositoryWrapper {
 
     private final ClientChargeRepository repository;
     private final OrganisationCurrencyRepositoryWrapper organisationCurrencyRepository;
-
-    @Autowired
-    public ClientChargeRepositoryWrapper(final ClientChargeRepository repository,
-            final OrganisationCurrencyRepositoryWrapper organisationCurrencyRepositoryWrapper) {
-        this.repository = repository;
-        this.organisationCurrencyRepository = organisationCurrencyRepositoryWrapper;
-    }
 
     public ClientCharge findOneWithNotFoundDetection(final Long id) {
         final ClientCharge clientCharge = this.repository.findById(id)

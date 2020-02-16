@@ -22,6 +22,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -31,13 +32,13 @@ import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.organisation.holiday.api.HolidayApiConstants;
 import org.apache.fineract.organisation.holiday.domain.RescheduleType;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class HolidayDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
@@ -47,11 +48,6 @@ public class HolidayDataValidator {
 					HolidayApiConstants.toDateParamName, HolidayApiConstants.descriptionParamName,
 					HolidayApiConstants.officesParamName, HolidayApiConstants.repaymentsRescheduledToParamName,
 					HolidayApiConstants.reschedulingType));
-
-    @Autowired
-    public HolidayDataValidator(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validateForCreate(final String json) {
 

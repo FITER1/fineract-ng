@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.campaigns.email.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.campaigns.email.EmailApiConstants;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -27,7 +28,6 @@ import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -36,6 +36,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
+@RequiredArgsConstructor
 public class EmailConfigurationValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
@@ -45,13 +46,6 @@ public class EmailConfigurationValidator {
 
     public static final Set<String> supportedParams = new HashSet<String>(Arrays.asList(EmailApiConstants.SMTP_PORT,EmailApiConstants.SMTP_PASSWORD,
             EmailApiConstants.SMTP_USERNAME,EmailApiConstants.SMTP_SERVER));
-
-    @Autowired
-    private EmailConfigurationValidator(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
-
-
 
     public void validateUpdateConfiguration(String json){
 

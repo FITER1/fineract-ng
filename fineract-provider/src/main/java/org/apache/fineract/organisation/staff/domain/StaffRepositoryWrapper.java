@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.organisation.staff.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.organisation.staff.exception.StaffNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,14 +29,10 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class StaffRepositoryWrapper {
 
     private final StaffRepository repository;
-
-    @Autowired
-    public StaffRepositoryWrapper(final StaffRepository repository) {
-        this.repository = repository;
-    }
 
     public Staff findOneWithNotFoundDetection(final Long id) {
         return this.repository.findById(id)

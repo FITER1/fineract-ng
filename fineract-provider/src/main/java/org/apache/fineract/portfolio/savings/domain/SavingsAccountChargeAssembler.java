@@ -21,6 +21,7 @@ package org.apache.fineract.portfolio.savings.domain;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
@@ -33,7 +34,6 @@ import org.apache.fineract.portfolio.charge.exception.ChargeCannotBeAppliedToExc
 import org.apache.fineract.portfolio.charge.exception.SavingsAccountChargeNotFoundException;
 import org.joda.time.LocalDate;
 import org.joda.time.MonthDay;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -42,19 +42,12 @@ import java.util.*;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
 
 @Service
+@RequiredArgsConstructor
 public class SavingsAccountChargeAssembler {
 
     private final FromJsonHelper fromApiJsonHelper;
     private final ChargeRepositoryWrapper chargeRepository;
     private final SavingsAccountChargeRepository savingsAccountChargeRepository;
-
-    @Autowired
-    public SavingsAccountChargeAssembler(final FromJsonHelper fromApiJsonHelper, final ChargeRepositoryWrapper chargeRepository,
-            final SavingsAccountChargeRepository savingsAccountChargeRepository) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.chargeRepository = chargeRepository;
-        this.savingsAccountChargeRepository = savingsAccountChargeRepository;
-    }
 
     public Set<SavingsAccountCharge> fromParsedJson(final JsonElement element, final String productCurrencyCode) {
 

@@ -19,13 +19,13 @@
 package org.apache.fineract.portfolio.savings.domain;
 
 import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.exception.UnsupportedParameterException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.organisation.staff.domain.StaffRepositoryWrapper;
-import org.apache.fineract.portfolio.account.service.AccountTransfersReadPlatformService;
 import org.apache.fineract.portfolio.accountdetails.domain.AccountType;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
@@ -39,7 +39,6 @@ import org.apache.fineract.portfolio.savings.*;
 import org.apache.fineract.portfolio.savings.exception.SavingsProductNotFoundException;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -49,6 +48,7 @@ import java.util.Set;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
 
 @Service
+@RequiredArgsConstructor
 public class SavingsAccountAssembler {
 
     private final SavingsAccountTransactionSummaryWrapper savingsAccountTransactionSummaryWrapper;
@@ -60,24 +60,6 @@ public class SavingsAccountAssembler {
     private final SavingsAccountRepositoryWrapper savingsAccountRepository;
     private final SavingsAccountChargeAssembler savingsAccountChargeAssembler;
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public SavingsAccountAssembler(final SavingsAccountTransactionSummaryWrapper savingsAccountTransactionSummaryWrapper,
-            final ClientRepositoryWrapper clientRepository, final GroupRepositoryWrapper groupRepository,
-            final StaffRepositoryWrapper staffRepository, final SavingsProductRepository savingProductRepository,
-            final SavingsAccountRepositoryWrapper savingsAccountRepository,
-            final SavingsAccountChargeAssembler savingsAccountChargeAssembler, final FromJsonHelper fromApiJsonHelper,
-            final AccountTransfersReadPlatformService accountTransfersReadPlatformService) {
-        this.savingsAccountTransactionSummaryWrapper = savingsAccountTransactionSummaryWrapper;
-        this.clientRepository = clientRepository;
-        this.groupRepository = groupRepository;
-        this.staffRepository = staffRepository;
-        this.savingProductRepository = savingProductRepository;
-        this.savingsAccountRepository = savingsAccountRepository;
-        this.savingsAccountChargeAssembler = savingsAccountChargeAssembler;
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        savingsHelper = new SavingsHelper(accountTransfersReadPlatformService);
-    }
 
     /**
      * Assembles a new {@link SavingsAccount} from JSON details passed in

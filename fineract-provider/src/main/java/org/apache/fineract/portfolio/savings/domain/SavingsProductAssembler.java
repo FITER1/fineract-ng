@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.savings.domain;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.common.AccountingRuleType;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
@@ -30,7 +31,6 @@ import org.apache.fineract.portfolio.loanproduct.exception.InvalidCurrencyExcept
 import org.apache.fineract.portfolio.savings.*;
 import org.apache.fineract.portfolio.tax.domain.TaxGroup;
 import org.apache.fineract.portfolio.tax.domain.TaxGroupRepositoryWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -40,16 +40,11 @@ import java.util.Set;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
 
 @Component
+@RequiredArgsConstructor
 public class SavingsProductAssembler {
 
     private final ChargeRepositoryWrapper chargeRepository;
     private final TaxGroupRepositoryWrapper taxGroupRepository;
-
-    @Autowired
-    public SavingsProductAssembler(final ChargeRepositoryWrapper chargeRepository, final TaxGroupRepositoryWrapper taxGroupRepository) {
-        this.chargeRepository = chargeRepository;
-        this.taxGroupRepository = taxGroupRepository;
-    }
 
     public SavingsProduct assemble(final JsonCommand command) {
 

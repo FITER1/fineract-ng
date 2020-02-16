@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.self.account.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -28,7 +29,6 @@ import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidati
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.account.PortfolioAccountType;
 import org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -37,6 +37,7 @@ import java.util.*;
 import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.*;
 
 @Component
+@RequiredArgsConstructor
 public class SelfBeneficiariesTPTDataValidator {
 
 	private final FromJsonHelper fromApiJsonHelper;
@@ -46,13 +47,6 @@ public class SelfBeneficiariesTPTDataValidator {
 
 	private static final Set<String> UPDATE_REQUEST_DATA_PARAMETERS = new HashSet<>(
 			Arrays.asList(NAME_PARAM_NAME, TRANSFER_LIMIT_PARAM_NAME));
-
-
-	@Autowired
-	public SelfBeneficiariesTPTDataValidator(
-			final FromJsonHelper fromApiJsonHelper) {
-		this.fromApiJsonHelper = fromApiJsonHelper;
-	}
 
 	public HashMap<String, Object> validateForCreate(String json) {
 		if (StringUtils.isBlank(json)) {

@@ -22,6 +22,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -32,7 +33,6 @@ import org.apache.fineract.portfolio.savings.*;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.joda.time.LocalDate;
 import org.joda.time.MonthDay;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -65,16 +65,11 @@ import static org.apache.fineract.portfolio.savings.SavingsApiConstants.submitte
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.*;
 
 @Component
+@RequiredArgsConstructor
 public class DepositAccountDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
     private final DepositProductDataValidator productDataValidator;
-
-    @Autowired
-    public DepositAccountDataValidator(final FromJsonHelper fromApiJsonHelper, final DepositProductDataValidator productDataValidator) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.productDataValidator = productDataValidator;
-    }
 
     public void validateFixedDepositForSubmit(final String json) {
         if (StringUtils.isBlank(json)) { throw new InvalidJsonException(); }

@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.domain.LocalDateInterval;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
@@ -26,7 +27,6 @@ import org.apache.fineract.portfolio.savings.SavingsPostingInterestPeriodType;
 import org.apache.fineract.portfolio.savings.domain.interest.CompoundInterestHelper;
 import org.apache.fineract.portfolio.savings.domain.interest.PostingPeriod;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,16 +35,12 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public final class SavingsHelper {
     
-    AccountTransfersReadPlatformService accountTransfersReadPlatformService = null;
+    private final AccountTransfersReadPlatformService accountTransfersReadPlatformService;
 
-    @Autowired
-    public SavingsHelper(AccountTransfersReadPlatformService accountTransfersReadPlatformService) {
-        this.accountTransfersReadPlatformService = accountTransfersReadPlatformService;
-    }
-
-    private final CompoundInterestHelper compoundInterestHelper = new CompoundInterestHelper();
+    private final CompoundInterestHelper compoundInterestHelper;
 
     public List<LocalDateInterval> determineInterestPostingPeriods(final LocalDate startInterestCalculationLocalDate,
             final LocalDate interestPostingUpToDate, final SavingsPostingInterestPeriodType postingPeriodType,

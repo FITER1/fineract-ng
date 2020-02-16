@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.dataqueries.exception.ReportNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /** 
@@ -27,13 +27,9 @@ import org.springframework.stereotype.Service;
  *  else throws "ReportNotFoundException" exception if the Report does not exist
  **/
 @Service
+@RequiredArgsConstructor
 public class ReportRepositoryWrapper {
     private final ReportRepository reportRepository;
-    
-    @Autowired
-    public ReportRepositoryWrapper(final ReportRepository reportRepository) {
-        this.reportRepository = reportRepository;
-    }
     
     /**
      * Retrieves an entity by its id

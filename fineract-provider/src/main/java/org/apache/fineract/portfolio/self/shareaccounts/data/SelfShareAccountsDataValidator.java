@@ -20,6 +20,7 @@
 package org.apache.fineract.portfolio.self.shareaccounts.data;
 
 import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -27,7 +28,6 @@ import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.accounts.constants.ShareAccountApiConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -35,14 +35,10 @@ import java.util.HashMap;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class SelfShareAccountsDataValidator {
 
 	private final FromJsonHelper fromApiJsonHelper;
-
-	@Autowired
-	public SelfShareAccountsDataValidator(final FromJsonHelper fromApiJsonHelper) {
-		this.fromApiJsonHelper = fromApiJsonHelper;
-	}
 
 	public HashMap<String, Object> validateShareAccountApplication(final String json) {
 		if (StringUtils.isBlank(json)) {

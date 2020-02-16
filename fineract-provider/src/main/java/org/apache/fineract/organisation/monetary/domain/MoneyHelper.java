@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.organisation.monetary.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -27,6 +27,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 
 @Component
+@RequiredArgsConstructor
 public class MoneyHelper {
 
     private static RoundingMode roundingMode = null;
@@ -35,8 +36,7 @@ public class MoneyHelper {
 
     private static ConfigurationDomainService staticConfigurationDomainService;
 
-    @Autowired
-    private ConfigurationDomainService configurationDomainService;
+    private final ConfigurationDomainService configurationDomainService;
 
     @PostConstruct
     public void someFunction () {

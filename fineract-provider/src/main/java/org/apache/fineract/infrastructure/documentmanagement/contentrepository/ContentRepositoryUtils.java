@@ -139,7 +139,7 @@ public class ContentRepositoryUtils {
             throw new ImageDataURLNotValidException();
         }
 
-        return new Base64EncodedImage(base64EncodedString, fileExtension);
+        return Base64EncodedImage.builder().base64EncodedString(base64EncodedString).fileExtension(fileExtension).build();
     }
 
     public static void validateFileSizeWithinPermissibleRange(final Long fileSize, final String name) {

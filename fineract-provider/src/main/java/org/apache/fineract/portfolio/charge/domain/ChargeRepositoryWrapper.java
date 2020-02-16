@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.charge.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.charge.exception.ChargeIsNotActiveException;
 import org.apache.fineract.portfolio.charge.exception.ChargeNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -36,14 +36,10 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class ChargeRepositoryWrapper {
 
     private final ChargeRepository repository;
-
-    @Autowired
-    public ChargeRepositoryWrapper(final ChargeRepository repository) {
-        this.repository = repository;
-    }
 
     public Charge findOneWithNotFoundDetection(final Long id) {
 

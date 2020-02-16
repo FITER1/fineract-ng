@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.accountnumberformat.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormatEnumerations;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormatEnumerations.AccountNumberPrefixType;
@@ -30,13 +31,13 @@ import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class AccountNumberFormatDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
@@ -45,11 +46,6 @@ public class AccountNumberFormatDataValidator {
 
 	private static final Set<String> ACCOUNT_NUMBER_FORMAT_UPDATE_REQUEST_DATA_PARAMETERS = new HashSet<>(
 			Arrays.asList(AccountNumberFormatConstants.prefixTypeParamName));
-
-    @Autowired
-    public AccountNumberFormatDataValidator(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validateForCreate(final String json) {
 

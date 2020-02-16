@@ -18,20 +18,16 @@
  */
 package org.apache.fineract.portfolio.shareproducts.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.products.exception.ProductNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class ShareProductRepositoryWrapper {
 
 	private final ShareProductRepository shareProductRepository ;
-	
-	@Autowired
-	public ShareProductRepositoryWrapper(final ShareProductRepository shareProductRepository) {
-		this.shareProductRepository = shareProductRepository ;
-	}
-	
+
 	public ShareProduct findOneWithNotFoundDetection(final Long productId) {
 		return this.shareProductRepository.findById(productId)
 				.orElseThrow(() -> new ProductNotFoundException(productId, "share"));

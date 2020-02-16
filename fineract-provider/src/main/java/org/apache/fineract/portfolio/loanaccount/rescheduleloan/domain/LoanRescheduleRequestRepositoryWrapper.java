@@ -18,20 +18,16 @@
  */
 package org.apache.fineract.portfolio.loanaccount.rescheduleloan.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.loanaccount.rescheduleloan.exception.LoanRescheduleRequestNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class LoanRescheduleRequestRepositoryWrapper {
 
     private final LoanRescheduleRequestRepository loanRescheduleRequestRepository;
-
-    @Autowired
-    public LoanRescheduleRequestRepositoryWrapper(final LoanRescheduleRequestRepository loanRescheduleRequestRepository) {
-        this.loanRescheduleRequestRepository = loanRescheduleRequestRepository;
-    }
 
     public LoanRescheduleRequest findOneWithNotFoundDetection(final Long id) {
         return this.findOneWithNotFoundDetection(id, false);

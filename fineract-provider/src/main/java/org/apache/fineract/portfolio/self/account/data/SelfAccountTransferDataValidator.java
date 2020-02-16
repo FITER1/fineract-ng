@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.self.account.data;
 
 import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -30,7 +31,6 @@ import org.apache.fineract.portfolio.self.account.service.SelfAccountTransferRea
 import org.apache.fineract.portfolio.self.account.service.SelfBeneficiariesTPTReadPlatformService;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -40,24 +40,13 @@ import static org.apache.fineract.portfolio.account.AccountDetailConstants.*;
 import static org.apache.fineract.portfolio.account.api.AccountTransfersApiConstants.*;
 
 @Component
+@RequiredArgsConstructor
 public class SelfAccountTransferDataValidator {
 
 	private final PlatformSecurityContext context;
 	private final SelfAccountTransferReadService selfAccountTransferReadService;
 	private final SelfBeneficiariesTPTReadPlatformService tptBeneficiaryReadPlatformService;
 	private final FromJsonHelper fromApiJsonHelper;
-
-	@Autowired
-	public SelfAccountTransferDataValidator(
-			final PlatformSecurityContext context,
-			final SelfAccountTransferReadService selfAccountTransferReadService,
-			final SelfBeneficiariesTPTReadPlatformService tptBeneficiaryReadPlatformService,
-			final FromJsonHelper fromApiJsonHelper) {
-		this.context = context;
-		this.selfAccountTransferReadService = selfAccountTransferReadService;
-		this.tptBeneficiaryReadPlatformService = tptBeneficiaryReadPlatformService;
-		this.fromApiJsonHelper = fromApiJsonHelper;
-	}
 
 	public Map<String,Object> validateCreate(String type, String apiRequestBodyAsJson) {
 		if (StringUtils.isBlank(apiRequestBodyAsJson)) {

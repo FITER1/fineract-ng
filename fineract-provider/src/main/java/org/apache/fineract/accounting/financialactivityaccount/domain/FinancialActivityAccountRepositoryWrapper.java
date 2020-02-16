@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.accounting.financialactivityaccount.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.financialactivityaccount.exception.FinancialActivityAccountNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,14 +31,10 @@ import java.util.List;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class FinancialActivityAccountRepositoryWrapper {
 
     private final FinancialActivityAccountRepository repository;
-
-    @Autowired
-    public FinancialActivityAccountRepositoryWrapper(final FinancialActivityAccountRepository repository) {
-        this.repository = repository;
-    }
 
     public FinancialActivityAccount findOneWithNotFoundDetection(final Long id) {
         return this.repository.findById(id)

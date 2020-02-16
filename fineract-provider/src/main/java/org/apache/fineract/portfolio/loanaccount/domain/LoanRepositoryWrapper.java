@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.portfolio.loanaccount.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.loanaccount.exception.LoanNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,14 +33,10 @@ import java.util.*;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class LoanRepositoryWrapper {
 
     private final LoanRepository repository;
-
-    @Autowired
-    public LoanRepositoryWrapper(final LoanRepository repository) {
-        this.repository = repository;
-    }
 
     public Loan findOneWithNotFoundDetection(final Long id) {
         return this.findOneWithNotFoundDetection(id, false) ;

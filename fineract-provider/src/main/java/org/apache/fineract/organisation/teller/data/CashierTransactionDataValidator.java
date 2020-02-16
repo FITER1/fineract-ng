@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.organisation.teller.data;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
@@ -30,28 +31,19 @@ import org.apache.fineract.organisation.teller.service.TellerManagementReadPlatf
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Component
+@RequiredArgsConstructor
 public class CashierTransactionDataValidator {
 
 	private final TellerManagementReadPlatformService tellerManagementReadPlatformService;
 	private final JdbcTemplate jdbcTemplate;
-
-	@Autowired
-	public CashierTransactionDataValidator(
-			final TellerManagementReadPlatformService tellerManagementReadPlatformService,
-			final DataSource dataSource) {
-		this.tellerManagementReadPlatformService = tellerManagementReadPlatformService;
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
 
 	public void validateSettleCashAndCashOutTransactions(final Long cashierId,
 			String currencyCode, final BigDecimal transactionAmount) {

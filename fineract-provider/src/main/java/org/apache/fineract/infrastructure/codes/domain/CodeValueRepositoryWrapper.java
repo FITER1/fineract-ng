@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.infrastructure.codes.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.codes.exception.CodeValueNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -36,14 +36,10 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class CodeValueRepositoryWrapper {
 
     private final CodeValueRepository repository;
-
-    @Autowired
-    public CodeValueRepositoryWrapper(final CodeValueRepository repository) {
-        this.repository = repository;
-    }
 
     public CodeValue findOneWithNotFoundDetection(final Long id) {
         return this.repository.findById(id).orElseThrow(() -> new CodeValueNotFoundException(id));

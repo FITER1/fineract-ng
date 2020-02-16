@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.portfolio.calendar.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.calendar.exception.CalendarNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -35,14 +35,10 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class CalendarRepositoryWrapper {
 
     private final CalendarRepository repository;
-
-    @Autowired
-    public CalendarRepositoryWrapper(final CalendarRepository repository) {
-        this.repository = repository;
-    }
 
     public Calendar findOneWithNotFoundDetection(final Long calendarId) {
         return this.repository.findById(calendarId)

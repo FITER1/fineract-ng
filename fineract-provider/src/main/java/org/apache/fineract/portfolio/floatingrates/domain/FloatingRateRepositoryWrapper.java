@@ -18,20 +18,15 @@
  */
 package org.apache.fineract.portfolio.floatingrates.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.floatingrates.exception.FloatingRateNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class FloatingRateRepositoryWrapper {
 
 	private final FloatingRateRepository floatingRateRepository;
-
-	@Autowired
-	public FloatingRateRepositoryWrapper(
-			final FloatingRateRepository floatingRateRepository) {
-		this.floatingRateRepository = floatingRateRepository;
-	}
 
 	public FloatingRate retrieveBaseLendingRate() {
 		return this.floatingRateRepository.retrieveBaseLendingRate();

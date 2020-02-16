@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.transfer.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -29,13 +30,13 @@ import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.client.api.ClientApiConstants;
 import org.apache.fineract.portfolio.group.api.GroupingTypesApiConstants;
 import org.apache.fineract.portfolio.transfer.api.TransferApiConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public final class TransfersDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
@@ -65,11 +66,6 @@ public final class TransfersDataValidator {
 
 	private static final Set<String> WITHDRAW_CLIENT_TRANSFER_DATA_PARAMETERS = new HashSet<>(
 			Arrays.asList(TransferApiConstants.note));
-
-    @Autowired
-    public TransfersDataValidator(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     private void throwExceptionIfValidationWarningsExist(final List<ApiParameterError> dataValidationErrors) {
         if (!dataValidationErrors.isEmpty()) { throw new PlatformApiDataValidationException(dataValidationErrors); }

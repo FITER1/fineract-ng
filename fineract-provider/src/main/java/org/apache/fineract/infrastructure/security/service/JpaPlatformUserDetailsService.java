@@ -18,10 +18,10 @@
  */
 package org.apache.fineract.infrastructure.security.service;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.security.domain.PlatformUser;
 import org.apache.fineract.infrastructure.security.domain.PlatformUserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
@@ -32,10 +32,10 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Primary
 @Service(value = "userDetailsService")
+@RequiredArgsConstructor
 public class JpaPlatformUserDetailsService implements PlatformUserDetailsService {
 
-    @Autowired
-    private PlatformUserRepository platformUserRepository;
+    private final PlatformUserRepository platformUserRepository;
 
     @Override
     @Cacheable(value = "usersByUsername")

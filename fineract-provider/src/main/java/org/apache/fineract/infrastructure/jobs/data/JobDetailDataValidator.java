@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.jobs.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -27,24 +28,19 @@ import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.jobs.api.SchedulerJobApiConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class JobDetailDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
 	private static final Set<String> JOB_UPDATE_REQUEST_DATA_PARAMETERS = new HashSet<>(Arrays.asList(
 			SchedulerJobApiConstants.displayNameParamName, SchedulerJobApiConstants.jobActiveStatusParamName,
 			SchedulerJobApiConstants.cronExpressionParamName));
-
-    @Autowired
-    public JobDetailDataValidator(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validateForUpdate(final String json) {
         if (StringUtils.isBlank(json)) { throw new InvalidJsonException(); }

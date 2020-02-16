@@ -22,6 +22,7 @@ package org.apache.fineract.portfolio.self.pockets.data;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.EntityAccountType;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -30,13 +31,13 @@ import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.self.pockets.api.PocketApiConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class PocketDataValidator {
 	private final Set<String> linkingAccountsSupportedParameters = new HashSet<>(
 			Arrays.asList(PocketApiConstants.accountIdParamName, PocketApiConstants.accountTypeParamName,
@@ -46,11 +47,6 @@ public class PocketDataValidator {
 			Arrays.asList(PocketApiConstants.pocketAccountMappingList));
 
 	private final FromJsonHelper fromApiJsonHelper;
-
-	@Autowired
-	public PocketDataValidator(FromJsonHelper fromApiJsonHelper) {
-		this.fromApiJsonHelper = fromApiJsonHelper;
-	}
 
 	public void validateForLinkingAccounts(final String json) {
 		if (StringUtils.isBlank(json)) {

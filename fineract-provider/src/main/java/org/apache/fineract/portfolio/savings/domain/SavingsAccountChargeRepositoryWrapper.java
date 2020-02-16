@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.charge.exception.SavingsAccountChargeNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -32,14 +32,10 @@ import java.util.List;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class SavingsAccountChargeRepositoryWrapper {
 
     private final SavingsAccountChargeRepository repository;
-
-    @Autowired
-    public SavingsAccountChargeRepositoryWrapper(final SavingsAccountChargeRepository repository) {
-        this.repository = repository;
-    }
 
     public SavingsAccountCharge findOneWithNotFoundDetection(final Long id) {
         return this.repository.findById(id)

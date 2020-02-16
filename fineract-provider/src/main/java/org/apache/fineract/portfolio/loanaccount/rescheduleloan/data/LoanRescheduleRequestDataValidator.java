@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.loanaccount.rescheduleloan.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -33,13 +34,13 @@ import org.apache.fineract.portfolio.loanaccount.domain.LoanRepaymentScheduleIns
 import org.apache.fineract.portfolio.loanaccount.rescheduleloan.RescheduleLoansApiConstants;
 import org.apache.fineract.portfolio.loanaccount.rescheduleloan.domain.LoanRescheduleRequest;
 import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.*;
 
 @Component
+@RequiredArgsConstructor
 public class LoanRescheduleRequestDataValidator {
 
     private final FromJsonHelper fromJsonHelper;
@@ -63,11 +64,6 @@ public class LoanRescheduleRequestDataValidator {
 	private static final Set<String> APPROVE_REQUEST_DATA_PARAMETERS = new HashSet<>(
 			Arrays.asList(RescheduleLoansApiConstants.localeParamName, RescheduleLoansApiConstants.dateFormatParamName,
 					RescheduleLoansApiConstants.approvedOnDateParam));
-
-    @Autowired
-    public LoanRescheduleRequestDataValidator(FromJsonHelper fromJsonHelper) {
-        this.fromJsonHelper = fromJsonHelper;
-    }
 
     /**
      * Validates the request to create a new loan reschedule entry

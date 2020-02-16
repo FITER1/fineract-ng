@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.infrastructure.configuration.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.configuration.exception.GlobalConfigurationPropertyNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -29,14 +29,10 @@ import org.springframework.stereotype.Service;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class GlobalConfigurationRepositoryWrapper {
 
     private final GlobalConfigurationRepository repository;
-
-    @Autowired
-    public GlobalConfigurationRepositoryWrapper(final GlobalConfigurationRepository repository) {
-        this.repository = repository;
-    }
 
     public GlobalConfigurationProperty findOneByNameWithNotFoundDetection(final String propertyName) {
         final GlobalConfigurationProperty property = this.repository.findOneByName(propertyName);

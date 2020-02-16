@@ -19,23 +19,19 @@
 package org.apache.fineract.portfolio.account.data;
 
 import com.google.gson.JsonElement;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static org.apache.fineract.portfolio.account.AccountDetailConstants.*;
 
 @Component
+@RequiredArgsConstructor
 public class AccountTransfersDetailDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
-
-    @Autowired
-    public AccountTransfersDetailDataValidator(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validate(final JsonCommand command, final DataValidatorBuilder baseDataValidator) {
 

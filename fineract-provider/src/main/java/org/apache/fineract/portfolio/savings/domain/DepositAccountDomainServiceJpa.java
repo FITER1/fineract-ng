@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormat;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormatRepositoryWrapper;
@@ -45,7 +46,6 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +56,7 @@ import java.util.*;
 import static org.apache.fineract.portfolio.savings.DepositsApiConstants.*;
 
 @Service
+@RequiredArgsConstructor
 public class DepositAccountDomainServiceJpa implements DepositAccountDomainService {
 
     private final PlatformSecurityContext context;
@@ -69,28 +70,6 @@ public class DepositAccountDomainServiceJpa implements DepositAccountDomainServi
     private final ConfigurationDomainService configurationDomainService;
     private final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository;
     private final CalendarInstanceRepository calendarInstanceRepository;
-
-    @Autowired
-    public DepositAccountDomainServiceJpa(final PlatformSecurityContext context,final SavingsAccountRepositoryWrapper savingsAccountRepository,
-            final ApplicationCurrencyRepositoryWrapper applicationCurrencyRepositoryWrapper,
-            final JournalEntryWritePlatformService journalEntryWritePlatformService, final AccountNumberGenerator accountNumberGenerator,
-            final DepositAccountAssembler depositAccountAssembler, final SavingsAccountDomainService savingsAccountDomainService,
-            final AccountTransfersWritePlatformService accountTransfersWritePlatformService,
-            final ConfigurationDomainService configurationDomainService,
-            final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository,
-            final CalendarInstanceRepository calendarInstanceRepository) {
-        this.context = context;
-        this.savingsAccountRepository = savingsAccountRepository;
-        this.applicationCurrencyRepositoryWrapper = applicationCurrencyRepositoryWrapper;
-        this.journalEntryWritePlatformService = journalEntryWritePlatformService;
-        this.accountNumberGenerator = accountNumberGenerator;
-        this.depositAccountAssembler = depositAccountAssembler;
-        this.savingsAccountDomainService = savingsAccountDomainService;
-        this.accountTransfersWritePlatformService = accountTransfersWritePlatformService;
-        this.configurationDomainService = configurationDomainService;
-        this.accountNumberFormatRepository = accountNumberFormatRepository;
-        this.calendarInstanceRepository = calendarInstanceRepository;
-    }
 
     @Transactional
     @Override

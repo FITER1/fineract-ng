@@ -18,9 +18,9 @@
  */
 package org.apache.fineract.portfolio.savings.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.savings.DepositAccountType;
 import org.apache.fineract.portfolio.savings.exception.SavingsAccountNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
@@ -42,15 +42,9 @@ import java.util.List;
  * </p>
  */
 @Service
+@RequiredArgsConstructor
 public class SavingsAccountRepositoryWrapper {
-
-    
     private final SavingsAccountRepository repository;
-
-    @Autowired
-    public SavingsAccountRepositoryWrapper(final SavingsAccountRepository repository) {
-        this.repository = repository;
-    }
 
     @Transactional(readOnly=true)
     public SavingsAccount findOneWithNotFoundDetection(final Long savingsId) {

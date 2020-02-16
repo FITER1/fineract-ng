@@ -18,20 +18,16 @@
  */
 package org.apache.fineract.accounting.glaccount.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.trialbalance.exception.TrialBalanceNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TrialBalanceRepositoryWrapper {
     private  final TrialBalanceRepository repository;
-
-    @Autowired
-    public TrialBalanceRepositoryWrapper(final TrialBalanceRepository repository){
-        this.repository=repository;
-    }
 
     public List<TrialBalance> findNewByOfficeAndAccount(final Long officeId, final Long accountId){
         final List<TrialBalance> trialBalanceList=this.repository.findNewByOfficeAndAccount(officeId,accountId);

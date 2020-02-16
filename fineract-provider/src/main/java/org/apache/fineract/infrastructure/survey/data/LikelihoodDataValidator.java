@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.survey.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -28,7 +29,6 @@ import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.survey.api.LikelihoodApiConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
@@ -39,16 +39,12 @@ import java.util.*;
  */
 
 @Component
+@RequiredArgsConstructor
 public class LikelihoodDataValidator {
 
     private final FromJsonHelper fromApiJsonHelper;
 	private static final Set<String> UPDATE_LIKELIHOOD_DATA_PARAMETERS = new HashSet<>(
 			Arrays.asList(LikelihoodApiConstants.ACTIVE));
-
-    @Autowired
-    public LikelihoodDataValidator(final FromJsonHelper fromApiJsonHelper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-    }
 
     public void validateForUpdate(final JsonCommand command) {
         final String json = command.json();

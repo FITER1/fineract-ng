@@ -20,6 +20,7 @@ package org.apache.fineract.infrastructure.security.data;
 
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -27,7 +28,6 @@ import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.security.constants.TwoFactorConfigurationConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -38,14 +38,10 @@ import java.util.Map;
 
 @Component
 @Profile("twofactor")
+@RequiredArgsConstructor
 public class TwoFactorConfigurationValidator {
 
     private final FromJsonHelper fromJsonHelper;
-
-    @Autowired
-    public TwoFactorConfigurationValidator(FromJsonHelper fromJsonHelper) {
-        this.fromJsonHelper = fromJsonHelper;
-    }
 
     public void validateForUpdate(final String json) {
         if (StringUtils.isBlank(json)) {

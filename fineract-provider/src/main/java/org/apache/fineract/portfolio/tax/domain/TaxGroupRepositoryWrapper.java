@@ -18,19 +18,15 @@
  */
 package org.apache.fineract.portfolio.tax.domain;
 
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.portfolio.tax.exception.TaxGroupNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class TaxGroupRepositoryWrapper {
 
     private final TaxGroupRepository repository;
-
-    @Autowired
-    public TaxGroupRepositoryWrapper(final TaxGroupRepository repository) {
-        this.repository = repository;
-    }
 
     public TaxGroup findOneWithNotFoundDetection(final Long id) {
         return this.repository.findById(id)

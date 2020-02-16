@@ -19,24 +19,19 @@
 package org.apache.fineract.portfolio.paymentdetail.domain;
 
 import com.google.gson.JsonObject;
+import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.paymentdetail.PaymentDetailConstants;
 import org.apache.fineract.portfolio.paymenttype.domain.PaymentType;
 import org.apache.fineract.portfolio.paymenttype.domain.PaymentTypeRepositoryWrapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class PaymentDetailAssembler {
 
     private final FromJsonHelper fromApiJsonHelper;
     private final PaymentTypeRepositoryWrapper repositoryWrapper;
-
-    @Autowired
-    public PaymentDetailAssembler(final FromJsonHelper fromApiJsonHelper, final PaymentTypeRepositoryWrapper repositoryWrapper) {
-        this.fromApiJsonHelper = fromApiJsonHelper;
-        this.repositoryWrapper = repositoryWrapper;
-    }
 
     public PaymentDetail fetchPaymentDetail(final JsonObject json) {
         final Long paymentTypeId = this.fromApiJsonHelper.extractLongNamed(PaymentDetailConstants.paymentTypeParamName, json);
