@@ -24,7 +24,6 @@ import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.domain.Client;
@@ -70,12 +69,12 @@ public class GroupRolesWritePlatformServiceJpaRepositoryImpl implements GroupRol
             if (!group.hasClientAsMember(client)) { throw new ClientNotInGroupException(clientId, command.getGroupId()); }
             final GroupRole groupRole = GroupRole.createGroupRole(group, client, role);
             this.groupRoleRepository.save(groupRole);
-            return new CommandProcessingResultBuilder().withClientId(client.getId()).withGroupId(group.getId())
-                    .withEntityId(groupRole.getId()).build();
+            return CommandProcessingResult.builder().clientId(client.getId()).groupId(group.getId())
+                    .resourceId(groupRole.getId()).build();
 
         } catch (final DataIntegrityViolationException dve) {
             handleGroupDataIntegrityIssues(command, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
 
     }
@@ -131,11 +130,11 @@ public class GroupRolesWritePlatformServiceJpaRepositoryImpl implements GroupRol
             }
 
             this.groupRoleRepository.saveAndFlush(groupRole);
-            return new CommandProcessingResultBuilder().with(actualChanges).withGroupId(group.getId()).withEntityId(groupRole.getId())
+            return CommandProcessingResult.builder().changes(actualChanges).groupId(group.getId()).resourceId(groupRole.getId())
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleGroupDataIntegrityIssues(command, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
 
     }
@@ -145,7 +144,7 @@ public class GroupRolesWritePlatformServiceJpaRepositoryImpl implements GroupRol
         this.context.authenticatedUser();
         final GroupRole groupRole = this.groupRoleRepository.findOneWithNotFoundDetection(ruleId);
         this.groupRoleRepository.delete(groupRole);
-        return new CommandProcessingResultBuilder().withEntityId(groupRole.getId()).build();
+        return CommandProcessingResult.builder().resourceId(groupRole.getId()).build();
     }
 
 }

@@ -21,7 +21,6 @@ package org.apache.fineract.useradministration.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.useradministration.command.PermissionsCommand;
 import org.apache.fineract.useradministration.domain.Permission;
@@ -77,7 +76,7 @@ public class PermissionWritePlatformServiceJpaRepositoryImpl implements Permissi
             changes.put("permissions", changedPermissions);
         }
 
-        return new CommandProcessingResultBuilder().withCommandId(command.commandId()).with(changes).build();
+        return CommandProcessingResult.builder().commandId(command.commandId()).changes(changes).build();
     }
 
     private Permission findPermissionInCollectionByCode(final Collection<Permission> allPermissions, final String permissionCode) {

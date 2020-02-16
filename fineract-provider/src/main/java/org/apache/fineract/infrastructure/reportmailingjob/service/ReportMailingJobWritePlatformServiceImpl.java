@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.dataqueries.domain.Report;
@@ -107,12 +106,12 @@ public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJo
             // save entity
             this.reportMailingJobRepository.save(reportMailingJob);
             
-            return new CommandProcessingResultBuilder().withCommandId(jsonCommand.commandId()).
-                    withEntityId(reportMailingJob.getId()).build();
+            return CommandProcessingResult.builder().commandId(jsonCommand.commandId()).
+                    resourceId(reportMailingJob.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve);
             
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -193,15 +192,15 @@ public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJo
                 this.reportMailingJobRepository.saveAndFlush(reportMailingJob);
             }
             
-            return new CommandProcessingResultBuilder().
-                    withCommandId(jsonCommand.commandId()).
-                    withEntityId(reportMailingJob.getId()).
-                    with(changes).
+            return CommandProcessingResult.builder().
+                    commandId(jsonCommand.commandId()).
+                    resourceId(reportMailingJob.getId()).
+                    changes(changes).
                     build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve);
             
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -217,7 +216,7 @@ public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJo
         // save the report mailing job entity
         this.reportMailingJobRepository.save(reportMailingJob);
         
-        return new CommandProcessingResultBuilder().withEntityId(reportMailingJobId).build();
+        return CommandProcessingResult.builder().resourceId(reportMailingJobId).build();
     }
     
     @Override

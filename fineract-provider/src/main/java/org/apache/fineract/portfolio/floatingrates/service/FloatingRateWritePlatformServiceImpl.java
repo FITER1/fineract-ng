@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.floatingrates.domain.FloatingRate;
@@ -55,17 +54,17 @@ public class FloatingRateWritePlatformServiceImpl implements FloatingRateWritePl
 			final FloatingRate newFloatingRate = FloatingRate.createNew(
 					currentUser, command);
 			this.floatingRateRepository.save(newFloatingRate);
-			return new CommandProcessingResultBuilder() //
-					.withCommandId(command.commandId()) //
-					.withEntityId(newFloatingRate.getId()) //
+			return CommandProcessingResult.builder() //
+					.commandId(command.commandId()) //
+					.resourceId(newFloatingRate.getId()) //
 					.build();
 		} catch (final DataIntegrityViolationException dve) {
 			handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-			return CommandProcessingResult.empty();
+			return new CommandProcessingResult();
 		}catch (final PersistenceException dve) {
 			Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
             handleDataIntegrityIssues(command, throwable, dve);
-         	return CommandProcessingResult.empty();
+         	return new CommandProcessingResult();
 		}
 	}
 
@@ -85,18 +84,18 @@ public class FloatingRateWritePlatformServiceImpl implements FloatingRateWritePl
 				this.floatingRateRepository.save(floatingRateForUpdate);
 			}
 
-			return new CommandProcessingResultBuilder() //
-					.withCommandId(command.commandId()) //
-					.withEntityId(command.entityId()) //
-					.with(changes) //
+			return CommandProcessingResult.builder() //
+					.commandId(command.commandId()) //
+					.resourceId(command.entityId()) //
+					.changes(changes) //
 					.build();
 		} catch (final DataIntegrityViolationException dve) {
 			handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-			return CommandProcessingResult.empty();
+			return new CommandProcessingResult();
 		}catch (final PersistenceException dve) {
 			Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
             handleDataIntegrityIssues(command, throwable, dve);
-         	return CommandProcessingResult.empty();
+         	return new CommandProcessingResult();
 		}
 	}
 

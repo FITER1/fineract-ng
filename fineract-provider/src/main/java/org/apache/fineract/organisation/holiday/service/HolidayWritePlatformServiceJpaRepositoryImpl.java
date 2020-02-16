@@ -25,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -79,14 +78,14 @@ public class HolidayWritePlatformServiceJpaRepositoryImpl implements HolidayWrit
 
             this.holidayRepository.save(holiday);
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(holiday.getId()).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(holiday.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -113,14 +112,14 @@ public class HolidayWritePlatformServiceJpaRepositoryImpl implements HolidayWrit
 
             this.holidayRepository.saveAndFlush(holiday);
 
-            return new CommandProcessingResultBuilder().withEntityId(holiday.getId()).with(changes).build();
+            return CommandProcessingResult.builder().resourceId(holiday.getId()).changes(changes).build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -132,7 +131,7 @@ public class HolidayWritePlatformServiceJpaRepositoryImpl implements HolidayWrit
 
         holiday.activate();
         this.holidayRepository.saveAndFlush(holiday);
-        return new CommandProcessingResultBuilder().withEntityId(holiday.getId()).build();
+        return CommandProcessingResult.builder().resourceId(holiday.getId()).build();
     }
 
     @Transactional
@@ -142,7 +141,7 @@ public class HolidayWritePlatformServiceJpaRepositoryImpl implements HolidayWrit
         final Holiday holiday = this.holidayRepository.findOneWithNotFoundDetection(holidayId);
         holiday.delete();
         this.holidayRepository.saveAndFlush(holiday);
-        return new CommandProcessingResultBuilder().withEntityId(holidayId).build();
+        return CommandProcessingResult.builder().resourceId(holidayId).build();
     }
 
     private Set<Office> getSelectedOffices(final JsonCommand command) {

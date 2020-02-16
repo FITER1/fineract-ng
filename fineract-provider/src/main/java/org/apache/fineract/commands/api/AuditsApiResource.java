@@ -80,7 +80,13 @@ public class AuditsApiResource {
             @QueryParam("orderBy") @ApiParam(value = "orderBy") final String orderBy, @QueryParam("sortOrder") @ApiParam(value = "sortOrder") final String sortOrder) {
 
         this.context.authenticatedUser().validateHasReadPermission(this.resourceNameForPermissions);
-        final PaginationParameters parameters = PaginationParameters.instance(paged, offset, limit, orderBy, sortOrder);
+        final PaginationParameters parameters = PaginationParameters.builder()
+            .paged(Boolean.TRUE.equals(paged))
+            .offset(offset)
+            .limit(limit==null ? PaginationParameters.DEFAULT_CHECKED_LIMIT : limit)
+            .orderBy(orderBy)
+            .sortOrder(sortOrder)
+            .build();
         final String extraCriteria = getExtraCriteria(actionName, entityName, resourceId, makerId, makerDateTimeFrom, makerDateTimeTo,
                 checkerId, checkerDateTimeFrom, checkerDateTimeTo, processingResult, officeId, groupId, clientId, loanId, savingsAccountId);
 

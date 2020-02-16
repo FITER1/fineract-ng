@@ -21,7 +21,6 @@ package org.apache.fineract.mix.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.mix.domain.MixTaxonomyMapping;
 import org.apache.fineract.mix.domain.MixTaxonomyMappingRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -47,10 +46,10 @@ public class MixTaxonomyMappingWritePlatformServiceImpl implements MixTaxonomyMa
 
             this.mappingRepository.saveAndFlush(mapping);
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(mapping.getId()).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(mapping.getId()).build();
 
         } catch (final DataIntegrityViolationException dve) {
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 }

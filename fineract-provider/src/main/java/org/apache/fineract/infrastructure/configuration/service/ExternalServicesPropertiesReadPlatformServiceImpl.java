@@ -57,7 +57,11 @@ public class ExternalServicesPropertiesReadPlatformServiceImpl implements Extern
                     secretKey = rs.getString("value");
                 }
             }
-            return new S3CredentialsData(bucketName, accessKey, secretKey);
+            return S3CredentialsData.builder()
+                .bucketName(bucketName)
+                .accessKey(accessKey)
+                .secretKey(secretKey)
+                .build();
         }
     }
 
@@ -93,7 +97,15 @@ public class ExternalServicesPropertiesReadPlatformServiceImpl implements Extern
                     fromName = value;
                 }
             }
-            return new SMTPCredentialsData(username, password, host, port, useTLS, fromEmail, fromName);
+            return SMTPCredentialsData.builder()
+                .username(username)
+                .password(password)
+                .host(host)
+                .port(port)
+                .useTLS(useTLS)
+                .fromEmail(fromEmail)
+                .fromName(fromName)
+                .build();
         }
     }
 
@@ -108,7 +120,10 @@ public class ExternalServicesPropertiesReadPlatformServiceImpl implements Extern
             if (name != null && "password".equalsIgnoreCase(name)) {
                 value = "XXXX";
             }
-            return new ExternalServicesPropertiesData(name, value);
+            return ExternalServicesPropertiesData.builder()
+                .name(name)
+                .value(value)
+                .build();
         }
 
     }

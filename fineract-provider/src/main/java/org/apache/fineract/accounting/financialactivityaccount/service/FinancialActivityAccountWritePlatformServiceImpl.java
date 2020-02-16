@@ -32,7 +32,6 @@ import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.accounting.glaccount.domain.GLAccountRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -64,17 +63,17 @@ public class FinancialActivityAccountWritePlatformServiceImpl implements Financi
 
             validateFinancialActivityAndAccountMapping(financialActivityAccount);
             this.financialActivityAccountRepository.save(financialActivityAccount);
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(financialActivityAccount.getId()) //
+            return CommandProcessingResult.builder()
+                    .commandId(command.commandId())
+                    .resourceId(financialActivityAccount.getId())
                     .build();
         } catch (DataIntegrityViolationException dataIntegrityViolationException) {
             handleFinancialActivityAccountDataIntegrityIssues(command, dataIntegrityViolationException.getMostSpecificCause(), dataIntegrityViolationException);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch(final PersistenceException ee) {
         	Throwable throwable = ExceptionUtils.getRootCause(ee.getCause()) ;
         	handleFinancialActivityAccountDataIntegrityIssues(command, throwable, ee);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -113,18 +112,18 @@ public class FinancialActivityAccountWritePlatformServiceImpl implements Financi
                 validateFinancialActivityAndAccountMapping(financialActivityAccount);
                 this.financialActivityAccountRepository.save(financialActivityAccount);
             }
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(financialActivityAccountId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder()
+                    .commandId(command.commandId())
+                    .resourceId(financialActivityAccountId)
+                    .changes(changes)
                     .build();
         } catch (DataIntegrityViolationException dataIntegrityViolationException) {
             handleFinancialActivityAccountDataIntegrityIssues(command, dataIntegrityViolationException.getMostSpecificCause(), dataIntegrityViolationException);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch(final PersistenceException ee) {
         	Throwable throwable = ExceptionUtils.getRootCause(ee.getCause()) ;
         	handleFinancialActivityAccountDataIntegrityIssues(command, throwable, ee);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -133,9 +132,9 @@ public class FinancialActivityAccountWritePlatformServiceImpl implements Financi
         final FinancialActivityAccount financialActivityAccount = this.financialActivityAccountRepository
                 .findOneWithNotFoundDetection(financialActivityAccountId);
         this.financialActivityAccountRepository.delete(financialActivityAccount);
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(financialActivityAccountId) //
+        return CommandProcessingResult.builder()
+                .commandId(command.commandId())
+                .resourceId(financialActivityAccountId)
                 .build();
     }
 

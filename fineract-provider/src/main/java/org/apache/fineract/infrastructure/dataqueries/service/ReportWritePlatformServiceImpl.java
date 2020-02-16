@@ -26,7 +26,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.dataqueries.domain.*;
 import org.apache.fineract.infrastructure.dataqueries.exception.ReportNotFoundException;
@@ -76,17 +75,17 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
             final Permission permission = new Permission("report", report.getReportName(), "READ");
             this.permissionRepository.save(permission);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(report.getId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(report.getId()) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleReportDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleReportDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -116,18 +115,18 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
                 this.reportRepository.saveAndFlush(report);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(report.getId()) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(report.getId()) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleReportDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleReportDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -149,8 +148,8 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
         this.reportRepository.delete(report);
         this.permissionRepository.delete(permission);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(reportId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(reportId) //
                 .build();
     }
 

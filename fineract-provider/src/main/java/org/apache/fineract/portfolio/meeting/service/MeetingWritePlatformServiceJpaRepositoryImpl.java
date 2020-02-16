@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.calendar.domain.*;
@@ -102,13 +101,13 @@ public class MeetingWritePlatformServiceJpaRepositoryImpl implements MeetingWrit
             // save meeting details
             this.meetingRepositoryWrapper.save(newMeeting);
             final Long groupId = newMeeting.isGroupEntity() ? newMeeting.entityId() : null;
-            return new CommandProcessingResultBuilder() //
-                    .withEntityId(newMeeting.getId()) //
-                    .withGroupId(groupId).build();
+            return CommandProcessingResult.builder() //
+                    .resourceId(newMeeting.getId()) //
+                    .groupId(groupId).build();
 
         } catch (final DataIntegrityViolationException dve) {
             handleMeetingDataIntegrityIssues(meetingDate, dve);
-            return new CommandProcessingResultBuilder() //
+            return CommandProcessingResult.builder() //
                     .build();
         }
     }
@@ -231,14 +230,14 @@ public class MeetingWritePlatformServiceJpaRepositoryImpl implements MeetingWrit
             }
         } catch (final DataIntegrityViolationException dve) {
             handleMeetingDataIntegrityIssues(meetingForUpdate.getMeetingDate(), dve);
-            return new CommandProcessingResultBuilder() //
+            return CommandProcessingResult.builder() //
                     .build();
         }
         final Long groupId = meetingForUpdate.isGroupEntity() ? meetingForUpdate.entityId() : null;
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(meetingForUpdate.getId()) //
-                .withGroupId(groupId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .resourceId(meetingForUpdate.getId()) //
+                .groupId(groupId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -246,8 +245,8 @@ public class MeetingWritePlatformServiceJpaRepositoryImpl implements MeetingWrit
     public CommandProcessingResult deleteMeeting(final Long meetingId) {
         final Meeting meetingForDelete = this.meetingRepositoryWrapper.findOneWithNotFoundDetection(meetingId);
         this.meetingRepositoryWrapper.delete(meetingForDelete);
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(meetingId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(meetingId) //
                 .build();
     }
 
@@ -261,10 +260,10 @@ public class MeetingWritePlatformServiceJpaRepositoryImpl implements MeetingWrit
 
         this.meetingRepositoryWrapper.saveAndFlush(meetingForUpdate);
         final Long groupId = meetingForUpdate.isGroupEntity() ? meetingForUpdate.entityId() : null;
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(meetingForUpdate.getId()) //
-                .withGroupId(groupId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .resourceId(meetingForUpdate.getId()) //
+                .groupId(groupId) //
+                .changes(changes) //
                 .build();
     }
 

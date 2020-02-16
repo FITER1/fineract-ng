@@ -26,7 +26,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.EntityAccountType;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.self.pockets.api.PocketApiConstants;
@@ -90,7 +89,7 @@ public class PocketWritePlatformServiceImpl implements PocketWritePlatformServic
 
 		}
 		this.pocketAccountMappingRepositoryWrapper.save(pocketAccounts);
-		return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(pocketId).build();
+		return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(pocketId).build();
 
 	}
 
@@ -117,7 +116,7 @@ public class PocketWritePlatformServiceImpl implements PocketWritePlatformServic
 		}
 
 		this.pocketAccountMappingRepositoryWrapper.delete(pocketAccounts);
-		return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(pocketId).build();
+		return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(pocketId).build();
 
 	}
 

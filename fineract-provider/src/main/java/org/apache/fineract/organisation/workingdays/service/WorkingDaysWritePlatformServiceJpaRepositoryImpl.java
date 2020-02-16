@@ -23,7 +23,6 @@ import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.validate.ValidationException;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.organisation.workingdays.api.WorkingDaysApiConstants;
 import org.apache.fineract.organisation.workingdays.data.WorkingDayValidator;
@@ -57,7 +56,7 @@ public class WorkingDaysWritePlatformServiceJpaRepositoryImpl implements Working
 
             Map<String, Object> changes = workingDays.update(command);
             this.daysRepositoryWrapper.saveAndFlush(workingDays);
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(workingDays.getId()).with(changes)
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(workingDays.getId()).changes(changes)
                     .build();
         } catch (final ValidationException e) {
             throw new PlatformDataIntegrityException("error.msg.invalid.recurring.rule",

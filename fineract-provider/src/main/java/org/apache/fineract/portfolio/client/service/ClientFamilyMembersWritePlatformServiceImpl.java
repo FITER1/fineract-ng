@@ -27,7 +27,6 @@ import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepository;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.client.domain.ClientFamilyMembers;
@@ -140,8 +139,8 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 		
 		this.clientFamilyRepository.save(clientFamilyMembers);
 		
-		return new CommandProcessingResultBuilder().withCommandId(command.commandId())
-				.withEntityId(clientFamilyMembers.getId()).build();
+		return CommandProcessingResult.builder().commandId(command.commandId())
+				.resourceId(clientFamilyMembers.getId()).build();
 		
 		
 	
@@ -269,8 +268,8 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 		
 		
 		
-		return new CommandProcessingResultBuilder().withCommandId(command.commandId())
-				.withEntityId(familyMember.getId()).build();
+		return CommandProcessingResult.builder().commandId(command.commandId())
+				.resourceId(familyMember.getId()).build();
 		
 		
 	}
@@ -387,8 +386,8 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 		
 		this.clientFamilyRepository.save(clientFamilyMember);
 		
-		return new CommandProcessingResultBuilder().withCommandId(command.commandId())
-				.withEntityId(clientFamilyMember.getId()).build();
+		return CommandProcessingResult.builder().commandId(command.commandId())
+				.resourceId(clientFamilyMember.getId()).build();
 	}
 
 
@@ -415,13 +414,13 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 		
 		if(clientFamilyMember!=null)
 		{
-			return new CommandProcessingResultBuilder().withCommandId(command.commandId())
-					.withEntityId(clientFamilyMember.getId()).build();	
+			return CommandProcessingResult.builder().commandId(command.commandId())
+					.resourceId(clientFamilyMember.getId()).build();
 		}
 		else
 		{
-			return new CommandProcessingResultBuilder().withCommandId(command.commandId())
-					.withEntityId(Long.valueOf(clientFamilyMemberId)).build();	
+			return CommandProcessingResult.builder().commandId(command.commandId())
+					.resourceId(Long.valueOf(clientFamilyMemberId)).build();
 		}
 		
 	}

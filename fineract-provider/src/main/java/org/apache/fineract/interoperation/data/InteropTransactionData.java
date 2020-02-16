@@ -81,7 +81,8 @@ public class InteropTransactionData extends CommandProcessingResult {
 
     public InteropTransactionData(Long entityId, String accountId, String transactionId, SavingsAccountTransactionType transactionType, BigDecimal amount, BigDecimal chargeAmount,
                                   String currency, BigDecimal accountBalance, LocalDate bookingDateTime, LocalDate valueDateTime, String note) {
-        super(entityId);
+        this.resourceIdentifier = entityId!=null ? entityId.toString() : null;
+        this.resourceId = entityId;
         this.accountId = accountId;
         this.savingTransactionId = transactionId;
         this.transactionType = transactionType;

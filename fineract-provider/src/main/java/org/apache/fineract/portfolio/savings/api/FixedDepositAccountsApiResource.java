@@ -119,7 +119,13 @@ public class FixedDepositAccountsApiResource {
             @QueryParam("orderBy") @ApiParam(value = "orderBy") final String orderBy, @QueryParam("sortOrder") @ApiParam(value = "sortOrder") final String sortOrder) {
 
         this.context.authenticatedUser().validateHasReadPermission(DepositsApiConstants.FIXED_DEPOSIT_ACCOUNT_RESOURCE_NAME);
-        final PaginationParameters paginationParameters = PaginationParameters.instance(paged, offset, limit, orderBy, sortOrder);
+        final PaginationParameters paginationParameters = PaginationParameters.builder()
+            .paged(Boolean.TRUE.equals(paged))
+            .offset(offset)
+            .limit(limit==null ? PaginationParameters.DEFAULT_CHECKED_LIMIT : limit)
+            .orderBy(orderBy)
+            .sortOrder(sortOrder)
+            .build();
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
 
         if (paginationParameters.isPaged()) {

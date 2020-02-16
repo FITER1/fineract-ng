@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.core.data;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +31,7 @@ public class PaginationParametersDataValidator {
 
     public void validateParameterValues(PaginationParameters parameters, final Set<String> supportedOrdeByValues, final String resourceName) {
         final List<ApiParameterError> dataValidationErrors = new ArrayList<>();
-            if (parameters.isOrderByRequested() && !supportedOrdeByValues.contains(parameters.getOrderBy())) {
+            if (StringUtils.isNotBlank(parameters.getOrderBy()) && !supportedOrdeByValues.contains(parameters.getOrderBy())) {
                 final String defaultUserMessage = "The orderBy value '" + parameters.getOrderBy()
                         + "' is not supported. The supported orderBy values are " + supportedOrdeByValues.toString();
                 final ApiParameterError error = ApiParameterError.parameterError("validation.msg." + resourceName
@@ -39,7 +40,7 @@ public class PaginationParametersDataValidator {
                 dataValidationErrors.add(error);
             }
 
-            if (parameters.isSortOrderProvided() && !sortOrderValues.contains(parameters.getSortOrder().toUpperCase())) {
+            if (StringUtils.isNotBlank(parameters.getSortOrder()) && !sortOrderValues.contains(parameters.getSortOrder().toUpperCase())) {
                 final String defaultUserMessage = "The sortOrder value '" + parameters.getSortOrder()
                         + "' is not supported. The supported sortOrder values are " + sortOrderValues.toString();
                 final ApiParameterError error = ApiParameterError.parameterError("validation.msg." + resourceName

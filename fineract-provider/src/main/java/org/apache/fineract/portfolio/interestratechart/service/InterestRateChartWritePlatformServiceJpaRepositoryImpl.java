@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartDataValidator;
 import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartRepositoryWrapper;
@@ -54,9 +53,9 @@ public class InterestRateChartWritePlatformServiceJpaRepositoryImpl implements I
 
         final Long interestRateChartId = interestRateChart.getId();
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(interestRateChartId) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(interestRateChartId) //
                 .build();
     }
 
@@ -71,10 +70,10 @@ public class InterestRateChartWritePlatformServiceJpaRepositoryImpl implements I
 
         this.interestRateChartRepository.saveAndFlush(interestRateChart);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(interestRateChartId) //
-                .with(changes).build();
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(interestRateChartId) //
+                .changes(changes).build();
     }
 
     @Override
@@ -84,8 +83,8 @@ public class InterestRateChartWritePlatformServiceJpaRepositoryImpl implements I
         // validate if chart is associated with any accounts
 
         this.interestRateChartRepository.delete(chart);
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(chartId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(chartId) //
                 .build();
     }
 

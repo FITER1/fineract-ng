@@ -77,7 +77,10 @@ public class ExternalServicesReadPlatformServiceImpl implements ExternalServices
                 id = rs.getLong("id");
             }
 
-            return new ExternalServicesData(id, name);
+            return ExternalServicesData.builder()
+                .id(id)
+                .name(name)
+                .build();
         }
 
     }

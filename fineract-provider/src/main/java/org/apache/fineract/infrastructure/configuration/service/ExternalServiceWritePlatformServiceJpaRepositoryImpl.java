@@ -27,7 +27,6 @@ import org.apache.fineract.infrastructure.configuration.domain.ExternalServicesP
 import org.apache.fineract.infrastructure.configuration.serialization.ExternalServicesPropertiesCommandFromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,8 +68,8 @@ public class ExternalServiceWritePlatformServiceJpaRepositoryImpl implements Ext
                 this.repository.saveAndFlush(externalServicesProperties);
             }
         }
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()).withEntityId(externalServiceId).with(changesList).build();
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()).resourceId(externalServiceId).changes(changesList).build();
         //
 
     }

@@ -38,12 +38,9 @@ import org.apache.fineract.infrastructure.codes.domain.CodeValueRepository;
 import org.apache.fineract.infrastructure.codes.exception.CodeValueNotFoundException;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,11 +90,11 @@ public class AccountingRuleWritePlatformServiceJpaRepositoryImpl implements Acco
 
             final AccountingRule accountingRule = assembleAccountingRuleAndTags(office, command);
             this.accountingRuleRepository.saveAndFlush(accountingRule);
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withOfficeId(officeId)
-                    .withEntityId(accountingRule.getId()).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).officeId(officeId)
+                    .resourceId(accountingRule.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
             handleAccountingRuleIntegrityIssues(command, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -256,11 +253,11 @@ public class AccountingRuleWritePlatformServiceJpaRepositoryImpl implements Acco
                 this.accountingRuleRepository.saveAndFlush(accountingRule);
             }
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(accountingRule.getId())
-                    .with(changesOnly).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(accountingRule.getId())
+                    .changes(changesOnly).build();
         } catch (final DataIntegrityViolationException dve) {
             handleAccountingRuleIntegrityIssues(command, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
 
     }
@@ -309,7 +306,7 @@ public class AccountingRuleWritePlatformServiceJpaRepositoryImpl implements Acco
     public CommandProcessingResult deleteAccountingRule(final Long accountingRuleId) {
         final AccountingRule accountingRule = this.accountingRuleRepositoryWrapper.findOneWithNotFoundDetection(accountingRuleId);
         this.accountingRuleRepository.delete(accountingRule);
-        return new CommandProcessingResultBuilder().withEntityId(accountingRule.getId()).build();
+        return CommandProcessingResult.builder().resourceId(accountingRule.getId()).build();
     }
 
     private List<AccountingTagRule> saveDebitOrCreditTags(final Set<String> creditOrDebitTagArray, final JournalEntryType transactionType,

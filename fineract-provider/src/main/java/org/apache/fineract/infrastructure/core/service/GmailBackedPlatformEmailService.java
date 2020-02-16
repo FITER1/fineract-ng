@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.core.service;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.DefaultAuthenticator;
 import org.apache.commons.mail.Email;
 import org.apache.commons.mail.EmailException;
@@ -69,7 +70,10 @@ public class GmailBackedPlatformEmailService implements PlatformEmailService {
             if(smtpCredentialsData.isUseTLS()){
                 email.getMailSession().getProperties().put("mail.smtp.starttls.enable", "true");
             }
-            email.setFrom(smtpCredentialsData.getFromEmail(), smtpCredentialsData.getFromName());
+            email.setFrom(
+                StringUtils.isEmpty(smtpCredentialsData.getFromEmail()) ? smtpCredentialsData.getUsername() : smtpCredentialsData.getFromEmail(),
+                StringUtils.isEmpty(smtpCredentialsData.getFromName()) ? smtpCredentialsData.getUsername() : smtpCredentialsData.getFromName()
+            );
 
             email.setSubject(emailDetails.getSubject());
             email.setMsg(emailDetails.getBody());

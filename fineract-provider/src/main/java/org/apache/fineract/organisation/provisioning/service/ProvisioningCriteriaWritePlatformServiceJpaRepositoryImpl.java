@@ -29,7 +29,6 @@ import org.apache.fineract.accounting.glaccount.domain.GLAccountRepository;
 import org.apache.fineract.accounting.provisioning.service.ProvisioningEntriesReadPlatformService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.organisation.provisioning.constants.ProvisioningCriteriaConstants;
@@ -68,14 +67,14 @@ public class ProvisioningCriteriaWritePlatformServiceJpaRepositoryImpl implement
             this.fromApiJsonDeserializer.validateForCreate(command.json());
             ProvisioningCriteria provisioningCriteria = provisioningCriteriaAssembler.fromParsedJson(command.parsedJson());
             this.provisioningCriteriaRepository.save(provisioningCriteria);
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(provisioningCriteria.getId()).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(provisioningCriteria.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -87,7 +86,7 @@ public class ProvisioningCriteriaWritePlatformServiceJpaRepositoryImpl implement
             throw new ProvisioningCriteriaCannotBeDeletedException(criteriaId) ;
         }
         this.provisioningCriteriaRepository.deleteById(criteriaId); ;
-        return new CommandProcessingResultBuilder().withEntityId(criteriaId).build();
+        return CommandProcessingResult.builder().resourceId(criteriaId).build();
     }
 
     @Override
@@ -104,14 +103,14 @@ public class ProvisioningCriteriaWritePlatformServiceJpaRepositoryImpl implement
                 updateProvisioningCriteriaDefinitions(provisioningCriteria, command) ;
                 provisioningCriteriaRepository.saveAndFlush(provisioningCriteria) ;    
             }
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(provisioningCriteria.getId()).build();	
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(provisioningCriteria.getId()).build();
     	} catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 

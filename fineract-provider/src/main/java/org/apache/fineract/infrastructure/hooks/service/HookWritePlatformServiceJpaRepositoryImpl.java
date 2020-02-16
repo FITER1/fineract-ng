@@ -25,7 +25,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
@@ -96,16 +95,16 @@ public class HookWritePlatformServiceJpaRepositoryImpl
 
             this.hookRepository.save(hook);
 
-            return new CommandProcessingResultBuilder()
-                    .withCommandId(command.commandId())
-                    .withEntityId(hook.getId()).build();
+            return CommandProcessingResult.builder()
+                    .commandId(command.commandId())
+                    .resourceId(hook.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
             handleHookDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleHookDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -162,18 +161,18 @@ public class HookWritePlatformServiceJpaRepositoryImpl
                 this.hookRepository.saveAndFlush(hook);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(hookId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(hookId) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleHookDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleHookDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -192,7 +191,7 @@ public class HookWritePlatformServiceJpaRepositoryImpl
                     "Unknown data integrity issue with resource: "
                             + e.getMostSpecificCause());
         }
-        return new CommandProcessingResultBuilder().withEntityId(hookId)
+        return CommandProcessingResult.builder().resourceId(hookId)
                 .build();
     }
 

@@ -42,7 +42,7 @@ public class WriteSurveyServiceImpl implements WriteSurveyService {
         final String permissionSql = this._getPermissionSql(dataTableName);
         this.readWriteNonCoreDataService.registerDatatable(command, permissionSql);
 
-        return CommandProcessingResult.commandOnlyResult(command.commandId());
+        return CommandProcessingResult.builder().commandId(command.commandId()).build();
 
     }
 

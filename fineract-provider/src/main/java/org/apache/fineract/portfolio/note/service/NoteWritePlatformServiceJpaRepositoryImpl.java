@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
 import org.apache.fineract.portfolio.client.exception.ClientNotFoundException;
@@ -65,11 +64,11 @@ public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatf
 
         this.noteRepository.save(newNote);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(newNote.getId()) //
-                .withClientId(client.getId()) //
-                .withOfficeId(client.getOffice().getId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(newNote.getId()) //
+                .clientId(client.getId()) //
+                .officeId(client.getOffice().getId()) //
                 .build();
 
     }
@@ -92,11 +91,11 @@ public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatf
 
         this.noteRepository.save(newNote);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(newNote.getId()) //
-                .withGroupId(group.getId()) //
-                .withOfficeId(group.officeId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(newNote.getId()) //
+                .groupId(group.getId()) //
+                .officeId(group.officeId()) //
                 .build();
     }
 
@@ -110,11 +109,11 @@ public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatf
 
         this.noteRepository.save(newNote);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(newNote.getId()) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withLoanId(loan.getId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(newNote.getId()) //
+                .officeId(loan.getOfficeId()) //
+                .loanId(loan.getId()) //
                 .build();
     }
 
@@ -132,11 +131,11 @@ public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatf
 
         this.noteRepository.save(newNote);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(newNote.getId()) //
-                .withOfficeId(loan.getOfficeId())//
-                .withLoanId(loan.getId())// Loan can be associated
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(newNote.getId()) //
+                .officeId(loan.getOfficeId())//
+                .loanId(loan.getId())// Loan can be associated
                 .build();
     }
 
@@ -155,10 +154,10 @@ public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatf
     //
     // this.noteRepository.save(newNote);
     //
-    // return new CommandProcessingResultBuilder() //
-    // .withCommandId(command.commandId()) //
-    // .withEntityId(newNote.getId()) //
-    // .withClientId(savingAccount.getClient().getId()).withOfficeId(savingAccount.getClient().getOffice().getId()).build();
+    // return CommandProcessingResult.builder() //
+    // .commandId()(command.commandId()) //
+    // .resourceId()(newNote.getId()) //
+    // .clientId(savingAccount.getClient().getId()).officeId(savingAccount.getClient().getOffice().getId()).build();
     // }
 
     @Override
@@ -232,12 +231,12 @@ public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatf
             this.noteRepository.saveAndFlush(noteForUpdate);
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(noteForUpdate.getId()) //
-                .withClientId(client.getId()) //
-                .withOfficeId(client.getOffice().getId()) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(noteForUpdate.getId()) //
+                .clientId(client.getId()) //
+                .officeId(client.getOffice().getId()) //
+                .changes(changes) //
                 .build();
     }
 
@@ -261,12 +260,12 @@ public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatf
             this.noteRepository.saveAndFlush(noteForUpdate);
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(noteForUpdate.getId()) //
-                .withGroupId(group.getId()) //
-                .withOfficeId(group.officeId()) //
-                .with(changes).build();
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(noteForUpdate.getId()) //
+                .groupId(group.getId()) //
+                .officeId(group.officeId()) //
+                .changes(changes).build();
     }
 
     private CommandProcessingResult updateLoanNote(final JsonCommand command) {
@@ -286,8 +285,8 @@ public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatf
             this.noteRepository.saveAndFlush(noteForUpdate);
         }
 
-        return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(noteForUpdate.getId())
-                .withLoanId(loan.getId()).withOfficeId(loan.getOfficeId()).with(changes).build();
+        return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(noteForUpdate.getId())
+                .loanId(loan.getId()).officeId(loan.getOfficeId()).changes(changes).build();
     }
 
     private CommandProcessingResult updateLoanTransactionNote(final JsonCommand command) {
@@ -311,45 +310,9 @@ public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatf
             this.noteRepository.saveAndFlush(noteForUpdate);
         }
 
-        return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(noteForUpdate.getId())
-                .withLoanId(loan.getId()).withOfficeId(loan.getOfficeId()).with(changes).build();
+        return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(noteForUpdate.getId())
+                .loanId(loan.getId()).officeId(loan.getOfficeId()).changes(changes).build();
     }
-
-    // private CommandProcessingResult updateSavingAccountNote(final JsonCommand
-    // command) {
-    //
-    // final Long resourceId = command.getSupportedEntityId();
-    // final Long noteId = command.entityId();
-    // final String resourceUrl = command.getSupportedEntityType();
-    //
-    // final NoteType type = NoteType.fromApiUrl(resourceUrl);
-    //
-    // final SavingAccount savingAccount =
-    // this.savingAccountRepository.findById(resourceId).orElse(null);
-    // if (savingAccount == null) { throw new
-    // SavingAccountNotFoundException(resourceId); }
-    //
-    // final Note noteForUpdate =
-    // this.noteRepository.findBySavingAccountIdAndId(resourceId, noteId);
-    //
-    // if (noteForUpdate == null) { throw new NoteNotFoundException(noteId,
-    // resourceId, type.name().toLowerCase()); }
-    //
-    // final Map<String, Object> changes = noteForUpdate.update(command);
-    //
-    // if (!changes.isEmpty()) {
-    // this.noteRepository.saveAndFlush(noteForUpdate);
-    // }
-    //
-    // return new CommandProcessingResultBuilder()
-    // //
-    // .withCommandId(command.commandId())
-    // //
-    // .withEntityId(noteForUpdate.getId())
-    // //
-    // .withClientId(savingAccount.getClient().getId()).withOfficeId(savingAccount.getClient().getOffice().getId()).with(changes)
-    // .build();
-    // }
 
     @Override
     public CommandProcessingResult updateNote(final JsonCommand command) {
@@ -386,9 +349,9 @@ public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatf
         final Note noteForDelete = getNoteForDelete(command);
 
         this.noteRepository.delete(noteForDelete);
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(null) //
-                .withEntityId(command.entityId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(null) //
+                .resourceId(command.entityId()) //
                 .build();
     }
 

@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.handler.NewCommandSourceHandler;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.dataqueries.service.ReadWriteNonCoreDataService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,14 +39,14 @@ public class CreateDatatableEntryCommandHandler implements NewCommandSourceHandl
         final CommandProcessingResult commandProcessingResult = this.writePlatformService.createNewDatatableEntry(command.entityName(),
                 command.entityId(), command);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(command.entityId()) //
-                .withOfficeId(commandProcessingResult.getOfficeId()) //
-                .withGroupId(commandProcessingResult.getGroupId()) //
-                .withClientId(commandProcessingResult.getClientId()) //
-                .withSavingsId(commandProcessingResult.getSavingsId()) //
-                .withLoanId(commandProcessingResult.getLoanId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(command.entityId()) //
+                .officeId(commandProcessingResult.getOfficeId()) //
+                .groupId(commandProcessingResult.getGroupId()) //
+                .clientId(commandProcessingResult.getClientId()) //
+                .savingsId(commandProcessingResult.getSavingsId()) //
+                .loanId(commandProcessingResult.getLoanId()) //
                 .build();
     }
 }

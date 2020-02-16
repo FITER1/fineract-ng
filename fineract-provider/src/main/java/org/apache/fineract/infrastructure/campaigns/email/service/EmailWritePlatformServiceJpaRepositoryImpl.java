@@ -26,7 +26,6 @@ import org.apache.fineract.infrastructure.campaigns.email.domain.EmailMessageAss
 import org.apache.fineract.infrastructure.campaigns.email.domain.EmailMessageRepository;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -59,13 +58,13 @@ public class EmailWritePlatformServiceJpaRepositoryImpl implements EmailWritePla
             // table
             this.repository.save(message);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(message.getId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(message.getId()) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -82,14 +81,14 @@ public class EmailWritePlatformServiceJpaRepositoryImpl implements EmailWritePla
                 this.repository.save(message);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(resourceId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(resourceId) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -103,9 +102,9 @@ public class EmailWritePlatformServiceJpaRepositoryImpl implements EmailWritePla
             this.repository.flush();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(null, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
-        return new CommandProcessingResultBuilder().withEntityId(resourceId).build();
+        return CommandProcessingResult.builder().resourceId(resourceId).build();
     }
 
     /*

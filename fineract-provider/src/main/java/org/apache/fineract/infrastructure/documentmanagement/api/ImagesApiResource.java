@@ -186,7 +186,7 @@ public class ImagesApiResource {
     public String deleteClientImage(@PathParam("entity") final String entityName, @PathParam("entityId") final Long entityId) {
         validateEntityTypeforImage(entityName);
         this.imageWritePlatformService.deleteImage(entityName, entityId);
-        return this.toApiJsonSerializer.serialize(new CommandProcessingResult(entityId));
+        return this.toApiJsonSerializer.serialize(CommandProcessingResult.builder().resourceId(entityId).build());
     }
 
     /*** Entities for document Management **/

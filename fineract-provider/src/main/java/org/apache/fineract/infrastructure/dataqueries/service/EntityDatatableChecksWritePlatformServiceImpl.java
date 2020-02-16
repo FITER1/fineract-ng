@@ -28,7 +28,6 @@ import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDoma
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
@@ -115,17 +114,17 @@ public class EntityDatatableChecksWritePlatformServiceImpl implements EntityData
 
             this.entityDatatableChecksRepository.saveAndFlush(check);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(check.getId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(check.getId()) //
                     .build();
         } catch (final DataAccessException e) {
             handleReportDataIntegrityIssues(command, e.getMostSpecificCause(), e);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         } catch (final PersistenceException dve) {
             Throwable throwable = ExceptionUtils.getRootCause(dve.getCause());
             handleReportDataIntegrityIssues(command, throwable, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -242,8 +241,8 @@ public class EntityDatatableChecksWritePlatformServiceImpl implements EntityData
 
         this.entityDatatableChecksRepository.delete(check);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(entityDatatableCheckId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(entityDatatableCheckId) //
                 .build();
     }
 

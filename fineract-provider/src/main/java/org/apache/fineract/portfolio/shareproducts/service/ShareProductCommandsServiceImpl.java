@@ -47,7 +47,7 @@ public class ShareProductCommandsServiceImpl implements ProductCommandsService {
         } else if (ShareProductApiConstants.POST_DIVIDENdS_COMMAND_STRING.equals(command)) { return postDividends(productId,
                 jsonCommand); }
         // throw unknow commandexception
-        return CommandProcessingResult.empty();
+        return new CommandProcessingResult();
     }
 
 }

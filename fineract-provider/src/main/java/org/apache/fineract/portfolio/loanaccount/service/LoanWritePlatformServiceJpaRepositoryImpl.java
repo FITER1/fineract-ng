@@ -30,7 +30,6 @@ import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDoma
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
@@ -347,14 +346,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         this.loanAccountDomainService.recalculateAccruals(loan);
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_DISBURSAL,
                 constructEntityMap(BUSINESS_ENTITY.LOAN, loan));
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loan.getId()) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loan.getId()) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -639,14 +638,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                     constructEntityMap(BUSINESS_ENTITY.LOAN, loan));
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loan.getId()) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loan.getId()) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -676,13 +675,13 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         final Boolean isHolidayValidationDone = false;
         final HolidayDetailDTO holidayDetailDto = null;
         boolean isAccountTransfer = false;
-        final CommandProcessingResultBuilder commandProcessingResultBuilder = new CommandProcessingResultBuilder();
+        final CommandProcessingResult.CommandProcessingResultBuilder commandProcessingResultBuilder = CommandProcessingResult.builder();
         this.loanAccountDomainService.makeRepayment(loan, commandProcessingResultBuilder, transactionDate, transactionAmount,
                 paymentDetail, noteText, txnExternalId, isRecoveryRepayment, isAccountTransfer, holidayDetailDto, isHolidayValidationDone);
 
-        return commandProcessingResultBuilder.withCommandId(command.commandId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return commandProcessingResultBuilder.commandId(command.commandId()) //
+                .loanId(loanId)
+                .changes(changes)
                 .build();
     }
 
@@ -727,7 +726,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 if (paymentDetail != null && paymentDetail.getId() == null) {
                     this.paymentDetailWritePlatformService.persistPaymentDetail(paymentDetail);
                 }
-                final CommandProcessingResultBuilder commandProcessingResultBuilder = new CommandProcessingResultBuilder();
+                final CommandProcessingResult.CommandProcessingResultBuilder commandProcessingResultBuilder = CommandProcessingResult.builder();
                 LoanTransaction loanTransaction = this.loanAccountDomainService.makeRepayment(loan, commandProcessingResultBuilder,
                         bulkRepaymentCommand.getTransactionDate(), singleLoanRepaymentCommand.getTransactionAmount(), paymentDetail,
                         bulkRepaymentCommand.getNote(), null, isRecoveryRepayment, isAccountTransfer, holidayDetailDTO,
@@ -872,14 +871,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         }
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_ADJUST_TRANSACTION, entityMap);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(transactionId) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(transactionId) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -959,14 +958,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         this.loanAccountDomainService.recalculateAccruals(loan);
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_WAIVE_INTEREST,
                 constructEntityMap(BUSINESS_ENTITY.LOAN_TRANSACTION, waiveInterestTransaction));
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(waiveInterestTransaction.getId()) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(waiveInterestTransaction.getId()) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -1029,14 +1028,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         this.loanAccountDomainService.recalculateAccruals(loan);
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_WRITTEN_OFF,
                 constructEntityMap(BUSINESS_ENTITY.LOAN_TRANSACTION, writeoff));
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(writeoff.getId()) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(writeoff.getId()) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -1101,24 +1100,24 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         CommandProcessingResult result = null;
         if (possibleClosingTransaction != null) {
 
-            result = new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(possibleClosingTransaction.getId()) //
-                    .withOfficeId(loan.getOfficeId()) //
-                    .withClientId(loan.getClientId()) //
-                    .withGroupId(loan.getGroupId()) //
-                    .withLoanId(loanId) //
-                    .with(changes) //
+            result = CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(possibleClosingTransaction.getId()) //
+                    .officeId(loan.getOfficeId()) //
+                    .clientId(loan.getClientId()) //
+                    .groupId(loan.getGroupId()) //
+                    .loanId(loanId) //
+                    .changes(changes) //
                     .build();
         } else {
-            result = new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(loanId) //
-                    .withOfficeId(loan.getOfficeId()) //
-                    .withClientId(loan.getClientId()) //
-                    .withGroupId(loan.getGroupId()) //
-                    .withLoanId(loanId) //
-                    .with(changes) //
+            result = CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(loanId) //
+                    .officeId(loan.getOfficeId()) //
+                    .clientId(loan.getClientId()) //
+                    .groupId(loan.getGroupId()) //
+                    .loanId(loanId) //
+                    .changes(changes) //
                     .build();
         }
 
@@ -1158,14 +1157,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         // disable all active standing instructions linked to the loan
         this.loanAccountDomainService.disableStandingInstructionsLinkedToClosedLoan(loan);
         
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loanId) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loanId) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -1274,13 +1273,13 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         }
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_ADD_CHARGE,
                 constructEntityMap(BUSINESS_ENTITY.LOAN_CHARGE, loanCharge));
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loanCharge.getId()) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loanCharge.getId()) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
                 .build();
     }
 
@@ -1398,14 +1397,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         saveLoanWithDataIntegrityViolationChecks(loan);
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_UPDATE_CHARGE,
                 constructEntityMap(BUSINESS_ENTITY.LOAN_CHARGE, loanCharge));
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loanChargeId) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loanChargeId) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -1482,14 +1481,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_WAIVE_CHARGE,
                 constructEntityMap(BUSINESS_ENTITY.LOAN_CHARGE, loanCharge));
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loanChargeId) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loanChargeId) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -1512,13 +1511,13 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         saveLoanWithDataIntegrityViolationChecks(loan);
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_DELETE_CHARGE,
                 constructEntityMap(BUSINESS_ENTITY.LOAN_CHARGE, loanCharge));
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loanChargeId) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loanChargeId) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
                 .build();
     }
 
@@ -1589,14 +1588,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 AccountTransferType.CHARGE_PAYMENT.getValue(), null, null, null, null, null, fromSavingsAccount, isRegularTransaction,
                 isExceptionForBalanceCheck);
         this.accountTransfersWritePlatformService.transferFunds(accountTransferDTO);
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loanChargeId) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .withSavingsId(portfolioAccountData.accountId()).build();
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loanChargeId) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .savingsId(portfolioAccountData.accountId()).build();
     }
 
     public void disburseLoanToLoan(final Loan loan, final JsonCommand command, final BigDecimal amount) {
@@ -1838,13 +1837,13 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_REASSIGN_OFFICER,
                 constructEntityMap(BUSINESS_ENTITY.LOAN, loan));
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loanId) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loanId) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
                 .build();
     }
 
@@ -1879,8 +1878,8 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         }
         this.loanRepositoryWrapper.flush();
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
                 .build();
     }
 
@@ -1907,13 +1906,13 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_REMOVE_OFFICER,
                 constructEntityMap(BUSINESS_ENTITY.LOAN, loan));
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loanId) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loanId) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
                 .build();
     }
 
@@ -2406,11 +2405,11 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
             this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_UNDO_WRITTEN_OFF,
                     constructEntityMap(BUSINESS_ENTITY.LOAN_TRANSACTION, writeOffTransaction));
         }
-        return new CommandProcessingResultBuilder() //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
+        return CommandProcessingResult.builder() //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
                 .build();
     }
 
@@ -2534,12 +2533,12 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         }
         postJournalEntries(loan, existingTransactionIds, existingReversedTransactionIds);
         this.loanAccountDomainService.recalculateAccruals(loan);
-        return new CommandProcessingResultBuilder() //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes).build();
+        return CommandProcessingResult.builder() //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes).build();
     }
 
     @Override
@@ -2664,7 +2663,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
     public CommandProcessingResult recoverFromGuarantor(final Long loanId) {
         final Loan loan = this.loanAssembler.assembleFrom(loanId);
         this.guarantorDomainService.transaferFundsFromGuarantor(loan);
-        return new CommandProcessingResultBuilder().withLoanId(loanId).build();
+        return CommandProcessingResult.builder().loanId(loanId).build();
     }
 
     private void updateLoanTransaction(final Long loanTransactionId, final LoanTransaction newLoanTransaction) {
@@ -2732,14 +2731,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
         final PaymentDetail paymentDetail = null;
 
-        final CommandProcessingResultBuilder commandProcessingResultBuilder = new CommandProcessingResultBuilder();
+        final CommandProcessingResult.CommandProcessingResultBuilder commandProcessingResultBuilder = CommandProcessingResult.builder();
 
         this.loanAccountDomainService.makeRefundForActiveLoan(loanId, commandProcessingResultBuilder, transactionDate, transactionAmount,
                 paymentDetail, noteText, null);
 
-        return commandProcessingResultBuilder.withCommandId(command.commandId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return commandProcessingResultBuilder.commandId(command.commandId()) //
+                .loanId(loanId)
+                .changes(changes)
                 .build();
 
     }
@@ -2806,14 +2805,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                     constructEntityMap(BUSINESS_ENTITY.LOAN, loan));
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loan.getId()) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loan.getId()) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -2845,9 +2844,9 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         final Map<String, Object> modifications = this.loanAccountDomainService.foreCloseLoan(loan, transactionDate, noteText);
         changes.putAll(modifications);
 
-        final CommandProcessingResultBuilder commandProcessingResultBuilder = new CommandProcessingResultBuilder();
-        return commandProcessingResultBuilder.withLoanId(loanId) //
-                .with(changes) //
+        final CommandProcessingResult.CommandProcessingResultBuilder commandProcessingResultBuilder = CommandProcessingResult.builder();
+        return commandProcessingResultBuilder.loanId(loanId)
+                .changes(changes)
                 .build();
     }
 

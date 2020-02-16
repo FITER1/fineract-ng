@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.fund.domain.Fund;
@@ -61,14 +60,14 @@ public class FundWritePlatformServiceJpaRepositoryImpl implements FundWritePlatf
 
             this.fundRepository.save(fund);
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(fund.getId()).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(fund.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
             handleFundDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleFundDataIntegrityIssues(command, throwable, dve);
-         	return CommandProcessingResult.empty();
+         	return new CommandProcessingResult();
         }
     }
 
@@ -90,14 +89,14 @@ public class FundWritePlatformServiceJpaRepositoryImpl implements FundWritePlatf
                 this.fundRepository.saveAndFlush(fund);
             }
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(fund.getId()).with(changes).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(fund.getId()).changes(changes).build();
         } catch (final DataIntegrityViolationException dve) {
             handleFundDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleFundDataIntegrityIssues(command, throwable, dve);
-         	return CommandProcessingResult.empty();
+         	return new CommandProcessingResult();
         }
     }
 

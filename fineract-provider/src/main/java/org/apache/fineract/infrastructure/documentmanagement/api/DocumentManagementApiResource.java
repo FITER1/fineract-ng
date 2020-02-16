@@ -111,7 +111,7 @@ public class DocumentManagementApiResource {
 
         final Long documentId = this.documentWritePlatformService.createDocument(documentCommand, file);
 
-        return this.toApiJsonSerializer.serialize(CommandProcessingResult.resourceResult(documentId, null));
+        return this.toApiJsonSerializer.serialize(CommandProcessingResult.builder().resourceId(documentId).build());
     }
 
     // NOTE: Swagger annotations don't work here

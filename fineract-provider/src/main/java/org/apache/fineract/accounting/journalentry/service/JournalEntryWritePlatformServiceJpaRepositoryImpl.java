@@ -55,7 +55,6 @@ import org.apache.fineract.accounting.rule.exception.AccountingRuleNotFoundExcep
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
@@ -175,8 +174,8 @@ public class JournalEntryWritePlatformServiceJpaRepositoryImpl implements Journa
 
             }
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withOfficeId(officeId)
-                    .withTransactionId(transactionId).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).officeId(officeId)
+                    .transactionId(transactionId).build();
         } catch (final DataIntegrityViolationException dve) {
             handleJournalEntryDataIntegrityIssues(dve);
             return null;
@@ -280,7 +279,7 @@ public class JournalEntryWritePlatformServiceJpaRepositoryImpl implements Journa
 
         if (journalEntries.size() <= 1) { throw new JournalEntriesNotFoundException(command.getTransactionId()); }
         final String reversalTransactionId = revertJournalEntry(journalEntries, reversalComment);
-        return new CommandProcessingResultBuilder().withTransactionId(reversalTransactionId).build();
+        return CommandProcessingResult.builder().transactionId(reversalTransactionId).build();
     }
 
     public String revertJournalEntry(final List<JournalEntry> journalEntries, String reversalComment) {
@@ -679,8 +678,8 @@ public class JournalEntryWritePlatformServiceJpaRepositoryImpl implements Journa
             saveAllDebitOrCreditOpeningBalanceEntries(journalEntryCommand, office, currencyCode, transactionDate,
                     journalEntryCommand.getCredits(), transactionId, JournalEntryType.CREDIT, contraId);
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withOfficeId(officeId)
-                    .withTransactionId(transactionId).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).officeId(officeId)
+                    .transactionId(transactionId).build();
         } catch (final DataIntegrityViolationException dve) {
             handleJournalEntryDataIntegrityIssues(dve);
             return null;

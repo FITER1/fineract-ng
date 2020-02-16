@@ -23,7 +23,6 @@ import org.apache.fineract.commands.annotation.CommandType;
 import org.apache.fineract.commands.handler.NewCommandSourceHandler;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.security.data.TwoFactorConfigurationValidator;
 import org.apache.fineract.infrastructure.security.service.TwoFactorConfigurationService;
 import org.springframework.context.annotation.Profile;
@@ -46,9 +45,9 @@ public class UpdateTwoFactorConfigCommandHandler implements NewCommandSourceHand
     public CommandProcessingResult processCommand(final JsonCommand command) {
         this.dataValidator.validateForUpdate(command.json());
         final Map<String, Object> changes = configurationService.update(command);
-        return new CommandProcessingResultBuilder()
-                .withCommandId(command.commandId())
-                .with(changes)
+        return CommandProcessingResult.builder()
+                .commandId(command.commandId())
+                .changes(changes)
                 .build();
     }
 }

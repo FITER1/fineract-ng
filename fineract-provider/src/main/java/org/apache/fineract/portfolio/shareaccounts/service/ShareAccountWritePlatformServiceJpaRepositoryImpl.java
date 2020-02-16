@@ -27,7 +27,6 @@ import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumb
 import org.apache.fineract.infrastructure.accountnumberformat.domain.EntityAccountType;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
@@ -88,17 +87,17 @@ public class ShareAccountWritePlatformServiceJpaRepositoryImpl implements ShareA
             this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.SHARE_ACCOUNT_CREATE,
                     constructEntityMap(BUSINESS_ENTITY.SHARE_ACCOUNT, account));
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(account.getId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(account.getId()) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(jsonCommand, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -185,18 +184,18 @@ public class ShareAccountWritePlatformServiceJpaRepositoryImpl implements ShareA
                         account.getPendingForApprovalSharePurchaseTransactions()));
                 changes.remove("reversalIds") ;
             }
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(accountId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(accountId) //
+                    .changes(changes) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(jsonCommand, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -219,14 +218,14 @@ public class ShareAccountWritePlatformServiceJpaRepositoryImpl implements ShareA
                 }
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(accountId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(accountId) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -264,14 +263,14 @@ public class ShareAccountWritePlatformServiceJpaRepositoryImpl implements ShareA
             this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.SHARE_ACCOUNT_APPROVE,
                     constructEntityMap(BUSINESS_ENTITY.SHARE_ACCOUNT, account));
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(accountId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(accountId) //
+                    .changes(changes) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -298,14 +297,14 @@ public class ShareAccountWritePlatformServiceJpaRepositoryImpl implements ShareA
             }
             
             this.journalEntryWritePlatformService.createJournalEntriesForShares(populateJournalEntries(account, journalTransactions));
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(accountId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(accountId) //
+                    .changes(changes) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -335,14 +334,14 @@ public class ShareAccountWritePlatformServiceJpaRepositoryImpl implements ShareA
             this.journalEntryWritePlatformService.revertShareAccountJournalEntries(journalEntryTransactions, transactionDate);
             journalEntryWritePlatformService.createJournalEntriesForShares(populateJournalEntries(account,
                     account.getPendingForApprovalSharePurchaseTransactions()));
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(accountId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(accountId) //
+                    .changes(changes) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -357,14 +356,14 @@ public class ShareAccountWritePlatformServiceJpaRepositoryImpl implements ShareA
             }
             this.journalEntryWritePlatformService.createJournalEntriesForShares(populateJournalEntries(account,
                     account.getChargeTransactions()));
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(accountId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(accountId) //
+                    .changes(changes) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -394,14 +393,14 @@ public class ShareAccountWritePlatformServiceJpaRepositoryImpl implements ShareA
                     this.shareProductRepository.save(shareProduct);
                 }
             }
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(accountId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(accountId) //
+                    .changes(changes) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -423,14 +422,14 @@ public class ShareAccountWritePlatformServiceJpaRepositoryImpl implements ShareA
                     this.journalEntryWritePlatformService.createJournalEntriesForShares(populateJournalEntries(account, transactions));
                 }
             }
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(accountId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(accountId) //
+                    .changes(changes) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -458,14 +457,14 @@ public class ShareAccountWritePlatformServiceJpaRepositoryImpl implements ShareA
                 changes.put(ShareAccountApiConstants.requestedshares_paramname, transaction.getId());
 
             }
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(accountId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(accountId) //
+                    .changes(changes) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -492,14 +491,14 @@ public class ShareAccountWritePlatformServiceJpaRepositoryImpl implements ShareA
                 changes.put(ShareAccountApiConstants.requestedshares_paramname, transaction.getId());
 
             }
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(accountId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(accountId) //
+                    .changes(changes) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 

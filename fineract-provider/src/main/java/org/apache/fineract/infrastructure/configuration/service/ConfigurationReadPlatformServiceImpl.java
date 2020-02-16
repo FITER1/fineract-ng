@@ -56,7 +56,9 @@ public class ConfigurationReadPlatformServiceImpl implements ConfigurationReadPl
         sql += "  order by c.id";
         final List<GlobalConfigurationPropertyData> globalConfiguration = this.jdbcTemplate.query(sql, this.rm, new Object[] {});
 
-        return new GlobalConfigurationData(globalConfiguration);
+        return GlobalConfigurationData.builder()
+            .globalConfiguration(globalConfiguration)
+            .build();
     }
     
   
@@ -101,7 +103,15 @@ public class ConfigurationReadPlatformServiceImpl implements ConfigurationReadPl
             final String description = rs.getString("description");
             final Long id = rs.getLong("id");
             final boolean isTrapDoor = rs.getBoolean("is_trap_door");
-            return new GlobalConfigurationPropertyData(name, enabled, value, dateValue, id, description, isTrapDoor);
+            return GlobalConfigurationPropertyData.builder()
+                .name(name)
+                .enabled(enabled)
+                .value(value)
+                .dateValue(dateValue)
+                .id(id)
+                .description(description)
+                .trapDoor(isTrapDoor)
+                .build();
         }
     }
 

@@ -21,7 +21,6 @@ package org.apache.fineract.portfolio.self.account.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.account.PortfolioAccountType;
@@ -105,7 +104,7 @@ public class SelfBeneficiariesTPTWritePlatformServiceImpl implements SelfBenefic
 						user.getId(), name, officeId, clientId, accountId,
 						accountType, transferLimit);
 				this.repository.save(beneficiary);
-				return new CommandProcessingResultBuilder().withEntityId(
+				return CommandProcessingResult.builder().resourceId(
 						beneficiary.getId()).build();
 			} catch (DataAccessException dae) {
 				handleDataIntegrityIssues(command, dae);
@@ -135,9 +134,9 @@ public class SelfBeneficiariesTPTWritePlatformServiceImpl implements SelfBenefic
 				try {
 					this.repository.save(beneficiary);
 
-					return new CommandProcessingResultBuilder() //
-							.withEntityId(beneficiary.getId()) //
-							.with(changes).build();
+					return CommandProcessingResult.builder() //
+							.resourceId(beneficiary.getId()) //
+							.changes(changes).build();
 				} catch (DataAccessException dae) {
 					handleDataIntegrityIssues(command, dae);
 				}
@@ -159,8 +158,8 @@ public class SelfBeneficiariesTPTWritePlatformServiceImpl implements SelfBenefic
 			beneficiary.setActive(false);
 			this.repository.save(beneficiary);
 
-			return new CommandProcessingResultBuilder() //
-					.withEntityId(beneficiary.getId()) //
+			return CommandProcessingResult.builder() //
+					.resourceId(beneficiary.getId()) //
 					.build();
 		}
 		throw new InvalidBeneficiaryException(beneficiaryId);

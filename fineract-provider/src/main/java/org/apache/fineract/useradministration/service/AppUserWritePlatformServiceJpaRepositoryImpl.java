@@ -27,7 +27,6 @@ import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.service.PlatformEmailSendException;
@@ -122,19 +121,19 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
             
             this.topicDomainService.subscribeUserToTopic(appUser);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(appUser.getId()) //
-                    .withOfficeId(userOffice.getId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(appUser.getId()) //
+                    .officeId(userOffice.getId()) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException | AuthenticationServiceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
             handleDataIntegrityIssues(command, throwable, dve);
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
                     .build();
         }catch (final PlatformEmailSendException e) {
             final List<ApiParameterError> dataValidationErrors = new ArrayList<>();
@@ -215,19 +214,19 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
 
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withEntityId(userId) //
-                    .withOfficeId(userToUpdate.getOffice().getId()) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .resourceId(userId) //
+                    .officeId(userToUpdate.getOffice().getId()) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException | AuthenticationServiceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
             handleDataIntegrityIssues(command, throwable, dve);
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
                     .build();
         }
     }
@@ -299,7 +298,7 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
         this.topicDomainService.unsubcribeUserFromTopic(user);
         this.appUserRepository.save(user);
 
-        return new CommandProcessingResultBuilder().withEntityId(userId).withOfficeId(user.getOffice().getId()).build();
+        return CommandProcessingResult.builder().resourceId(userId).officeId(user.getOffice().getId()).build();
     }
 
     /*

@@ -30,7 +30,6 @@ import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDoma
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.serialization.ToApiJsonSerializer;
 import org.apache.fineract.infrastructure.hooks.event.HookEvent;
 import org.apache.fineract.infrastructure.hooks.event.HookEventSource;
@@ -76,18 +75,18 @@ public class SynchronousCommandProcessingService implements CommandProcessingSer
         } else {
             commandSourceResult = CommandSource.fullEntryFrom(wrapper, command, maker);
         }
-        commandSourceResult.setResourceId(result.resourceId());
+        commandSourceResult.setResourceId(result.getResourceId());
         commandSourceResult.updateForAudit(result.getOfficeId(), result.getGroupId(), result.getClientId(), result.getLoanId(),
                 result.getSavingsId(), result.getProductId(), result.getTransactionId());
 
         String changesOnlyJson = null;
         boolean rollBack = (rollbackTransaction || result.isRollbackTransaction()) && !isApprovedByChecker ;
-        if (result.hasChanges() && !rollBack) {
+        if (!result.getChanges().isEmpty() && !rollBack) {
             changesOnlyJson = this.toApiJsonSerializer.serializeResult(result.getChanges());
             commandSourceResult.setCommandAsJson(changesOnlyJson);
         }
 
-        if (!result.hasChanges() && wrapper.isUpdateOperation() && !wrapper.isUpdateDatatable()) {
+        if (result.getChanges().isEmpty() && wrapper.isUpdateOperation() && !wrapper.isUpdateDatatable()) {
             commandSourceResult.setCommandAsJson(null);
         }
 
@@ -110,7 +109,7 @@ public class SynchronousCommandProcessingService implements CommandProcessingSer
             commandSourceResult.setCommandAsJson(command.json());
             throw new RollbackTransactionAsCommandIsNotApprovedByCheckerException(commandSourceResult);
         }
-        result.setRollbackTransaction(null);
+        result.setRollbackTransaction(false);
 
         publishEvent(wrapper.entityName(), wrapper.actionName(), result);
 
@@ -124,8 +123,8 @@ public class SynchronousCommandProcessingService implements CommandProcessingSer
         commandSourceResult.markAsAwaitingApproval();
         commandSourceResult = this.commandSourceRepository.save(commandSourceResult);
 
-        return new CommandProcessingResultBuilder().withCommandId(commandSourceResult.getId())
-                .withEntityId(commandSourceResult.getResourceId()).build();
+        return CommandProcessingResult.builder().commandId(commandSourceResult.getId())
+                .resourceId(commandSourceResult.getResourceId()).build();
     }
 
     private NewCommandSourceHandler findCommandHandler(final CommandWrapper wrapper) {

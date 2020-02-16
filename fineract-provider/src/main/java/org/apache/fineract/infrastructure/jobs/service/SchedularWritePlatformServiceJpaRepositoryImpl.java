@@ -21,7 +21,6 @@ package org.apache.fineract.infrastructure.jobs.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.jobs.data.JobDetailDataValidator;
 import org.apache.fineract.infrastructure.jobs.domain.*;
 import org.apache.fineract.infrastructure.jobs.exception.JobNotFoundException;
@@ -108,10 +107,10 @@ public class SchedularWritePlatformServiceJpaRepositoryImpl implements Schedular
         if (!changes.isEmpty()) {
             this.scheduledJobDetailsRepository.saveAndFlush(scheduledJobDetail);
         }
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(jobId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(jobId) //
+                .changes(changes) //
                 .build();
 
     }

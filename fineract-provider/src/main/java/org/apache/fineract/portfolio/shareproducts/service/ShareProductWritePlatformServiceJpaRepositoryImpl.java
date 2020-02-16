@@ -24,7 +24,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.accounting.producttoaccountmapping.service.ProductToGLAccountMappingWritePlatformService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.portfolio.common.BusinessEventNotificationConstants;
@@ -68,17 +67,17 @@ public class ShareProductWritePlatformServiceJpaRepositoryImpl implements ShareP
             // save accounting mappings
             this.accountMappingWritePlatformService.createShareProductToGLAccountMapping(product.getId(), jsonCommand);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(product.getId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(product.getId()) //
                     .build();
         }catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(jsonCommand, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
 
     }
@@ -98,18 +97,18 @@ public class ShareProductWritePlatformServiceJpaRepositoryImpl implements ShareP
             if (!changes.isEmpty()) {
                 this.repository.saveAndFlush(product);
             }
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(productId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(productId) //
+                    .changes(changes) //
                     .build();
         }catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(jsonCommand, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(jsonCommand, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -135,14 +134,14 @@ public class ShareProductWritePlatformServiceJpaRepositoryImpl implements ShareP
             this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.SHARE_PRODUCT_DIVIDENDS_CREATE,
                     constructEntityMap(BUSINESS_ENTITY.SHARE_PRODUCT, productId));
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(jsonCommand.commandId()) //
-                    .withEntityId(productId) //
-                    .withSubEntityId(dividendPayOutDetails.getId())//
+            return CommandProcessingResult.builder() //
+                    .commandId(jsonCommand.commandId()) //
+                    .resourceId(productId) //
+                    .subResourceId(dividendPayOutDetails.getId())//
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -155,12 +154,12 @@ public class ShareProductWritePlatformServiceJpaRepositoryImpl implements ShareP
                     "Can't approve already appoved  dividends "); }
             dividendPayOutDetails.approveDividendPayout();
             this.shareProductDividentPayOutDetailsRepository.save(dividendPayOutDetails);
-            return new CommandProcessingResultBuilder() //
-                    .withEntityId(PayOutDetailId) //
+            return CommandProcessingResult.builder() //
+                    .resourceId(PayOutDetailId) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -172,12 +171,12 @@ public class ShareProductWritePlatformServiceJpaRepositoryImpl implements ShareP
             if (dividendPayOutDetails.getStatus().isApproved()) { throw new DividentProcessingException("alreay.approved",
                     "Can't delete already appoved  dividends "); }
             this.shareProductDividentPayOutDetailsRepository.delete(dividendPayOutDetails);
-            return new CommandProcessingResultBuilder() //
-                    .withEntityId(PayOutDetailId) //
+            return CommandProcessingResult.builder() //
+                    .resourceId(PayOutDetailId) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 

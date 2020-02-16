@@ -92,9 +92,9 @@ public class ApiParameterError {
             for (final Object object : defaultUserMessageArgs) {
                 if(object instanceof Date){
                     final String formattedDate = dateFormatter.format(object);
-                    messageArgs.add(ApiErrorMessageArg.from(formattedDate));
+                    messageArgs.add(ApiErrorMessageArg.builder().value(formattedDate).build());
                 } else {
-                    messageArgs.add(ApiErrorMessageArg.from(object));
+                    messageArgs.add(ApiErrorMessageArg.builder().value(object).build());
                 }
             }
         }

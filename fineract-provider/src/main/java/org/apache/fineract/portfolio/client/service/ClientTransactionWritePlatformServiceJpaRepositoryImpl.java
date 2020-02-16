@@ -21,7 +21,6 @@ package org.apache.fineract.portfolio.client.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.organisation.office.domain.OrganisationCurrencyRepositoryWrapper;
 import org.apache.fineract.portfolio.client.domain.*;
 import org.apache.fineract.portfolio.client.exception.ClientTransactionCannotBeUndoneException;
@@ -73,10 +72,10 @@ public class ClientTransactionWritePlatformServiceJpaRepositoryImpl implements C
         this.clientTransactionRepository.saveAndFlush(clientTransaction);
         generateAccountingEntries(clientTransaction);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(transactionId) //
-                .withOfficeId(client.getOffice().getId()) //
-                .withClientId(clientId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(transactionId) //
+                .officeId(client.getOffice().getId()) //
+                .clientId(clientId) //
                 .build();
     }
 

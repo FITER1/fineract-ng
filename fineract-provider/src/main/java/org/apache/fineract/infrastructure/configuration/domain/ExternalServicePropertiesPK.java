@@ -18,13 +18,17 @@
  */
 package org.apache.fineract.infrastructure.configuration.domain;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Embeddable
 public class ExternalServicePropertiesPK implements Serializable {
 
@@ -33,47 +37,4 @@ public class ExternalServicePropertiesPK implements Serializable {
 
     @Column(name = "external_service_id")
     private Long externalServiceId;
-
-    public ExternalServicePropertiesPK() {
-
-    }
-
-    public ExternalServicePropertiesPK(Long externalServiceId, String name) {
-        this.externalServiceId = externalServiceId;
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Long getExternalService() {
-        return externalServiceId;
-    }
-    
-    @Override 
-	public boolean equals(Object obj) {
-		if (obj == null) {
-			return false;
-		}
-		if (obj == this) {
-			return true;
-		}
-		if (obj.getClass() != getClass()) {
-			return false;
-		}
-		final ExternalServicePropertiesPK rhs = (ExternalServicePropertiesPK) obj;
-		return new EqualsBuilder() //
-				.append(this.externalServiceId, rhs.externalServiceId) //
-				.append(this.name, rhs.name) //
-				.isEquals();
-	}
-
-    @Override 
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37) //
-                .append(this.externalServiceId) //
-                .append(this.name) //
-                .toHashCode();
-    }
 }

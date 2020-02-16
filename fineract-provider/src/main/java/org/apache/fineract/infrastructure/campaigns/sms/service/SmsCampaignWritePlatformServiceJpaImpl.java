@@ -38,7 +38,6 @@ import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.api.JsonQuery;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
@@ -119,9 +118,9 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
                 smsCampaign.getRecurrenceStartDate()); }
         this.smsCampaignRepository.save(smsCampaign);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(smsCampaign.getId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(smsCampaign.getId()) //
                 .build();
     }
 
@@ -148,14 +147,14 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
             if (!changes.isEmpty()) {
                 this.smsCampaignRepository.saveAndFlush(smsCampaign);
             }
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(resourceId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(resourceId) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
 
     }
@@ -175,8 +174,8 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
         smsCampaign.delete();
         this.smsCampaignRepository.saveAndFlush(smsCampaign);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(smsCampaign.getId()) //
+        return CommandProcessingResult.builder() //
+                .resourceId(smsCampaign.getId()) //
                 .build();
 
     }
@@ -455,9 +454,9 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
          * if campaign is direct insert campaign message into sms outbound table
          * else if its a schedule create a job process for it
          */
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(smsCampaign.getId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(smsCampaign.getId()) //
                 .build();
     }
 
@@ -480,9 +479,9 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
         this.smsCampaignRepository.saveAndFlush(smsCampaign);
 //        this.serviceui.sendMessagesToGateway();
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(smsCampaign.getId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(smsCampaign.getId()) //
                 .build();
     }
 
@@ -618,8 +617,8 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
         }
         this.smsCampaignRepository.saveAndFlush(smsCampaign);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(smsCampaign.getId()) //
+        return CommandProcessingResult.builder() //
+                .resourceId(smsCampaign.getId()) //
                 .build();
 
     }

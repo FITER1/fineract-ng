@@ -25,7 +25,6 @@ import org.apache.fineract.commands.service.CommandWrapperBuilder;
 import org.apache.fineract.commands.service.PortfolioCommandSourceWritePlatformService;
 import org.apache.fineract.infrastructure.core.api.ApiParameterHelper;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.serialization.ToApiJsonSerializer;
 import org.apache.fineract.infrastructure.dataqueries.data.DatatableData;
 import org.apache.fineract.infrastructure.dataqueries.data.GenericResultsetData;
@@ -146,7 +145,7 @@ public class DatatablesApiResource {
 
         this.readWriteNonCoreDataService.deregisterDatatable(datatable);
 
-        final CommandProcessingResult result = new CommandProcessingResultBuilder().withResourceIdAsString(datatable).build();
+        final CommandProcessingResult result = CommandProcessingResult.builder().resourceIdentifier(datatable).build();
 
         return this.toApiJsonSerializer.serialize(result);
     }

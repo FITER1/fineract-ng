@@ -35,7 +35,6 @@ import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.api.JsonQuery;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
@@ -342,21 +341,21 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
             this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_CREATE,
                     constructEntityMap(BUSINESS_ENTITY.LOAN, newLoanApplication));
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(newLoanApplication.getId()) //
-                    .withOfficeId(newLoanApplication.getOfficeId()) //
-                    .withClientId(newLoanApplication.getClientId()) //
-                    .withGroupId(newLoanApplication.getGroupId()) //
-                    .withLoanId(newLoanApplication.getId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(newLoanApplication.getId()) //
+                    .officeId(newLoanApplication.getOfficeId()) //
+                    .clientId(newLoanApplication.getClientId()) //
+                    .groupId(newLoanApplication.getGroupId()) //
+                    .loanId(newLoanApplication.getId()) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch(final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
             handleDataIntegrityIssues(command, throwable, dve);
-         	return CommandProcessingResult.empty();
+         	return new CommandProcessingResult();
         }
     }
 
@@ -950,20 +949,20 @@ public void checkForProductMixRestrictions(final Loan loan) {
 
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withEntityId(loanId) //
-                    .withOfficeId(existingLoanApplication.getOfficeId()) //
-                    .withClientId(existingLoanApplication.getClientId()) //
-                    .withGroupId(existingLoanApplication.getGroupId()) //
-                    .withLoanId(existingLoanApplication.getId()) //
-                    .with(changes).build();
+            return CommandProcessingResult.builder() //
+                    .resourceId(loanId) //
+                    .officeId(existingLoanApplication.getOfficeId()) //
+                    .clientId(existingLoanApplication.getClientId()) //
+                    .groupId(existingLoanApplication.getGroupId()) //
+                    .loanId(existingLoanApplication.getId()) //
+                    .changes(changes).build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
             Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
             handleDataIntegrityIssues(command, throwable, dve);
-         	return CommandProcessingResult.empty();
+         	return new CommandProcessingResult();
         }
     }
 
@@ -1008,12 +1007,12 @@ public void checkForProductMixRestrictions(final Loan loan) {
 		
         this.loanRepositoryWrapper.delete(loanId);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(loanId) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loan.getId()) //
+        return CommandProcessingResult.builder() //
+                .resourceId(loanId) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loan.getId()) //
                 .build();
     }
 
@@ -1125,14 +1124,14 @@ public void checkForProductMixRestrictions(final Loan loan) {
                     constructEntityMap(BUSINESS_ENTITY.LOAN, loan));
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loan.getId()) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loan.getId()) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -1171,14 +1170,14 @@ public void checkForProductMixRestrictions(final Loan loan) {
                     constructEntityMap(BUSINESS_ENTITY.LOAN, loan));
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loan.getId()) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loan.getId()) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -1208,14 +1207,14 @@ public void checkForProductMixRestrictions(final Loan loan) {
             }
         }
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_REJECTED, constructEntityMap(BUSINESS_ENTITY.LOAN, loan));
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loan.getId()) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loan.getId()) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -1245,14 +1244,14 @@ public void checkForProductMixRestrictions(final Loan loan) {
             }
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(loan.getId()) //
-                .withOfficeId(loan.getOfficeId()) //
-                .withClientId(loan.getClientId()) //
-                .withGroupId(loan.getGroupId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(loan.getId()) //
+                .officeId(loan.getOfficeId()) //
+                .clientId(loan.getClientId()) //
+                .groupId(loan.getGroupId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 

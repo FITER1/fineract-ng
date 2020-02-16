@@ -182,7 +182,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
             updatedExtraCriteria = " where (" + extraCriteria + ")";
         }
 
-        updatedExtraCriteria += " order by aud.id DESC limit " + PaginationParameters.getCheckedLimit(null);
+        updatedExtraCriteria += " order by aud.id DESC limit " + PaginationParameters.DEFAULT_CHECKED_LIMIT;
         return retrieveEntries("audit", updatedExtraCriteria, includeJson, StringUtils.isNotBlank(extraCriteria));
     }
 
@@ -205,7 +205,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
         sqlBuilder.append(rm.schema(includeJson, hierarchy));
         sqlBuilder.append(' ').append(updatedExtraCriteria);
         this.columnValidator.validateSqlInjection(sqlBuilder.toString(), extraCriteria);
-        if (parameters.isOrderByRequested()) {
+        if (StringUtils.isNotBlank(parameters.getOrderBy())) {
             sqlBuilder.append(' ').append(parameters.orderBySql());
             this.columnValidator.validateSqlInjection(sqlBuilder.toString(), parameters.orderBySql());
         } else {

@@ -30,7 +30,6 @@ import org.apache.fineract.accounting.journalentry.domain.JournalEntryRepository
 import org.apache.fineract.accounting.journalentry.domain.JournalEntryType;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.exception.NoAuthorizationException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -46,8 +45,6 @@ import org.apache.fineract.organisation.teller.exception.CashierNotFoundExceptio
 import org.apache.fineract.organisation.teller.serialization.TellerCommandFromApiJsonDeserializer;
 import org.apache.fineract.portfolio.client.domain.ClientTransaction;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,18 +87,18 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
             // pre save to generate id for use in office hierarchy
             this.tellerRepositoryWrapper.save(teller);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(teller.getId()) //
-                    .withOfficeId(teller.getOffice().getId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(teller.getId()) //
+                    .officeId(teller.getOffice().getId()) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleTellerDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleTellerDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -124,19 +121,19 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
                 this.tellerRepositoryWrapper.saveAndFlush(teller);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(teller.getId()) //
-                    .withOfficeId(teller.getOffice().getId()) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(teller.getId()) //
+                    .officeId(teller.getOffice().getId()) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleTellerDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleTellerDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -169,8 +166,8 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
 
         }
         tellerRepositoryWrapper.delete(teller);
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(teller.getId()) //
+        return CommandProcessingResult.builder() //
+                .resourceId(teller.getId()) //
                 .build();
 
     }
@@ -234,18 +231,18 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
             
             this.cashierRepository.save(cashier);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(teller.getId()) //
-                    .withSubEntityId(cashier.getId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(teller.getId()) //
+                    .subResourceId(cashier.getId()) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleTellerDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleTellerDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -273,19 +270,19 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
                 this.cashierRepository.saveAndFlush(cashier);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(cashier.getTeller().getId()) //
-                    .withSubEntityId(cashier.getId()) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(cashier.getTeller().getId()) //
+                    .subResourceId(cashier.getId()) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleTellerDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleTellerDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -306,15 +303,15 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
 
         } catch (final DataIntegrityViolationException dve) {
             handleTellerDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleTellerDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(cashierId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(cashierId) //
                 .build();
     }
 
@@ -439,18 +436,18 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
             this.glJournalEntryRepository.saveAndFlush(debitJournalEntry);
             this.glJournalEntryRepository.saveAndFlush(creditJournalEntry);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(cashier.getId()) //
-                    .withSubEntityId(cashierTxn.getId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(cashier.getId()) //
+                    .subResourceId(cashierTxn.getId()) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleTellerDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleTellerDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 

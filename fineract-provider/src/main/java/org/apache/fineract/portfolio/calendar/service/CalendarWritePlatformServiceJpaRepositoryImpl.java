@@ -23,7 +23,6 @@ import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDoma
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.portfolio.calendar.CalendarConstants.CALENDAR_SUPPORTED_PARAMETERS;
@@ -127,12 +126,12 @@ public class CalendarWritePlatformServiceJpaRepositoryImpl implements CalendarWr
         final CalendarInstance newCalendarInstance = new CalendarInstance(newCalendar, entityId, entityTypeId);
         this.calendarInstanceRepository.save(newCalendarInstance);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(newCalendar.getId()) //
-                .withClientId(command.getClientId()) //
-                .withGroupId(command.getGroupId()) //
-                .withLoanId(command.getLoanId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(newCalendar.getId()) //
+                .clientId(command.getClientId()) //
+                .groupId(command.getGroupId()) //
+                .loanId(command.getLoanId()) //
                 .build();
 
     }
@@ -286,10 +285,10 @@ public class CalendarWritePlatformServiceJpaRepositoryImpl implements CalendarWr
             }
         }
 
-        return new CommandProcessingResultBuilder()
-                .withCommandId(command.commandId())
-                .withEntityId(calendarForUpdate.getId())
-                .with(changes)
+        return CommandProcessingResult.builder()
+                .commandId(command.commandId())
+                .resourceId(calendarForUpdate.getId())
+                .changes(changes)
                 .build();
     }
 
@@ -299,9 +298,9 @@ public class CalendarWritePlatformServiceJpaRepositoryImpl implements CalendarWr
                 .orElseThrow(() -> new CalendarNotFoundException(calendarId));
 
         this.calendarRepository.delete(calendarForDelete);
-        return new CommandProcessingResultBuilder()
-                .withCommandId(null)
-                .withEntityId(calendarId)
+        return CommandProcessingResult.builder()
+                .commandId(null)
+                .resourceId(calendarId)
                 .build();
     }
 
@@ -313,9 +312,9 @@ public class CalendarWritePlatformServiceJpaRepositoryImpl implements CalendarWr
         final CalendarInstance newCalendarInstance = new CalendarInstance(calendarForUpdate, entityId, entityTypeId);
         this.calendarInstanceRepository.save(newCalendarInstance);
 
-        return new CommandProcessingResultBuilder()
-                .withCommandId(null)
-                .withEntityId(calendarForUpdate.getId())
+        return CommandProcessingResult.builder()
+                .commandId(null)
+                .resourceId(calendarForUpdate.getId())
                 .build();
     }
 
@@ -327,9 +326,9 @@ public class CalendarWritePlatformServiceJpaRepositoryImpl implements CalendarWr
         final CalendarInstance calendarInstanceForUpdate = this.calendarInstanceRepository.findByCalendarIdAndEntityIdAndEntityTypeId(
                 calendarId, entityId, entityTypeId);
         this.calendarInstanceRepository.saveAndFlush(calendarInstanceForUpdate);
-        return new CommandProcessingResultBuilder()
-                .withCommandId(null)
-                .withEntityId(calendarForUpdate.getId())
+        return CommandProcessingResult.builder()
+                .commandId(null)
+                .resourceId(calendarForUpdate.getId())
                 .build();
     }
 }

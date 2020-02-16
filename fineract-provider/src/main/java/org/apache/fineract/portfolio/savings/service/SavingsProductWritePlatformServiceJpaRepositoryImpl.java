@@ -25,7 +25,6 @@ import org.apache.fineract.accounting.producttoaccountmapping.service.ProductToG
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
@@ -40,7 +39,6 @@ import org.apache.fineract.portfolio.savings.domain.SavingsProductAssembler;
 import org.apache.fineract.portfolio.savings.domain.SavingsProductRepository;
 import org.apache.fineract.portfolio.savings.exception.SavingsProductNotFoundException;
 import org.apache.fineract.portfolio.tax.domain.TaxGroup;
-import org.slf4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -109,16 +107,16 @@ public class SavingsProductWritePlatformServiceJpaRepositoryImpl implements Savi
             fineractEntityAccessUtil.checkConfigurationAndAddProductResrictionsForUserOffice(
                     FineractEntityAccessType.OFFICE_ACCESS_TO_SAVINGS_PRODUCTS, product.getId());
 
-            return new CommandProcessingResultBuilder() //
-                    .withEntityId(product.getId()) //
+            return CommandProcessingResult.builder() //
+                    .resourceId(product.getId()) //
                     .build();
         } catch (final DataAccessException e) {
             handleDataIntegrityIssues(command, e.getMostSpecificCause(), e);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -168,16 +166,16 @@ public class SavingsProductWritePlatformServiceJpaRepositoryImpl implements Savi
                 this.savingProductRepository.saveAndFlush(product);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withEntityId(product.getId()) //
-                    .with(changes).build();
+            return CommandProcessingResult.builder() //
+                    .resourceId(product.getId()) //
+                    .changes(changes).build();
         } catch (final DataAccessException e) {
             handleDataIntegrityIssues(command, e.getMostSpecificCause(), e);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -191,8 +189,8 @@ public class SavingsProductWritePlatformServiceJpaRepositoryImpl implements Savi
 
         this.savingProductRepository.delete(product);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(product.getId()) //
+        return CommandProcessingResult.builder() //
+                .resourceId(product.getId()) //
                 .build();
     }
 

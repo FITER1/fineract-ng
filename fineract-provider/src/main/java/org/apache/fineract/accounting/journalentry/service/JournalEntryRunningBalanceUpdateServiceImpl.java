@@ -28,7 +28,6 @@ import org.apache.fineract.accounting.journalentry.data.JournalEntryDataValidato
 import org.apache.fineract.accounting.journalentry.domain.JournalEntryType;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
@@ -98,8 +97,7 @@ public class JournalEntryRunningBalanceUpdateServiceImpl implements JournalEntry
         this.dataValidator.validateForUpdateRunningbalance(command);
         final Long officeId = this.fromApiJsonHelper.extractLongNamed(JournalEntryJsonInputParams.OFFICE_ID.getValue(),
                 command.parsedJson());
-        CommandProcessingResultBuilder commandProcessingResultBuilder = new CommandProcessingResultBuilder().withCommandId(command
-                .commandId());
+        CommandProcessingResult.CommandProcessingResultBuilder commandProcessingResultBuilder = CommandProcessingResult.builder().commandId(command.commandId());
         if (officeId == null) {
             updateRunningBalance();
         } else {
@@ -112,7 +110,7 @@ public class JournalEntryRunningBalanceUpdateServiceImpl implements JournalEntry
             } catch (EmptyResultDataAccessException e) {
                 log.debug("No results found for updation of office running balance with office id:" + officeId);
             }
-            commandProcessingResultBuilder.withOfficeId(officeId);
+            commandProcessingResultBuilder.officeId(officeId);
         }
         return commandProcessingResultBuilder.build();
     }

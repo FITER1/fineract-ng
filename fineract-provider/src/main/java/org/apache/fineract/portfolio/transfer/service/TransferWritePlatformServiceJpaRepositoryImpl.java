@@ -24,7 +24,6 @@ import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -109,8 +108,8 @@ public class TransferWritePlatformServiceJpaRepositoryImpl implements TransferWr
             transferClientBetweenGroups(sourceGroup, client, destinationGroup, inheritDestinationGroupLoanOfficer, staff);
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(sourceGroupId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(sourceGroupId) //
                 .build();
     }
 
@@ -244,9 +243,9 @@ public class TransferWritePlatformServiceJpaRepositoryImpl implements TransferWr
         handleClientTransferLifecycleEvent(client, client.getTransferToOffice(), TransferEventType.ACCEPTANCE, jsonCommand);
         this.clientRepositoryWrapper.save(client);
 
-        return new CommandProcessingResultBuilder() //
-                .withClientId(clientId) //
-                .withEntityId(clientId) //
+        return CommandProcessingResult.builder() //
+                .clientId(clientId) //
+                .resourceId(clientId) //
                 .build();
     }
 
@@ -277,9 +276,9 @@ public class TransferWritePlatformServiceJpaRepositoryImpl implements TransferWr
 		}
 		handleClientTransferLifecycleEvent(client, office, TransferEventType.PROPOSAL, jsonCommand);
 		this.clientRepositoryWrapper.save(client);
-        return new CommandProcessingResultBuilder() //
-                .withClientId(clientId) //
-                .withEntityId(clientId) //
+        return CommandProcessingResult.builder() //
+                .clientId(clientId) //
+                .resourceId(clientId) //
                 .build();
     }
 
@@ -304,9 +303,9 @@ public class TransferWritePlatformServiceJpaRepositoryImpl implements TransferWr
         handleClientTransferLifecycleEvent(client, client.getTransferToOffice(), TransferEventType.ACCEPTANCE, jsonCommand);
         this.clientRepositoryWrapper.save(client);
 
-        return new CommandProcessingResultBuilder() //
-                .withClientId(clientId) //
-                .withEntityId(clientId) //
+        return CommandProcessingResult.builder() //
+                .clientId(clientId) //
+                .resourceId(clientId) //
                 .build();
     }
 
@@ -319,9 +318,9 @@ public class TransferWritePlatformServiceJpaRepositoryImpl implements TransferWr
         validateClientAwaitingTransferAcceptanceOnHold(client);
         handleClientTransferLifecycleEvent(client, client.getOffice(), TransferEventType.WITHDRAWAL, jsonCommand);
         this.clientRepositoryWrapper.save(client);
-        return new CommandProcessingResultBuilder() //
-                .withClientId(clientId) //
-                .withEntityId(clientId) //
+        return CommandProcessingResult.builder() //
+                .clientId(clientId) //
+                .resourceId(clientId) //
                 .build();
     }
 
@@ -335,9 +334,9 @@ public class TransferWritePlatformServiceJpaRepositoryImpl implements TransferWr
         this.clientRepositoryWrapper.save(client);
 
 
-        return new CommandProcessingResultBuilder() //
-                .withClientId(clientId) //
-                .withEntityId(clientId) //
+        return CommandProcessingResult.builder() //
+                .clientId(clientId) //
+                .resourceId(clientId) //
                 .build();
     }
 

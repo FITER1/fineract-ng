@@ -156,7 +156,13 @@ public class GroupsApiResource {
             @QueryParam("orphansOnly") @ApiParam(value = "orphansOnly") final Boolean orphansOnly) {
 
         this.context.authenticatedUser().validateHasReadPermission(GroupingTypesApiConstants.GROUP_RESOURCE_NAME);
-        final PaginationParameters parameters = PaginationParameters.instance(paged, offset, limit, orderBy, sortOrder);
+        final PaginationParameters parameters = PaginationParameters.builder()
+            .paged(Boolean.TRUE.equals(paged))
+            .offset(offset)
+            .limit(limit==null ? PaginationParameters.DEFAULT_CHECKED_LIMIT : limit)
+            .orderBy(orderBy)
+            .sortOrder(sortOrder)
+            .build();
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
 
         final SearchParameters searchParameters = SearchParameters.forGroups(sqlSearch, officeId, staffId, externalId, name, hierarchy,

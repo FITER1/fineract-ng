@@ -24,7 +24,6 @@ import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.collateral.api.CollateralApiConstants;
@@ -82,14 +81,14 @@ public class CollateralWritePlatformServiceJpaRepositoryImpl implements Collater
 
             this.collateralRepository.save(collateral);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withLoanId(loan.getId())//
-                    .withEntityId(collateral.getId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .loanId(loan.getId())//
+                    .resourceId(collateral.getId()) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleCollateralDataIntegrityViolation(dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -129,15 +128,15 @@ public class CollateralWritePlatformServiceJpaRepositoryImpl implements Collater
                 this.collateralRepository.saveAndFlush(collateralForUpdate);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withLoanId(command.getLoanId())//
-                    .withEntityId(collateralId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .loanId(command.getLoanId())//
+                    .resourceId(collateralId) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleCollateralDataIntegrityViolation(dve);
-            return new CommandProcessingResult(Long.valueOf(-1));
+            return CommandProcessingResult.builder().resourceId(-1L).build();
         }
     }
 
@@ -156,7 +155,7 @@ public class CollateralWritePlatformServiceJpaRepositoryImpl implements Collater
                 LOAN_COLLATERAL_CANNOT_BE_DELETED_REASON.LOAN_NOT_IN_SUBMITTED_AND_PENDING_APPROVAL_STAGE, loanId, collateralId); }
 
         this.collateralRepository.delete(collateral);
-        return new CommandProcessingResultBuilder().withCommandId(commandId).withLoanId(loanId).withEntityId(collateralId).build();
+        return CommandProcessingResult.builder().commandId(commandId).loanId(loanId).resourceId(collateralId).build();
     }
 
     private void handleCollateralDataIntegrityViolation(final DataIntegrityViolationException dve) {

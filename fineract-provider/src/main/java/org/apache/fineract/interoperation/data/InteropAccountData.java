@@ -69,7 +69,11 @@ public class InteropAccountData extends CommandProcessingResult {
                        BigDecimal availableBalance, SavingsAccountStatusType status, SavingsAccountSubStatusEnum subStatus,
                        AccountType accountType, DepositAccountType depositType, LocalDate activatedOn, LocalDate statusUpdateOn,
                        LocalDate withdrawnOn, LocalDate balanceOn, List<InteropIdentifierData> identifiers) {
-        super(resourceId, officeId, commandId, changesOnly);
+        this.resourceIdentifier = resourceId!=null ? resourceId.toString() : null;
+        this.resourceId = resourceId;
+        this.officeId = officeId;
+        this.commandId = commandId;
+        this.changes = changesOnly;
         this.accountId = accountId;
         this.savingProductId = productId;
         this.productName = productName;

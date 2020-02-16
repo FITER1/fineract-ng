@@ -36,7 +36,6 @@ import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -89,10 +88,10 @@ public class GLAccountWritePlatformServiceJpaRepositoryImpl implements GLAccount
 
             this.glAccountRepository.save(glAccount);
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(glAccount.getId()).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(glAccount.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
             handleGLAccountDataIntegrityIssues(command, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -150,11 +149,11 @@ public class GLAccountWritePlatformServiceJpaRepositoryImpl implements GLAccount
                 this.glAccountRepository.saveAndFlush(glAccount);
             }
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(glAccount.getId())
-                    .with(changesOnly).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(glAccount.getId())
+                    .changes(changesOnly).build();
         } catch (final DataIntegrityViolationException dve) {
             handleGLAccountDataIntegrityIssues(command, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -185,7 +184,7 @@ public class GLAccountWritePlatformServiceJpaRepositoryImpl implements GLAccount
                 GL_ACCOUNT_INVALID_DELETE_REASON.TRANSANCTIONS_LOGGED, glAccountId); }
         this.glAccountRepository.delete(glAccount);
 
-        return new CommandProcessingResultBuilder().withEntityId(glAccountId).build();
+        return CommandProcessingResult.builder().resourceId(glAccountId).build();
     }
 
     private GLAccount validateParentGLAccount(final Long parentAccountId) {

@@ -26,7 +26,6 @@ import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrappe
 import org.apache.fineract.infrastructure.codes.exception.CodeValueNotFoundException;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.command.ClientIdentifierCommand;
@@ -79,19 +78,19 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
 
             this.clientIdentifierRepository.save(clientIdentifier);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withOfficeId(client.getOffice().getId()) //
-                    .withClientId(clientId) //
-                    .withEntityId(clientIdentifier.getId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .officeId(client.getOffice().getId()) //
+                    .clientId(clientId) //
+                    .resourceId(clientIdentifier.getId()) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleClientIdentifierDataIntegrityViolation(documentTypeLabel, documentTypeId, documentKey, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch(final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleClientIdentifierDataIntegrityViolation(documentTypeLabel, documentTypeId, documentKey, throwable, dve);
-         	return CommandProcessingResult.empty();
+         	return new CommandProcessingResult();
         }
     }
 
@@ -140,20 +139,20 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
                 this.clientIdentifierRepository.saveAndFlush(clientIdentifierForUpdate);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withOfficeId(client.getOffice().getId()) //
-                    .withClientId(clientId) //
-                    .withEntityId(identifierId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .officeId(client.getOffice().getId()) //
+                    .clientId(clientId) //
+                    .resourceId(identifierId) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleClientIdentifierDataIntegrityViolation(documentTypeLabel, documentTypeId, documentKey, dve.getMostSpecificCause(), dve);
-            return new CommandProcessingResult(Long.valueOf(-1));
+            return CommandProcessingResult.builder().resourceId(-1L).build();
         }catch(final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleClientIdentifierDataIntegrityViolation(documentTypeLabel, documentTypeId, documentKey, throwable, dve);
-         	return CommandProcessingResult.empty();
+         	return new CommandProcessingResult();
         }
     }
 
@@ -167,11 +166,11 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
                 .orElseThrow(() -> new ClientIdentifierNotFoundException(identifierId));
         this.clientIdentifierRepository.delete(clientIdentifier);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(commandId) //
-                .withOfficeId(client.getOffice().getId()) //
-                .withClientId(clientId) //
-                .withEntityId(identifierId) //
+        return CommandProcessingResult.builder() //
+                .commandId(commandId) //
+                .officeId(client.getOffice().getId()) //
+                .clientId(clientId) //
+                .resourceId(identifierId) //
                 .build();
     }
 

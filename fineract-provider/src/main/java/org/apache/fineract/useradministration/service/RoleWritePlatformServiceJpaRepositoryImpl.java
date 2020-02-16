@@ -23,7 +23,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.notification.service.TopicDomainService;
@@ -73,17 +72,17 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
             
             this.topicDomainService.createTopic(entity);
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(entity.getId()).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(entity.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
                     .build();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
                     .build();
         }
     }
@@ -126,21 +125,21 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
                 }
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(roleId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(roleId) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
                     .build();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
                     .build();
         }
     }
@@ -175,10 +174,10 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
             this.roleRepository.save(role);
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(roleId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(roleId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -214,7 +213,7 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
             this.topicDomainService.deleteTopic(role);
             
             this.roleRepository.delete(role);
-            return new CommandProcessingResultBuilder().withEntityId(roleId).build();
+            return CommandProcessingResult.builder().resourceId(roleId).build();
         } catch (final DataIntegrityViolationException e) {
             throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue",
                     "Unknown data integrity issue with resource: " + e.getMostSpecificCause());
@@ -245,7 +244,7 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
              */
             role.disableRole();
             this.roleRepository.save(role);
-            return new CommandProcessingResultBuilder().withEntityId(roleId).build();
+            return CommandProcessingResult.builder().resourceId(roleId).build();
 
         } catch (final DataIntegrityViolationException e) {
             throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue",
@@ -269,7 +268,7 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
             
             role.enableRole();
             this.roleRepository.save(role);
-            return new CommandProcessingResultBuilder().withEntityId(roleId).build();
+            return CommandProcessingResult.builder().resourceId(roleId).build();
 
         } catch (final DataIntegrityViolationException e) {
             throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue",

@@ -24,7 +24,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.entityaccess.api.FineractEntityApiResourceConstants;
 import org.apache.fineract.infrastructure.entityaccess.data.FineractEntityDataValidator;
@@ -88,14 +87,14 @@ public class FineractEntityAccessWriteServiceImpl implements FineractEntityAcces
 
             this.fineractEntityToEntityMappingRepository.save(newMap);
 
-            return new CommandProcessingResultBuilder().withEntityId(newMap.getId()).withCommandId(command.commandId()).build();
+            return CommandProcessingResult.builder().resourceId(newMap.getId()).commandId(command.commandId()).build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -120,15 +119,15 @@ public class FineractEntityAccessWriteServiceImpl implements FineractEntityAcces
             if (!changes.isEmpty()) {
                 this.fineractEntityToEntityMappingRepository.saveAndFlush(mapForUpdate);
             }
-            return new CommandProcessingResultBuilder(). //
-                    withEntityId(mapForUpdate.getId()).withCommandId(command.commandId()).build();
+            return CommandProcessingResult.builder(). //
+                    resourceId(mapForUpdate.getId()).commandId(command.commandId()).build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -140,8 +139,8 @@ public class FineractEntityAccessWriteServiceImpl implements FineractEntityAcces
         final FineractEntityToEntityMapping deleteMap = this.fineractEntityToEntityMappingRepositoryWrapper.findOneWithNotFoundDetection(mapId);
         this.fineractEntityToEntityMappingRepository.delete(deleteMap);
 
-        return new CommandProcessingResultBuilder(). //
-                withEntityId(deleteMap.getId()).build();
+        return CommandProcessingResult.builder(). //
+                resourceId(deleteMap.getId()).build();
 
     }
 

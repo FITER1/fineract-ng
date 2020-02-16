@@ -25,7 +25,6 @@ import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepository;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.address.domain.Address;
 import org.apache.fineract.portfolio.address.domain.AddressRepository;
@@ -80,8 +79,8 @@ public class AddressWritePlatformServiceImpl implements AddressWritePlatformServ
 		final ClientAddress clientAddressobj = ClientAddress.fromJson(isActive, client, addobj, addressTypeIdObj);
 		this.clientAddressRepository.save(clientAddressobj);
 
-		return new CommandProcessingResultBuilder().withCommandId(command.commandId())
-				.withEntityId(clientAddressobj.getId()).build();
+		return CommandProcessingResult.builder().commandId(command.commandId())
+				.resourceId(clientAddressobj.getId()).build();
 	}
 
 	// following method is used for adding multiple addresses while creating new
@@ -135,8 +134,8 @@ public class AddressWritePlatformServiceImpl implements AddressWritePlatformServ
 			}
 		}
 
-		return new CommandProcessingResultBuilder().withCommandId(command.commandId())
-				.withEntityId(clientAddressobj.getId()).build();
+		return CommandProcessingResult.builder().commandId(command.commandId())
+				.resourceId(clientAddressobj.getId()).build();
 	}
 
 	@Override
@@ -264,7 +263,7 @@ public class AddressWritePlatformServiceImpl implements AddressWritePlatformServ
 
 		}
 
-		return new CommandProcessingResultBuilder().withCommandId(command.commandId())
-				.withEntityId(clientAddressObj.getId()).build();
+		return CommandProcessingResult.builder().commandId(command.commandId())
+				.resourceId(clientAddressObj.getId()).build();
 	}
 }

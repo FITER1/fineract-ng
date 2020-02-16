@@ -26,7 +26,6 @@ import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrappe
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
@@ -54,8 +53,6 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -217,8 +214,8 @@ public class LoanRescheduleRequestWritePlatformServiceImpl implements LoanResche
             this.loanRescheduleRequestRepository.save(loanRescheduleRequest);
             this.loanRepositoryWrapper.save(loan);
 
-            return new CommandProcessingResultBuilder().withCommandId(jsonCommand.commandId()).withEntityId(loanRescheduleRequest.getId())
-                    .withLoanId(loan.getId()).build();
+            return CommandProcessingResult.builder().commandId(jsonCommand.commandId()).resourceId(loanRescheduleRequest.getId())
+                    .loanId(loan.getId()).build();
         }
 
         catch (final DataIntegrityViolationException dve) {
@@ -226,7 +223,7 @@ public class LoanRescheduleRequestWritePlatformServiceImpl implements LoanResche
             handleDataIntegrityViolation(dve);
 
             // return an empty command processing result object
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -420,8 +417,8 @@ public class LoanRescheduleRequestWritePlatformServiceImpl implements LoanResche
             
             this.loanAccountDomainService.recalculateAccruals(loan, true);
 
-            return new CommandProcessingResultBuilder().withCommandId(jsonCommand.commandId()).withEntityId(loanRescheduleRequestId)
-                    .withLoanId(loanRescheduleRequest.getLoan().getId()).with(changes).build();
+            return CommandProcessingResult.builder().commandId(jsonCommand.commandId()).resourceId(loanRescheduleRequestId)
+                    .loanId(loanRescheduleRequest.getLoan().getId()).changes(changes).build();
         }
 
         catch (final DataIntegrityViolationException dve) {
@@ -429,7 +426,7 @@ public class LoanRescheduleRequestWritePlatformServiceImpl implements LoanResche
             handleDataIntegrityViolation(dve);
 
             // return an empty command processing result object
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -498,8 +495,8 @@ public class LoanRescheduleRequestWritePlatformServiceImpl implements LoanResche
                 }
             }
 
-            return new CommandProcessingResultBuilder().withCommandId(jsonCommand.commandId()).withEntityId(loanRescheduleRequestId)
-                    .withLoanId(loanRescheduleRequest.getLoan().getId()).with(changes).build();
+            return CommandProcessingResult.builder().commandId(jsonCommand.commandId()).resourceId(loanRescheduleRequestId)
+                    .loanId(loanRescheduleRequest.getLoan().getId()).changes(changes).build();
         }
 
         catch (final DataIntegrityViolationException dve) {
@@ -507,7 +504,7 @@ public class LoanRescheduleRequestWritePlatformServiceImpl implements LoanResche
             handleDataIntegrityViolation(dve);
 
             // return an empty command processing result object
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 

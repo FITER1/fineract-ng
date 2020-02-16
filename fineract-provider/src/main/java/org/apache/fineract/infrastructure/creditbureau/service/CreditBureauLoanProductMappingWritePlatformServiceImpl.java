@@ -21,7 +21,6 @@ package org.apache.fineract.infrastructure.creditbureau.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.creditbureau.domain.CreditBureauLoanProductMapping;
 import org.apache.fineract.infrastructure.creditbureau.domain.CreditBureauLoanProductMappingRepository;
 import org.apache.fineract.infrastructure.creditbureau.domain.OrganisationCreditBureau;
@@ -64,7 +63,7 @@ public class CreditBureauLoanProductMappingWritePlatformServiceImpl implements C
 
 		this.creditBureauLoanProductMappingRepository.save(cb_lp);
 
-		return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(cb_lp.getId())
+		return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(cb_lp.getId())
 				.build();
 
 	}
@@ -80,7 +79,7 @@ public class CreditBureauLoanProductMappingWritePlatformServiceImpl implements C
 		final CreditBureauLoanProductMapping cblpmapping = this.creditBureauLoanProductMappingRepository.getOne(mappingid);
 		cblpmapping.setActive(is_active);
 		this.creditBureauLoanProductMappingRepository.saveAndFlush(cblpmapping);
-		return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(cblpmapping.getId())
+		return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(cblpmapping.getId())
 				.build();
 	}
 }

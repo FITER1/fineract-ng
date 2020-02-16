@@ -28,7 +28,6 @@ import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumb
 import org.apache.fineract.infrastructure.accountnumberformat.domain.EntityAccountType;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -68,16 +67,16 @@ public class AccountNumberFormatWritePlatformServiceJpaRepositoryImpl implements
 
             this.accountNumberFormatRepository.save(accountNumberFormat);
 
-            return new CommandProcessingResultBuilder() //
-                    .withEntityId(accountNumberFormat.getId()) //
+            return CommandProcessingResult.builder() //
+                    .resourceId(accountNumberFormat.getId()) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException ee) {
         	Throwable throwable = ExceptionUtils.getRootCause(ee.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, ee);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -106,18 +105,18 @@ public class AccountNumberFormatWritePlatformServiceJpaRepositoryImpl implements
                 this.accountNumberFormatRepository.saveAndFlush(accountNumberFormatForUpdate);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(accountNumberFormatId) //
-                    .with(actualChanges) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(accountNumberFormatId) //
+                    .changes(actualChanges) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         } catch (final PersistenceException ee) {
         	Throwable throwable = ExceptionUtils.getRootCause(ee.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, ee);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -127,8 +126,8 @@ public class AccountNumberFormatWritePlatformServiceJpaRepositoryImpl implements
         AccountNumberFormat accountNumberFormat = this.accountNumberFormatRepository.findOneWithNotFoundDetection(accountNumberFormatId);
         this.accountNumberFormatRepository.delete(accountNumberFormat);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(accountNumberFormatId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(accountNumberFormatId) //
                 .build();
     }
 

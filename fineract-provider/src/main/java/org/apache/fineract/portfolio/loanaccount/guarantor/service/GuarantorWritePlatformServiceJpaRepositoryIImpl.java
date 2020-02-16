@@ -25,7 +25,6 @@ import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrappe
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
@@ -151,11 +150,11 @@ public class GuarantorWritePlatformServiceJpaRepositoryIImpl implements Guaranto
                 this.accountAssociationsRepository.save(accountAssociations);
             }
             this.guarantorRepository.save(guarantor);
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withOfficeId(guarantor.getOfficeId())
-                    .withEntityId(guarantor.getId()).withLoanId(loan.getId()).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).officeId(guarantor.getOfficeId())
+                    .resourceId(guarantor.getId()).loanId(loan.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
             handleGuarantorDataIntegrityIssues(dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -216,11 +215,11 @@ public class GuarantorWritePlatformServiceJpaRepositoryIImpl implements Guaranto
                 this.guarantorRepository.save(guarantorForUpdate);
             }
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withOfficeId(guarantorForUpdate.getOfficeId())
-                    .withEntityId(guarantorForUpdate.getId()).withOfficeId(guarantorForUpdate.getLoanId()).with(changesOnly).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).officeId(guarantorForUpdate.getOfficeId())
+                    .resourceId(guarantorForUpdate.getId()).officeId(guarantorForUpdate.getLoanId()).changes(changesOnly).build();
         } catch (final DataIntegrityViolationException dve) {
             handleGuarantorDataIntegrityIssues(dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -258,13 +257,13 @@ public class GuarantorWritePlatformServiceJpaRepositoryIImpl implements Guaranto
         if (!dataValidationErrors.isEmpty()) { throw new PlatformApiDataValidationException("validation.msg.validation.errors.exist",
                 "Validation errors exist.", dataValidationErrors); }
         this.guarantorRepository.saveAndFlush(guarantorForDelete);
-        CommandProcessingResultBuilder commandProcessingResultBuilder = new CommandProcessingResultBuilder()
-                .withEntityId(guarantorForDelete.getId()).withLoanId(guarantorForDelete.getLoanId())
-                .withOfficeId(guarantorForDelete.getOfficeId());
-        if (guarantorFundingId != null) {
-            commandProcessingResultBuilder.withSubEntityId(guarantorFundingId);
-        }
-        return commandProcessingResultBuilder.build();
+
+        return CommandProcessingResult.builder()
+            .resourceId(guarantorForDelete.getId())
+            .loanId(guarantorForDelete.getLoanId())
+            .officeId(guarantorForDelete.getOfficeId())
+            .subResourceId(guarantorFundingId)
+            .build();
     }
 
     private void removeguarantorFundDetails(final Guarantor guarantorForDelete, final DataValidatorBuilder baseDataValidator,

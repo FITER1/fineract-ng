@@ -138,7 +138,7 @@ public class GroupReadPlatformServiceImpl implements GroupReadPlatformService {
             sqlBuilder.append(" and (").append(extraCriteria).append(")");
         }
 
-        if (parameters.isOrderByRequested()) {
+        if (StringUtils.isNotBlank(parameters.getOrderBy())) {
             sqlBuilder.append(" order by ").append(searchParameters.getOrderBy()).append(' ').append(searchParameters.getSortOrder());
             this.columnValidator.validateSqlInjection(sqlBuilder.toString(), searchParameters.getOrderBy(),
             		searchParameters.getSortOrder());
@@ -176,7 +176,7 @@ public class GroupReadPlatformServiceImpl implements GroupReadPlatformService {
             }
         }
         if (parameters!=null) {
-            if (parameters.isOrderByRequested()) {
+            if (StringUtils.isNotBlank(parameters.getOrderBy())) {
                 sqlBuilder.append(parameters.orderBySql());
                 this.columnValidator.validateSqlInjection(sqlBuilder.toString(), parameters.orderBySql());
             }

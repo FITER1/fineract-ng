@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.loanproduct.domain.LoanProduct;
@@ -74,11 +73,11 @@ public class ProductMixWritePlatformServiceJpaRepositoryImpl implements ProductM
             final Map<String, Object> changes = new LinkedHashMap<>();
             changes.put("restrictedProductsForMix", restrictedProductsAsMap.keySet());
             changes.put("removedProductsForMix", removedRestrictions);
-            return new CommandProcessingResultBuilder().withProductId(productId).with(changes).withCommandId(command.commandId()).build();
+            return CommandProcessingResult.builder().productId(productId).changes(changes).commandId(command.commandId()).build();
         } catch (final DataIntegrityViolationException dve) {
 
             handleDataIntegrityIssues(dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -127,7 +126,7 @@ public class ProductMixWritePlatformServiceJpaRepositoryImpl implements ProductM
                 final List<Long> removedRestrictedProductIds = this.productMixRepository.findRestrictedProductIdsByProductId(productId);
                 this.productMixRepository.deleteAll(existedProductMixes);
                 changes.put("removedProductsForMix", removedRestrictedProductIds);
-                return new CommandProcessingResultBuilder().with(changes).withProductId(productId).withCommandId(command.commandId())
+                return CommandProcessingResult.builder().changes(changes).productId(productId).commandId(command.commandId())
                         .build();
             }
 
@@ -146,11 +145,11 @@ public class ProductMixWritePlatformServiceJpaRepositoryImpl implements ProductM
                 this.productMixRepository.deleteAll(productMixesToRemove);
                 changes.put("removedProductsForMix", getProductIdsFromCollection(productMixesToRemove));
             }
-            return new CommandProcessingResultBuilder().with(changes).withProductId(productId).withCommandId(command.commandId()).build();
+            return CommandProcessingResult.builder().changes(changes).productId(productId).commandId(command.commandId()).build();
         } catch (final DataIntegrityViolationException dve) {
 
             handleDataIntegrityIssues(dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -202,11 +201,11 @@ public class ProductMixWritePlatformServiceJpaRepositoryImpl implements ProductM
             if (CollectionUtils.isEmpty(existedProductMixes)) { throw new ProductMixNotFoundException(productId); }
             this.productMixRepository.deleteAll(existedProductMixes);
             changes.put("removedProductsForMix", getProductIdsFromCollection(existedProductMixes));
-            return new CommandProcessingResultBuilder().with(changes).withProductId(productId).build();
+            return CommandProcessingResult.builder().changes(changes).productId(productId).build();
         } catch (final DataIntegrityViolationException dve) {
 
             handleDataIntegrityIssues(dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 

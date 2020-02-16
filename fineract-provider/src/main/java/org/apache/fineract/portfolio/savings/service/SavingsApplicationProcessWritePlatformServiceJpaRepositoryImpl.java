@@ -31,7 +31,6 @@ import org.apache.fineract.infrastructure.accountnumberformat.domain.EntityAccou
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
@@ -148,21 +147,21 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
             this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.SAVINGS_CREATE,
                     constructEntityMap(BUSINESS_ENTITY.SAVING, account));
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(savingsId) //
-                    .withOfficeId(account.officeId()) //
-                    .withClientId(account.clientId()) //
-                    .withGroupId(account.groupId()) //
-                    .withSavingsId(savingsId) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(savingsId) //
+                    .officeId(account.officeId()) //
+                    .clientId(account.clientId()) //
+                    .groupId(account.groupId()) //
+                    .savingsId(savingsId) //
                     .build();
         } catch (final DataAccessException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -249,22 +248,22 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
                 this.savingAccountRepository.saveAndFlush(account);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(savingsId) //
-                    .withOfficeId(account.officeId()) //
-                    .withClientId(account.clientId()) //
-                    .withGroupId(account.groupId()) //
-                    .withSavingsId(savingsId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(savingsId) //
+                    .officeId(account.officeId()) //
+                    .clientId(account.clientId()) //
+                    .groupId(account.groupId()) //
+                    .savingsId(savingsId) //
+                    .changes(changes) //
                     .build();
         } catch (final DataAccessException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return new CommandProcessingResult(Long.valueOf(-1));
+            return CommandProcessingResult.builder().resourceId(-1L).build();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -291,12 +290,12 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
 
         this.savingAccountRepository.delete(account);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsId) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsId) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsId) //
                 .build();
     }
 
@@ -331,14 +330,14 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.SAVINGS_APPROVE,
                 constructEntityMap(BUSINESS_ENTITY.SAVING, savingsAccount));
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(savingsId) //
-                .withOfficeId(savingsAccount.officeId()) //
-                .withClientId(savingsAccount.clientId()) //
-                .withGroupId(savingsAccount.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(savingsId) //
+                .officeId(savingsAccount.officeId()) //
+                .clientId(savingsAccount.clientId()) //
+                .groupId(savingsAccount.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -365,14 +364,14 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
             }
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(savingsId) //
-                .withOfficeId(savingsAccount.officeId()) //
-                .withClientId(savingsAccount.clientId()) //
-                .withGroupId(savingsAccount.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(savingsId) //
+                .officeId(savingsAccount.officeId()) //
+                .clientId(savingsAccount.clientId()) //
+                .groupId(savingsAccount.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -404,14 +403,14 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
         }
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.SAVINGS_REJECT,
                 constructEntityMap(BUSINESS_ENTITY.SAVING, savingsAccount));
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(savingsId) //
-                .withOfficeId(savingsAccount.officeId()) //
-                .withClientId(savingsAccount.clientId()) //
-                .withGroupId(savingsAccount.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(savingsId) //
+                .officeId(savingsAccount.officeId()) //
+                .clientId(savingsAccount.clientId()) //
+                .groupId(savingsAccount.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -442,14 +441,14 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
             }
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(savingsId) //
-                .withOfficeId(savingsAccount.officeId()) //
-                .withClientId(savingsAccount.clientId()) //
-                .withGroupId(savingsAccount.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(savingsId) //
+                .officeId(savingsAccount.officeId()) //
+                .clientId(savingsAccount.clientId()) //
+                .groupId(savingsAccount.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -493,9 +492,9 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
         // post journal entries for activation charges
         this.savingsAccountDomainService.postJournalEntries(account, existingTransactionIds, existingReversedTransactionIds);
 
-        return new CommandProcessingResultBuilder() //
-                .withSavingsId(account.getId()) //
-                .setRollbackTransaction(rollbackTransaction)//
+        return CommandProcessingResult.builder() //
+                .savingsId(account.getId()) //
+                .rollbackTransaction(rollbackTransaction)//
                 .build();
     }
     

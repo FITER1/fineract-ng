@@ -18,34 +18,15 @@
  */
 package org.apache.fineract.infrastructure.core.data;
 
-/**
- * <p>
- * Immutable data object representing generic enumeration value.
- * </p>
- */
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class EnumOptionData {
-
-    private final Long id;
-    private final String code;
-    private final String value;
-
-    public EnumOptionData(final Long id, final String code, final String value) {
-        this.id = id;
-        this.code = code;
-        this.value = value;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-    
-    public String getValue() {
-        return this.value;
-    }
-    
-    
+    private Long id;
+    private String code;
+    private String value;
 }

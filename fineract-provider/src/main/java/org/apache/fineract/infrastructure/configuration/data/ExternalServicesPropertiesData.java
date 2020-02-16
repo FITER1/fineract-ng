@@ -18,24 +18,16 @@
  */
 package org.apache.fineract.infrastructure.configuration.data;
 
+import lombok.*;
+
 import java.io.Serializable;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ExternalServicesPropertiesData implements Serializable {
-
-    private final String name;
-    private final String value;
-
-    public ExternalServicesPropertiesData(final String name, final String value) {
-        this.name = name;
-        this.value = value;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
+    private String name;
+    private String value;
 }

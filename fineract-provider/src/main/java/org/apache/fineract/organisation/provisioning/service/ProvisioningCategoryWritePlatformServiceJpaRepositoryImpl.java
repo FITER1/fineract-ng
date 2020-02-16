@@ -23,16 +23,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.organisation.provisioning.domain.ProvisioningCategory;
 import org.apache.fineract.organisation.provisioning.domain.ProvisioningCategoryRepository;
 import org.apache.fineract.organisation.provisioning.exception.ProvisioningCategoryCannotBeDeletedException;
 import org.apache.fineract.organisation.provisioning.exception.ProvisioningCategoryNotFoundException;
 import org.apache.fineract.organisation.provisioning.serialization.ProvisioningCategoryDefinitionJsonDeserializer;
-import org.apache.fineract.portfolio.charge.service.ChargeWritePlatformServiceJpaRepositoryImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -56,15 +52,15 @@ public class ProvisioningCategoryWritePlatformServiceJpaRepositoryImpl implement
             this.fromApiJsonDeserializer.validateForCreate(command.json());
             final ProvisioningCategory provisioningCategory = ProvisioningCategory.fromJson(command);
             this.provisioningCategoryRepository.save(provisioningCategory);
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(provisioningCategory.getId())
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(provisioningCategory.getId())
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -79,7 +75,7 @@ public class ProvisioningCategoryWritePlatformServiceJpaRepositoryImpl implement
                     "This provisioning category cannot be deleted, it is already used in loan product");
         }
         this.provisioningCategoryRepository.delete(provisioningCategory);
-        return new CommandProcessingResultBuilder().withEntityId(provisioningCategory.getId()).build();
+        return CommandProcessingResult.builder().resourceId(provisioningCategory.getId()).build();
     }
 
     @Override
@@ -92,14 +88,14 @@ public class ProvisioningCategoryWritePlatformServiceJpaRepositoryImpl implement
             if (!changes.isEmpty()) {
                 this.provisioningCategoryRepository.save(provisioningCategoryForUpdate);
             }
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(categoryId).with(changes).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(categoryId).changes(changes).build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 

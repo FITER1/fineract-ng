@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartRepositoryWrapper;
 import org.apache.fineract.portfolio.interestratechart.data.InterestRateChartSlabDataValidator;
@@ -60,9 +59,9 @@ public class InterestRateChartSlabWritePlatformServiceJpaRepositoryImpl implemen
 
         final Long interestRateChartId = interestRateChartSlab.getId();
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(interestRateChartId) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(interestRateChartId) //
                 .build();
     }
 
@@ -78,10 +77,10 @@ public class InterestRateChartSlabWritePlatformServiceJpaRepositoryImpl implemen
 
         this.chartSlabRepository.saveAndFlush(updateChartSlabs);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(interestRateChartId) //
-                .with(changes).build();
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(interestRateChartId) //
+                .changes(changes).build();
     }
 
     @Override
@@ -90,8 +89,8 @@ public class InterestRateChartSlabWritePlatformServiceJpaRepositoryImpl implemen
         final InterestRateChartSlab deleteChartSlabs = this.interestRateChartSlabAssembler.assembleFrom(chartSlabId,
                 interestRateChartId);
         this.chartSlabRepository.delete(deleteChartSlabs);
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(chartSlabId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(chartSlabId) //
                 .build();
     }
 

@@ -32,7 +32,6 @@ import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrappe
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.dataqueries.data.EntityTables;
@@ -66,8 +65,6 @@ import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepositoryWrapper;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -195,21 +192,21 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
                         StatusEnum.CREATE.getCode().longValue(), EntityTables.GROUP.getForeignKeyColumnNameOnDatatable());
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withOfficeId(groupOffice.getId()) //
-                    .withGroupId(newGroup.getId()) //
-                    .withEntityId(newGroup.getId()) //
-                    .setRollbackTransaction(rollbackTransaction)//
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .officeId(groupOffice.getId()) //
+                    .groupId(newGroup.getId()) //
+                    .resourceId(newGroup.getId()) //
+                    .rollbackTransaction(rollbackTransaction)//
                     .build();
 
         } catch (final DataIntegrityViolationException dve) {
             handleGroupDataIntegrityIssues(command, dve.getMostSpecificCause(), dve, groupingType);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
             handleGroupDataIntegrityIssues(command, throwable, dve, groupingType);
-         	return CommandProcessingResult.empty();
+         	return new CommandProcessingResult();
         }
     }
 
@@ -288,19 +285,19 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
 
             this.groupRepository.saveAndFlush(group);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withOfficeId(group.officeId()) //
-                    .withGroupId(groupId) //
-                    .withEntityId(groupId) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .officeId(group.officeId()) //
+                    .groupId(groupId) //
+                    .resourceId(groupId) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleGroupDataIntegrityIssues(command, dve.getMostSpecificCause(), dve, GroupTypes.GROUP);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
             Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
             handleGroupDataIntegrityIssues(command, throwable, dve, GroupTypes.GROUP);
-         	return CommandProcessingResult.empty();
+         	return new CommandProcessingResult();
         }
     }
 
@@ -426,21 +423,21 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
 
             this.groupRepository.saveAndFlush(groupForUpdate);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withOfficeId(groupForUpdate.officeId()) //
-                    .withGroupId(groupForUpdate.getId()) //
-                    .withEntityId(groupForUpdate.getId()) //
-                    .with(actualChanges) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .officeId(groupForUpdate.officeId()) //
+                    .groupId(groupForUpdate.getId()) //
+                    .resourceId(groupForUpdate.getId()) //
+                    .changes(actualChanges) //
                     .build();
 
         } catch (final DataIntegrityViolationException dve) {
             handleGroupDataIntegrityIssues(command, dve.getMostSpecificCause(), dve, groupingType);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
             handleGroupDataIntegrityIssues(command, throwable, dve, groupingType);
-         	return CommandProcessingResult.empty();
+         	return new CommandProcessingResult();
         }
     }
 
@@ -466,12 +463,12 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
 
         actualChanges.put(staffIdParamName, null);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withOfficeId(groupForUpdate.getId()) //
-                .withGroupId(groupForUpdate.officeId()) //
-                .withEntityId(groupForUpdate.getId()) //
-                .with(actualChanges) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .officeId(groupForUpdate.getId()) //
+                .groupId(groupForUpdate.officeId()) //
+                .resourceId(groupForUpdate.getId()) //
+                .changes(actualChanges) //
                 .build();
 
     }
@@ -526,11 +523,11 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
 
         actualChanges.put(GroupingTypesApiConstants.staffIdParamName, staffId);
 
-        return new CommandProcessingResultBuilder() //
-                .withOfficeId(groupForUpdate.officeId()) //
-                .withEntityId(groupForUpdate.getId()) //
-                .withGroupId(groupId) //
-                .with(actualChanges) //
+        return CommandProcessingResult.builder() //
+                .officeId(groupForUpdate.officeId()) //
+                .resourceId(groupForUpdate.getId()) //
+                .groupId(groupId) //
+                .changes(actualChanges) //
                 .build();
     }
 
@@ -548,10 +545,10 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
 
             this.groupRepository.delete(groupForDelete);
             this.groupRepository.flush();
-            return new CommandProcessingResultBuilder() //
-                    .withOfficeId(groupForDelete.getId()) //
-                    .withGroupId(groupForDelete.officeId()) //
-                    .withEntityId(groupForDelete.getId()) //
+            return CommandProcessingResult.builder() //
+                    .officeId(groupForDelete.getId()) //
+                    .groupId(groupForDelete.officeId()) //
+                    .resourceId(groupForDelete.getId()) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             Throwable throwable = ExceptionUtils.getRootCause(dve.getCause());
@@ -589,9 +586,9 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
 
         this.groupRepository.saveAndFlush(group);
 
-        return new CommandProcessingResultBuilder() //
-                .withGroupId(groupId) //
-                .withEntityId(groupId) //
+        return CommandProcessingResult.builder() //
+                .groupId(groupId) //
+                .resourceId(groupId) //
                 .build();
     }
 
@@ -665,8 +662,8 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
 
         this.groupRepository.saveAndFlush(center);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(centerId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(centerId) //
                 .build();
     }
 
@@ -775,12 +772,12 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
 
         this.groupRepository.saveAndFlush(groupForUpdate);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withOfficeId(groupForUpdate.officeId()) //
-                .withGroupId(groupForUpdate.getId()) //
-                .withEntityId(groupForUpdate.getId()) //
-                .with(actualChanges) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .officeId(groupForUpdate.officeId()) //
+                .groupId(groupForUpdate.getId()) //
+                .resourceId(groupForUpdate.getId()) //
+                .changes(actualChanges) //
                 .build();
     }
 
@@ -804,12 +801,12 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
 
         this.groupRepository.saveAndFlush(groupForUpdate);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withOfficeId(groupForUpdate.officeId()) //
-                .withGroupId(groupForUpdate.getId()) //
-                .withEntityId(groupForUpdate.getId()) //
-                .with(actualChanges) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .officeId(groupForUpdate.officeId()) //
+                .groupId(groupForUpdate.getId()) //
+                .resourceId(groupForUpdate.getId()) //
+                .changes(actualChanges) //
                 .build();
     }
 
@@ -831,12 +828,12 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
 
         this.groupRepository.saveAndFlush(centerForUpdate);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withOfficeId(centerForUpdate.officeId()) //
-                .withGroupId(centerForUpdate.getId()) //
-                .withEntityId(centerForUpdate.getId()) //
-                .with(actualChanges) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .officeId(centerForUpdate.officeId()) //
+                .groupId(centerForUpdate.getId()) //
+                .resourceId(centerForUpdate.getId()) //
+                .changes(actualChanges) //
                 .build();
     }
 
@@ -857,12 +854,12 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
 
         this.groupRepository.saveAndFlush(centerForUpdate);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withOfficeId(centerForUpdate.officeId()) //
-                .withGroupId(centerForUpdate.getId()) //
-                .withEntityId(centerForUpdate.getId()) //
-                .with(actualChanges) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .officeId(centerForUpdate.officeId()) //
+                .groupId(centerForUpdate.getId()) //
+                .resourceId(centerForUpdate.getId()) //
+                .changes(actualChanges) //
                 .build();
 
     }

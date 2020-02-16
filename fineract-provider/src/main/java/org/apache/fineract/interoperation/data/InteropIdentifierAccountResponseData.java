@@ -31,7 +31,11 @@ public class InteropIdentifierAccountResponseData extends CommandProcessingResul
 
 
     protected InteropIdentifierAccountResponseData(Long resourceId, Long officeId, Long commandId, Map<String, Object> changesOnly, @NotNull String accountId) {
-        super(resourceId, officeId, commandId, changesOnly);
+        this.resourceIdentifier = resourceId!=null ? resourceId.toString() : null;
+        this.resourceId = resourceId;
+        this.officeId = officeId;
+        this.commandId = commandId;
+        this.changes = changesOnly;
         this.accountId = accountId;
     }
 

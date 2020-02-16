@@ -34,6 +34,6 @@ public class ValidCommandHandler implements NewCommandSourceHandler {
 
     @Override
     public CommandProcessingResult processCommand(JsonCommand command) {
-        return CommandProcessingResult.commandOnlyResult(command.commandId());
+        return CommandProcessingResult.builder().commandId(command.commandId()).build();
     }
 }

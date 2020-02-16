@@ -21,7 +21,6 @@ package org.apache.fineract.portfolio.tax.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.portfolio.tax.domain.*;
 import org.apache.fineract.portfolio.tax.serialization.TaxValidator;
 import org.springframework.stereotype.Service;
@@ -45,9 +44,9 @@ public class TaxWritePlatformServiceImpl implements TaxWritePlatformService {
         this.validator.validateForTaxComponentCreate(command.json());
         TaxComponent taxComponent = this.taxAssembler.assembleTaxComponentFrom(command);
         this.taxComponentRepository.save(taxComponent);
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(taxComponent.getId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(taxComponent.getId()) //
                 .build();
     }
 
@@ -59,9 +58,9 @@ public class TaxWritePlatformServiceImpl implements TaxWritePlatformService {
         Map<String, Object> changes = taxComponent.update(command);
         this.validator.validateTaxComponentForUpdate(taxComponent);
         this.taxComponentRepository.save(taxComponent);
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(id) //
-                .with(changes).build();
+        return CommandProcessingResult.builder() //
+                .resourceId(id) //
+                .changes(changes).build();
     }
 
     @Override
@@ -70,9 +69,9 @@ public class TaxWritePlatformServiceImpl implements TaxWritePlatformService {
         final TaxGroup taxGroup = this.taxAssembler.assembleTaxGroupFrom(command);
         this.validator.validateTaxGroup(taxGroup);
         this.taxGroupRepository.save(taxGroup);
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(taxGroup.getId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(taxGroup.getId()) //
                 .build();
     }
 
@@ -86,9 +85,9 @@ public class TaxWritePlatformServiceImpl implements TaxWritePlatformService {
         Map<String, Object> changes = taxGroup.update(command, groupMappings);
         this.validator.validateTaxGroup(taxGroup);
         this.taxGroupRepository.save(taxGroup);
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(id) //
-                .with(changes).build();
+        return CommandProcessingResult.builder() //
+                .resourceId(id) //
+                .changes(changes).build();
     }
 
 }

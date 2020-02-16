@@ -114,7 +114,7 @@ public class MakercheckersApiResource {
             result = this.writePlatformService.approveEntry(auditId);
         } else if (is(commandParam, "reject")) {
             final Long id = this.writePlatformService.rejectEntry(auditId);
-            result = CommandProcessingResult.commandOnlyResult(id);
+            result = CommandProcessingResult.builder().commandId(id).build();
         } else {
             throw new UnrecognizedQueryParamException("command", commandParam);
         }
@@ -135,7 +135,7 @@ public class MakercheckersApiResource {
 
         final Long id = this.writePlatformService.deleteEntry(auditId);
 
-        return this.toApiJsonSerializerAudit.serialize(CommandProcessingResult.commandOnlyResult(id));
+        return this.toApiJsonSerializerAudit.serialize(CommandProcessingResult.builder().commandId(id).build());
     }
 
     private String getExtraCriteria(final String actionName, final String entityName, final Long resourceId, final Long makerId,

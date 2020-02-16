@@ -25,7 +25,6 @@ import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDoma
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformServiceUnavailableException;
@@ -190,13 +189,13 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
         }     
         postJournalEntries(account, existingTransactionIds, existingReversedTransactionIds);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsId) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsId) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -310,13 +309,13 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
 
         postJournalEntries(account, existingTransactionIds, existingReversedTransactionIds);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsId) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsId) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -348,13 +347,13 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
         Map<String, Object> changes = recurringDetail.updateMandatoryRecommendedDepositAmount(mandatoryRecommendedDepositAmount,
                 depositAmountUpdateEffectiveFromDate, isSavingsInterestPostingAtCurrentPeriodEnd, financialYearBeginningMonth);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsId) //
-                .withOfficeId(recurringDepositAccount.officeId()) //
-                .withClientId(recurringDepositAccount.clientId()) //
-                .withGroupId(recurringDepositAccount.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsId) //
+                .officeId(recurringDepositAccount.officeId()) //
+                .clientId(recurringDepositAccount.clientId()) //
+                .groupId(recurringDepositAccount.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -380,13 +379,13 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
         final SavingsAccountTransaction deposit = this.depositAccountDomainService.handleRDDeposit(account, fmt, transactionDate,
                 transactionAmount, paymentDetail, isRegularTransaction);
         
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(deposit.getId()) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .resourceId(deposit.getId()) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -419,13 +418,13 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
         final SavingsAccountTransaction withdrawal = this.depositAccountDomainService.handleWithdrawal(account, fmt, transactionDate,
                 transactionAmount, paymentDetail, true, isRegularTransaction);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(withdrawal.getId()) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes)//
+        return CommandProcessingResult.builder() //
+                .resourceId(withdrawal.getId()) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes)//
                 .build();
     }
 
@@ -449,12 +448,12 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
 
         this.savingAccountRepositoryWrapper.save(account);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsId) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsId) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsId) //
                 .build();
     }
 
@@ -465,12 +464,12 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
         final SavingsAccount account = this.depositAccountAssembler.assembleFrom(savingsId, depositAccountType);
         checkClientOrGroupActive(account);
         postInterest(account);
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsId) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsId) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsId) //
                 .build();
     }
 
@@ -585,12 +584,12 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
         this.savingAccountRepositoryWrapper.saveAndFlush(account);
         postJournalEntries(account, existingTransactionIds, existingReversedTransactionIds);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsId) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsId) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsId) //
                 .build();
     }
 
@@ -683,13 +682,13 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
 
         this.savingAccountRepositoryWrapper.saveAndFlush(account);
         postJournalEntries(account, existingTransactionIds, existingReversedTransactionIds);
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(newtransactionId) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes)//
+        return CommandProcessingResult.builder() //
+                .resourceId(newtransactionId) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes)//
                 .build();
     }
 
@@ -738,13 +737,13 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
             this.noteRepository.save(note);
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsId) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes)//
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsId) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes)//
                 .build();
 
     }
@@ -772,13 +771,13 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
             this.noteRepository.save(note);
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsId) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes)//
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsId) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes)//
                 .build();
 
     }
@@ -806,13 +805,13 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
             this.noteRepository.save(note);
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsId) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes)//
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsId) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes)//
                 .build();
 
     }
@@ -847,13 +846,13 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
             this.noteRepository.save(note);
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsId) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsId) //
-                .with(changes)//
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsId) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsId) //
+                .changes(changes)//
                 .build();
 
     }
@@ -1014,12 +1013,12 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
 
         this.savingAccountRepositoryWrapper.saveAndFlush(savingsAccount);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsAccountCharge.getId()) //
-                .withOfficeId(savingsAccount.officeId()) //
-                .withClientId(savingsAccount.clientId()) //
-                .withGroupId(savingsAccount.groupId()) //
-                .withSavingsId(savingsAccountId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsAccountCharge.getId()) //
+                .officeId(savingsAccount.officeId()) //
+                .clientId(savingsAccount.clientId()) //
+                .groupId(savingsAccount.groupId()) //
+                .savingsId(savingsAccountId) //
                 .build();
     }
 
@@ -1067,13 +1066,13 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
 
         this.savingsAccountChargeRepository.saveAndFlush(savingsAccountCharge);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsAccountCharge.getId()) //
-                .withOfficeId(savingsAccountCharge.savingsAccount().officeId()) //
-                .withClientId(savingsAccountCharge.savingsAccount().clientId()) //
-                .withGroupId(savingsAccountCharge.savingsAccount().groupId()) //
-                .withSavingsId(savingsAccountCharge.savingsAccount().getId()) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsAccountCharge.getId()) //
+                .officeId(savingsAccountCharge.savingsAccount().officeId()) //
+                .clientId(savingsAccountCharge.savingsAccount().clientId()) //
+                .groupId(savingsAccountCharge.savingsAccount().groupId()) //
+                .savingsId(savingsAccountCharge.savingsAccount().getId()) //
+                .changes(changes) //
                 .build();
     }
 
@@ -1125,12 +1124,12 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
 
         postJournalEntries(account, existingTransactionIds, existingReversedTransactionIds);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsAccountChargeId) //
-                .withOfficeId(account.officeId()) //
-                .withClientId(account.clientId()) //
-                .withGroupId(account.groupId()) //
-                .withSavingsId(savingsAccountId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsAccountChargeId) //
+                .officeId(account.officeId()) //
+                .clientId(account.clientId()) //
+                .groupId(account.groupId()) //
+                .savingsId(savingsAccountId) //
                 .build();
     }
 
@@ -1148,12 +1147,12 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
         savingsAccount.removeCharge(savingsAccountCharge);
         this.savingAccountRepositoryWrapper.saveAndFlush(savingsAccount);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsAccountChargeId) //
-                .withOfficeId(savingsAccount.officeId()) //
-                .withClientId(savingsAccount.clientId()) //
-                .withGroupId(savingsAccount.groupId()) //
-                .withSavingsId(savingsAccountId) //
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsAccountChargeId) //
+                .officeId(savingsAccount.officeId()) //
+                .clientId(savingsAccount.clientId()) //
+                .groupId(savingsAccount.groupId()) //
+                .savingsId(savingsAccountId) //
                 .build();
     }
 
@@ -1192,12 +1191,12 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
         }
 
         this.payCharge(savingsAccountCharge, transactionDate, amountPaid, fmt);
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(savingsAccountCharge.getId()) //
-                .withOfficeId(savingsAccountCharge.savingsAccount().officeId()) //
-                .withClientId(savingsAccountCharge.savingsAccount().clientId()) //
-                .withGroupId(savingsAccountCharge.savingsAccount().groupId()) //
-                .withSavingsId(savingsAccountCharge.savingsAccount().getId()) //
+        return CommandProcessingResult.builder() //
+                .resourceId(savingsAccountCharge.getId()) //
+                .officeId(savingsAccountCharge.savingsAccount().officeId()) //
+                .clientId(savingsAccountCharge.savingsAccount().clientId()) //
+                .groupId(savingsAccountCharge.savingsAccount().groupId()) //
+                .savingsId(savingsAccountCharge.savingsAccount().getId()) //
                 .build();
 
     }

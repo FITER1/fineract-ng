@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.fineract.commands.handler.NewCommandSourceHandler;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.dataqueries.service.ReadWriteNonCoreDataService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +40,6 @@ public class UpdateDatatableCommandHandler implements NewCommandSourceHandler {
 
         this.writePlatformService.updateDatatable(datatableName, command);
 
-        return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withResourceIdAsString(datatableName).build();
+        return CommandProcessingResult.builder().commandId(command.commandId()).resourceIdentifier(datatableName).build();
     }
 }

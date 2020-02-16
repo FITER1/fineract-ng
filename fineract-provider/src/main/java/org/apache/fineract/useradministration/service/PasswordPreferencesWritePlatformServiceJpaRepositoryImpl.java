@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.useradministration.api.PasswordPreferencesApiConstants;
 import org.apache.fineract.useradministration.data.PasswordPreferencesDataValidator;
@@ -76,9 +75,9 @@ public class PasswordPreferencesWritePlatformServiceJpaRepositoryImpl implements
                 this.validationRepository.flush();
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             log.error(dve.getMessage(), dve);

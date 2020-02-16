@@ -126,7 +126,7 @@ public class DocumentWritePlatformServiceJpaRepositoryImpl implements DocumentWr
 
             this.documentRepository.saveAndFlush(documentForUpdate);
 
-            return new CommandProcessingResult(documentForUpdate.getId());
+            return CommandProcessingResult.builder().resourceId(documentForUpdate.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
             log.error(dve.getMessage(), dve);
             throw new PlatformDataIntegrityException("error.msg.document.unknown.data.integrity.issue",
@@ -151,7 +151,7 @@ public class DocumentWritePlatformServiceJpaRepositoryImpl implements DocumentWr
 
         final ContentRepository contentRepository = this.contentRepositoryFactory.getRepository(document.storageType());
         contentRepository.deleteFile(document.getName(), document.getLocation());
-        return new CommandProcessingResult(document.getId());
+        return CommandProcessingResult.builder().resourceId(document.getId()).build();
     }
 
     private void validateParentEntityType(final DocumentCommand documentCommand) {

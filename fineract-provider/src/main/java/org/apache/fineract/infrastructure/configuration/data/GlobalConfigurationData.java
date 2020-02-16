@@ -18,17 +18,15 @@
  */
 package org.apache.fineract.infrastructure.configuration.data;
 
+import lombok.*;
+
 import java.util.List;
 
-/**
- * Immutable data object for global configuration.
- */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class GlobalConfigurationData {
-
-    @SuppressWarnings("unused")
-    private final List<GlobalConfigurationPropertyData> globalConfiguration;
-
-    public GlobalConfigurationData(final List<GlobalConfigurationPropertyData> globalConfiguration) {
-        this.globalConfiguration = globalConfiguration;
-    }
+    private List<GlobalConfigurationPropertyData> globalConfiguration;
 }

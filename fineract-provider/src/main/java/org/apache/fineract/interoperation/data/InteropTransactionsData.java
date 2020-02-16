@@ -33,7 +33,8 @@ public class InteropTransactionsData extends CommandProcessingResult {
 
 
     public InteropTransactionsData(Long entityId, List<InteropTransactionData> transactions) {
-        super(entityId);
+        this.resourceIdentifier = entityId!=null ? entityId.toString() : null;
+        this.resourceId = entityId;
         this.transactions = transactions;
     }
 

@@ -33,7 +33,11 @@ public class InteropIdentifiersResponseData extends CommandProcessingResult {
     private List<InteropIdentifierData> identifiers;
 
     protected InteropIdentifiersResponseData(Long resourceId, Long officeId, Long commandId, Map<String, Object> changesOnly, @NotNull List<InteropIdentifierData> identifiers) {
-        super(resourceId, officeId, commandId, changesOnly);
+        this.resourceIdentifier = resourceId!=null ? resourceId.toString() : null;
+        this.resourceId = resourceId;
+        this.officeId = officeId;
+        this.commandId = commandId;
+        this.changes = changesOnly;
         this.identifiers = identifiers;
     }
 

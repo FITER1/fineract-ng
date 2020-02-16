@@ -33,7 +33,6 @@ import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDoma
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
@@ -617,7 +616,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
              throwExceptionIfValidationWarningsExist(dataValidationErrors);
         }
 
-        return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withResourceIdAsString(datatableName).build();
+        return CommandProcessingResult.builder().commandId(command.commandId()).resourceIdentifier(datatableName).build();
     }
 
     private void parseDatatableColumnForUpdate(final JsonObject column,
@@ -814,7 +813,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
      *            Name of data table
      * @param column
      *            JSON encoded array of column properties
-     * @see https://mifosforge.jira.com/browse/MIFOSX-1145
+     * @see "https://mifosforge.jira.com/browse/MIFOSX-1145"
      **/
     private void removeNullValuesFromStringColumn(final String datatableName, final JsonObject column,
             final Map<String, ResultsetColumnHeaderData> mapColumnNameDefinition) {
@@ -1108,13 +1107,13 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
             }
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withOfficeId(commandProcessingResult.getOfficeId()) //
-                .withGroupId(commandProcessingResult.getGroupId()) //
-                .withClientId(commandProcessingResult.getClientId()) //
-                .withSavingsId(commandProcessingResult.getSavingsId()) //
-                .withLoanId(commandProcessingResult.getLoanId()) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .officeId(commandProcessingResult.getOfficeId()) //
+                .groupId(commandProcessingResult.getGroupId()) //
+                .clientId(commandProcessingResult.getClientId()) //
+                .savingsId(commandProcessingResult.getSavingsId()) //
+                .loanId(commandProcessingResult.getLoanId()) //
+                .changes(changes) //
                 .build();
     }
 
@@ -1219,12 +1218,13 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
 
         if (rs.next()) { throw new DatatableSystemErrorException("System Error: More than one row returned from data scoping query"); }
 
-        return new CommandProcessingResultBuilder() //
-                .withOfficeId(officeId) //
-                .withGroupId(groupId) //
-                .withClientId(clientId) //
-                .withSavingsId(savingsId) //
-                .withLoanId(LoanId).withEntityId(entityId)//
+        return CommandProcessingResult.builder() //
+                .officeId(officeId) //
+                .groupId(groupId) //
+                .clientId(clientId) //
+                .savingsId(savingsId) //
+                .loanId(LoanId)
+                .resourceId(entityId)//
                 .build();
     }
 

@@ -18,51 +18,19 @@
  */
 package org.apache.fineract.infrastructure.configuration.data;
 
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class SMTPCredentialsData {
-
-    private final String username;
-    private final String password;
-    private final String host;
-    private final String port;
-    private final boolean useTLS;
-    private final String fromEmail;
-    private final String fromName;
-
-    public SMTPCredentialsData(final String username, final String password, final String host, final String port, final boolean useTLS, String fromEmail, String fromName) {
-        this.username = username;
-        this.password = password;
-        this.host = host;
-        this.port = port;
-        this.useTLS = useTLS;
-        this.fromEmail = fromEmail;
-        this.fromName = fromName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public String getPort() {
-        return port;
-    }
-
-    public boolean isUseTLS() {
-        return useTLS;
-    }
-
-    public String getFromEmail() {
-        return fromEmail != null ?fromEmail :username;
-    }
-
-    public String getFromName() {
-        return fromName != null ?fromName :username;
-    }
+    private String username;
+    private String password;
+    private String host;
+    private String port;
+    private boolean useTLS;
+    private String fromEmail;
+    private String fromName;
 }

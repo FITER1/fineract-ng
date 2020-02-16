@@ -21,7 +21,6 @@ package org.apache.fineract.organisation.monetary.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepositoryWrapper;
@@ -87,9 +86,9 @@ public class CurrencyWritePlatformServiceJpaRepositoryImpl implements CurrencyWr
         this.organisationCurrencyRepository.deleteAll();
         this.organisationCurrencyRepository.saveAll(allowedCurrencies);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .changes(changes) //
                 .build();
     }
 }

@@ -21,7 +21,6 @@ package org.apache.fineract.portfolio.account.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.GeneralPlatformDomainRuleException;
 import org.apache.fineract.portfolio.account.PortfolioAccountType;
 import org.apache.fineract.portfolio.account.data.AccountTransferDTO;
@@ -137,7 +136,7 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
             final HolidayDetailDTO holidayDetailDto = null;
             final boolean isRecoveryRepayment = false;
             final LoanTransaction loanRepaymentTransaction = this.loanAccountDomainService.makeRepayment(toLoanAccount,
-                    new CommandProcessingResultBuilder(), transactionDate, transactionAmount, paymentDetail, null, null,
+                    CommandProcessingResult.builder(), transactionDate, transactionAmount, paymentDetail, null, null,
                     isRecoveryRepayment, isAccountTransfer, holidayDetailDto, isHolidayValidationDone);
 
             final AccountTransferDetails accountTransferDetails = this.accountTransferAssembler.assembleSavingsToLoanTransfer(command,
@@ -153,7 +152,7 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
             final Loan fromLoanAccount = this.loanAccountAssembler.assembleFrom(fromLoanAccountId);
 
             final LoanTransaction loanRefundTransaction = this.loanAccountDomainService.makeRefund(fromLoanAccountId,
-                    new CommandProcessingResultBuilder(), transactionDate, transactionAmount, paymentDetail, null, null);
+                    CommandProcessingResult.builder(), transactionDate, transactionAmount, paymentDetail, null, null);
 
             final Long toSavingsAccountId = command.longValueOfParameterNamed(toAccountIdParamName);
             final SavingsAccount toSavingsAccount = this.savingsAccountAssembler.assembleFrom(toSavingsAccountId);
@@ -170,13 +169,13 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
 
         }
 
-        final CommandProcessingResultBuilder builder = new CommandProcessingResultBuilder().withEntityId(transferDetailId);
+        final CommandProcessingResult.CommandProcessingResultBuilder builder = CommandProcessingResult.builder().resourceId(transferDetailId);
 
         if (fromAccountType.isSavingsAccount()) {
-            builder.withSavingsId(fromSavingsAccountId);
+            builder.savingsId(fromSavingsAccountId);
         }
         if (fromAccountType.isLoanAccount()) {
-            builder.withLoanId(fromLoanAccountId);
+            builder.loanId(fromLoanAccountId);
         }
 
         return builder.build();
@@ -297,7 +296,7 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
                 final boolean isRecoveryRepayment = false;
                 final Boolean isHolidayValidationDone=false;
                 final HolidayDetailDTO holidayDetailDto=null;
-                loanTransaction = this.loanAccountDomainService.makeRepayment(toLoanAccount, new CommandProcessingResultBuilder(),
+                loanTransaction = this.loanAccountDomainService.makeRepayment(toLoanAccount, CommandProcessingResult.builder(),
                         accountTransferDTO.getTransactionDate(), accountTransferDTO.getTransactionAmount(),
                         accountTransferDTO.getPaymentDetail(), null, null, isRecoveryRepayment, isAccountTransfer,holidayDetailDto,isHolidayValidationDone);
             }
@@ -372,7 +371,7 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
                         accountTransferDTO.getPaymentDetail(), accountTransferDTO.getNoteText(), accountTransferDTO.getTxnExternalId());
             } else {
                 loanTransaction = this.loanAccountDomainService.makeRefund(accountTransferDTO.getFromAccountId(),
-                        new CommandProcessingResultBuilder(), accountTransferDTO.getTransactionDate(),
+                        CommandProcessingResult.builder(), accountTransferDTO.getTransactionDate(),
                         accountTransferDTO.getTransactionAmount(), accountTransferDTO.getPaymentDetail(), accountTransferDTO.getNoteText(),
                         accountTransferDTO.getTxnExternalId());
             }
@@ -414,7 +413,7 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
                 accountTransferDTO.getTransactionDate(), accountTransferDTO.getTransactionAmount(),
                 accountTransferDTO.getPaymentDetail(), accountTransferDTO.getNoteText(), accountTransferDTO.getTxnExternalId(), true);
 
-        LoanTransaction repayTransaction = this.loanAccountDomainService.makeRepayment(toLoanAccount, new CommandProcessingResultBuilder(),
+        LoanTransaction repayTransaction = this.loanAccountDomainService.makeRepayment(toLoanAccount, CommandProcessingResult.builder(),
                 accountTransferDTO.getTransactionDate(), accountTransferDTO.getTransactionAmount(),
                 accountTransferDTO.getPaymentDetail(), null, null, false, isAccountTransfer,null,false, true);
 
@@ -474,7 +473,7 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
         }
 
         final LoanTransaction loanRefundTransaction = this.loanAccountDomainService.makeRefundForActiveLoan(fromLoanAccountId,
-                new CommandProcessingResultBuilder(), transactionDate, transactionAmount, paymentDetail, null, null);
+                CommandProcessingResult.builder(), transactionDate, transactionAmount, paymentDetail, null, null);
 
         final Long toSavingsAccountId = command.longValueOfParameterNamed(toAccountIdParamName);
         final SavingsAccount toSavingsAccount = this.savingsAccountAssembler.assembleFrom(toSavingsAccountId);
@@ -487,11 +486,11 @@ public class AccountTransfersWritePlatformServiceImpl implements AccountTransfer
         this.accountTransferDetailRepository.saveAndFlush(accountTransferDetails);
         transferTransactionId = accountTransferDetails.getId();
 
-        final CommandProcessingResultBuilder builder = new CommandProcessingResultBuilder().withEntityId(transferTransactionId);
+        final CommandProcessingResult.CommandProcessingResultBuilder builder = CommandProcessingResult.builder().resourceId(transferTransactionId);
 
         // if (fromAccountType.isSavingsAccount()) {
 
-        builder.withSavingsId(toSavingsAccountId);
+        builder.savingsId(toSavingsAccountId);
         // }
 
         return builder.build();

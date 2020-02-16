@@ -21,7 +21,6 @@ package org.apache.fineract.infrastructure.creditbureau.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.creditbureau.domain.CreditBureau;
 import org.apache.fineract.infrastructure.creditbureau.domain.CreditBureauRepository;
 import org.apache.fineract.infrastructure.creditbureau.domain.OrganisationCreditBureau;
@@ -55,7 +54,7 @@ public class OrganisationCreditBureauWritePlatflormServiceImpl
 
 		this.organisationCreditBureauRepository.save(organisationCreditBureau);
 
-		return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(organisationCreditBureau.getId())
+		return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(organisationCreditBureau.getId())
 				.build();
 	}
 
@@ -75,7 +74,7 @@ public class OrganisationCreditBureauWritePlatflormServiceImpl
 
 		organisationCreditBureauRepository.saveAndFlush(orgcb);
 
-		return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(orgcb.getId())
+		return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(orgcb.getId())
 				.build();
 
 	}

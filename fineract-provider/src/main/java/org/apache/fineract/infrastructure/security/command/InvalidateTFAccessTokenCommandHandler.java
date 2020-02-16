@@ -27,7 +27,6 @@ import org.apache.fineract.commands.handler.NewCommandSourceHandler;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
@@ -65,9 +64,9 @@ public class InvalidateTFAccessTokenCommandHandler implements NewCommandSourceHa
 
         final TFAccessToken accessToken = twoFactorService.invalidateAccessToken(user, command);
 
-        return new CommandProcessingResultBuilder()
-                .withCommandId(command.commandId())
-                .withResourceIdAsString(accessToken.getToken())
+        return CommandProcessingResult.builder()
+                .commandId(command.commandId())
+                .resourceIdentifier(accessToken.getToken())
                 .build();
     }
 

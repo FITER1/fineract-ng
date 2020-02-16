@@ -24,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
@@ -62,17 +61,17 @@ public class StaffWritePlatformServiceJpaRepositoryImpl implements StaffWritePla
 
             this.staffRepository.save(staff);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(staff.getId()).withOfficeId(officeId) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(staff.getId()).officeId(officeId) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleStaffDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleStaffDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -97,15 +96,15 @@ public class StaffWritePlatformServiceJpaRepositoryImpl implements StaffWritePla
                 this.staffRepository.saveAndFlush(staffForUpdate);
             }
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(staffId)
-                    .withOfficeId(staffForUpdate.getOffice().getId()).with(changesOnly).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(staffId)
+                    .officeId(staffForUpdate.getOffice().getId()).changes(changesOnly).build();
         } catch (final DataIntegrityViolationException dve) {
             handleStaffDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleStaffDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 

@@ -21,7 +21,6 @@ package org.apache.fineract.portfolio.paymenttype.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.portfolio.paymenttype.api.PaymentTypeApiResourceConstants;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeDataValidator;
@@ -51,7 +50,7 @@ public class PaymentTypeWriteServiceImpl implements PaymentTypeWriteService {
 
         PaymentType newPaymentType = PaymentType.create(name, description, isCashPayment, position);
         this.repository.save(newPaymentType);
-        return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(newPaymentType.getId()).build();
+        return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(newPaymentType.getId()).build();
     }
 
     @Override
@@ -65,7 +64,7 @@ public class PaymentTypeWriteServiceImpl implements PaymentTypeWriteService {
             this.repository.save(paymentType);
         }
 
-        return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(command.entityId()).build();
+        return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(command.entityId()).build();
     }
 
     @Override
@@ -77,7 +76,7 @@ public class PaymentTypeWriteServiceImpl implements PaymentTypeWriteService {
         } catch (final DataIntegrityViolationException e) {
             handleDataIntegrityIssues(e);
         }
-        return new CommandProcessingResultBuilder().withEntityId(paymentType.getId()).build();
+        return CommandProcessingResult.builder().resourceId(paymentType.getId()).build();
     }
 
     private void handleDataIntegrityIssues(final DataIntegrityViolationException dve) {

@@ -57,13 +57,13 @@ public class GlobalConfigurationProperty extends AbstractPersistableCustom<Long>
     private String description;
 
     @Column(name = "is_trap_door", nullable = false)
-    private boolean isTrapDoor;
+    private boolean trapDoor;
 
     public Map<String, Object> update(final JsonCommand command) {
 
         final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
 
-        if (this.isTrapDoor == true) { throw new GlobalConfigurationPropertyCannotBeModfied(this.getId()); }
+        if (this.trapDoor) { throw new GlobalConfigurationPropertyCannotBeModfied(this.getId()); }
 
         final String enabledParamName = "enabled";
         if (command.isChangeInBooleanParameterNamed(enabledParamName, this.enabled)) {
@@ -96,16 +96,15 @@ public class GlobalConfigurationProperty extends AbstractPersistableCustom<Long>
         return actualChanges;
     }
 
-    public static GlobalConfigurationProperty newSurveyConfiguration(final String name) {
-        return GlobalConfigurationProperty.builder()
-            .name(name)
-            .enabled(false)
-            .isTrapDoor(false)
-            .build();
-    }
-    
     public GlobalConfigurationPropertyData toData() {
-        return new GlobalConfigurationPropertyData(getName(), isEnabled(), getValue(), getDateValue(), this.getId(), this.description,
-                this.isTrapDoor);
+        return GlobalConfigurationPropertyData.builder()
+            .name(getName())
+            .enabled(isEnabled())
+            .value(getValue())
+            .dateValue(getDateValue())
+            .id(this.getId())
+            .description(this.description)
+            .trapDoor(this.trapDoor)
+            .build();
     }
 }

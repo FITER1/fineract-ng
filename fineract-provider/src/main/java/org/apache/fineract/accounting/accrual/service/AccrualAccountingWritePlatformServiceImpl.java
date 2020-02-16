@@ -53,7 +53,7 @@ public class AccrualAccountingWritePlatformServiceImpl implements AccrualAccount
             baseDataValidator.reset().failWithCodeNoParameterAddedToErrorCode(PERIODIC_ACCRUAL_ACCOUNTING_EXECUTION_ERROR_CODE, errorlog);
             throw new PlatformApiDataValidationException(dataValidationErrors);
         }
-        return CommandProcessingResult.empty();
+        return new CommandProcessingResult();
     }
 
 }

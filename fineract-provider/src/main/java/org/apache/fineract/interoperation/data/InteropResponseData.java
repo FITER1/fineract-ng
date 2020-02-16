@@ -48,7 +48,11 @@ public class InteropResponseData extends CommandProcessingResult {
 
     protected InteropResponseData(Long resourceId, Long officeId, Long commandId, Map<String, Object> changesOnly, @NotNull String transactionCode,
                                   @NotNull InteropActionState state, LocalDateTime expiration, List<ExtensionData> extensionList) {
-        super(resourceId, officeId, commandId, changesOnly);
+        this.resourceIdentifier = resourceId!=null ? resourceId.toString() : null;
+        this.resourceId = resourceId;
+        this.officeId = officeId;
+        this.commandId = commandId;
+        this.changes = changesOnly;
         this.transactionCode = transactionCode;
         this.state = state;
         this.expiration = format(expiration);

@@ -29,7 +29,6 @@ import org.apache.fineract.infrastructure.cache.service.CacheWritePlatformServic
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.InvalidJsonException;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
@@ -73,6 +72,6 @@ public class UpdateCacheCommandHandler implements NewCommandSourceHandler {
 
         final Map<String, Object> changes = this.cacheService.switchToCache(cacheType);
 
-        return new CommandProcessingResultBuilder().withCommandId(command.commandId()).with(changes).build();
+        return CommandProcessingResult.builder().commandId(command.commandId()).changes(changes).build();
     }
 }

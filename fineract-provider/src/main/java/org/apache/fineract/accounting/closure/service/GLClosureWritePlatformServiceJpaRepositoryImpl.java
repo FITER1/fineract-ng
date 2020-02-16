@@ -32,7 +32,6 @@ import org.apache.fineract.accounting.closure.exception.GLClosureNotFoundExcepti
 import org.apache.fineract.accounting.closure.serialization.GLClosureCommandFromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
@@ -78,11 +77,11 @@ public class GLClosureWritePlatformServiceJpaRepositoryImpl implements GLClosure
 
             this.glClosureRepository.saveAndFlush(glClosure);
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withOfficeId(officeId)
-                    .withEntityId(glClosure.getId()).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).officeId(officeId)
+                    .resourceId(glClosure.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
             handleGLClosureIntegrityIssues(command, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -101,8 +100,8 @@ public class GLClosureWritePlatformServiceJpaRepositoryImpl implements GLClosure
             this.glClosureRepository.saveAndFlush(glClosure);
         }
 
-        return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withOfficeId(glClosure.getOffice().getId())
-                .withEntityId(glClosure.getId()).with(changesOnly).build();
+        return CommandProcessingResult.builder().commandId(command.commandId()).officeId(glClosure.getOffice().getId())
+                .resourceId(glClosure.getId()).changes(changesOnly).build();
     }
 
     @Transactional
@@ -123,7 +122,7 @@ public class GLClosureWritePlatformServiceJpaRepositoryImpl implements GLClosure
 
         this.glClosureRepository.delete(glClosure);
 
-        return new CommandProcessingResultBuilder().withOfficeId(glClosure.getOffice().getId()).withEntityId(glClosure.getId()).build();
+        return CommandProcessingResult.builder().officeId(glClosure.getOffice().getId()).resourceId(glClosure.getId()).build();
     }
 
     /**

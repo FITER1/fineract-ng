@@ -18,14 +18,19 @@
  */
 package org.apache.fineract.infrastructure.core.data;
 
+import lombok.*;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-/**
- *
- */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ApiGlobalErrorResponse {
 
     /**
@@ -56,186 +61,95 @@ public class ApiGlobalErrorResponse {
      * they be needed. Typically used to express data validation errors with
      * parameters passed to API.
      */
+    @XmlElementWrapper(name = "errors")
+    @XmlElement(name = "errorResponse")
     private List<ApiParameterError> errors = new ArrayList<>();
 
     public static ApiGlobalErrorResponse unAuthenticated() {
-
-        final ApiGlobalErrorResponse globalErrorResponse = new ApiGlobalErrorResponse();
-        globalErrorResponse.setHttpStatusCode("401");
-        globalErrorResponse.setDeveloperMessage("Invalid authentication details were passed in api request.");
-        globalErrorResponse.setUserMessageGlobalisationCode("error.msg.not.authenticated");
-        globalErrorResponse.setDefaultUserMessage("Unauthenticated. Please login.");
-
-        return globalErrorResponse;
+        return ApiGlobalErrorResponse.builder()
+            .httpStatusCode("401")
+            .developerMessage("Invalid authentication details were passed in api request.")
+            .userMessageGlobalisationCode("error.msg.not.authenticated")
+            .defaultUserMessage("Unauthenticated. Please login.")
+            .build();
     }
 
     public static ApiGlobalErrorResponse invalidTenantIdentifier() {
-
-        final ApiGlobalErrorResponse globalErrorResponse = new ApiGlobalErrorResponse();
-        globalErrorResponse.setHttpStatusCode("401");
-        globalErrorResponse.setDeveloperMessage("Invalid tenant details were passed in api request.");
-        globalErrorResponse.setUserMessageGlobalisationCode("error.msg.invalid.tenant.identifier");
-        globalErrorResponse.setDefaultUserMessage("Invalide tenant identifier provided with request.");
-
-        return globalErrorResponse;
+        return ApiGlobalErrorResponse.builder()
+            .httpStatusCode("401")
+            .developerMessage("Invalid tenant details were passed in api request.")
+            .userMessageGlobalisationCode("error.msg.invalid.tenant.identifier")
+            .defaultUserMessage("Invalide tenant identifier provided with request.")
+            .build();
     }
 
     public static ApiGlobalErrorResponse unAuthorized(final String defaultUserMessage) {
-        final ApiGlobalErrorResponse globalErrorResponse = new ApiGlobalErrorResponse();
-        globalErrorResponse.setHttpStatusCode("403");
-        globalErrorResponse
-                .setDeveloperMessage("The user associated with credentials passed on this request does not have sufficient privileges to perform this action.");
-        globalErrorResponse.setUserMessageGlobalisationCode("error.msg.not.authorized");
-        globalErrorResponse.setDefaultUserMessage("Insufficient privileges to perform this action.");
-
-        final List<ApiParameterError> errors = new ArrayList<>();
-        errors.add(ApiParameterError.generalError("error.msg.not.authorized", defaultUserMessage));
-        globalErrorResponse.setErrors(errors);
-
-        return globalErrorResponse;
+        return ApiGlobalErrorResponse.builder()
+            .httpStatusCode("403")
+            .developerMessage("The user associated with credentials passed on this request does not have sufficient privileges to perform this action.")
+            .userMessageGlobalisationCode("error.msg.not.authorized")
+            .defaultUserMessage("Insufficient privileges to perform this action.")
+            .errors(Collections.singletonList(ApiParameterError.generalError("error.msg.not.authorized", defaultUserMessage)))
+            .build();
     }
 
-    public static ApiGlobalErrorResponse domainRuleViolation(final String globalisationMessageCode, final String defaultUserMessage,
-            final Object... defaultUserMessageArgs) {
-        final ApiGlobalErrorResponse globalErrorResponse = new ApiGlobalErrorResponse();
-        globalErrorResponse.setHttpStatusCode("403");
-        globalErrorResponse.setDeveloperMessage("Request was understood but caused a domain rule violation.");
-        globalErrorResponse.setUserMessageGlobalisationCode("validation.msg.domain.rule.violation");
-        globalErrorResponse.setDefaultUserMessage("Errors contain reason for domain rule violation.");
-
-        final List<ApiParameterError> errors = new ArrayList<>();
-        errors.add(ApiParameterError.generalError(globalisationMessageCode, defaultUserMessage, defaultUserMessageArgs));
-        globalErrorResponse.setErrors(errors);
-
-        return globalErrorResponse;
+    public static ApiGlobalErrorResponse domainRuleViolation(final String globalisationMessageCode, final String defaultUserMessage, final Object... defaultUserMessageArgs) {
+        return ApiGlobalErrorResponse.builder()
+            .httpStatusCode("403")
+            .developerMessage("Request was understood but caused a domain rule violation.")
+            .userMessageGlobalisationCode("validation.msg.domain.rule.violation")
+            .defaultUserMessage("Errors contain reason for domain rule violation.")
+            .errors(Collections.singletonList(ApiParameterError.generalError(globalisationMessageCode, defaultUserMessage, defaultUserMessageArgs)))
+            .build();
     }
 
-    public static ApiGlobalErrorResponse notFound(final String globalisationMessageCode, final String defaultUserMessage,
-            final Object... defaultUserMessageArgs) {
-
-        final ApiGlobalErrorResponse globalErrorResponse = new ApiGlobalErrorResponse();
-        globalErrorResponse.setHttpStatusCode("404");
-        globalErrorResponse.setDeveloperMessage("The requested resource is not available.");
-        globalErrorResponse.setUserMessageGlobalisationCode("error.msg.resource.not.found");
-        globalErrorResponse.setDefaultUserMessage("The requested resource is not available.");
-
-        final List<ApiParameterError> errors = new ArrayList<>();
-        errors.add(ApiParameterError.resourceIdentifierNotFound(globalisationMessageCode, defaultUserMessage, defaultUserMessageArgs));
-        globalErrorResponse.setErrors(errors);
-
-        return globalErrorResponse;
+    public static ApiGlobalErrorResponse notFound(final String globalisationMessageCode, final String defaultUserMessage, final Object... defaultUserMessageArgs) {
+        return ApiGlobalErrorResponse.builder()
+            .httpStatusCode("404")
+            .developerMessage("The requested resource is not available.")
+            .userMessageGlobalisationCode("error.msg.resource.not.found")
+            .defaultUserMessage("The requested resource is not available.")
+            .errors(Collections.singletonList(ApiParameterError.generalError(globalisationMessageCode, defaultUserMessage, defaultUserMessageArgs)))
+            .build();
     }
 
-    public static ApiGlobalErrorResponse dataIntegrityError(final String globalisationMessageCode, final String defaultUserMessage,
-            final String parameterName, final Object... defaultUserMessageArgs) {
-
-        final ApiGlobalErrorResponse globalErrorResponse = new ApiGlobalErrorResponse();
-        globalErrorResponse.setHttpStatusCode("403");
-        globalErrorResponse.setDeveloperMessage("The request caused a data integrity issue to be fired by the database.");
-        globalErrorResponse.setUserMessageGlobalisationCode(globalisationMessageCode);
-        globalErrorResponse.setDefaultUserMessage(defaultUserMessage);
-
-        final List<ApiParameterError> errors = new ArrayList<>();
-        errors.add(ApiParameterError.parameterError(globalisationMessageCode, defaultUserMessage, parameterName, defaultUserMessageArgs));
-        globalErrorResponse.setErrors(errors);
-
-        return globalErrorResponse;
+    public static ApiGlobalErrorResponse dataIntegrityError(final String globalisationMessageCode, final String defaultUserMessage, final String parameterName, final Object... defaultUserMessageArgs) {
+        return ApiGlobalErrorResponse.builder()
+            .httpStatusCode("403")
+            .developerMessage("The request caused a data integrity issue to be fired by the database.")
+            .userMessageGlobalisationCode(globalisationMessageCode)
+            .defaultUserMessage(defaultUserMessage)
+            .errors(Collections.singletonList(ApiParameterError.parameterError(globalisationMessageCode, defaultUserMessage, parameterName, defaultUserMessageArgs)))
+            .build();
     }
 
-    public static ApiGlobalErrorResponse badClientRequest(final String globalisationMessageCode, final String defaultUserMessage,
-            final List<ApiParameterError> errors) {
-
-        final ApiGlobalErrorResponse globalErrorResponse = new ApiGlobalErrorResponse();
-        globalErrorResponse.setHttpStatusCode("400");
-        globalErrorResponse
-                .setDeveloperMessage("The request was invalid. This typically will happen due to validation errors which are provided.");
-        globalErrorResponse.setUserMessageGlobalisationCode(globalisationMessageCode);
-        globalErrorResponse.setDefaultUserMessage(defaultUserMessage);
-
-        globalErrorResponse.setErrors(errors);
-
-        return globalErrorResponse;
+    public static ApiGlobalErrorResponse badClientRequest(final String globalisationMessageCode, final String defaultUserMessage, final List<ApiParameterError> errors) {
+        return ApiGlobalErrorResponse.builder()
+            .httpStatusCode("400")
+            .developerMessage("The request was invalid. This typically will happen due to validation errors which are provided.")
+            .userMessageGlobalisationCode(globalisationMessageCode)
+            .defaultUserMessage(defaultUserMessage)
+            .errors(errors)
+            .build();
     }
 
-    public static ApiGlobalErrorResponse serverSideError(final String globalisationMessageCode, final String defaultUserMessage,
-            final Object... defaultUserMessageArgs) {
-
-        final ApiGlobalErrorResponse globalErrorResponse = new ApiGlobalErrorResponse();
-        globalErrorResponse.setHttpStatusCode("500");
-        globalErrorResponse.setDeveloperMessage("An unexpected error occured on the platform server.");
-        globalErrorResponse.setUserMessageGlobalisationCode("error.msg.platform.server.side.error");
-        globalErrorResponse.setDefaultUserMessage("An unexpected error occured on the platform server.");
-
-        final List<ApiParameterError> errors = new ArrayList<>();
-        errors.add(ApiParameterError.generalError(globalisationMessageCode, defaultUserMessage, defaultUserMessageArgs));
-        globalErrorResponse.setErrors(errors);
-
-        return globalErrorResponse;
+    public static ApiGlobalErrorResponse serverSideError(final String globalisationMessageCode, final String defaultUserMessage, final Object... defaultUserMessageArgs) {
+        return ApiGlobalErrorResponse.builder()
+            .httpStatusCode("500")
+            .developerMessage("An unexpected error occured on the platform server.")
+            .userMessageGlobalisationCode("error.msg.platform.server.side.error")
+            .defaultUserMessage("An unexpected error occured on the platform server.")
+            .errors(Collections.singletonList(ApiParameterError.generalError(globalisationMessageCode, defaultUserMessage, defaultUserMessageArgs)))
+            .build();
     }
 
-    public static ApiGlobalErrorResponse serviceUnavailable(final String globalisationMessageCode, final String defaultUserMessage,
-            final Object... defaultUserMessageArgs) {
-
-        final ApiGlobalErrorResponse globalErrorResponse = new ApiGlobalErrorResponse();
-        globalErrorResponse.setHttpStatusCode("503");
-        globalErrorResponse.setDeveloperMessage("The server is currently unable to handle the request , please try after some time.");
-        globalErrorResponse.setUserMessageGlobalisationCode("error.msg.platform.service.unavailable");
-        globalErrorResponse.setDefaultUserMessage("The server is currently unable to handle the request , please try after some time.");
-
-        final List<ApiParameterError> errors = new ArrayList<>();
-        errors.add(ApiParameterError.generalError(globalisationMessageCode, defaultUserMessage, defaultUserMessageArgs));
-        globalErrorResponse.setErrors(errors);
-
-        return globalErrorResponse;
-    }
-
-    protected ApiGlobalErrorResponse() {
-        //
-    }
-
-    public ApiGlobalErrorResponse(final List<ApiParameterError> errors) {
-        this.errors = errors;
-    }
-
-    @XmlElementWrapper(name = "errors")
-    @XmlElement(name = "errorResponse")
-    public List<ApiParameterError> getErrors() {
-        return this.errors;
-    }
-
-    public void setErrors(final List<ApiParameterError> errors) {
-        this.errors = errors;
-    }
-
-    public String getDeveloperMessage() {
-        return this.developerMessage;
-    }
-
-    public void setDeveloperMessage(final String developerMessage) {
-        this.developerMessage = developerMessage;
-    }
-
-    public String getHttpStatusCode() {
-        return this.httpStatusCode;
-    }
-
-    public void setHttpStatusCode(final String httpStatusCode) {
-        this.httpStatusCode = httpStatusCode;
-    }
-
-    public String getDefaultUserMessage() {
-        return this.defaultUserMessage;
-    }
-
-    public void setDefaultUserMessage(final String defaultUserMessage) {
-        this.defaultUserMessage = defaultUserMessage;
-    }
-
-    public String getUserMessageGlobalisationCode() {
-        return this.userMessageGlobalisationCode;
-    }
-
-    public void setUserMessageGlobalisationCode(final String userMessageGlobalisationCode) {
-        this.userMessageGlobalisationCode = userMessageGlobalisationCode;
+    public static ApiGlobalErrorResponse serviceUnavailable(final String globalisationMessageCode, final String defaultUserMessage, final Object... defaultUserMessageArgs) {
+        return ApiGlobalErrorResponse.builder()
+            .httpStatusCode("503")
+            .developerMessage("The server is currently unable to handle the request , please try after some time.")
+            .userMessageGlobalisationCode("error.msg.platform.service.unavailable")
+            .defaultUserMessage("The server is currently unable to handle the request , please try after some time.")
+            .errors(Collections.singletonList(ApiParameterError.generalError(globalisationMessageCode, defaultUserMessage, defaultUserMessageArgs)))
+            .build();
     }
 }

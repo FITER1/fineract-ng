@@ -35,7 +35,6 @@ import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDoma
 import org.apache.fineract.infrastructure.configuration.service.ConfigurationReadPlatformService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.dataqueries.data.EntityTables;
@@ -72,8 +71,6 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -125,10 +122,10 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 
             this.clientRepository.delete(client);
             this.clientRepository.flush();
-            return new CommandProcessingResultBuilder() //
-                    .withOfficeId(client.getOffice().getId()) //
-                    .withClientId(clientId) //
-                    .withEntityId(clientId) //
+            return CommandProcessingResult.builder() //
+                    .officeId(client.getOffice().getId()) //
+                    .clientId(clientId) //
+                    .resourceId(clientId) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
@@ -291,23 +288,23 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 
             this.entityDatatableChecksWritePlatformService.runTheCheck(newClient.getId(), EntityTables.CLIENT.getName(),
                     StatusEnum.CREATE.getCode().longValue(), EntityTables.CLIENT.getForeignKeyColumnNameOnDatatable());
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withOfficeId(clientOffice.getId()) //
-                    .withClientId(newClient.getId()) //
-                    .withGroupId(groupId) //
-                    .withEntityId(newClient.getId()) //
-                    .withSavingsId(result.getSavingsId())//
-                    .setRollbackTransaction(rollbackTransaction)//
-                    .setRollbackTransaction(result.isRollbackTransaction())//
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .officeId(clientOffice.getId()) //
+                    .clientId(newClient.getId()) //
+                    .groupId(groupId) //
+                    .resourceId(newClient.getId()) //
+                    .savingsId(result.getSavingsId())//
+                    // .rollbackTransaction(rollbackTransaction)//
+                    .rollbackTransaction(result.isRollbackTransaction())//
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch(final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
             handleDataIntegrityIssues(command, throwable, dve);
-         	return CommandProcessingResult.empty();
+         	return new CommandProcessingResult();
         }
     }
 
@@ -494,20 +491,20 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                     extractAndCreateClientNonPerson(clientForUpdate, command);
                 }
             }
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withOfficeId(clientForUpdate.getOffice().getId()) //
-                    .withClientId(clientId) //
-                    .withEntityId(clientId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .officeId(clientForUpdate.getOffice().getId()) //
+                    .clientId(clientId) //
+                    .resourceId(clientId) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch(final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
             handleDataIntegrityIssues(command, throwable, dve);
-         	return CommandProcessingResult.empty();
+         	return new CommandProcessingResult();
         }
     }
 
@@ -531,22 +528,22 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             this.clientRepository.saveAndFlush(client);
             this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.CLIENTS_ACTIVATE,
                     constructEntityMap(BUSINESS_ENTITY.CLIENT, client));
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withOfficeId(client.getOffice().getId()) //
-                    .withClientId(clientId) //
-                    .withEntityId(clientId) //
-                    .withSavingsId(result.getSavingsId())//
-                    .setRollbackTransaction(result.isRollbackTransaction())//
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .officeId(client.getOffice().getId()) //
+                    .clientId(clientId) //
+                    .resourceId(clientId) //
+                    .savingsId(result.getSavingsId())//
+                    .rollbackTransaction(result.isRollbackTransaction())//
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
     private CommandProcessingResult openSavingsAccount(final Client client, final DateTimeFormatter fmt) {
-        CommandProcessingResult commandProcessingResult = CommandProcessingResult.empty();
+        CommandProcessingResult commandProcessingResult = new CommandProcessingResult();
         if (client.isActive() && client.getSavingsProductId() != null) {
             SavingsAccountDataDTO savingsAccountDataDTO = new SavingsAccountDataDTO(client, null, client.getSavingsProductId(),
                     client.getActivationLocalDate(), client.getActivatedBy(), fmt);
@@ -584,12 +581,12 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 
         actualChanges.put(staffIdParamName, presentStaffId);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withOfficeId(clientForUpdate.getOffice().getId()) //
-                .withEntityId(clientForUpdate.getId()) //
-                .withClientId(clientId) //
-                .with(actualChanges) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .officeId(clientForUpdate.getOffice().getId()) //
+                .resourceId(clientForUpdate.getId()) //
+                .clientId(clientId) //
+                .changes(actualChanges) //
                 .build();
     }
 
@@ -618,12 +615,12 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
         this.clientRepository.saveAndFlush(clientForUpdate);
 
         actualChanges.put(ClientApiConstants.staffIdParamName, staffId);
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withOfficeId(clientForUpdate.getOffice().getId()) //
-                .withEntityId(clientForUpdate.getId()) //
-                .withClientId(clientId) //
-                .with(actualChanges) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .officeId(clientForUpdate.getOffice().getId()) //
+                .resourceId(clientForUpdate.getId()) //
+                .clientId(clientId) //
+                .changes(actualChanges) //
                 .build();
     }
 
@@ -684,14 +681,14 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 
             client.close(currentUser, closureReason, closureDate.toDate());
             this.clientRepository.saveAndFlush(client);
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withClientId(clientId) //
-                    .withEntityId(clientId) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .clientId(clientId) //
+                    .resourceId(clientId) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -722,12 +719,12 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 
         actualChanges.put(ClientApiConstants.savingsAccountIdParamName, savingsId);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withOfficeId(clientForUpdate.getOffice().getId()) //
-                .withEntityId(clientForUpdate.getId()) //
-                .withClientId(clientId) //
-                .with(actualChanges) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .officeId(clientForUpdate.getOffice().getId()) //
+                .resourceId(clientForUpdate.getId()) //
+                .clientId(clientId) //
+                .changes(actualChanges) //
                 .build();
     }
 
@@ -781,10 +778,10 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
         this.clientRepository.saveAndFlush(client);
         this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.CLIENTS_REJECT,
                 constructEntityMap(BUSINESS_ENTITY.CLIENT, client));
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withClientId(entityId) //
-                .withEntityId(entityId) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .clientId(entityId) //
+                .resourceId(entityId) //
                 .build();
     }
 
@@ -811,10 +808,10 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
         }
         client.withdraw(currentUser, withdrawalReason, withdrawalDate.toDate());
         this.clientRepository.saveAndFlush(client);
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withClientId(entityId) //
-                .withEntityId(entityId) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .clientId(entityId) //
+                .resourceId(entityId) //
                 .build();
     }
 
@@ -836,10 +833,10 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
         }
         client.reActivate(currentUser, reactivateDate.toDate());
         this.clientRepository.saveAndFlush(client);
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withClientId(entityId) //
-                .withEntityId(entityId) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .clientId(entityId) //
+                .resourceId(entityId) //
                 .build();
     }
 
@@ -864,10 +861,10 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 		client.reOpened(currentUser, undoRejectDate.toDate());
 		this.clientRepository.saveAndFlush(client);
 
-		return new CommandProcessingResultBuilder() //
-				.withCommandId(command.commandId()) //
-				.withClientId(entityId) //
-				.withEntityId(entityId) //
+		return CommandProcessingResult.builder() //
+				.commandId(command.commandId()) //
+				.clientId(entityId) //
+				.resourceId(entityId) //
 				.build();
 	}
 
@@ -891,10 +888,10 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 		client.reOpened(currentUser, undoWithdrawalDate.toDate());
 		this.clientRepository.saveAndFlush(client);
 
-		return new CommandProcessingResultBuilder() //
-				.withCommandId(command.commandId()) //
-				.withClientId(entityId) //
-				.withEntityId(entityId) //
+		return CommandProcessingResult.builder() //
+				.commandId(command.commandId()) //
+				.clientId(entityId) //
+				.resourceId(entityId) //
 				.build();
 	}
 

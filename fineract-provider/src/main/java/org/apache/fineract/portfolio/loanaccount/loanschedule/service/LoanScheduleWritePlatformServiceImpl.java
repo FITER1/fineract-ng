@@ -21,7 +21,6 @@ package org.apache.fineract.portfolio.loanaccount.loanschedule.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.loanaccount.data.LoanTermVariationsData;
 import org.apache.fineract.portfolio.loanaccount.data.ScheduleGeneratorDTO;
@@ -73,10 +72,10 @@ public class LoanScheduleWritePlatformServiceImpl implements LoanScheduleWritePl
             changes.put("removedVariations", loanTermVariations.keySet());
         }
         changes.put("loanTermVariations", newVariationsData);
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 
@@ -96,9 +95,9 @@ public class LoanScheduleWritePlatformServiceImpl implements LoanScheduleWritePl
         AppUser currentUser = this.context.getAuthenticatedUserIfPresent();
         loan.regenerateRepaymentSchedule(scheduleGeneratorDTO, currentUser);
         this.loanAccountDomainService.saveLoanWithDataIntegrityViolationChecks(loan);
-        return new CommandProcessingResultBuilder() //
-                .withLoanId(loanId) //
-                .with(changes) //
+        return CommandProcessingResult.builder() //
+                .loanId(loanId) //
+                .changes(changes) //
                 .build();
     }
 

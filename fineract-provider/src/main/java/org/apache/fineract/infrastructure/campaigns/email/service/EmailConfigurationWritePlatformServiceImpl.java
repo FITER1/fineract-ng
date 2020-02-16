@@ -25,7 +25,6 @@ import org.apache.fineract.infrastructure.campaigns.email.domain.EmailConfigurat
 import org.apache.fineract.infrastructure.campaigns.email.exception.EmailConfigurationSMTPUsernameNotValid;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.stereotype.Service;
@@ -69,8 +68,8 @@ public class EmailConfigurationWritePlatformServiceImpl implements EmailConfigur
                 }
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .with(changes)
+            return CommandProcessingResult.builder() //
+                    .changes(changes)
                     .build();
 
     }

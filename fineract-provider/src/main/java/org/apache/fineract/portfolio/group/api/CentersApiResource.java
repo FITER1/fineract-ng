@@ -147,7 +147,13 @@ public class CentersApiResource {
             return this.toApiJsonSerializer.serialize(settings, staffCenterDataArray,
                     GroupingTypesApiConstants.STAFF_CENTER_RESPONSE_DATA_PARAMETERS);
         }
-        final PaginationParameters parameters = PaginationParameters.instance(paged, offset, limit, orderBy, sortOrder);
+        final PaginationParameters parameters = PaginationParameters.builder()
+            .paged(Boolean.TRUE.equals(paged))
+            .offset(offset)
+            .limit(limit==null ? PaginationParameters.DEFAULT_CHECKED_LIMIT : limit)
+            .orderBy(orderBy)
+            .sortOrder(sortOrder)
+            .build();
         final Boolean isOrphansOnly = false;
         final SearchParameters searchParameters = SearchParameters.forGroups(sqlSearch, officeId, staffId, externalId, name, hierarchy,
                 offset, limit, orderBy, sortOrder, isOrphansOnly);

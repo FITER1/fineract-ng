@@ -53,7 +53,7 @@ public class ShareAccountCommandsServiceImpl implements AccountsCommandsService 
             return rejectAdditionalShares(accountId, jsonCommand) ;
         }
         
-        return CommandProcessingResult.empty();
+        return new CommandProcessingResult();
     }
 
     public Object approveShareAccount(Long accountId, JsonCommand jsonCommand) {

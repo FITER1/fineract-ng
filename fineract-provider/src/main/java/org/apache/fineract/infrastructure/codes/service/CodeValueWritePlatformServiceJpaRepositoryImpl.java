@@ -25,11 +25,8 @@ import org.apache.fineract.infrastructure.codes.exception.CodeNotFoundException;
 import org.apache.fineract.infrastructure.codes.serialization.CodeValueCommandFromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -64,15 +61,15 @@ public class CodeValueWritePlatformServiceJpaRepositoryImpl implements CodeValue
             final CodeValue codeValue = CodeValue.fromJson(code, command);
             this.codeValueRepository.save(codeValue);
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(code.getId()) //
-                    .withSubEntityId(codeValue.getId())//
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(code.getId()) //
+                    .subResourceId(codeValue.getId())//
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleCodeValueDataIntegrityIssues(command, dve);
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
                     .build();
         }
     }
@@ -111,15 +108,15 @@ public class CodeValueWritePlatformServiceJpaRepositoryImpl implements CodeValue
                 this.codeValueRepository.saveAndFlush(codeValue);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(codeValueId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(codeValueId) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleCodeValueDataIntegrityIssues(command, dve);
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
                     .build();
         }
 
@@ -143,9 +140,9 @@ public class CodeValueWritePlatformServiceJpaRepositoryImpl implements CodeValue
                 this.codeRepository.saveAndFlush(code);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withEntityId(codeId) //
-                    .withSubEntityId(codeValueId)//
+            return CommandProcessingResult.builder() //
+                    .resourceId(codeId) //
+                    .subResourceId(codeValueId)//
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             log.error(dve.getMessage(), dve);

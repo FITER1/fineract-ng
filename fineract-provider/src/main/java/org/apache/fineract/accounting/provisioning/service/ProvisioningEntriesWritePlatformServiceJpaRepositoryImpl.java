@@ -36,7 +36,6 @@ import org.apache.fineract.accounting.provisioning.exception.ProvisioningJournal
 import org.apache.fineract.accounting.provisioning.serialization.ProvisioningEntriesDefinitionJsonDeserializer;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
@@ -84,7 +83,7 @@ public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements
         ProvisioningEntryData exisProvisioningEntryData = this.provisioningEntriesReadPlatformService
                 .retrieveExistingProvisioningIdDateWithJournals();
         revertAndAddJournalEntries(exisProvisioningEntryData, requestedEntry);
-        return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(requestedEntry.getId()).build();
+        return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(requestedEntry.getId()).build();
     }
 
     private void revertAndAddJournalEntries(ProvisioningEntryData existingEntryData, ProvisioningEntry requestedEntry) {
@@ -150,9 +149,9 @@ public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements
                 throw new NoProvisioningCriteriaDefinitionFound() ;
             }
             ProvisioningEntry requestedEntry = createProvsioningEntry(createdDate, addJournalEntries);
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(requestedEntry.getId()).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(requestedEntry.getId()).build();
         } catch (DataIntegrityViolationException dve) {
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -192,7 +191,7 @@ public class ProvisioningEntriesWritePlatformServiceJpaRepositoryImpl implements
         Collection<LoanProductProvisioningEntry> entries = generateLoanProvisioningEntry(requestedEntry, requestedEntry.getCreatedDate());
         requestedEntry.setProvisioningEntries(entries);
         this.provisioningEntryRepository.save(requestedEntry);
-        return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(requestedEntry.getId()).build();
+        return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(requestedEntry.getId()).build();
     }
 
     private Collection<LoanProductProvisioningEntry> generateLoanProvisioningEntry(ProvisioningEntry parent, Date date) {

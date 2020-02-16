@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.portfolio.collectionsheet.command.CollectionSheetBulkDisbursalCommand;
 import org.apache.fineract.portfolio.collectionsheet.command.CollectionSheetBulkRepaymentCommand;
 import org.apache.fineract.portfolio.collectionsheet.data.CollectionSheetTransactionDataValidator;
@@ -78,11 +77,11 @@ public class CollectionSheetWritePlatformServiceJpaRepositoryImpl implements Col
 
         this.meetingWritePlatformService.updateCollectionSheetAttendance(command);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(command.entityId()) //
-                .withGroupId(command.entityId()) //
-                .with(changes).with(changes).build();
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(command.entityId()) //
+                .groupId(command.entityId()) //
+                .changes(changes).changes(changes).build();
     }
 
     @Override
@@ -107,11 +106,11 @@ public class CollectionSheetWritePlatformServiceJpaRepositoryImpl implements Col
 
         changes.putAll(updateBulkMandatorySavingsDuePayments(command, paymentDetail));
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(command.entityId()) //
-                .withGroupId(command.entityId()) //
-                .with(changes).with(changes).build();
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(command.entityId()) //
+                .groupId(command.entityId()) //
+                .changes(changes).changes(changes).build();
     }
 
     private Map<String, Object> updateBulkReapayments(final JsonCommand command, final PaymentDetail paymentDetail) {

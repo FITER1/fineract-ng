@@ -51,7 +51,7 @@ public class CommandHandlerProviderTest {
             final CommandProcessingResult result =
                     registeredHandler.processCommand(
                             JsonCommand.fromExistingCommand(testCommandId, null, null, null, null, null, null, null, null,null,null));
-            Assert.assertEquals(testCommandId, result.commandId());
+            Assert.assertEquals(testCommandId, result.getCommandId());
         } catch (UnsupportedCommandException ucex) {
             // TODO: @aleks fix this
             // Assert.fail();

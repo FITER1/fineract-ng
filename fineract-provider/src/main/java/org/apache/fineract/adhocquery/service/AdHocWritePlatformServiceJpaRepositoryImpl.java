@@ -25,7 +25,6 @@ import org.apache.fineract.adhocquery.domain.AdHocRepository;
 import org.apache.fineract.adhocquery.exception.AdHocNotFoundException;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -55,11 +54,11 @@ public class AdHocWritePlatformServiceJpaRepositoryImpl implements AdHocWritePla
             final AdHoc entity = AdHoc.fromJson(command);
             this.adHocRepository.save(entity);
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(entity.getId()).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(entity.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve);
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
                     .build();
         }
     }
@@ -98,15 +97,15 @@ public class AdHocWritePlatformServiceJpaRepositoryImpl implements AdHocWritePla
                 this.adHocRepository.saveAndFlush(adHoc);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(adHocId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(adHocId) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve);
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
                     .build();
         }
     }
@@ -124,7 +123,7 @@ public class AdHocWritePlatformServiceJpaRepositoryImpl implements AdHocWritePla
             final AdHoc adHoc = this.adHocRepository.findById(adHocId).orElseThrow(() -> new AdHocNotFoundException(adHocId));
 
             this.adHocRepository.delete(adHoc);
-            return new CommandProcessingResultBuilder().withEntityId(adHocId).build();
+            return CommandProcessingResult.builder().resourceId(adHocId).build();
         } catch (final DataIntegrityViolationException e) {
             throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue",
                     "Unknown data integrity issue with resource: " + e.getMostSpecificCause());
@@ -144,7 +143,7 @@ public class AdHocWritePlatformServiceJpaRepositoryImpl implements AdHocWritePla
             final AdHoc adHoc = this.adHocRepository.findById(adHocId).orElseThrow(() -> new AdHocNotFoundException(adHocId));
             adHoc.setActive(false);
             this.adHocRepository.save(adHoc);
-            return new CommandProcessingResultBuilder().withEntityId(adHocId).build();
+            return CommandProcessingResult.builder().resourceId(adHocId).build();
 
         } catch (final DataIntegrityViolationException e) {
             throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue",
@@ -165,7 +164,7 @@ public class AdHocWritePlatformServiceJpaRepositoryImpl implements AdHocWritePla
             final AdHoc adHoc = this.adHocRepository.findById(adHocId).orElseThrow(() -> new AdHocNotFoundException(adHocId));
             adHoc.setActive(true);
             this.adHocRepository.save(adHoc);
-            return new CommandProcessingResultBuilder().withEntityId(adHocId).build();
+            return CommandProcessingResult.builder().resourceId(adHocId).build();
 
         } catch (final DataIntegrityViolationException e) {
             throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue",

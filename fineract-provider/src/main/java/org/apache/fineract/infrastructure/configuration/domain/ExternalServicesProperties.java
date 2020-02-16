@@ -18,8 +18,8 @@
  */
 package org.apache.fineract.infrastructure.configuration.domain;
 
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.fineract.infrastructure.configuration.data.ExternalServicesPropertiesData;
 import org.apache.fineract.infrastructure.configuration.service.ExternalServicesConstants.EXTERNALSERVICEPROPERTIES_JSON_INPUT_PARAMS;
 import org.apache.fineract.infrastructure.configuration.service.ExternalServicesConstants.SMTP_JSON_INPUT_PARAMS;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -31,30 +31,30 @@ import javax.persistence.Table;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Entity
 @Table(name = "c_external_service_properties")
 public class ExternalServicesProperties {
-
     @EmbeddedId
-    ExternalServicePropertiesPK externalServicePropertiesPK;
+    private ExternalServicePropertiesPK externalServicePropertiesPK;
 
     @Column(name = "value", length = 250)
     private String value;
 
-    protected ExternalServicesProperties() {
-
-    }
-
-    private ExternalServicesProperties(final ExternalServicePropertiesPK externalServicePropertiesPK, final String value) {
-        this.externalServicePropertiesPK = externalServicePropertiesPK;
-
-        this.value = value;
-
-    }
     public static ExternalServicesProperties fromJson(final ExternalService externalService, final JsonCommand command) {
         final String name = command.stringValueOfParameterNamed(EXTERNALSERVICEPROPERTIES_JSON_INPUT_PARAMS.NAME.getValue());
         final String value = command.stringValueOfParameterNamed(EXTERNALSERVICEPROPERTIES_JSON_INPUT_PARAMS.VALUE.getValue());
-        return new ExternalServicesProperties(new ExternalServicePropertiesPK(externalService.getId(), name), value);
+        return ExternalServicesProperties.builder()
+            .externalServicePropertiesPK(ExternalServicePropertiesPK.builder()
+                .externalServiceId(externalService.getId())
+                .name(name)
+                .build())
+            .value(value)
+            .build();
     }
 
     public Map<String, Object> update(final JsonCommand command, String paramName) {
@@ -73,9 +73,5 @@ public class ExternalServicesProperties {
         }
 
         return actualChanges;
-    }
-
-    public ExternalServicesPropertiesData toData() {
-        return new ExternalServicesPropertiesData(this.externalServicePropertiesPK.getName(), this.value);
     }
 }

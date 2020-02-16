@@ -25,7 +25,6 @@ import org.apache.fineract.accounting.producttoaccountmapping.service.ProductToG
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
@@ -79,16 +78,16 @@ public class FixedDepositProductWritePlatformServiceJpaRepositoryImpl implements
             this.accountMappingWritePlatformService.createSavingProductToGLAccountMapping(product.getId(), command,
                     DepositAccountType.FIXED_DEPOSIT);
 
-            return new CommandProcessingResultBuilder() //
-                    .withEntityId(product.getId()) //
+            return CommandProcessingResult.builder() //
+                    .resourceId(product.getId()) //
                     .build();
         } catch (final DataAccessException e) {
             handleDataIntegrityIssues(command, e.getMostSpecificCause(), e);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -139,16 +138,16 @@ public class FixedDepositProductWritePlatformServiceJpaRepositoryImpl implements
                 this.fixedDepositProductRepository.save(product);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withEntityId(product.getId()) //
-                    .with(changes).build();
+            return CommandProcessingResult.builder() //
+                    .resourceId(product.getId()) //
+                    .changes(changes).build();
         } catch (final DataAccessException e) {
             handleDataIntegrityIssues(command, e.getMostSpecificCause(), e);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException dve) {
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleDataIntegrityIssues(command, throwable, dve);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -162,8 +161,8 @@ public class FixedDepositProductWritePlatformServiceJpaRepositoryImpl implements
 
         this.fixedDepositProductRepository.delete(product);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(product.getId()) //
+        return CommandProcessingResult.builder() //
+                .resourceId(product.getId()) //
                 .build();
     }
 

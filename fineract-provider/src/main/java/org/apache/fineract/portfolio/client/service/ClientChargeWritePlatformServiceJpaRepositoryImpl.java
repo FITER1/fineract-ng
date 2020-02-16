@@ -25,7 +25,6 @@ import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDoma
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
@@ -102,14 +101,14 @@ public class ClientChargeWritePlatformServiceJpaRepositoryImpl implements Client
             validateDueDateOnWorkingDay(clientCharge, fmt);
             this.clientChargeRepository.saveAndFlush(clientCharge);
 
-            return new CommandProcessingResultBuilder() //
-                    .withEntityId(clientCharge.getId()) //
-                    .withOfficeId(clientCharge.getClient().getOffice().getId()) //
-                    .withClientId(clientCharge.getClient().getId()) //
+            return CommandProcessingResult.builder() //
+                    .resourceId(clientCharge.getId()) //
+                    .officeId(clientCharge.getClient().getOffice().getId()) //
+                    .clientId(clientCharge.getClient().getId()) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(clientId, null, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -149,14 +148,14 @@ public class ClientChargeWritePlatformServiceJpaRepositoryImpl implements Client
             // generate accounting entries
             generateAccountingEntries(clientTransaction);
 
-            return new CommandProcessingResultBuilder() //
-                    .withTransactionId(clientTransaction.getId().toString())//
-                    .withEntityId(clientCharge.getId()) //
-                    .withOfficeId(clientCharge.getClient().getOffice().getId()) //
-                    .withClientId(clientCharge.getClient().getId()).build();
+            return CommandProcessingResult.builder() //
+                    .transactionId(clientTransaction.getId().toString())//
+                    .resourceId(clientCharge.getId()) //
+                    .officeId(clientCharge.getClient().getOffice().getId()) //
+                    .clientId(clientCharge.getClient().getId()).build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(clientId, clientChargeId, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
 
     }
@@ -188,14 +187,14 @@ public class ClientChargeWritePlatformServiceJpaRepositoryImpl implements Client
             final ClientChargePaidBy chargePaidBy = ClientChargePaidBy.instance(clientTransaction, clientCharge, waivedAmount.getAmount());
             clientTransaction.getClientChargePaidByCollection().add(chargePaidBy);
 
-            return new CommandProcessingResultBuilder().withTransactionId(clientTransaction.getId().toString())//
-                    .withEntityId(clientCharge.getId()) //
-                    .withOfficeId(clientCharge.getClient().getOffice().getId()) //
-                    .withClientId(clientCharge.getClient().getId()) //
+            return CommandProcessingResult.builder().transactionId(clientTransaction.getId().toString())//
+                    .resourceId(clientCharge.getId()) //
+                    .officeId(clientCharge.getClient().getOffice().getId()) //
+                    .clientId(clientCharge.getClient().getId()) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(clientId, clientChargeId, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -211,14 +210,14 @@ public class ClientChargeWritePlatformServiceJpaRepositoryImpl implements Client
             // delete the charge
             clientChargeRepository.delete(clientCharge);
 
-            return new CommandProcessingResultBuilder() //
-                    .withEntityId(clientCharge.getId()) //
-                    .withOfficeId(clientCharge.getClient().getOffice().getId()) //
-                    .withClientId(clientCharge.getClient().getId()) //
+            return CommandProcessingResult.builder() //
+                    .resourceId(clientCharge.getId()) //
+                    .officeId(clientCharge.getClient().getOffice().getId()) //
+                    .clientId(clientCharge.getClient().getId()) //
                     .build();
         } catch (DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(clientId, clientChargeId, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
     }
 
@@ -348,9 +347,6 @@ public class ClientChargeWritePlatformServiceJpaRepositoryImpl implements Client
     /**
      * Ensures that the charge transaction date (for payments) is not on a
      * holiday or a non working day
-     * 
-     * @param savingsAccountCharge
-     * @param fmt
      */
     private void validateTransactionDateOnWorkingDay(final LocalDate transactionDate, final ClientCharge clientCharge,
             final DateTimeFormatter fmt) {
@@ -359,13 +355,6 @@ public class ClientChargeWritePlatformServiceJpaRepositoryImpl implements Client
                 fmt);
     }
 
-    /**
-     * @param date
-     * @param officeId
-     * @param jsonPropertyName
-     * @param errorMessageFragment
-     * @param fmt
-     */
     private void validateActivityDateFallOnAWorkingDay(final LocalDate date, final Long officeId, final String jsonPropertyName,
             final String errorMessageFragmentForActivityOnHoliday, final String errorMessageFragmentForActivityOnNonWorkingDay,
             final DateTimeFormatter fmt) {

@@ -28,7 +28,6 @@ import org.apache.fineract.infrastructure.codes.exception.SystemDefinedCodeCanno
 import org.apache.fineract.infrastructure.codes.serialization.CodeCommandFromApiJsonDeserializer;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.springframework.cache.annotation.CacheEvict;
@@ -61,14 +60,14 @@ public class CodeWritePlatformServiceJpaRepositoryImpl implements CodeWritePlatf
             final Code code = Code.fromJson(command);
             this.codeRepository.save(code);
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(code.getId()).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(code.getId()).build();
         } catch (final DataIntegrityViolationException dve) {
             handleCodeDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException ee) {
         	Throwable throwable = ExceptionUtils.getRootCause(ee.getCause()) ;
         	handleCodeDataIntegrityIssues(command, throwable, ee);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -89,18 +88,18 @@ public class CodeWritePlatformServiceJpaRepositoryImpl implements CodeWritePlatf
                 this.codeRepository.save(code);
             }
 
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(codeId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(codeId) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleCodeDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }catch (final PersistenceException ee) {
         	Throwable throwable = ExceptionUtils.getRootCause(ee.getCause()) ;
         	handleCodeDataIntegrityIssues(command, throwable, ee);
-        	return CommandProcessingResult.empty();
+        	return new CommandProcessingResult();
         }
     }
 
@@ -121,7 +120,7 @@ public class CodeWritePlatformServiceJpaRepositoryImpl implements CodeWritePlatf
             throw new PlatformDataIntegrityException("error.msg.cund.unknown.data.integrity.issue",
                     "Unknown data integrity issue with resource: " + e.getMostSpecificCause());
         }
-        return new CommandProcessingResultBuilder().withEntityId(codeId).build();
+        return CommandProcessingResult.builder().resourceId(codeId).build();
     }
 
     private Code retrieveCodeBy(final Long codeId) {

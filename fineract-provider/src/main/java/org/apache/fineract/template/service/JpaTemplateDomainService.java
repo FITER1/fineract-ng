@@ -23,7 +23,6 @@ import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.template.domain.*;
 import org.apache.fineract.template.exception.TemplateNotFoundException;
 import org.springframework.stereotype.Service;
@@ -65,7 +64,7 @@ public class JpaTemplateDomainService implements TemplateDomainService {
         final Template template = Template.fromJson(command);
 
         this.templateRepository.saveAndFlush(template);
-        return new CommandProcessingResultBuilder().withEntityId(
+        return CommandProcessingResult.builder().resourceId(
                 template.getId()).build();
     }
 
@@ -108,9 +107,9 @@ public class JpaTemplateDomainService implements TemplateDomainService {
 
         this.templateRepository.saveAndFlush(template);
 
-        return new CommandProcessingResultBuilder()
-                .withCommandId(command.commandId())
-                .withEntityId(template.getId()).build();
+        return CommandProcessingResult.builder()
+                .commandId(command.commandId())
+                .resourceId(template.getId()).build();
     }
 
     @Transactional
@@ -120,7 +119,7 @@ public class JpaTemplateDomainService implements TemplateDomainService {
 
         this.templateRepository.delete(template);
 
-        return new CommandProcessingResultBuilder().withEntityId(templateId)
+        return CommandProcessingResult.builder().resourceId(templateId)
                 .build();
     }
 

@@ -37,7 +37,6 @@ import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.api.JsonQuery;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
@@ -132,9 +131,9 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
 
         this.emailCampaignRepository.save(emailCampaign);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(emailCampaign.getId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(emailCampaign.getId()) //
                 .build();
     }
 
@@ -161,14 +160,14 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
             if (!changes.isEmpty()) {
                 this.emailCampaignRepository.saveAndFlush(emailCampaign);
             }
-            return new CommandProcessingResultBuilder() //
-                    .withCommandId(command.commandId()) //
-                    .withEntityId(resourceId) //
-                    .with(changes) //
+            return CommandProcessingResult.builder() //
+                    .commandId(command.commandId()) //
+                    .resourceId(resourceId) //
+                    .changes(changes) //
                     .build();
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(command, dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
 
     }
@@ -188,8 +187,8 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
         emailCampaign.delete();
         this.emailCampaignRepository.saveAndFlush(emailCampaign);
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(emailCampaign.getId()) //
+        return CommandProcessingResult.builder() //
+                .resourceId(emailCampaign.getId()) //
                 .build();
 
     }
@@ -359,9 +358,9 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
          * if campaign is direct insert campaign message into email outbound
          * table else if its a schedule create a job process for it
          */
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(emailCampaign.getId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(emailCampaign.getId()) //
                 .build();
     }
 
@@ -383,9 +382,9 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
 
         this.emailCampaignRepository.saveAndFlush(emailCampaign);
 
-        return new CommandProcessingResultBuilder() //
-                .withCommandId(command.commandId()) //
-                .withEntityId(emailCampaign.getId()) //
+        return CommandProcessingResult.builder() //
+                .commandId(command.commandId()) //
+                .resourceId(emailCampaign.getId()) //
                 .build();
     }
 
@@ -506,8 +505,8 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
             this.emailCampaignRepository.saveAndFlush(emailCampaign);
         }
 
-        return new CommandProcessingResultBuilder() //
-                .withEntityId(emailCampaign.getId()) //
+        return CommandProcessingResult.builder() //
+                .resourceId(emailCampaign.getId()) //
                 .build();
 
     }

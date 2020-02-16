@@ -26,7 +26,6 @@ import org.apache.fineract.infrastructure.configuration.domain.GlobalConfigurati
 import org.apache.fineract.infrastructure.configuration.domain.GlobalConfigurationRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
-import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -63,11 +62,11 @@ public class GlobalConfigurationWritePlatformServiceJpaRepositoryImpl implements
                 this.repository.save(configItemForUpdate);
             }
 
-            return new CommandProcessingResultBuilder().withCommandId(command.commandId()).withEntityId(configId).with(changes).build();
+            return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(configId).changes(changes).build();
 
         } catch (final DataIntegrityViolationException dve) {
             handleDataIntegrityIssues(dve);
-            return CommandProcessingResult.empty();
+            return new CommandProcessingResult();
         }
 
     }
@@ -77,7 +76,11 @@ public class GlobalConfigurationWritePlatformServiceJpaRepositoryImpl implements
     public void addSurveyConfig(final String name)
     {
         try{
-            final GlobalConfigurationProperty ppi = GlobalConfigurationProperty.newSurveyConfiguration(name);
+            final GlobalConfigurationProperty ppi = GlobalConfigurationProperty.builder()
+                .name(name)
+                .enabled(false)
+                .trapDoor(false)
+                .build();
             this.repository.save(ppi);
         }
         catch (final DataIntegrityViolationException dve)
