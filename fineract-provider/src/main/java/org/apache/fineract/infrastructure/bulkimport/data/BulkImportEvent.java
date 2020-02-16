@@ -28,7 +28,7 @@ import org.springframework.context.ApplicationEvent;
 @Data
 // @NoArgsConstructor
 // @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 public class BulkImportEvent extends ApplicationEvent {
     private String tenantIdentifier;
     private Workbook workbook;

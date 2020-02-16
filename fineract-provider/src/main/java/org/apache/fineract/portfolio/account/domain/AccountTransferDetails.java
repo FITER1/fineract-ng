@@ -73,6 +73,7 @@ public class AccountTransferDetails extends AbstractPersistableCustom<Long> {
     @Column(name = "transfer_type")
     private Integer transferType;
 
+    @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "accountTransferDetails", orphanRemoval = true, fetch=FetchType.EAGER)
     private List<AccountTransferTransaction> accountTransferTransactions = new ArrayList<>();
 

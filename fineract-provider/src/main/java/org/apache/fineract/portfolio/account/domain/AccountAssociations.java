@@ -53,6 +53,7 @@ public class AccountAssociations extends AbstractPersistableCustom<Long> {
     @Column(name = "association_type_enum", nullable = false)
     private Integer associationType;
 
+    @Builder.Default
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 
