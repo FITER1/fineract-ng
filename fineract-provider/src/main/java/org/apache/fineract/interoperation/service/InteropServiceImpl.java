@@ -134,7 +134,7 @@ public class InteropServiceImpl implements InteropService {
         if (identifier == null)
             throw new UnsupportedOperationException("Account not found for identifier " + idType + "/" + idValue + (subIdOrType == null ? "" : ("/" + subIdOrType)));
 
-        return InteropIdentifierAccountResponseData.build(identifier.getAccount().getExternalId());
+        return new InteropIdentifierAccountResponseData(identifier.getAccount().getExternalId());
     }
 
     @NotNull
@@ -152,7 +152,7 @@ public class InteropServiceImpl implements InteropService {
 
         identifierRepository.save(identifier);
 
-        return InteropIdentifierAccountResponseData.build(savingsAccount.getExternalId());
+        return new InteropIdentifierAccountResponseData(savingsAccount.getExternalId());
     }
 
     @NotNull
@@ -167,7 +167,7 @@ public class InteropServiceImpl implements InteropService {
 
         identifierRepository.delete(identifier);
 
-        return InteropIdentifierAccountResponseData.build(accountId);
+        return new InteropIdentifierAccountResponseData(accountId);
     }
 
     @Override
@@ -186,8 +186,15 @@ public class InteropServiceImpl implements InteropService {
         //TODO: error handling
         SavingsAccount savingsAccount = validateAndGetSavingAccount(request);
 
-        return InteropTransactionRequestResponseData.build(command.commandId(), request.getTransactionCode(), InteropActionState.ACCEPTED,
-                request.getExpiration(), request.getExtensionList(), request.getRequestCode());
+        InteropTransactionRequestResponseData requestResponseData = new InteropTransactionRequestResponseData();
+        requestResponseData.setState(InteropActionState.ACCEPTED);
+        requestResponseData.setTransactionCode(request.getTransactionCode());
+        requestResponseData.setExpiration(request.getExpiration().toString(InteropTransactionRequestResponseData.ISO_DATE_TIME_FORMATTER));
+        requestResponseData.setExtensionList(request.getExtensionList());
+        requestResponseData.setCommandId(command.commandId());
+        requestResponseData.setRequestCode(request.getRequestCode());
+
+        return requestResponseData;
     }
 
     @Override

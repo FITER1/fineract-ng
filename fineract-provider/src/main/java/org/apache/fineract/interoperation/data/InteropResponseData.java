@@ -18,6 +18,8 @@
  */
 package org.apache.fineract.interoperation.data;
 
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.interoperation.domain.InteropActionState;
 import org.joda.time.LocalDateTime;
@@ -29,21 +31,20 @@ import java.beans.Transient;
 import java.util.List;
 import java.util.Map;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class InteropResponseData extends CommandProcessingResult {
-
     public static final String ISO_DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ssZ";
-//    public static final SimpleDateFormat ISO_DATE_TIME_FORMATTER = new SimpleDateFormat(ISO_DATE_TIME_PATTERN); // TODO: not synchronized
     public static DateTimeFormatter ISO_DATE_TIME_FORMATTER = DateTimeFormat.forPattern(ISO_DATE_TIME_PATTERN);
-
     @NotNull
-    private final String transactionCode;
-
+    private String transactionCode;
     @NotNull
-    private final InteropActionState state;
-
-    private final String expiration;
-
-    private final List<ExtensionData> extensionList;
+    private InteropActionState state;
+    private String expiration;
+    private List<ExtensionData> extensionList;
 
 
     protected InteropResponseData(Long resourceId, Long officeId, Long commandId, Map<String, Object> changesOnly, @NotNull String transactionCode,
@@ -55,7 +56,7 @@ public class InteropResponseData extends CommandProcessingResult {
         this.changes = changesOnly;
         this.transactionCode = transactionCode;
         this.state = state;
-        this.expiration = format(expiration);
+        this.expiration = expiration.toString(ISO_DATE_TIME_FORMATTER);
         this.extensionList = extensionList;
     }
 
@@ -77,32 +78,7 @@ public class InteropResponseData extends CommandProcessingResult {
         return build(null, transactionCode, state);
     }
 
-    public String getTransactionCode() {
-        return transactionCode;
-    }
-
-    public InteropActionState getState() {
-        return state;
-    }
-
-    public String getExpiration() {
-        return expiration;
-    }
-
-    @Transient
-    public LocalDateTime getExpirationDate() {
-        return parse(expiration);
-    }
-
-    public List<ExtensionData> getExtensionList() {
-        return extensionList;
-    }
-
     protected static LocalDateTime parse(String date) {
         return date == null ? null : LocalDateTime.parse(date, ISO_DATE_TIME_FORMATTER);
-    }
-
-    protected static String format(LocalDateTime date) {
-        return date == null ? null : date.toString(ISO_DATE_TIME_FORMATTER);
     }
 }

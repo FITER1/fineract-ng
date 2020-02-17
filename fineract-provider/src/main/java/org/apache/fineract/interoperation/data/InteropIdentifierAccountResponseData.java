@@ -18,45 +18,21 @@
  */
 package org.apache.fineract.interoperation.data;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.util.Map;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class InteropIdentifierAccountResponseData extends CommandProcessingResult {
-
     @NotEmpty
     private String accountId;
-
-
-    protected InteropIdentifierAccountResponseData(Long resourceId, Long officeId, Long commandId, Map<String, Object> changesOnly, @NotNull String accountId) {
-        this.resourceIdentifier = resourceId!=null ? resourceId.toString() : null;
-        this.resourceId = resourceId;
-        this.officeId = officeId;
-        this.commandId = commandId;
-        this.changes = changesOnly;
-        this.accountId = accountId;
-    }
-
-    protected static InteropIdentifierAccountResponseData build(Long resourceId, Long officeId, Long commandId, Map<String, Object> changesOnly, @NotNull String accountId) {
-        return new InteropIdentifierAccountResponseData(resourceId, officeId, commandId, changesOnly, accountId);
-    }
-
-    protected static InteropIdentifierAccountResponseData build(Long commandId, @NotNull String accountId) {
-        return build(null, null, commandId, null, accountId);
-    }
-
-    public static InteropIdentifierAccountResponseData build(@NotNull String accountId) {
-        return build(null, accountId);
-    }
-
-    @NotNull
-    public String getAccountId() {
-        return accountId;
-    }
-
-    protected void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
 }

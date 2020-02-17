@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.core.data;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -28,7 +29,7 @@ import java.util.Map;
  * Represents the successful result of an REST API call that results in
  * processing a command.
  */
-@Builder
+@SuperBuilder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

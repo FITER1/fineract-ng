@@ -18,6 +18,11 @@
  */
 package org.apache.fineract.interoperation.data;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountTransaction;
@@ -27,16 +32,13 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class InteropTransactionsData extends CommandProcessingResult {
-
     List<InteropTransactionData> transactions;
-
-
-    public InteropTransactionsData(Long entityId, List<InteropTransactionData> transactions) {
-        this.resourceIdentifier = entityId!=null ? entityId.toString() : null;
-        this.resourceId = entityId;
-        this.transactions = transactions;
-    }
 
     public static InteropTransactionsData build(SavingsAccount account, @NotNull Predicate<SavingsAccountTransaction> filter) {
         if (account == null)
@@ -46,6 +48,10 @@ public class InteropTransactionsData extends CommandProcessingResult {
             int i = t2.getDateOf().compareTo(t1.getDateOf());
             return i != 0 ? i : Long.signum(t2.getId() - t1.getId());
         }).map(InteropTransactionData::build).collect(Collectors.toList());
-        return new InteropTransactionsData(account.getId(), trans);
+        return InteropTransactionsData.builder()
+            .resourceIdentifier(account.getId()+"")
+            .resourceId(account.getId())
+            .transactions(trans)
+            .build();
     }
 }

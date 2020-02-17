@@ -19,6 +19,10 @@
 package org.apache.fineract.interoperation.data;
 
 import com.google.gson.JsonObject;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.interoperation.domain.InteropTransactionRole;
@@ -30,21 +34,31 @@ import java.util.List;
 
 import static org.apache.fineract.interoperation.util.InteropUtil.*;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class InteropTransactionRequestData extends InteropRequestData {
 
-    static final String[] PARAMS = {PARAM_TRANSACTION_CODE, PARAM_REQUEST_CODE, PARAM_ACCOUNT_ID, PARAM_AMOUNT, PARAM_TRANSACTION_ROLE,
-            PARAM_TRANSACTION_TYPE, PARAM_NOTE, PARAM_GEO_CODE, PARAM_EXPIRATION, PARAM_EXTENSION_LIST, PARAM_LOCALE, PARAM_DATE_FORMAT};
-
+    static final String[] PARAMS = {
+        PARAM_TRANSACTION_CODE,
+        PARAM_REQUEST_CODE,
+        PARAM_ACCOUNT_ID,
+        PARAM_AMOUNT,
+        PARAM_TRANSACTION_ROLE,
+        PARAM_TRANSACTION_TYPE,
+        PARAM_NOTE,
+        PARAM_GEO_CODE,
+        PARAM_EXPIRATION,
+        PARAM_EXTENSION_LIST,
+        PARAM_LOCALE,
+        PARAM_DATE_FORMAT
+    };
 
     public InteropTransactionRequestData(@NotNull String transactionCode, @NotNull String requestCode, @NotNull String accountId,
                                          @NotNull MoneyData amount, @NotNull InteropTransactionTypeData transactionType, String note,
                                          GeoCodeData geoCode, LocalDateTime expiration, List<ExtensionData> extensionList) {
         super(transactionCode, requestCode, accountId, amount, InteropTransactionRole.PAYER, transactionType, note, geoCode, expiration, extensionList);
-    }
-
-    public InteropTransactionRequestData(@NotNull String transactionCode, @NotNull String requestCode, @NotNull String accountId,
-                                         @NotNull MoneyData amount, @NotNull InteropTransactionTypeData transactionType) {
-        this(transactionCode, requestCode, accountId, amount, transactionType, null, null, null, null);
     }
 
     private InteropTransactionRequestData(InteropRequestData other) {
@@ -62,10 +76,19 @@ public class InteropTransactionRequestData extends InteropRequestData {
 
         DataValidatorBuilder dataValidatorCopy = dataValidator.reset().parameter(PARAM_REQUEST_CODE).value(interopRequestData.getRequestCode()).notNull();
         dataValidatorCopy = dataValidatorCopy.reset().parameter(PARAM_TRANSACTION_TYPE).value(interopRequestData.getTransactionType()).notNull();
-        dataValidatorCopy = dataValidatorCopy.reset().parameter(PARAM_TRANSACTION_ROLE).value(interopRequestData.getTransactionRole()).ignoreIfNull()
-                .isOneOfTheseValues(InteropTransactionRole.PAYER);
+        dataValidatorCopy = dataValidatorCopy.reset().parameter(PARAM_TRANSACTION_ROLE).value(interopRequestData.getTransactionRole()).ignoreIfNull().isOneOfTheseValues(InteropTransactionRole.PAYER);
 
         dataValidator.merge(dataValidatorCopy);
-        return dataValidator.hasError() ? null : new InteropTransactionRequestData(interopRequestData);
+        return dataValidator.hasError() ? null : InteropTransactionRequestData.builder()
+            .transactionCode(interopRequestData.getTransactionCode())
+            .requestCode(interopRequestData.getRequestCode())
+            .accountId(interopRequestData.getAccountId())
+            .amount(interopRequestData.getAmount())
+            .transactionType(interopRequestData.getTransactionType())
+            .note(interopRequestData.getNote())
+            .geoCode(interopRequestData.getGeoCode())
+            .expiration(interopRequestData.getExpiration())
+            .extensionList(interopRequestData.getExtensionList())
+            .build();
     }
 }

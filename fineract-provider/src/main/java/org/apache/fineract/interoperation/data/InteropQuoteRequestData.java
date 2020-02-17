@@ -19,66 +19,50 @@
 package org.apache.fineract.interoperation.data;
 
 import com.google.gson.JsonObject;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.interoperation.domain.InteropAmountType;
-import org.apache.fineract.interoperation.domain.InteropTransactionRole;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
-import org.joda.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.apache.fineract.interoperation.util.InteropUtil.*;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class InteropQuoteRequestData extends InteropRequestData {
+    private static final String[] PARAMS = {
+        PARAM_TRANSACTION_CODE,
+        PARAM_REQUEST_CODE,
+        PARAM_ACCOUNT_ID,
+        PARAM_AMOUNT,
+        PARAM_TRANSACTION_TYPE,
+        PARAM_TRANSACTION_ROLE,
+        PARAM_NOTE,
+        PARAM_GEO_CODE,
+        PARAM_EXPIRATION,
+        PARAM_EXTENSION_LIST,
+        PARAM_QUOTE_CODE,
+        PARAM_AMOUNT_TYPE,
+        PARAM_FEES,
+        PARAM_LOCALE,
+        PARAM_DATE_FORMAT
+    };
 
-    static final String[] PARAMS = {PARAM_TRANSACTION_CODE, PARAM_REQUEST_CODE, PARAM_ACCOUNT_ID, PARAM_AMOUNT, PARAM_TRANSACTION_TYPE,
-            PARAM_TRANSACTION_ROLE, PARAM_NOTE, PARAM_GEO_CODE, PARAM_EXPIRATION, PARAM_EXTENSION_LIST, PARAM_QUOTE_CODE,
-            PARAM_AMOUNT_TYPE, PARAM_FEES, PARAM_LOCALE, PARAM_DATE_FORMAT};
     @NotNull
-    private final String quoteCode;
+    private String quoteCode;
     @NotNull
-    private final InteropAmountType amountType;
-
-    private final MoneyData fees; // only for disclosed Payer fees on the Payee side
-
-    public InteropQuoteRequestData(@NotNull String transactionCode, String requestCode, @NotNull String accountId, @NotNull MoneyData amount,
-                                   @NotNull InteropTransactionRole transactionRole, @NotNull InteropTransactionTypeData transactionType,
-                                   String note, GeoCodeData geoCode, LocalDateTime expiration, List<ExtensionData> extensionList,
-                                   @NotNull String quoteCode, @NotNull InteropAmountType amountType, MoneyData fees) {
-        super(transactionCode, requestCode, accountId, amount, transactionRole, transactionType, note, geoCode, expiration, extensionList);
-        this.quoteCode = quoteCode;
-        this.amountType = amountType;
-        this.fees = fees;
-    }
-
-    public InteropQuoteRequestData(@NotNull String transactionCode, @NotNull String accountId, @NotNull InteropAmountType amountType,
-                                   @NotNull MoneyData amount, @NotNull InteropTransactionRole transactionRole, @NotNull InteropTransactionTypeData transactionType,
-                                   @NotNull String quoteCode) {
-        this(transactionCode, null, accountId, amount, transactionRole, transactionType, null, null, null, null, quoteCode,
-                amountType, null);
-    }
-
-    private InteropQuoteRequestData(@NotNull InteropRequestData other, @NotNull String quoteCode, @NotNull InteropAmountType amountType,
-                                    MoneyData fees) {
-        this(other.getTransactionCode(), other.getRequestCode(), other.getAccountId(), other.getAmount(), other.getTransactionRole(),
-                other.getTransactionType(), other.getNote(), other.getGeoCode(), other.getExpiration(), other.getExtensionList(),
-                quoteCode, amountType, fees);
-    }
-
-    public String getQuoteCode() {
-        return quoteCode;
-    }
-
-    public InteropAmountType getAmountType() {
-        return amountType;
-    }
-
-    public MoneyData getFees() {
-        return fees;
-    }
+    private InteropAmountType amountType;
+    private MoneyData fees; // only for disclosed Payer fees on the Payee side
 
     public void normalizeAmounts(@NotNull MonetaryCurrency currency) {
         super.normalizeAmounts(currency);
@@ -112,6 +96,20 @@ public class InteropQuoteRequestData extends InteropRequestData {
         dataValidatorCopy = dataValidatorCopy.reset().parameter(PARAM_TRANSACTION_TYPE).value(transactionTypeElement).notNull();
 
         dataValidator.merge(dataValidatorCopy);
-        return dataValidator.hasError() ? null : new InteropQuoteRequestData(interopRequestData, quoteCode, amountType, fees);
+
+        return dataValidator.hasError() ? null : InteropQuoteRequestData.builder()
+            .amountType(amountType)
+            .fees(fees)
+            .quoteCode(quoteCode)
+            .requestCode(interopRequestData.getRequestCode())
+            .amount(interopRequestData.getAmount())
+            .accountId(interopRequestData.getAccountId())
+            .transactionRole(interopRequestData.getTransactionRole())
+            .transactionType(interopRequestData.getTransactionType())
+            .note(interopRequestData.getNote())
+            .geoCode(interopRequestData.getGeoCode())
+            .expiration(interopRequestData.getExpiration())
+            .extensionList(interopRequestData.getExtensionList())
+            .build();
     }
 }

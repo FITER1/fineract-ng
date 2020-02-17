@@ -19,6 +19,7 @@
 package org.apache.fineract.interoperation.data;
 
 import com.google.gson.JsonObject;
+import lombok.*;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 
@@ -28,31 +29,18 @@ import java.util.Arrays;
 import static org.apache.fineract.interoperation.util.InteropUtil.PARAM_KEY;
 import static org.apache.fineract.interoperation.util.InteropUtil.PARAM_VALUE;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ExtensionData {
 
     public static final String[] PARAMS = {PARAM_KEY, PARAM_VALUE};
 
     @NotNull
-    private final String key;
-
+    private String key;
     private String value;
-
-    public ExtensionData(String key, String value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
 
     public static ExtensionData validateAndParse(DataValidatorBuilder dataValidator, JsonObject element, FromJsonHelper jsonHelper) {
         if (element == null)
@@ -66,6 +54,9 @@ public class ExtensionData {
         String value = jsonHelper.extractStringNamed(PARAM_VALUE, element);
 
         dataValidator.merge(dataValidatorCopy);
-        return dataValidator.hasError() ? null : new ExtensionData(key, value);
+        return dataValidator.hasError() ? null : ExtensionData.builder()
+            .key(key)
+            .value(value)
+            .build();
     }
 }

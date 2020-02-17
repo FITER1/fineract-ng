@@ -18,6 +18,11 @@
  */
 package org.apache.fineract.interoperation.data;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.interoperation.domain.InteropIdentifier;
 import org.apache.fineract.portfolio.accountdetails.domain.AccountType;
@@ -32,74 +37,39 @@ import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class InteropAccountData extends CommandProcessingResult {
-
     @NotNull
-    private final String accountId;
+    private String accountId;
     @NotNull
-    private final String savingProductId;
+    private String savingProductId;
     @NotNull
-    private final String productName;
+    private String productName;
     @NotNull
-    private final String shortProductName;
+    private String shortProductName;
     @NotNull
-    private final String currency;
+    private String currency;
     @NotNull
-    private final BigDecimal accountBalance;
+    private BigDecimal accountBalance;
     @NotNull
-    private final BigDecimal availableBalance;
+    private BigDecimal availableBalance;
     @NotNull
-    private final SavingsAccountStatusType status;
-    private final SavingsAccountSubStatusEnum subStatus;
-
-    private final AccountType accountType; //differentiate Individual, JLG or Group account
-    private final DepositAccountType depositType; //differentiate deposit accounts Savings, FD and RD accounts
+    private SavingsAccountStatusType status;
+    private SavingsAccountSubStatusEnum subStatus;
+    private AccountType accountType; //differentiate Individual, JLG or Group account
+    private DepositAccountType depositType; //differentiate deposit accounts Savings, FD and RD accounts
     @NotNull
-    private final LocalDate activatedOn;
-    private final LocalDate statusUpdateOn;
-    private final LocalDate withdrawnOn;
-    private final LocalDate balanceOn;
+    private LocalDate activatedOn;
+    private LocalDate statusUpdateOn;
+    private LocalDate withdrawnOn;
+    private LocalDate balanceOn;
     @NotNull
     private List<InteropIdentifierData> identifiers;
-
-    InteropAccountData(Long resourceId, Long officeId, Long commandId, Map<String, Object> changesOnly, String accountId,
-                       String productId, String productName, String shortProductName, String currency, BigDecimal accountBalance,
-                       BigDecimal availableBalance, SavingsAccountStatusType status, SavingsAccountSubStatusEnum subStatus,
-                       AccountType accountType, DepositAccountType depositType, LocalDate activatedOn, LocalDate statusUpdateOn,
-                       LocalDate withdrawnOn, LocalDate balanceOn, List<InteropIdentifierData> identifiers) {
-        this.resourceIdentifier = resourceId!=null ? resourceId.toString() : null;
-        this.resourceId = resourceId;
-        this.officeId = officeId;
-        this.commandId = commandId;
-        this.changes = changesOnly;
-        this.accountId = accountId;
-        this.savingProductId = productId;
-        this.productName = productName;
-        this.shortProductName = shortProductName;
-        this.currency = currency;
-        this.accountBalance = accountBalance;
-        this.availableBalance = availableBalance;
-        this.status = status;
-        this.subStatus = subStatus;
-        this.accountType = accountType;
-        this.depositType = depositType;
-        this.activatedOn = activatedOn;
-        this.statusUpdateOn = statusUpdateOn;
-        this.withdrawnOn = withdrawnOn;
-        this.balanceOn = balanceOn;
-        this.identifiers = identifiers;
-    }
-
-    InteropAccountData(String accountId, String productId, String productName, String shortProductName, String currency,
-                       BigDecimal accountBalance, BigDecimal availableBalance, SavingsAccountStatusType status, SavingsAccountSubStatusEnum subStatus,
-                       AccountType accountType, DepositAccountType depositType, LocalDate activatedOn, LocalDate statusUpdateOn,
-                       LocalDate withdrawnOn, LocalDate balanceOn, List<InteropIdentifierData> identifiers) {
-        this(null, null, null, null, accountId, productId, productName, shortProductName, currency, accountBalance,
-                availableBalance, status, subStatus, accountType, depositType, activatedOn, statusUpdateOn, withdrawnOn, balanceOn,
-                identifiers);
-    }
 
     public static InteropAccountData build(SavingsAccount account) {
         if (account == null)
@@ -107,7 +77,11 @@ public class InteropAccountData extends CommandProcessingResult {
 
         List<InteropIdentifierData> ids = new ArrayList<>();
         for (InteropIdentifier identifier : account.getIdentifiers()) {
-            ids.add(InteropIdentifierData.build(identifier));
+            ids.add(InteropIdentifierData.builder()
+                .idValue(identifier.getValue())
+                .idType(identifier.getType())
+                .subIdOrType(identifier.getSubValueOrType())
+                .build());
         }
 
         SavingsProduct product = account.savingsProduct();

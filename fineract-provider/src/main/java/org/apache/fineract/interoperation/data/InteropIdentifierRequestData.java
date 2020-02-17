@@ -19,6 +19,7 @@
 package org.apache.fineract.interoperation.data;
 
 import com.google.gson.JsonObject;
+import lombok.*;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.interoperation.domain.InteropIdentifierType;
@@ -29,48 +30,30 @@ import java.util.Arrays;
 
 import static org.apache.fineract.interoperation.util.InteropUtil.PARAM_ACCOUNT_ID;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class InteropIdentifierRequestData {
-
-    static final String[] PARAMS = {PARAM_ACCOUNT_ID};
-
-    @NotEmpty
-    private final InteropIdentifierType idType;
-    @NotEmpty
-    private final String idValue;
-
-    private final String subIdOrType;
+    static final String[] PARAMS = {
+        PARAM_ACCOUNT_ID
+    };
 
     @NotEmpty
-    private final String accountId;
-
-    public InteropIdentifierRequestData(@NotNull InteropIdentifierType idType, @NotNull String idValue, String subIdOrType, String accountId) {
-        this.idType = idType;
-        this.idValue = idValue;
-        this.subIdOrType = subIdOrType;
-        this.accountId = accountId;
-    }
-
-    public InteropIdentifierType getIdType() {
-        return idType;
-    }
-
-    public String getIdValue() {
-        return idValue;
-    }
-
-    public String getSubIdOrType() {
-        return subIdOrType;
-    }
-
-    public String getAccountId() {
-        return accountId;
-    }
+    private InteropIdentifierType idType;
+    @NotEmpty
+    private String idValue;
+    private String subIdOrType;
+    @NotEmpty
+    private String accountId;
 
     public static InteropIdentifierRequestData validateAndParse(final DataValidatorBuilder dataValidator, @NotNull InteropIdentifierType idType,
                                                                 @NotNull String idValue, String subIdOrType, JsonObject element,
                                                                 FromJsonHelper jsonHelper) {
-        if (element == null)
+        if (element == null) {
             return null;
+        }
 
         jsonHelper.checkForUnsupportedParameters(element, Arrays.asList(PARAMS));
 

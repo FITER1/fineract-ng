@@ -18,11 +18,17 @@
  */
 package org.apache.fineract.interoperation.data;
 
+import lombok.*;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class InteropRefundData {
-
     @Size(max = 36)
     @NotNull
     private String originalTransactionId; // mandatory payment id

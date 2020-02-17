@@ -18,6 +18,8 @@
  */
 package org.apache.fineract.interoperation.data;
 
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.interoperation.util.MathUtil;
 import org.apache.fineract.portfolio.note.domain.Note;
@@ -31,69 +33,30 @@ import org.joda.time.LocalDate;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class InteropTransactionData extends CommandProcessingResult {
-
-//    private final SavingsAccountTransactionEnumData transactionType;
-//    private final PaymentDetailData paymentDetailData;
-//    private final BigDecimal outstandingChargeAmount;
-//    private final boolean reversed;
-//    private final AccountTransferData transfer;
-//    private final LocalDate submittedOnDate;
-//    private final boolean interestedPostedAsOn;
-//    private final String submittedByUsername;
-//    // templates
-//    final Collection<PaymentTypeData> paymentTypeOptions;
-//    //import fields
-//    private Long paymentTypeId;
-//    private String checkNumber;
-//    private String routingCode;
-//    private String receiptNumber;
-//    private String bankNumber;
-
-//    private String transactionReference;
-//    private String statementReference;
-//    private CreditDebitType creditDebit;
-//    private TransactionStatus status;
-//    private String transactionInformation;
-//    private String addressLine;
-
     @NotNull
-    private final String accountId;
+    private String accountId;
     @NotNull
-    private final String savingTransactionId;
+    private String savingTransactionId;
     @NotNull
-    private final SavingsAccountTransactionType transactionType;
+    private SavingsAccountTransactionType transactionType;
     @NotNull
-    private final BigDecimal amount;
-
-    private final BigDecimal chargeAmount;
+    private BigDecimal amount;
+    private BigDecimal chargeAmount;
     @NotNull
-    private final String currency;
+    private String currency;
     @NotNull
-    private final BigDecimal accountBalance;
+    private BigDecimal accountBalance;
     @NotNull
-    private final LocalDate bookingDateTime;
+    private LocalDate bookingDateTime;
     @NotNull
-    private final LocalDate valueDateTime;
-
-    private final String note;
-
-
-    public InteropTransactionData(Long entityId, String accountId, String transactionId, SavingsAccountTransactionType transactionType, BigDecimal amount, BigDecimal chargeAmount,
-                                  String currency, BigDecimal accountBalance, LocalDate bookingDateTime, LocalDate valueDateTime, String note) {
-        this.resourceIdentifier = entityId!=null ? entityId.toString() : null;
-        this.resourceId = entityId;
-        this.accountId = accountId;
-        this.savingTransactionId = transactionId;
-        this.transactionType = transactionType;
-        this.amount = amount;
-        this.chargeAmount = chargeAmount;
-        this.currency = currency;
-        this.accountBalance = accountBalance;
-        this.bookingDateTime = bookingDateTime;
-        this.valueDateTime = valueDateTime;
-        this.note = note;
-    }
+    private LocalDate valueDateTime;
+    private String note;
 
     public static InteropTransactionData build(SavingsAccountTransaction transaction) {
         if (transaction == null)
@@ -141,7 +104,22 @@ public class InteropTransactionData extends CommandProcessingResult {
             sb.append(SavingsEnumerations.transactionType(transactionType).getValue());
         }
 
-        return new InteropTransactionData(savingsAccount.getId(), savingsAccount.getExternalId(), transactionId, transactionType, amount, chargeAmount, currency,
-                runningBalance, bookingDateTime, valueDateTime, sb.toString());
+        InteropTransactionData transactionData = InteropTransactionData.builder()
+            .accountId(savingsAccount.getExternalId())
+            .savingTransactionId(transactionId)
+            .transactionType(transactionType)
+            .amount(amount)
+            .chargeAmount(chargeAmount)
+            .currency(currency)
+            .accountBalance(runningBalance)
+            .bookingDateTime(bookingDateTime)
+            .valueDateTime(valueDateTime)
+            .note(sb.toString())
+            .build();
+
+        transactionData.setResourceIdentifier(savingsAccount.getId()+"");
+        transactionData.setResourceId(savingsAccount.getId());
+
+        return transactionData;
     }
 }

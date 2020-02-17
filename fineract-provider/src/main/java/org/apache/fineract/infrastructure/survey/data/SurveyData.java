@@ -18,12 +18,14 @@
  */
 package org.apache.fineract.infrastructure.survey.data;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Builder
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode
 public class SurveyData {
 }

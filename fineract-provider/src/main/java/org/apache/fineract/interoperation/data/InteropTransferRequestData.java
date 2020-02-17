@@ -19,63 +19,47 @@
 package org.apache.fineract.interoperation.data;
 
 import com.google.gson.JsonObject;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
-import org.apache.fineract.interoperation.domain.InteropTransactionRole;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
-import org.joda.time.LocalDateTime;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
-import java.util.List;
 
 import static org.apache.fineract.interoperation.util.InteropUtil.*;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class InteropTransferRequestData extends InteropRequestData {
-
-    static final String[] PARAMS = {PARAM_TRANSACTION_CODE, PARAM_ACCOUNT_ID, PARAM_AMOUNT, PARAM_TRANSACTION_ROLE, PARAM_TRANSACTION_TYPE,
-            PARAM_NOTE, PARAM_EXPIRATION, PARAM_EXTENSION_LIST, PARAM_TRANSFER_CODE, PARAM_FSP_FEE, PARAM_FSP_COMMISSION,
-            PARAM_LOCALE, PARAM_DATE_FORMAT};
-
+    static final String[] PARAMS = {
+        PARAM_TRANSACTION_CODE,
+        PARAM_ACCOUNT_ID,
+        PARAM_AMOUNT,
+        PARAM_TRANSACTION_ROLE,
+        PARAM_TRANSACTION_TYPE,
+        PARAM_NOTE,
+        PARAM_EXPIRATION,
+        PARAM_EXTENSION_LIST,
+        PARAM_TRANSFER_CODE,
+        PARAM_FSP_FEE,
+        PARAM_FSP_COMMISSION,
+        PARAM_LOCALE,
+        PARAM_DATE_FORMAT
+    };
 
     @NotNull
-    private final String transferCode;
-
+    private String transferCode;
     // validation: what was specified in quotes step
     private MoneyData fspFee;
-
     private MoneyData fspCommission;
-
-    public InteropTransferRequestData(@NotNull String transactionCode, @NotNull String accountId, @NotNull MoneyData amount,
-                                      @NotNull InteropTransactionRole transactionRole, InteropTransactionTypeData transactionType, String note, LocalDateTime expiration,
-                                      List<ExtensionData> extensionList, @NotNull String transferCode, MoneyData fspFee, MoneyData fspCommission) {
-        super(transactionCode, null, accountId, amount, transactionRole, transactionType, note, null, expiration, extensionList);
-        this.transferCode = transferCode;
-        this.fspFee = fspFee;
-        this.fspCommission = fspCommission;
-    }
-
-    public InteropTransferRequestData(@NotNull String transactionCode, @NotNull String transferCode, @NotNull String accountId,
-                                      @NotNull MoneyData amount, @NotNull InteropTransactionRole transactionRole) {
-        this(transactionCode, accountId, amount, transactionRole, null, null, null, null, transferCode, null, null);
-    }
-
-    private InteropTransferRequestData(InteropRequestData other, @NotNull String transferCode, MoneyData fspFee, MoneyData fspCommission) {
-        this(other.getTransactionCode(), other.getAccountId(), other.getAmount(), other.getTransactionRole(), other.getTransactionType(),
-                other.getNote(), other.getExpiration(), other.getExtensionList(), transferCode, fspFee, fspCommission);
-    }
-
-    public String getTransferCode() {
-        return transferCode;
-    }
-
-    public MoneyData getFspFee() {
-        return fspFee;
-    }
-
-    public MoneyData getFspCommission() {
-        return fspCommission;
-    }
 
     public void normalizeAmounts(@NotNull MonetaryCurrency currency) {
         super.normalizeAmounts(currency);
@@ -106,6 +90,18 @@ public class InteropTransferRequestData extends InteropRequestData {
         dataValidatorCopy = dataValidator.reset().parameter(PARAM_TRANSACTION_ROLE).value(transactionRoleString).notNull();
 
         dataValidator.merge(dataValidatorCopy);
-        return dataValidator.hasError() ? null : new InteropTransferRequestData(interopRequestData, transferCode, fspFee, fspCommission);
+        return dataValidator.hasError() ? null : InteropTransferRequestData.builder()
+            .transferCode(interopRequestData.getTransactionCode())
+            .transferCode(transferCode)
+            .accountId(interopRequestData.getAccountId())
+            .amount(interopRequestData.getAmount())
+            .transactionRole(interopRequestData.getTransactionRole())
+            .transactionType(interopRequestData.getTransactionType())
+            .note(interopRequestData.getNote())
+            .expiration(interopRequestData.getExpiration())
+            .extensionList(interopRequestData.getExtensionList())
+            .fspFee(fspFee)
+            .fspCommission(fspCommission)
+            .build();
     }
 }

@@ -21,6 +21,11 @@ package org.apache.fineract.interoperation.data;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.interoperation.domain.InteropTransactionRole;
@@ -36,111 +41,30 @@ import java.util.List;
 
 import static org.apache.fineract.interoperation.util.InteropUtil.*;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class InteropRequestData {
-
     @NotNull
-    private final String transactionCode;
-
-    private final String requestCode;
+    private String transactionCode;
+    private String requestCode;
     @NotNull
-    private final String accountId;
+    private String accountId;
     @NotNull
-    private final MoneyData amount;
+    private MoneyData amount;
     @NotNull
-    private final InteropTransactionRole transactionRole;
-
-    private final InteropTransactionTypeData transactionType;
-
+    private InteropTransactionRole transactionRole;
+    private InteropTransactionTypeData transactionType;
     private String note;
-
     private GeoCodeData geoCode;
-
     @JsonDeserialize(using = JodaDeserializers.LocalDateTimeDeserializer.class)
     private LocalDateTime expiration;
-
     private List<ExtensionData> extensionList;
-
-    protected InteropRequestData(@NotNull String transactionCode, String requestCode, @NotNull String accountId, @NotNull MoneyData amount,
-                                 @NotNull InteropTransactionRole transactionRole, InteropTransactionTypeData transactionType, String note,
-                                 GeoCodeData geoCode, LocalDateTime expiration, List<ExtensionData> extensionList) {
-        this.transactionCode = transactionCode;
-        this.requestCode = requestCode;
-        this.accountId = accountId;
-        this.amount = amount;
-        this.transactionType = transactionType;
-        this.transactionRole = transactionRole;
-        this.note = note;
-        this.geoCode = geoCode;
-        this.expiration = expiration;
-        this.extensionList = extensionList;
-    }
-
-    protected InteropRequestData(@NotNull String transactionCode, @NotNull String accountId, @NotNull MoneyData amount, @NotNull InteropTransactionRole transactionRole) {
-        this(transactionCode, null, accountId, amount, transactionRole, null, null, null, null, null);
-    }
-
-    @NotNull
-    public String getTransactionCode() {
-        return transactionCode;
-    }
-
-    public String getRequestCode() {
-        return requestCode;
-    }
-
-    @NotNull
-    public String getAccountId() {
-        return accountId;
-    }
-
-    @NotNull
-    public MoneyData getAmount() {
-        return amount;
-    }
-
-    public InteropTransactionTypeData getTransactionType() {
-        return transactionType;
-    }
-
-    @NotNull
-    public InteropTransactionRole getTransactionRole() {
-        return transactionRole;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public GeoCodeData getGeoCode() {
-        return geoCode;
-    }
-
-    public void setGeoCode(GeoCodeData geoCode) {
-        this.geoCode = geoCode;
-    }
-
-    public LocalDateTime getExpiration() {
-        return expiration;
-    }
 
     public LocalDate getExpirationLocalDate() {
         return expiration == null ? null : expiration.toLocalDate();
-    }
-
-    public void setExpiration(LocalDateTime expiration) {
-        this.expiration = expiration;
-    }
-
-    public List<ExtensionData> getExtensionList() {
-        return extensionList;
-    }
-
-    public void setExtensionList(List<ExtensionData> extensionList) {
-        this.extensionList = extensionList;
     }
 
     public void normalizeAmounts(@NotNull MonetaryCurrency currency) {
@@ -148,8 +72,9 @@ public class InteropRequestData {
     }
 
     public static InteropRequestData validateAndParse(final DataValidatorBuilder dataValidator, JsonObject element, FromJsonHelper jsonHelper) {
-        if (element == null)
+        if (element == null) {
             return null;
+        }
 
         String transactionCode = jsonHelper.extractStringNamed(PARAM_TRANSACTION_CODE, element);
         DataValidatorBuilder  dataValidatorCopy = dataValidator.reset().parameter(PARAM_TRANSACTION_CODE).value(transactionCode).notBlank();
@@ -190,7 +115,18 @@ public class InteropRequestData {
             }
         }
 
-        return dataValidator.hasError() ? null : new InteropRequestData(transactionCode, requestCode, accountId, amount,
-                transactionRole, transactionType, note, geoCode, expiration, extensionList);
+        InteropRequestData requestData = new InteropRequestData();
+        requestData.setTransactionCode(transactionCode);
+        requestData.setRequestCode(requestCode);
+        requestData.setAccountId(accountId);
+        requestData.setAmount(amount);
+        requestData.setTransactionRole(transactionRole);
+        requestData.setTransactionType(transactionType);
+        requestData.setNote(note);
+        requestData.setGeoCode(geoCode);
+        requestData.setExpiration(expiration);
+        requestData.setExtensionList(extensionList);
+
+        return dataValidator.hasError() ? null : requestData;
     }
 }

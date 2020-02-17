@@ -19,6 +19,8 @@
 package org.apache.fineract.interoperation.data;
 
 import com.google.gson.JsonObject;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.interoperation.util.MathUtil;
@@ -30,35 +32,31 @@ import java.util.Arrays;
 
 import static org.apache.fineract.interoperation.util.InteropUtil.*;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class MoneyData {
-
-    public static final String[] PARAMS = {PARAM_AMOUNT, PARAM_CURRENCY, PARAM_LOCALE};
+    public static final String[] PARAMS = {
+        PARAM_AMOUNT,
+        PARAM_CURRENCY,
+        PARAM_LOCALE
+    };
 
     @NotNull
-    private final BigDecimal amount;
+    private BigDecimal amount;
     @NotNull
-    private final String currency;
-
-    MoneyData(BigDecimal amount, String currency) {
-        this.amount = amount;
-        this.currency = currency;
-    }
+    private String currency;
 
     public static MoneyData build(BigDecimal amount, String currency) {
         return new MoneyData(amount, currency);
     }
 
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public String getCurrency() {
-        return currency;
-    }
-
     public void normalizeAmount(@NotNull MonetaryCurrency currency) {
-        if (!currency.getCode().equals(this.currency))
+        if (!currency.getCode().equals(this.currency)) {
             throw new UnsupportedOperationException("Internal error: Invalid currency " + currency.getCode());
+        }
         MathUtil.normalizeAmount(amount, currency);
     }
 
