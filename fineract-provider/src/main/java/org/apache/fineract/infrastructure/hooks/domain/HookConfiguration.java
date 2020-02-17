@@ -18,7 +18,10 @@
  */
 package org.apache.fineract.infrastructure.hooks.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
@@ -45,21 +48,4 @@ public class HookConfiguration extends AbstractPersistableCustom<Long> {
 
 	@Column(name = "field_value", nullable = false, length = 100)
 	private String fieldValue;
-
-	public static HookConfiguration createNewWithoutHook(final String fieldType, final String fieldName, final String fieldValue) {
-		return HookConfiguration.builder()
-			.fieldType(fieldType)
-			.fieldName(fieldName)
-			.fieldValue(fieldValue)
-			.build();
-	}
-	
-	public static HookConfiguration createNew(final Hook hook, final String fieldType, final String fieldName, final String fieldValue) {
-		return HookConfiguration.builder()
-			.hook(hook)
-			.fieldType(fieldType)
-			.fieldName(fieldName)
-			.fieldValue(fieldValue)
-			.build();
-	}
 }

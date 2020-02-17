@@ -18,26 +18,26 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.data;
 
+import lombok.*;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Immutable data object representing a resultset column.
- */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public final class ResultsetColumnHeaderData {
-
-    private final String columnName;
+    private String columnName;
     private String columnType;
-    private final Long columnLength;
-    private final String columnDisplayType;
-    private final boolean isColumnNullable;
-    @SuppressWarnings("unused")
-    private final boolean isColumnPrimaryKey;
-
-    private final List<ResultsetColumnValueData> columnValues;
-    private final String columnCode;
+    private Long columnLength;
+    private String columnDisplayType;
+    private boolean isColumnNullable;
+    private boolean isColumnPrimaryKey;
+    private List<ResultsetColumnValueData> columnValues;
+    private String columnCode;
 
     public static ResultsetColumnHeaderData basic(final String columnName, final String columnType) {
 
@@ -274,7 +274,7 @@ public final class ResultsetColumnHeaderData {
     public boolean isColumnValueAllowed(final String match) {
         boolean allowed = false;
         for (final ResultsetColumnValueData allowedValue : this.columnValues) {
-            if (allowedValue.matches(match)) {
+            if (match.equalsIgnoreCase(allowedValue.getValue())) {
                 allowed = true;
             }
         }
@@ -292,7 +292,7 @@ public final class ResultsetColumnHeaderData {
     public boolean isColumnCodeAllowed(final Integer match) {
         boolean allowed = false;
         for (final ResultsetColumnValueData allowedValue : this.columnValues) {
-            if (allowedValue.codeMatches(match)) {
+            if (match.equals(allowedValue.getId())) {
                 allowed = true;
             }
         }

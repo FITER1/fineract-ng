@@ -73,8 +73,4 @@ public final class Likelihood extends AbstractPersistableCustom<Long> {
     public boolean isActivateCommand(final JsonCommand command) {
         return command.booleanPrimitiveValueOfParameterNamed(LikelihoodApiConstants.ACTIVE);
     }
-
-    public void disable() {
-        this.enabled = LikelihoodStatus.DISABLED;
-    }
 }

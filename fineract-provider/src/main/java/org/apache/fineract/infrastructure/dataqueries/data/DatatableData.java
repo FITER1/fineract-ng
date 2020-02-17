@@ -18,46 +18,26 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.data;
 
+import lombok.*;
+
 import java.util.List;
+import java.util.Objects;
 
-/**
- * Immutable data object representing datatable data.
- */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class DatatableData {
+    private String applicationTableName;
+    private String registeredTableName;
+    private List<ResultsetColumnHeaderData> columnHeaderData;
 
-    @SuppressWarnings("unused")
-    private final String applicationTableName;
-    @SuppressWarnings("unused")
-    private final String registeredTableName;
-    @SuppressWarnings("unused")
-    private final List<ResultsetColumnHeaderData> columnHeaderData;
-
-
-    public static DatatableData create(final String applicationTableName, final String registeredTableName,
-            final List<ResultsetColumnHeaderData> columnHeaderData) {
-        return new DatatableData(applicationTableName, registeredTableName, columnHeaderData);
-    }
-
-    private DatatableData(final String applicationTableName, final String registeredTableName,
-            final List<ResultsetColumnHeaderData> columnHeaderData) {
-        this.applicationTableName = applicationTableName;
-        this.registeredTableName = registeredTableName;
-        this.columnHeaderData = columnHeaderData;
-
-    }
-
-    public boolean hasColumn(final String columnName){
-
-        for(ResultsetColumnHeaderData c : this.columnHeaderData){
-
-            if(c.getColumnName().equals(columnName)) return true;
+    public boolean hasColumn(final String columnName) {
+        if(columnHeaderData==null) {
+            return false;
         }
 
-        return false;
+        return Objects.requireNonNull(columnHeaderData).stream().anyMatch(data -> data.getColumnName().equals(columnName));
     }
-
-    public String getRegisteredTableName(){
-        return registeredTableName;
-    }
-    
 }

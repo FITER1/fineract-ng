@@ -30,7 +30,6 @@ import org.apache.fineract.infrastructure.campaigns.email.exception.EmailBusines
 import org.apache.fineract.infrastructure.campaigns.email.exception.EmailCampaignNotFound;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.JdbcSupport;
-import org.apache.fineract.infrastructure.dataqueries.data.ReportData;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.dao.DataAccessException;
@@ -113,17 +112,6 @@ public class EmailCampaignReadPlatformServiceImpl implements EmailCampaignReadPl
                 emailAttachmentFileFormat = ScheduledEmailEnumerations.emailAttachementFileFormat(emailAttachmentFileFormatString);
             }
             final Long reportId = JdbcSupport.getLong(rs, "stretchyReportId");
-            final String reportName = rs.getString("reportName");
-            final String reportType = rs.getString("reportType");
-            final String reportSubType = rs.getString("reportSubType");
-            final String reportCategory = rs.getString("reportCategory");
-            final String reportSql = rs.getString("reportSql");
-            final String reportDescription = rs.getString("reportDescription");
-            final boolean coreReport = rs.getBoolean("coreReport");
-            final boolean useReport = rs.getBoolean("useReport");
-
-            final ReportData stretchyReport = new ReportData(reportId, reportName, reportType, reportSubType, reportCategory,
-                    reportDescription, reportSql, coreReport, useReport, null);
 
             final Integer statusId = JdbcSupport.getInteger(rs, "statusEnum");
             final EnumOptionData status = EmailCampaignStatusEnumerations.status(statusId);

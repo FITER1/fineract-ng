@@ -153,12 +153,26 @@ public class SchedulerJobRunnerReadServiceImpl implements SchedulerJobRunnerRead
 
             JobDetailHistoryData lastRunHistory = null;
             if (version > 0) {
-                lastRunHistory = new JobDetailHistoryData(version, jobRunStartTime, jobRunEndTime, status, jobRunErrorMessage, triggerType,
-                        jobRunErrorLog);
+                lastRunHistory = JobDetailHistoryData.builder()
+                    .version(version)
+                    .jobRunStartTime(jobRunStartTime)
+                    .jobRunEndTime(jobRunEndTime)
+                    .status(status)
+                    .jobRunErrorMessage(jobRunErrorMessage)
+                    .triggerType(triggerType)
+                    .jobRunErrorLog(jobRunErrorLog)
+                    .build();
             }
-            final JobDetailData jobDetail = new JobDetailData(id, displayName, nextRunTime, initializingError, cronExpression, active,
-                    currentlyRunning, lastRunHistory);
-            return jobDetail;
+            return JobDetailData.builder()
+                .jobId(id)
+                .displayName(displayName)
+                .nextRunTime(nextRunTime)
+                .initializingError(initializingError)
+                .cronExpression(cronExpression)
+                .active(active)
+                .currentlyRunning(currentlyRunning)
+                .lastRunHistory(lastRunHistory)
+                .build();
         }
 
     }
@@ -182,11 +196,15 @@ public class SchedulerJobRunnerReadServiceImpl implements SchedulerJobRunnerRead
             final String jobRunErrorMessage = rs.getString("jobRunErrorMessage");
             final String triggerType = rs.getString("triggerType");
             final String jobRunErrorLog = rs.getString("jobRunErrorLog");
-            final JobDetailHistoryData jobDetailHistory = new JobDetailHistoryData(version, jobRunStartTime, jobRunEndTime, status,
-                    jobRunErrorMessage, triggerType, jobRunErrorLog);
-            return jobDetailHistory;
+            return JobDetailHistoryData.builder()
+                .version(version)
+                .jobRunStartTime(jobRunStartTime)
+                .jobRunEndTime(jobRunEndTime)
+                .status(status)
+                .jobRunErrorMessage(jobRunErrorMessage)
+                .triggerType(triggerType)
+                .jobRunErrorLog(jobRunErrorLog)
+                .build();
         }
-
     }
-
 }

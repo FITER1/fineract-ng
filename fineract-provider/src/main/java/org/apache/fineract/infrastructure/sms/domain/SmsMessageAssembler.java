@@ -83,7 +83,17 @@ public class SmsMessageAssembler {
 
         final String message = this.fromApiJsonHelper.extractStringNamed(SmsApiConstants.messageParamName, element);
 
-        return SmsMessage.pendingSms(externalId, group, client, staff, message, mobileNo, smsCampaign, isNotification);
+        return SmsMessage.builder()
+            .statusType(SmsMessageStatusType.PENDING.getValue())
+            .externalId(externalId)
+            .group(group)
+            .client(client)
+            .staff(staff)
+            .message(message)
+            .mobileNo(mobileNo)
+            .smsCampaign(smsCampaign)
+            .notification(isNotification)
+            .build();
     }
 
     public SmsMessage assembleFromResourceId(final Long resourceId) {

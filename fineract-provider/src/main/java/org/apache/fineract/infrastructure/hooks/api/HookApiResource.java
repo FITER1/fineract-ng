@@ -90,10 +90,21 @@ public class HookApiResource {
 		HookData hook = this.readPlatformService.retrieveHook(hookId);
 
 		if (settings.isTemplate()) {
-			final HookData hookData = this.readPlatformService
-					.retrieveNewHookDetails(hook.getTemplateName());
-			hook = HookData.templateExisting(hook, hookData.getTemplates(),
-					hookData.getGroupings());
+			final HookData hookData = this.readPlatformService.retrieveNewHookDetails(hook.getName());
+			hook = HookData.builder()
+				.id(hookData.getId())
+				.name(hookData.getName())
+				.displayName(hookData.getDisplayName())
+				.active(hookData.getActive())
+				.createdAt(hookData.getCreatedAt())
+				.updatedAt(hookData.getUpdatedAt())
+				.templateId(hookData.getTemplateId())
+				.events(hookData.getEvents())
+				.config(hookData.getConfig())
+				.templateName(hookData.getTemplateName())
+				.templates(hookData.getTemplates())
+				.groupings(hookData.getGroupings())
+				.build();
 		}
 		return this.toApiJsonSerializer.serialize(settings, hook,
 				RESPONSE_DATA_PARAMETERS);

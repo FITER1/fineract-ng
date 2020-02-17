@@ -18,60 +18,20 @@
  */
 package org.apache.fineract.infrastructure.core.domain;
 
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class Tenant {
-
-    private final Long id;
-    private final String name;
-    private final String schemaName;
-    private final String schemaServer;
-    private final String schemaServerPort;
-    private final String schemaUsername;
-    private final String schemaPassword;
-    private final String timezoneId;
-
-    public Tenant(final Long id, final String name, final String schemaName, final String schemaServer, final String schemaServerPort,
-            final String schemaUsername, final String schemaPassword, final String timezoneId) {
-        this.id = id;
-        this.name = name;
-        this.schemaName = schemaName;
-        this.schemaServer = schemaServer;
-        this.schemaServerPort = schemaServerPort;
-        this.schemaUsername = schemaUsername;
-        this.schemaPassword = schemaPassword;
-        this.timezoneId = timezoneId;
-
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getSchemaName() {
-        return this.schemaName;
-    }
-
-    public String getSchemaServer() {
-        return this.schemaServer;
-    }
-
-    public String getSchemaServerPort() {
-        return this.schemaServerPort;
-    }
-
-    public String getSchemaUsername() {
-        return this.schemaUsername;
-    }
-
-    public String getSchemaPassword() {
-        return this.schemaPassword;
-    }
-
-    public String getTimezoneId() {
-        return this.timezoneId;
-    }
-
+    private Long id;
+    private String name;
+    private String schemaName;
+    private String schemaServer;
+    private String schemaServerPort;
+    private String schemaUsername;
+    private String schemaPassword;
+    private String timezoneId;
 }

@@ -60,8 +60,18 @@ public class CreditBureauLoanProductMappingReadPlatformServiceImpl implements Cr
 			final int stale_period = rs.getInt("staleperiod");
 			final boolean is_active = rs.getBoolean("is_active");
 
-			return CreditBureauLoanProductMappingData.instance(mapping_id, orgcbID, alias, credit_bureau_name, loan_product_name,
-					lpId, is_creditcheck_mandatory, skip_credit_check_in_failure, stale_period, is_active);
+			return CreditBureauLoanProductMappingData.builder()
+				.creditbureauLoanProductMappingId(mapping_id)
+				.organisationCreditBureauId(orgcbID)
+				.alias(alias)
+				.creditbureauSummary(credit_bureau_name)
+				.loanProductName(loan_product_name)
+				.loanProductId(lpId)
+				.creditCheckMandatory(is_creditcheck_mandatory)
+				.skipCrediCheckInFailure(skip_credit_check_in_failure)
+				.stalePeriod(stale_period)
+				.active(is_active)
+				.build();
 		}
 	}
 
@@ -78,7 +88,18 @@ public class CreditBureauLoanProductMappingReadPlatformServiceImpl implements Cr
 
 			final String loan_product_name = rs.getString("loan_product_name");
 
-			return CreditBureauLoanProductMappingData.instance1(loan_product_name, loanid);
+			return CreditBureauLoanProductMappingData.builder()
+				.loanProductName(loan_product_name)
+				.loanProductId(loanid)
+				.creditbureauLoanProductMappingId(0)
+				.organisationCreditBureauId(0)
+				.stalePeriod(0)
+				.alias("")
+				.creditbureauSummary("")
+				.creditCheckMandatory(false)
+				.skipCrediCheckInFailure(false)
+				.active(false)
+				.build();
 		}
 	}
 

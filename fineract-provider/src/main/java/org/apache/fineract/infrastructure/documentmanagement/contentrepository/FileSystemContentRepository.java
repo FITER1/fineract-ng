@@ -114,13 +114,22 @@ public class FileSystemContentRepository implements ContentRepository {
 
     @Override
     public FileData fetchFile(final DocumentData documentData) {
-        final File file = new File(documentData.fileLocation());
-        return new FileData(file, documentData.fileName(), documentData.contentType());
+        try {
+            return FileData.builder()
+                .inputStream(new FileInputStream(documentData.getLocation()))
+                .fileName(documentData.getFileName())
+                .contentType(documentData.getType())
+                .build();
+        } catch (Exception e) {
+            log.error(e.toString(), e);
+        }
+
+        return null;
     }
 
     @Override
     public ImageData fetchImage(final ImageData imageData) {
-        final File file = new File(imageData.location());
+        final File file = new File(imageData.getLocation());
         imageData.updateContent(file);
         return imageData;
     }

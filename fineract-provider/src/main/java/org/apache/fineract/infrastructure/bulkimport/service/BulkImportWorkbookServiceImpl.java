@@ -273,8 +273,8 @@ public class BulkImportWorkbookServiceImpl implements BulkImportWorkbookService 
     }
 
     private Response buildResponse(DocumentData documentData) {
-        String fileName="Output"+documentData.fileName();
-        String fileLocation=documentData.fileLocation();
+        String fileName="Output"+documentData.getFileName();
+        String fileLocation=documentData.getLocation();
         File file=new File(fileLocation);
         final Response.ResponseBuilder response = Response.ok((Object)file);
         response.header("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
@@ -294,8 +294,10 @@ public class BulkImportWorkbookServiceImpl implements BulkImportWorkbookService 
             public DocumentData mapRow (ResultSet rs,int rowNum) throws SQLException {
                 final String location = rs.getString("location");
                 final String fileName=rs.getString("file_name");
-                return new DocumentData(null,null,null,null,fileName,
-                        null,null,null,location,null);
+                return DocumentData.builder()
+                    .fileName(fileName)
+                    .location(location)
+                    .build();
             }
     }
 }

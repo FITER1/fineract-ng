@@ -96,8 +96,15 @@ public class ReportMailingJobRunHistoryReadPlatformServiceImpl implements Report
             final String errorMessage = rs.getString("errorMessage");
             final String errorLog = rs.getString("errorLog");
             
-            return ReportMailingJobRunHistoryData.newInstance(id, reportMailingJobId, startDateTime, endDateTime, status, 
-                    errorMessage, errorLog);
+            return ReportMailingJobRunHistoryData.builder()
+                .id(id)
+                .reportMailingJobId(reportMailingJobId)
+                .startDateTime(startDateTime)
+                .endDateTime(endDateTime)
+                .status(status)
+                .errorMessage(errorMessage)
+                .errorLog(errorLog)
+                .build();
         }
     }
 }

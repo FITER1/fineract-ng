@@ -33,8 +33,12 @@ public class OTPRequest {
 
     public static OTPRequest create(String token, int tokenLiveTimeInSec, boolean extendedAccessToken,
                                     OTPDeliveryMethod deliveryMethod) {
-        final OTPMetadata metadata = new OTPMetadata(DateUtils.getLocalDateTimeOfTenant().toDateTime(),
-                tokenLiveTimeInSec, extendedAccessToken, deliveryMethod);
+        final OTPMetadata metadata = OTPMetadata.builder()
+            .requestTime(DateUtils.getLocalDateTimeOfTenant().toDateTime())
+            .tokenLiveTimeInSec(tokenLiveTimeInSec)
+            .extendedAccessToken(extendedAccessToken)
+            .deliveryMethod(deliveryMethod)
+            .build();
         return new OTPRequest(token, metadata);
     }
 

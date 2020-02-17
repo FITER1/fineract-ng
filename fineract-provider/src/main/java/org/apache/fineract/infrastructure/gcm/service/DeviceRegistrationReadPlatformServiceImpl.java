@@ -74,8 +74,12 @@ public class DeviceRegistrationReadPlatformServiceImpl implements
 			final Long clientId = rs.getLong("clientId");
 			final String clientName = rs.getString("clientName");
 			ClientData clientData = ClientData.instance(clientId, clientName);
-			return DeviceRegistrationData.instance(id, clientData,
-					registrationId, updatedOnDate.toDate());
+			return DeviceRegistrationData.builder()
+				.id(id)
+				.clientData(clientData)
+				.registrationId(registrationId)
+				.updatedOnDate(updatedOnDate.toDate())
+				.build();
 		}
 	}
 

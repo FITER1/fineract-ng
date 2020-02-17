@@ -562,7 +562,11 @@ public final class JsonCommand {
             final Long saltValue) {
         final String passwordPlainText = stringValueOfParameterNamed(parameterName);
 
-        final PlatformUser dummyPlatformUser = new BasicPasswordEncodablePlatformUser(saltValue, "", passwordPlainText);
+        final PlatformUser dummyPlatformUser = BasicPasswordEncodablePlatformUser.builder()
+            .id(saltValue)
+            .username("")
+            .password(passwordPlainText)
+            .build();
         return platformPasswordEncoder.encode(dummyPlatformUser);
     }
 

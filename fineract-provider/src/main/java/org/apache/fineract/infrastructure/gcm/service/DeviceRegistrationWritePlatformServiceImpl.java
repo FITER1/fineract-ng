@@ -51,8 +51,10 @@ public class DeviceRegistrationWritePlatformServiceImpl implements
 		Client client = this.clientRepositoryWrapper
 				.findOneWithNotFoundDetection(clientId);
 		try {
-			DeviceRegistration deviceRegistration = DeviceRegistration
-					.instance(client, registrationId);
+			DeviceRegistration deviceRegistration = DeviceRegistration.builder()
+				.client(client)
+				.registrationId(registrationId)
+				.build();
 			this.deviceRegistrationRepository.save(deviceRegistration);
 			return deviceRegistration;
 		} catch (final EntityExistsException dve) {

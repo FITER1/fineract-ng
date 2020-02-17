@@ -18,22 +18,16 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.data;
 
-/* used to show list of parameters used by a report and also for getting a list of parameters available (the reportParameterName is left null */
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 final public class ReportParameterData {
-
-    @SuppressWarnings("unused")
-    private final Long id;
-    @SuppressWarnings("unused")
-    private final Long parameterId;
-    @SuppressWarnings("unused")
-    private final String parameterName;
-    @SuppressWarnings("unused")
-    private final String reportParameterName;
-
-    public ReportParameterData(final Long id, final Long parameterId, final String reportParameterName, final String parameterName) {
-        this.id = id;
-        this.parameterId = parameterId;
-        this.parameterName = parameterName;
-        this.reportParameterName = reportParameterName;
-    }
+    private Long id;
+    private Long parameterId;
+    private String parameterName;
+    private String reportParameterName;
 }

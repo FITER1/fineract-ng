@@ -37,10 +37,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Path("reports")
 @Component
@@ -89,7 +86,9 @@ public class ReportsApiResource {
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
 
         if (settings.isTemplate()) {
-            result.appendedTemplate(this.readReportingService.getAllowedParameters(), this.readReportingService.getAllowedReportTypes());
+            result.setAllowedParameters(this.readReportingService.getAllowedParameters());
+            result.setAllowedReportTypes(new ArrayList<>(this.readReportingService.getAllowedReportTypes()));
+            result.setAllowedReportSubTypes(Arrays.asList("Bar", "Pie"));
         }
         return this.toApiJsonSerializer.serialize(settings, result, this.RESPONSE_DATA_PARAMETERS);
     }
@@ -105,7 +104,9 @@ public class ReportsApiResource {
         this.context.authenticatedUser().validateHasReadPermission(this.resourceNameForPermissions);
 
         final ReportData result = new ReportData();
-        result.appendedTemplate(this.readReportingService.getAllowedParameters(), this.readReportingService.getAllowedReportTypes());
+        result.setAllowedParameters(this.readReportingService.getAllowedParameters());
+        result.setAllowedReportTypes(new ArrayList<>(this.readReportingService.getAllowedReportTypes()));
+        result.setAllowedReportSubTypes(Arrays.asList("Bar", "Pie"));
 
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
         return this.toApiJsonSerializer.serialize(settings, result, this.RESPONSE_DATA_PARAMETERS);

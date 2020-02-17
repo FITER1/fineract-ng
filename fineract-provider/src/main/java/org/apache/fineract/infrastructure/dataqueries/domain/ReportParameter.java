@@ -18,7 +18,6 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.domain;
 
-import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -35,8 +34,4 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "stretchy_parameter")
 public class ReportParameter extends AbstractPersistableCustom<Long> {
-
-    public boolean hasIdOf(final Long id) {
-        return getId().equals(id);
-    }
 }

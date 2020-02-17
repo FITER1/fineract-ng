@@ -24,6 +24,7 @@ import org.apache.fineract.infrastructure.documentmanagement.api.ImagesApiResour
 import org.apache.fineract.infrastructure.documentmanagement.contentrepository.ContentRepository;
 import org.apache.fineract.infrastructure.documentmanagement.contentrepository.ContentRepositoryFactory;
 import org.apache.fineract.infrastructure.documentmanagement.data.ImageData;
+import org.apache.fineract.infrastructure.documentmanagement.domain.StorageType;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.organisation.staff.domain.StaffRepositoryWrapper;
 import org.apache.fineract.portfolio.client.domain.Client;
@@ -70,7 +71,12 @@ public class ImageReadPlatformServiceImpl implements ImageReadPlatformService {
             final Long id = JdbcSupport.getLong(rs, "id");
             final String location = rs.getString("location");
             final Integer storageType = JdbcSupport.getInteger(rs, "storageType");
-            return new ImageData(id, location, storageType, this.entityDisplayName);
+            return ImageData.builder()
+                .imageId(id)
+                .location(location)
+                .storageType(storageType)
+                .entityDisplayName(this.entityDisplayName)
+                .build();
         }
     }
 
@@ -91,7 +97,7 @@ public class ImageReadPlatformServiceImpl implements ImageReadPlatformService {
             final String sql = "select " + imageMapper.schema(entityType);
 
             final ImageData imageData = this.jdbcTemplate.queryForObject(sql, imageMapper, new Object[] { entityId });
-            final ContentRepository contentRepository = this.contentRepositoryFactory.getRepository(imageData.storageType());
+            final ContentRepository contentRepository = this.contentRepositoryFactory.getRepository(StorageType.fromInt(imageData.getStorageType()));
             final ImageData result = contentRepository.fetchImage(imageData);
 
           //Once we read content EofSensorInputStream, the wrappedStream object is becoming null. So further image source is becoming null 

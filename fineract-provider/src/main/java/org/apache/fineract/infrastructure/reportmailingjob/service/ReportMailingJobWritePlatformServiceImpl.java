@@ -125,7 +125,7 @@ public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJo
             // retrieve the ReportMailingJob object from the database
             final ReportMailingJob reportMailingJob = this.reportMailingJobRepositoryWrapper.findOneThrowExceptionIfNotFound(reportMailingJobId);
             
-            final Map<String, Object> changes = reportMailingJob.update(jsonCommand);
+            final Map<String, Object> changes = reportMailingJob.updateStretchyReport(jsonCommand);
             
             // get the recurrence rule string
             final String recurrence = reportMailingJob.getRecurrence();
@@ -139,7 +139,7 @@ public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJo
                 final Report stretchyReport = this.reportRepositoryWrapper.findOneThrowExceptionIfNotFound(stretchyReportId);
                 
                 // update the stretchy report
-                reportMailingJob.update(stretchyReport);
+                reportMailingJob.setStretchyReport(stretchyReport);
             }
             
             // check if the recurrence was updated
@@ -162,12 +162,12 @@ public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJo
                     final DateTime nextRecurringDateTime = this.createNextRecurringDateTime(recurrence, startDateTime);
                     
                     // update the next run time property
-                    reportMailingJob.updateNextRunDateTime(nextRecurringDateTime);
+                    reportMailingJob.setNextRunDateTime(nextRecurringDateTime);
                     
                  // check if the next run DateTime is not empty and the recurrence is empty
                 } else if (StringUtils.isBlank(recurrence) && (nextRunDateTime != null)) {
                     // the next run DateTime should be set to null
-                    reportMailingJob.updateNextRunDateTime(null);
+                    reportMailingJob.setNextRunDateTime(null);
                 }
             }
             
@@ -184,7 +184,7 @@ public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJo
                 }
                 
                 // update the next run time property
-                reportMailingJob.updateNextRunDateTime(nextRecurringDateTime);
+                reportMailingJob.setNextRunDateTime(nextRecurringDateTime);
             }
             
             if (!changes.isEmpty()) {
@@ -287,29 +287,34 @@ public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJo
         final DateTime nextRunDateTime = reportMailingJob.getNextRunDateTime();
         ReportMailingJobPreviousRunStatus reportMailingJobPreviousRunStatus = ReportMailingJobPreviousRunStatus.SUCCESS;
         
-        reportMailingJob.updatePreviousRunErrorLog(null);
+        reportMailingJob.setPreviousRunErrorLog(null);
         
         if (errorLog != null && errorLog.length() > 0) {
             reportMailingJobPreviousRunStatus = ReportMailingJobPreviousRunStatus.ERROR;
-            reportMailingJob.updatePreviousRunErrorLog(errorLog.toString());
+            reportMailingJob.setPreviousRunErrorLog(errorLog.toString());
         }
         
-        reportMailingJob.increaseNumberOfRunsByOne();
-        reportMailingJob.updatePreviousRunStatus(reportMailingJobPreviousRunStatus.getValue());
-        reportMailingJob.updatePreviousRunDateTime(reportMailingJob.getNextRunDateTime());
-        
+        reportMailingJob.setNumberOfRuns(reportMailingJob.getNumberOfRuns() + 1);
+        if(!StringUtils.isEmpty(reportMailingJobPreviousRunStatus.getValue())) {
+            reportMailingJob.setPreviousRunStatus(reportMailingJobPreviousRunStatus.getValue());
+        }
+
+        if(reportMailingJob.getNextRunDateTime()!=null) {
+            reportMailingJob.setPreviousRunDateTime(reportMailingJob.getNextRunDateTime());
+        }
+
         // check if the job has a recurrence pattern, if not deactivate the job. The job will only run once
         if (StringUtils.isEmpty(recurrence)) {
             // deactivate job
-            reportMailingJob.deactivate();
+            reportMailingJob.setActive(false);
             
             // job will only run once, no next run time
-            reportMailingJob.updateNextRunDateTime(null);
+            reportMailingJob.setNextRunDateTime(null);
         } else if (nextRunDateTime != null) {
             final DateTime nextRecurringDateTime = this.createNextRecurringDateTime(recurrence, nextRunDateTime);
             
             // finally update the next run date time property
-            reportMailingJob.updateNextRunDateTime(nextRecurringDateTime);
+            reportMailingJob.setNextRunDateTime(nextRecurringDateTime);
         }
         
         // save the ReportMailingJob entity
@@ -458,8 +463,12 @@ public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJo
             byteArrayOutputStream.writeTo(outputStream);
             
             for (String emailRecipient : emailRecipients) {
-                final ReportMailingJobEmailData reportMailingJobEmailData = new ReportMailingJobEmailData(emailRecipient, 
-                        reportMailingJob.getEmailMessage(), reportMailingJob.getEmailSubject(), file);
+                final ReportMailingJobEmailData reportMailingJobEmailData = ReportMailingJobEmailData.builder()
+                    .to(emailRecipient)
+                    .text(reportMailingJob.getEmailMessage())
+                    .subject(reportMailingJob.getEmailSubject())
+                    .attachment(file)
+                    .build();
                 
                 this.reportMailingJobEmailService.sendEmailWithAttachment(reportMailingJobEmailData);
             }

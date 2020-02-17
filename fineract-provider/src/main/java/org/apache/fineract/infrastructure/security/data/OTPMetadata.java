@@ -18,36 +18,17 @@
  */
 package org.apache.fineract.infrastructure.security.data;
 
+import lombok.*;
 import org.joda.time.DateTime;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class OTPMetadata {
-
-    private final DateTime requestTime;
-    private final int tokenLiveTimeInSec;
-    private final boolean extendedAccessToken;
-    private final OTPDeliveryMethod deliveryMethod;
-
-    public OTPMetadata(DateTime requestTime, int tokenLiveTimeInSec,
-                       boolean extendedAccessToken, OTPDeliveryMethod deliveryMethod) {
-        this.requestTime = requestTime;
-        this.tokenLiveTimeInSec = tokenLiveTimeInSec;
-        this.extendedAccessToken = extendedAccessToken;
-        this.deliveryMethod = deliveryMethod;
-    }
-
-    public DateTime getRequestTime() {
-        return requestTime;
-    }
-
-    public int getTokenLiveTimeInSec() {
-        return tokenLiveTimeInSec;
-    }
-
-    public boolean isExtendedAccessToken() {
-        return extendedAccessToken;
-    }
-
-    public OTPDeliveryMethod getDeliveryMethod() {
-        return deliveryMethod;
-    }
+    private DateTime requestTime;
+    private int tokenLiveTimeInSec;
+    private boolean extendedAccessToken;
+    private OTPDeliveryMethod deliveryMethod;
 }

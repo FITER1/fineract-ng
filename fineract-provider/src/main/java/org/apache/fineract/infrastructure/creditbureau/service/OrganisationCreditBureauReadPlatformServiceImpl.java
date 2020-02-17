@@ -57,9 +57,16 @@ public class OrganisationCreditBureauReadPlatformServiceImpl implements Organisa
 			final long cbid = rs.getLong("cbid");
 			final boolean is_active = rs.getBoolean("is_active");
 
-			return OrganisationCreditBureauData.instance(orgCbId, orgCbAlias, cbid, creditbureauName,
-					creditbureauProduct, creditbureauCountry, CreditBureauSummary, is_active);
-
+			return OrganisationCreditBureauData.builder()
+				.organisationCreditBureauId(orgCbId)
+				.alias(orgCbAlias)
+				.creditBureauId(cbid)
+				.creditBureauName(creditbureauName)
+				.creditBureauProduct(creditbureauProduct)
+				.creditBureauCountry(creditbureauCountry)
+				.creditBureauSummary(CreditBureauSummary)
+				.active(is_active)
+				.build();
 		}
 	}
 

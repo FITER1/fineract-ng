@@ -18,50 +18,15 @@
  */
 package org.apache.fineract.infrastructure.reportmailingjob.data;
 
-/** 
- * Immutable data object representing report mailing job configuration data. 
- **/
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ReportMailingJobConfigurationData {
-    private final int id;
-    private final String name;
-    private final String value;
-    
-    /** 
-     * ReportMailingJobConfigurationData private constructor 
-     **/
-    private ReportMailingJobConfigurationData(final int id, final String name, final String value) {
-        this.id = id;
-        this.name = name;
-        this.value = value;
-    }
-    
-    /** 
-     * creates an instance of the ReportMailingJobConfigurationData class
-     * 
-     * @return ReportMailingJobConfigurationData object
-     **/
-    public static ReportMailingJobConfigurationData newInstance(final int id, final String name, final String value) {
-        return new ReportMailingJobConfigurationData(id, name, value);
-    }
-
-    /**
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @return the value
-     */
-    public String getValue() {
-        return value;
-    }
+    private int id;
+    private String name;
+    private String value;
 }

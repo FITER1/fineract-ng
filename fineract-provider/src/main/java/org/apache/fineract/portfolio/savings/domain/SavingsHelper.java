@@ -70,7 +70,7 @@ public final class SavingsHelper {
                 }
             }
             
-            postingPeriods.add(LocalDateInterval.create(periodStartDate, periodEndDate));
+            postingPeriods.add(new LocalDateInterval(periodStartDate, periodEndDate));
                      
             if (actualPeriodStartDate.isEqual(periodEndDate))
             {

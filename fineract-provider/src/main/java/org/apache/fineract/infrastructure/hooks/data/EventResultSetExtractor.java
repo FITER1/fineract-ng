@@ -26,8 +26,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.Map.Entry;
 
-public class EventResultSetExtractor implements
-		ResultSetExtractor<List<Grouping>> {
+public class EventResultSetExtractor implements ResultSetExtractor<List<Grouping>> {
 
 	@Override
 	public List<Grouping> extractData(final ResultSet rs) throws SQLException,

@@ -18,7 +18,10 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
@@ -43,12 +46,4 @@ public final class ReportParameterUsage extends AbstractPersistableCustom<Long> 
 
     @Column(name = "report_parameter_name")
     private String reportParameterName;
-
-    public boolean hasParameterIdOf(final Long parameterId) {
-        return this.parameter != null && parameterId.equals(this.parameter.getId());
-    }
-
-    public void updateParameterName(final String parameterName) {
-        this.reportParameterName = parameterName;
-    }
 }

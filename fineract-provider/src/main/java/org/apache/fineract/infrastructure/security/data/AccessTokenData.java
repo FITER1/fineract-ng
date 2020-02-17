@@ -18,30 +18,16 @@
  */
 package org.apache.fineract.infrastructure.security.data;
 
+import lombok.*;
 import org.joda.time.DateTime;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class AccessTokenData {
-
-    private final String token;
-
-    private final DateTime validFrom;
-    private final DateTime validTo;
-
-    public AccessTokenData(String token, DateTime validFrom, DateTime validTo) {
-        this.token = token;
-        this.validFrom = validFrom;
-        this.validTo = validTo;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public DateTime getValidFrom() {
-        return validFrom;
-    }
-
-    public DateTime getValidTo() {
-        return validTo;
-    }
+    private String token;
+    private DateTime validFrom;
+    private DateTime validTo;
 }

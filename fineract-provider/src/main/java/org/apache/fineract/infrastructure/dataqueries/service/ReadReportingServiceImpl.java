@@ -331,16 +331,30 @@ public class ReadReportingServiceImpl implements ReadReportingService {
                 if (reportParameters == null) {
                     reportParameters = new ArrayList<>();
                 }
-                reportParameters.add(new ReportParameterData(rpJoin.getReportParameterId(), rpJoin.getParameterId(), rpJoin
-                        .getReportParameterName(), rpJoin.getParameterName()));
+                reportParameters.add(ReportParameterData.builder()
+                    .id(rpJoin.getReportParameterId())
+                    .parameterId(rpJoin.getParameterId())
+                    .reportParameterName(rpJoin.getReportParameterName())
+                    .parameterName(rpJoin.getParameterName())
+                    .build());
 
             } else {
                 if (firstReport) {
                     firstReport = false;
                 } else {
                     // write report entry
-                    reportList.add(new ReportData(reportId, reportName, reportType, reportSubType, reportCategory, description, reportSql,
-                            coreReport, useReport, reportParameters));
+                    reportList.add(ReportData.builder()
+                        .id(reportId)
+                        .reportName(reportName)
+                        .reportType(reportType)
+                        .reportSubType(reportSubType)
+                        .reportCategory(reportCategory)
+                        .description(description)
+                        .reportSql(reportSql)
+                        .coreReport(coreReport)
+                        .useReport(useReport)
+                        .reportParameters(reportParameters)
+                        .build());
                 }
 
                 prevReportId = rpJoin.getReportId();
@@ -358,8 +372,12 @@ public class ReadReportingServiceImpl implements ReadReportingService {
                 if (rpJoin.getReportParameterId() != null) {
                     // report has at least one parameter
                     reportParameters = new ArrayList<>();
-                    reportParameters.add(new ReportParameterData(rpJoin.getReportParameterId(), rpJoin.getParameterId(), rpJoin
-                            .getReportParameterName(), rpJoin.getParameterName()));
+                    reportParameters.add(ReportParameterData.builder()
+                        .id(rpJoin.getReportParameterId())
+                        .parameterId(rpJoin.getParameterId())
+                        .reportParameterName(rpJoin.getReportParameterName())
+                        .parameterName(rpJoin.getParameterName())
+                        .build());
                 } else {
                     reportParameters = null;
                 }
@@ -367,8 +385,18 @@ public class ReadReportingServiceImpl implements ReadReportingService {
 
         }
         // write last report
-        reportList.add(new ReportData(reportId, reportName, reportType, reportSubType, reportCategory, description, reportSql, coreReport,
-                useReport, reportParameters));
+        reportList.add(ReportData.builder()
+            .id(reportId)
+            .reportName(reportName)
+            .reportType(reportType)
+            .reportSubType(reportSubType)
+            .reportCategory(reportCategory)
+            .description(description)
+            .reportSql(reportSql)
+            .coreReport(coreReport)
+            .useReport(useReport)
+            .reportParameters(reportParameters)
+            .build());
 
         return reportList;
     }
@@ -452,8 +480,21 @@ public class ReadReportingServiceImpl implements ReadReportingService {
             final String reportParameterName = rs.getString("reportParameterName");
             final String parameterName = rs.getString("parameterName");
 
-            return new ReportParameterJoinData(reportId, reportName, reportType, reportSubType, reportCategory, description, reportSql,
-                    coreReport, useReport, reportParameterId, parameterId, reportParameterName, parameterName);
+            return ReportParameterJoinData.builder()
+                .reportId(reportId)
+                .reportName(reportName)
+                .reportType(reportType)
+                .reportSubType(reportSubType)
+                .reportCategory(reportCategory)
+                .description(description)
+                .reportSql(reportSql)
+                .coreReport(coreReport)
+                .useReport(useReport)
+                .reportParameterId(reportParameterId)
+                .parameterId(parameterId)
+                .reportParameterName(reportParameterName)
+                .parameterName(parameterName)
+                .build();
         }
     }
 
@@ -471,7 +512,10 @@ public class ReadReportingServiceImpl implements ReadReportingService {
             final Long id = rs.getLong("id");
             final String parameterName = rs.getString("parameterName");
 
-            return new ReportParameterData(id, null, null, parameterName);
+            return ReportParameterData.builder()
+                .id(id)
+                .parameterName(parameterName)
+                .build();
         }
     }
 

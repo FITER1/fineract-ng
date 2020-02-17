@@ -18,7 +18,10 @@
  */
 package org.apache.fineract.infrastructure.sms.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.campaigns.sms.domain.SmsCampaign;
@@ -28,7 +31,6 @@ import org.apache.fineract.infrastructure.sms.SmsApiConstants;
 import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.portfolio.group.domain.Group;
-import org.joda.time.LocalDate;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -81,66 +83,7 @@ public class SmsMessage extends AbstractPersistableCustom<Long> {
     private Date deliveredOnDate; 
     
     @Column(name = "is_notification", nullable = true)
-    private boolean isNotification;
-
-    public static SmsMessage pendingSms(final String externalId, final Group group, final Client client, final Staff staff,
-            final String message, final String mobileNo, final SmsCampaign smsCampaign, final boolean isNotification) {
-        return SmsMessage.builder()
-            .externalId(externalId)
-            .group(group)
-            .client(client)
-            .staff(staff)
-            .statusType(SmsMessageStatusType.PENDING.getValue())
-            .message(message)
-            .mobileNo(mobileNo)
-            .smsCampaign(smsCampaign)
-            .isNotification(isNotification)
-            .build();
-    }
-
-    public static SmsMessage sentSms(final String externalId, final Group group, final Client client, final Staff staff,
-            final String message, final String mobileNo, final SmsCampaign smsCampaign, final boolean isNotification) {
-        return SmsMessage.builder()
-            .externalId(externalId)
-            .group(group)
-            .client(client)
-            .staff(staff)
-            .statusType(SmsMessageStatusType.WAITING_FOR_DELIVERY_REPORT.getValue())
-            .message(message)
-            .mobileNo(mobileNo)
-            .smsCampaign(smsCampaign)
-            .isNotification(isNotification)
-            .build();
-    }
-
-    public static SmsMessage instance(String externalId, final Group group, final Client client, final Staff staff,
-            final SmsMessageStatusType statusType, final String message, final String mobileNo, final SmsCampaign smsCampaign, final boolean isNotification) {
-        return SmsMessage.builder()
-            .externalId(externalId)
-            .group(group)
-            .client(client)
-            .staff(staff)
-            .statusType(statusType.getValue())
-            .message(message)
-            .mobileNo(mobileNo)
-            .smsCampaign(smsCampaign)
-            .isNotification(isNotification)
-            .build();
-    }
-
-    private SmsMessage(String externalId, final Group group, final Client client, final Staff staff, final SmsMessageStatusType statusType,
-            final String message, final String mobileNo, final SmsCampaign smsCampaign, final boolean isNotification) {
-        this.externalId = externalId;
-        this.group = group;
-        this.client = client;
-        this.staff = staff;
-        this.statusType = statusType.getValue();
-        this.mobileNo = mobileNo;
-        this.message = message;
-        this.smsCampaign = smsCampaign;
-        this.submittedOnDate = LocalDate.now().toDate();
-        this.isNotification = isNotification;
-    }
+    private boolean notification;
 
     public Map<String, Object> update(final JsonCommand command) {
 

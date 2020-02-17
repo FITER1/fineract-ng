@@ -23,8 +23,6 @@ import org.apache.fineract.infrastructure.configuration.service.ExternalServices
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.gcm.GcmConstants;
 import org.apache.fineract.infrastructure.gcm.domain.*;
-import org.apache.fineract.infrastructure.gcm.domain.Message.Builder;
-import org.apache.fineract.infrastructure.gcm.domain.Message.Priority;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessage;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageRepository;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageStatusType;
@@ -79,17 +77,19 @@ public class NotificationSenderService {
 		}
 		for (SmsMessage smsMessage : smsList) {
 			try {
-				Notification notification = new Notification.Builder(
-						GcmConstants.defaultIcon).title(GcmConstants.title)
-						.body(smsMessage.getMessage()).build();
-				Builder b = new Builder();
-				b.notification(notification);
-				b.dryRun(false);
-				b.contentAvailable(true);
-				b.timeToLive(GcmConstants.TIME_TO_LIVE);
-				b.priority(Priority.HIGH);
-				b.delayWhileIdle(true);
-				Message msg = b.build();
+				Notification notification = Notification.builder()
+					.icon(GcmConstants.defaultIcon)
+					.title(GcmConstants.title)
+					.body(smsMessage.getMessage())
+					.build();
+				Message msg = Message.builder()
+					.notification(notification)
+					.dryRun(false)
+					.contentAvailable(true)
+					.timeToLive(GcmConstants.TIME_TO_LIVE)
+					.priority(GcmConstants.MESSAGE_PRIORITY_NORMAL)
+					.delayWhileIdle(true)
+					.build();
 				Sender s = new Sender(notificationConfigurationData.getServerKey(),notificationConfigurationData.getFcmEndPoint());
 				Result res;
 

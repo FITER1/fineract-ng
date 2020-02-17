@@ -70,7 +70,10 @@ public class AuthenticationApiResource {
         final Authentication authenticationCheck = this.customAuthenticationProvider.authenticate(authentication);
 
         final Collection<String> permissions = new ArrayList<>();
-        AuthenticatedUserData authenticatedUserData = new AuthenticatedUserData(username, permissions);
+        AuthenticatedUserData authenticatedUserData = AuthenticatedUserData.builder()
+            .username(username)
+            .permissions(permissions)
+            .build();
 
         if (authenticationCheck.isAuthenticated()) {
             final Collection<GrantedAuthority> authorities = new ArrayList<>(authenticationCheck.getAuthorities());
@@ -104,13 +107,27 @@ public class AuthenticationApiResource {
             boolean isTwoFactorRequired = twoFactorUtils.isTwoFactorAuthEnabled() && !
                     principal.hasSpecificPermissionTo(TwoFactorConstants.BYPASS_TWO_FACTOR_PERMISSION);
             if (this.springSecurityPlatformSecurityContext.doesPasswordHasToBeRenewed(principal)) {
-                authenticatedUserData = new AuthenticatedUserData(username, principal.getId(),
-                        new String(base64EncodedAuthenticationKey), isTwoFactorRequired);
+                authenticatedUserData = AuthenticatedUserData.builder()
+                    .username(username)
+                    .userId(principal.getId())
+                    .base64EncodedAuthenticationKey(new String(base64EncodedAuthenticationKey))
+                    .twoFactorAuthenticationRequired(isTwoFactorRequired)
+                    .build();
             } else {
 
-                authenticatedUserData = new AuthenticatedUserData(username, officeId, officeName, staffId, staffDisplayName,
-                        organisationalRole, roles, permissions, principal.getId(),
-                        new String(base64EncodedAuthenticationKey), isTwoFactorRequired);
+                authenticatedUserData = AuthenticatedUserData.builder()
+                    .username(username)
+                    .officeId(officeId)
+                    .officeName(officeName)
+                    .staffId(staffId)
+                    .staffDisplayName(staffDisplayName)
+                    .organisationalRole(organisationalRole)
+                    .roles(roles)
+                    .permissions(permissions)
+                    .userId(principal.getId())
+                    .base64EncodedAuthenticationKey(new String(base64EncodedAuthenticationKey))
+                    .twoFactorAuthenticationRequired(isTwoFactorRequired)
+                    .build();
             }
 
         }

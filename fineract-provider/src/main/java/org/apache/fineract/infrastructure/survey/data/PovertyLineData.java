@@ -18,24 +18,16 @@
  */
 package org.apache.fineract.infrastructure.survey.data;
 
-/**
- * Created by Cieyou on 3/11/14.
- */
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class PovertyLineData {
-
-    final Long resourceId;
-    final Long scoreFrom;
-    final Long scoreTo;
-    final Double povertyLine;
-
-    public PovertyLineData(final Long resourceId,
-            final Long scoreFrom,
-            final Long scoreTo,
-            final Double povertyLine){
-
-        this.resourceId = resourceId;
-        this.scoreTo = scoreTo;
-        this.scoreFrom = scoreFrom;
-        this.povertyLine = povertyLine;
-    }
+    private Long resourceId;
+    private Long scoreFrom;
+    private Long scoreTo;
+    private Double povertyLine;
 }

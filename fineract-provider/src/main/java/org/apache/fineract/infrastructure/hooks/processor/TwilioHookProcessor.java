@@ -59,7 +59,7 @@ public class TwilioHookProcessor implements HookProcessor {
             final String authToken) {
 
         final SmsProviderData smsProviderData = new SmsProviderData(
-                hook.getHookConfig());
+                hook.getConfig());
 
         sendRequest(smsProviderData, payload, entityName, actionName,
                 tenantIdentifier, authToken, hook);
@@ -91,8 +91,12 @@ public class TwilioHookProcessor implements HookProcessor {
             } catch (Exception e) {
                 log.error(e.toString(), e);
             }
-            final HookConfiguration apiKeyEntry = HookConfiguration.createNew(
-                    hook, "string", apiKeyName, apiKey);
+            final HookConfiguration apiKeyEntry = HookConfiguration.builder()
+                    .hook(hook)
+                    .fieldType("string")
+                    .fieldName(apiKeyName)
+                    .fieldValue(apiKey)
+                    .build();
             this.hookConfigurationRepository.save(apiKeyEntry);
         }
 

@@ -145,22 +145,22 @@ public class EndOfDayBalance {
 
         int daysOfBalance = this.numberOfDays;
 
-        if (this.date.isBefore(compoundingPeriodInterval.startDate())) {
-            balanceStartDate = compoundingPeriodInterval.startDate();
+        if (this.date.isBefore(compoundingPeriodInterval.getStartDate())) {
+            balanceStartDate = compoundingPeriodInterval.getStartDate();
             startingBalance = this.endOfDayBalance;
-            final LocalDateInterval balancePeriodInterval = LocalDateInterval.create(balanceStartDate, oldBalanceEndDate);
+            final LocalDateInterval balancePeriodInterval = new LocalDateInterval(balanceStartDate, oldBalanceEndDate);
             daysOfBalance = balancePeriodInterval.daysInPeriodInclusiveOfEndDate();
         }
 
         LocalDate balanceEndDate = balanceStartDate.plusDays(daysOfBalance - 1);
-        if (balanceEndDate.isAfter(compoundingPeriodInterval.endDate())) {
-            balanceEndDate = compoundingPeriodInterval.endDate();
-            final LocalDateInterval balancePeriodInterval = LocalDateInterval.create(balanceStartDate, balanceEndDate);
+        if (balanceEndDate.isAfter(compoundingPeriodInterval.getEndDate())) {
+            balanceEndDate = compoundingPeriodInterval.getEndDate();
+            final LocalDateInterval balancePeriodInterval = new LocalDateInterval(balanceStartDate, balanceEndDate);
             daysOfBalance = balancePeriodInterval.daysInPeriodInclusiveOfEndDate();
         }
         if (balanceEndDate.isAfter(upToInterestCalculationDate)) {
             balanceEndDate = upToInterestCalculationDate;
-            final LocalDateInterval balancePeriodInterval = LocalDateInterval.create(balanceStartDate, balanceEndDate);
+            final LocalDateInterval balancePeriodInterval = new LocalDateInterval(balanceStartDate, balanceEndDate);
             daysOfBalance = balancePeriodInterval.daysInPeriodInclusiveOfEndDate();
         }
 
@@ -171,7 +171,7 @@ public class EndOfDayBalance {
 
         final LocalDate balanceUpToDate = this.date.plusDays(this.numberOfDays - 1);
 
-        final LocalDateInterval balanceInterval = LocalDateInterval.create(this.date, balanceUpToDate);
+        final LocalDateInterval balanceInterval = new LocalDateInterval(this.date, balanceUpToDate);
         return balanceInterval.containsPortionOf(compoundingPeriodInterval);
     }
 

@@ -73,11 +73,14 @@ public class GenericDataServiceImpl implements GenericDataService {
     	                columnValues.add(columnValue);
     	            }
 
-    	            final ResultsetRowData resultsetDataRow = ResultsetRowData.create(columnValues);
+    	            final ResultsetRowData resultsetDataRow = new ResultsetRowData(columnValues);
     	            resultsetDataRows.add(resultsetDataRow);
     	        }
 
-			return new GenericResultsetData(columnHeaders, resultsetDataRows);
+			return GenericResultsetData.builder()
+                .columnHeaders(columnHeaders)
+                .data(resultsetDataRows)
+                .build();
 		} catch (DataAccessException e) {
 			throw new PlatformDataIntegrityException("error.msg.report.unknown.data.integrity.issue", e.getClass().getName());
 		}
@@ -282,7 +285,10 @@ public class GenericDataServiceImpl implements GenericDataService {
             while (rsValues.next()) {
                 final Integer id = rsValues.getInt("id");
                 final String codeValue = rsValues.getString("code_value");
-                columnValues.add(new ResultsetColumnValueData(id, codeValue));
+                columnValues.add(ResultsetColumnValueData.builder()
+                    .id(id)
+                    .value(codeValue)
+                    .build());
             }
         }
 

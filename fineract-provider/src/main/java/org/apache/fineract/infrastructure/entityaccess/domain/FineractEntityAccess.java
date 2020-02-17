@@ -18,7 +18,10 @@
  */
 package org.apache.fineract.infrastructure.entityaccess.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -53,18 +56,6 @@ public class FineractEntityAccess extends AbstractPersistableCustom<Long> {
 	
 	@Column(name = "second_entity_id")
     private Long secondEntityId;
-
-    public static FineractEntityAccess createNew(final String entityType, final Long entityId,
-    		final CodeValue accessType,
-    		final String secondEntityType, final Long secondEntityId) {
-        return FineractEntityAccess.builder()
-            .entityType(entityType)
-            .entityId(entityId)
-            .accessType(accessType)
-            .secondEntityType(secondEntityType)
-            .secondEntityId(secondEntityId)
-            .build();
-    }
 
     public static FineractEntityAccess fromJson(final CodeValue accessType, final JsonCommand command) {
         final String entityType = command.stringValueOfParameterNamed(

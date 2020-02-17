@@ -64,9 +64,17 @@ public class DocumentWritePlatformServiceJpaRepositoryImpl implements DocumentWr
 
             final String fileLocation = contentRepository.saveFile(inputStream, documentCommand);
 
-            final Document document = Document.createNew(documentCommand.getParentEntityType(), documentCommand.getParentEntityId(),
-                    documentCommand.getName(), documentCommand.getFileName(), documentCommand.getSize(), documentCommand.getType(),
-                    documentCommand.getDescription(), fileLocation, contentRepository.getStorageType());
+            final Document document = Document.builder()
+                .parentEntityType(documentCommand.getParentEntityType())
+                .parentEntityId(documentCommand.getParentEntityId())
+                .name(documentCommand.getName())
+                .fileName(documentCommand.getFileName())
+                .size(documentCommand.getSize())
+                .type(documentCommand.getType())
+                .description(documentCommand.getDescription())
+                .location(fileLocation)
+                .storageType(contentRepository.getStorageType().getValue())
+                .build();
 
             this.documentRepository.save(document);
 
@@ -109,7 +117,7 @@ public class DocumentWritePlatformServiceJpaRepositoryImpl implements DocumentWr
                     .orElseThrow(() -> new DocumentNotFoundException(documentCommand.getParentEntityType(),
                             documentCommand.getParentEntityId(), documentCommand.getId()));
 
-            final StorageType documentStoreType = documentForUpdate.storageType();
+            final StorageType documentStoreType = StorageType.fromInt(documentForUpdate.getStorageType());
             oldLocation = documentForUpdate.getLocation();
             if (inputStream != null && documentCommand.isFileNameChanged()) {
                 final ContentRepository contentRepository = this.contentRepositoryFactory.getRepository();
@@ -149,7 +157,7 @@ public class DocumentWritePlatformServiceJpaRepositoryImpl implements DocumentWr
                         documentCommand.getParentEntityId(), documentCommand.getId()));
         this.documentRepository.delete(document);
 
-        final ContentRepository contentRepository = this.contentRepositoryFactory.getRepository(document.storageType());
+        final ContentRepository contentRepository = this.contentRepositoryFactory.getRepository(StorageType.fromInt(document.getStorageType()));
         contentRepository.deleteFile(document.getName(), document.getLocation());
         return CommandProcessingResult.builder().resourceId(document.getId()).build();
     }

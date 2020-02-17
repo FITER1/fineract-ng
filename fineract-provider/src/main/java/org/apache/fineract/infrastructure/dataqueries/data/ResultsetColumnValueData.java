@@ -18,34 +18,15 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.data;
 
-/**
- * Immutable data object representing a possible value for a given resultset
- * column.
- */
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ResultsetColumnValueData {
-
-    private final int id;
-    private final String value;
-    @SuppressWarnings("unused")
-    private final Integer score;
-
-    public ResultsetColumnValueData(final int id, final String value) {
-        this.id = id;
-        this.value = value;
-        this.score = null;
-    }
-
-    public ResultsetColumnValueData(final int id, final String value, final int score) {
-        this.id = id;
-        this.value = value;
-        this.score = score;
-    }
-
-    public boolean matches(final String match) {
-        return match.equalsIgnoreCase(this.value);
-    }
-
-    public boolean codeMatches(final Integer match) {
-        return match.intValue() == this.id;
-    }
+    private Integer id;
+    private String value;
+    private Integer score;
 }

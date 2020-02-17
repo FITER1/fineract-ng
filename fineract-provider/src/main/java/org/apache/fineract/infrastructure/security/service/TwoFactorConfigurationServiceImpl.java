@@ -94,10 +94,10 @@ public class TwoFactorConfigurationServiceImpl implements TwoFactorConfiguration
                 continue;
             }
 
-            if(command.isChangeInStringParameterNamed(parameterName, configuration.getStringValue())) {
+            if(command.isChangeInStringParameterNamed(parameterName, configuration.getValue())) {
                 final String newValue = command.stringValueOfParameterNamed(parameterName).trim();
                 actualChanges.put(parameterName, newValue);
-                configuration.setStringValue(newValue);
+                configuration.setValue(newValue);
                 configurationRepository.save(configuration);
             }
         }
@@ -239,7 +239,7 @@ public class TwoFactorConfigurationServiceImpl implements TwoFactorConfiguration
     private String getStringConfig(final String name, final String defaultValue) {
         final TwoFactorConfiguration configuration =
                 configurationRepository.findByName(name);
-        String value = configuration.getStringValue();
+        String value = configuration.getValue();
         if(value == null) {
             return defaultValue;
         }

@@ -56,8 +56,13 @@ public class CreditBureauReadConfigurationServiceImpl implements CreditBureauRea
 			final long orgCBId = rs.getLong("orgCBId");
 			final String desc = rs.getString("description");
 
-			return CreditBureauConfigurationData.instance(configId, configkey, configValue, orgCBId, desc);
-
+			return CreditBureauConfigurationData.builder()
+				.creditBureauConfigurationId(configId)
+				.configurationKey(configkey)
+				.value(configValue)
+				.organizationCreditBureauId(orgCBId)
+				.description(desc)
+				.build();
 		}
 	}
 

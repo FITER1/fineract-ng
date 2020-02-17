@@ -58,7 +58,13 @@ public class FineractEntityAccessWriteServiceImpl implements FineractEntityAcces
     @Transactional
     public void addNewEntityAccess(final String entityType, final Long entityId, final CodeValue accessType, final String secondEntityType,
             final Long secondEntityId) {
-        FineractEntityAccess entityAccess = FineractEntityAccess.createNew(entityType, entityId, accessType, secondEntityType, secondEntityId);
+        FineractEntityAccess entityAccess = FineractEntityAccess.builder()
+            .entityType(entityType)
+            .entityId(entityId)
+            .accessType(accessType)
+            .secondEntityType(secondEntityType)
+            .secondEntityId(secondEntityId)
+            .build();
         entityAccessRepository.save(entityAccess);
     }
 
@@ -83,7 +89,13 @@ public class FineractEntityAccessWriteServiceImpl implements FineractEntityAcces
                         .before(startDate)) { throw new FineractEntityToEntityMappingDateException(startDate.toString(), endDate.toString()); }
             }
 
-            final FineractEntityToEntityMapping newMap = FineractEntityToEntityMapping.newMap(mapId, fromId, toId, startDate, endDate);
+            final FineractEntityToEntityMapping newMap = FineractEntityToEntityMapping.builder()
+                .relationId(mapId)
+                .fromId(fromId)
+                .toId(toId)
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
 
             this.fineractEntityToEntityMappingRepository.save(newMap);
 

@@ -115,7 +115,7 @@ public class PostingPeriod {
 
             // this check is to make sure to add interest if withdrawal is
             // happened for already
-            if (transaction.occursOn(periodInterval.endDate().plusDays(1))) {
+            if (transaction.occursOn(periodInterval.getEndDate().plusDays(1))) {
                 if (transaction.getId() == null) {
                     interestTransfered = isInterestTransfer;
                 } else if (interestPostTransactions.contains(transaction.getId())) {
@@ -126,13 +126,13 @@ public class PostingPeriod {
         }
 
         if (accountEndOfDayBalances.isEmpty()) {
-            LocalDate balanceStartDate = periodInterval.startDate();
-            LocalDate balanceEndDate = periodInterval.endDate();
+            LocalDate balanceStartDate = periodInterval.getStartDate();
+            LocalDate balanceEndDate = periodInterval.getEndDate();
             Integer numberOfDaysOfBalance = periodInterval.daysInPeriodInclusiveOfEndDate();
 
             if (balanceEndDate.isAfter(upToInterestCalculationDate)) {
                 balanceEndDate = upToInterestCalculationDate;
-                final LocalDateInterval spanOfBalance = LocalDateInterval.create(balanceStartDate, balanceEndDate);
+                final LocalDateInterval spanOfBalance = new LocalDateInterval(balanceStartDate, balanceEndDate);
                 numberOfDaysOfBalance = spanOfBalance.daysInPeriodInclusiveOfEndDate();
             }
 
@@ -171,9 +171,9 @@ public class PostingPeriod {
         this.compoundingPeriods = compoundingPeriods;
 
         if (isSavingsInterestPostingAtCurrentPeriodEnd)
-            this.dateOfPostingTransaction = periodInterval.endDate();
+            this.dateOfPostingTransaction = periodInterval.getEndDate();
         else
-            this.dateOfPostingTransaction = periodInterval.endDate().plusDays(1);
+            this.dateOfPostingTransaction = periodInterval.getEndDate().plusDays(1);
         this.interestTransfered = interestTransfered;
         this.minBalanceForInterestCalculation = minBalanceForInterestCalculation;
         this.overdraftInterestRateAsFraction = overdraftInterestRateAsFraction;
@@ -211,14 +211,14 @@ public class PostingPeriod {
                     this.minOverdraftForInterestCalculation.getAmount());
 			BigDecimal unCompoundedInterest = compoundInterestValues.getuncompoundedInterest().add(interestUnrounded);
 			compoundInterestValues.setuncompoundedInterest(unCompoundedInterest);
-			LocalDate compoundingPeriodEndDate = compoundingPeriod.getPeriodInterval().endDate();
+			LocalDate compoundingPeriodEndDate = compoundingPeriod.getPeriodInterval().getEndDate();
 			if (!SavingsCompoundingInterestPeriodType.DAILY.equals(this.interestCompoundingType)) {
 				compoundingPeriodEndDate = determineInterestPeriodEndDateFrom(
-						compoundingPeriod.getPeriodInterval().startDate(), this.interestCompoundingType,
-						compoundingPeriod.getPeriodInterval().endDate(), this.getFinancialYearBeginningMonth());
+						compoundingPeriod.getPeriodInterval().getStartDate(), this.interestCompoundingType,
+						compoundingPeriod.getPeriodInterval().getEndDate(), this.getFinancialYearBeginningMonth());
 			}
 
-			if (compoundingPeriodEndDate.equals(compoundingPeriod.getPeriodInterval().endDate())) {
+			if (compoundingPeriodEndDate.equals(compoundingPeriod.getPeriodInterval().getEndDate())) {
 				BigDecimal interestCompounded = compoundInterestValues.getcompoundedInterest()
 						.add(unCompoundedInterest);
 				compoundInterestValues.setcompoundedInterest(interestCompounded);
@@ -253,9 +253,9 @@ public class PostingPeriod {
             break;
             case MONTHLY:
 
-                final LocalDate postingPeriodEndDate = postingPeriodInterval.endDate();
+                final LocalDate postingPeriodEndDate = postingPeriodInterval.getEndDate();
 
-                LocalDate periodStartDate = postingPeriodInterval.startDate();
+                LocalDate periodStartDate = postingPeriodInterval.getStartDate();
                 LocalDate periodEndDate = periodStartDate;
 
                 while (!periodStartDate.isAfter(postingPeriodEndDate) && !periodEndDate.isAfter(postingPeriodEndDate)) {
@@ -265,7 +265,7 @@ public class PostingPeriod {
                         periodEndDate = postingPeriodEndDate;
                     }
 
-                    final LocalDateInterval compoundingPeriodInterval = LocalDateInterval.create(periodStartDate, periodEndDate);
+                    final LocalDateInterval compoundingPeriodInterval = new LocalDateInterval(periodStartDate, periodEndDate);
                     if (postingPeriodInterval.contains(compoundingPeriodInterval)) {
 
                         compoundingPeriod = MonthlyCompoundingPeriod.create(compoundingPeriodInterval, allEndOfDayBalances,
@@ -282,9 +282,9 @@ public class PostingPeriod {
             // case BIWEEKLY:
             // break;
             case QUATERLY:
-                final LocalDate qPostingPeriodEndDate = postingPeriodInterval.endDate();
+                final LocalDate qPostingPeriodEndDate = postingPeriodInterval.getEndDate();
 
-                periodStartDate = postingPeriodInterval.startDate();
+                periodStartDate = postingPeriodInterval.getStartDate();
                 periodEndDate = periodStartDate;
 
                 while (!periodStartDate.isAfter(qPostingPeriodEndDate) && !periodEndDate.isAfter(qPostingPeriodEndDate)) {
@@ -294,7 +294,7 @@ public class PostingPeriod {
                         periodEndDate = qPostingPeriodEndDate;
                     }
 
-                    final LocalDateInterval compoundingPeriodInterval = LocalDateInterval.create(periodStartDate, periodEndDate);
+                    final LocalDateInterval compoundingPeriodInterval = new LocalDateInterval(periodStartDate, periodEndDate);
                     if (postingPeriodInterval.contains(compoundingPeriodInterval)) {
 
                         compoundingPeriod = QuarterlyCompoundingPeriod.create(compoundingPeriodInterval, allEndOfDayBalances,
@@ -307,9 +307,9 @@ public class PostingPeriod {
                 }
             break;
             case BI_ANNUAL:
-                final LocalDate bPostingPeriodEndDate = postingPeriodInterval.endDate();
+                final LocalDate bPostingPeriodEndDate = postingPeriodInterval.getEndDate();
 
-                periodStartDate = postingPeriodInterval.startDate();
+                periodStartDate = postingPeriodInterval.getStartDate();
                 periodEndDate = periodStartDate;
 
                 while (!periodStartDate.isAfter(bPostingPeriodEndDate) && !periodEndDate.isAfter(bPostingPeriodEndDate)) {
@@ -319,7 +319,7 @@ public class PostingPeriod {
                         periodEndDate = bPostingPeriodEndDate;
                     }
 
-                    final LocalDateInterval compoundingPeriodInterval = LocalDateInterval.create(periodStartDate, periodEndDate);
+                    final LocalDateInterval compoundingPeriodInterval = new LocalDateInterval(periodStartDate, periodEndDate);
                     if (postingPeriodInterval.contains(compoundingPeriodInterval)) {
 
                         compoundingPeriod = BiAnnualCompoundingPeriod.create(compoundingPeriodInterval, allEndOfDayBalances,
@@ -332,9 +332,9 @@ public class PostingPeriod {
                 }
             break;
             case ANNUAL:
-                final LocalDate aPostingPeriodEndDate = postingPeriodInterval.endDate();
+                final LocalDate aPostingPeriodEndDate = postingPeriodInterval.getEndDate();
 
-                periodStartDate = postingPeriodInterval.startDate();
+                periodStartDate = postingPeriodInterval.getStartDate();
                 periodEndDate = periodStartDate;
 
                 while (!periodStartDate.isAfter(aPostingPeriodEndDate) && !periodEndDate.isAfter(aPostingPeriodEndDate)) {
@@ -344,7 +344,7 @@ public class PostingPeriod {
                         periodEndDate = aPostingPeriodEndDate;
                     }
 
-                    final LocalDateInterval compoundingPeriodInterval = LocalDateInterval.create(periodStartDate, periodEndDate);
+                    final LocalDateInterval compoundingPeriodInterval = new LocalDateInterval(periodStartDate, periodEndDate);
                     if (postingPeriodInterval.contains(compoundingPeriodInterval)) {
 
                         compoundingPeriod = AnnualCompoundingPeriod.create(compoundingPeriodInterval, allEndOfDayBalances,

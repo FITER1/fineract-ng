@@ -42,11 +42,4 @@ public class ReportMailingJobConfiguration extends AbstractPersistableCustom<Int
     
     @Column(name = "value", nullable = false)
     private String value;
-    
-    public static ReportMailingJobConfiguration newInstance(final String name, final String value) {
-        return ReportMailingJobConfiguration.builder()
-            .name(name)
-            .value(value)
-            .build();
-    }
 }

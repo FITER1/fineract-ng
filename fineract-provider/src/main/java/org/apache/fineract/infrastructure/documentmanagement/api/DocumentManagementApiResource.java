@@ -187,9 +187,9 @@ public class DocumentManagementApiResource {
         this.context.authenticatedUser().validateHasReadPermission(this.SystemEntityType);
 
         final FileData fileData = this.documentReadPlatformService.retrieveFileData(entityType, entityId, documentId);
-        final ResponseBuilder response = Response.ok(fileData.file());
-        response.header("Content-Disposition", "attachment; filename=\"" + fileData.name() + "\"");
-        response.header("Content-Type", fileData.contentType());
+        final ResponseBuilder response = Response.ok(fileData.getInputStream());
+        response.header("Content-Disposition", "attachment; filename=\"" + fileData.getFileName() + "\"");
+        response.header("Content-Type", fileData.getContentType());
 
         return response.build();
     }

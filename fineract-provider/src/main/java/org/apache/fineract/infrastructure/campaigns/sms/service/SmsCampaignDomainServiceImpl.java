@@ -28,6 +28,7 @@ import org.apache.fineract.infrastructure.campaigns.sms.exception.SmsRuntimeExce
 import org.apache.fineract.infrastructure.campaigns.sms.serialization.SmsCampaignValidator;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessage;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageRepository;
+import org.apache.fineract.infrastructure.sms.domain.SmsMessageStatusType;
 import org.apache.fineract.infrastructure.sms.scheduler.SmsMessageScheduledJobService;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OfficeRepository;
@@ -201,8 +202,14 @@ public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
 		                    	if(mobileNo != null){
 		                    		mobileNumber = mobileNo.toString();
 		                    	}
-								SmsMessage smsMessage = SmsMessage.pendingSms(null, null, client, null, message,
-										mobileNumber, smsCampaign, smsCampaign.isNotification());
+								SmsMessage smsMessage = SmsMessage.builder()
+									.statusType(SmsMessageStatusType.PENDING.getValue())
+									.client(client)
+									.message(message)
+									.mobileNo(mobileNumber)
+									.smsCampaign(smsCampaign)
+									.notification(smsCampaign.isNotification())
+									.build();
 								Collection<SmsMessage> messages = new ArrayList<>();
 								messages.add(smsMessage);
 								Map<SmsCampaign, Collection<SmsMessage>> smsDataMap = new HashMap<>();
@@ -260,8 +267,14 @@ public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
                     	if(mobileNo != null){
                     		mobileNumber = mobileNo.toString();
                     	}
-						SmsMessage smsMessage = SmsMessage.pendingSms(null, null, client, null, message,
-								mobileNumber, smsCampaign, smsCampaign.isNotification());
+						SmsMessage smsMessage = SmsMessage.builder()
+							.statusType(SmsMessageStatusType.PENDING.getValue())
+							.client(client)
+							.message(message)
+							.mobileNo(mobileNumber)
+							.smsCampaign(smsCampaign)
+							.notification(smsCampaign.isNotification())
+							.build();
 						this.smsMessageRepository.save(smsMessage);
 						Collection<SmsMessage> messages = new ArrayList<>();
 						messages.add(smsMessage);

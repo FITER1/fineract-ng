@@ -76,7 +76,11 @@ public class TFAccessToken extends AbstractPersistableCustom<Long> {
     }
 
     public AccessTokenData toTokenData() {
-        return new AccessTokenData(this.token, getValidFromDate().toDateTime(), getValidToDate().toDateTime());
+        return AccessTokenData.builder()
+            .token(this.token)
+            .validFrom(getValidFromDate().toDateTime())
+            .validTo(getValidToDate().toDateTime())
+            .build();
     }
 
     public LocalDateTime getValidFromDate() {

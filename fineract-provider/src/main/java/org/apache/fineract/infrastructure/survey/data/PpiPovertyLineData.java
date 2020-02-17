@@ -18,16 +18,18 @@
  */
 package org.apache.fineract.infrastructure.survey.data;
 
+import lombok.*;
+
 import java.util.List;
 
-/**
- * Created by Cieyou on 3/11/14.
- */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class PpiPovertyLineData {
-
-    final String ppi;
-    final List<LikeliHoodPovertyLineData> likeliHoodPovertyLineData;
-
+    private String ppi;
+    private List<LikeliHoodPovertyLineData> likeliHoodPovertyLineData;
 
     public PpiPovertyLineData(final List<LikeliHoodPovertyLineData> likeliHoodPovertyLineData,
                        final String ppi){

@@ -47,7 +47,7 @@ public class WebHookProcessor implements HookProcessor {
 			final String actionName, final String tenantIdentifier,
 			final String authToken) {
 
-		final Set<HookConfiguration> config = hook.getHookConfig();
+		final Set<HookConfiguration> config = hook.getConfig();
 
 		String url = "";
 		String contentType = "";

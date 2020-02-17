@@ -18,33 +18,16 @@
  */
 package org.apache.fineract.infrastructure.core.domain;
 
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class EmailDetail {
-
-    private final String subject;
-    private final String body;
-    private final String address;
-    private final String contactName;
-
-    public EmailDetail(final String subject, final String body, final String address, final String contactName) {
-        this.subject = subject;
-        this.body = body;
-        this.address = address;
-        this.contactName = contactName;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public String getContactName() {
-        return this.contactName;
-    }
-
-    public String getAddress() {
-        return this.address;
-    }
+    private String subject;
+    private String body;
+    private String address;
+    private String contactName;
 }

@@ -97,7 +97,10 @@ public class HookReadPlatformServiceImpl implements HookReadPlatformService {
 
         final List<Grouping> events = getTemplateForEvents();
 
-        return HookData.template(templateData, events);
+        return HookData.builder()
+            .templates(templateData)
+            .groupings(events)
+            .build();
     }
 
     private List<Grouping> getTemplateForEvents() {
@@ -141,9 +144,18 @@ public class HookReadPlatformServiceImpl implements HookReadPlatformService {
             final List<Event> registeredEvents = retrieveEvents(id);
             final List<Field> config = retrieveConfig(id);
 
-            return HookData.instance(id, name, displayname, isActive,
-                    createdAt, updatedAt, templateId, registeredEvents, config,
-                    templateName);
+            return HookData.builder()
+                .id(id)
+                .name(name)
+                .displayName(displayname)
+                .active(isActive)
+                .createdAt(createdAt)
+                .updatedAt(updatedAt)
+                .templateId(templateId)
+                .events(registeredEvents)
+                .config(config)
+                .templateName(templateName)
+                .build();
         }
 
         private List<Event> retrieveEvents(final Long hookId) {
@@ -179,7 +191,10 @@ public class HookReadPlatformServiceImpl implements HookReadPlatformService {
                 throws SQLException {
             final String actionName = rs.getString("action_name");
             final String entityName = rs.getString("entity_name");
-            return Event.instance(actionName, entityName);
+            return Event.builder()
+                .actionName(actionName)
+                .entityName(entityName)
+                .build();
         }
     }
 
@@ -195,7 +210,10 @@ public class HookReadPlatformServiceImpl implements HookReadPlatformService {
                 throws SQLException {
             final String fieldName = rs.getString("field_name");
             final String fieldValue = rs.getString("field_value");
-            return Field.fromConfig(fieldName, fieldValue);
+            return Field.builder()
+                .fieldName(fieldName)
+                .fieldValue(fieldValue)
+                .build();
         }
     }
 
@@ -222,7 +240,11 @@ public class HookReadPlatformServiceImpl implements HookReadPlatformService {
             final String name = rs.getString("name");
             final List<Field> schema = retrieveSchema(id);
 
-            return HookTemplateData.instance(id, name, schema);
+            return HookTemplateData.builder()
+                .id(id)
+                .name(name)
+                .schema(schema)
+                .build();
         }
 
         private List<Field> retrieveSchema(final Long templateId) {
@@ -253,8 +275,12 @@ public class HookReadPlatformServiceImpl implements HookReadPlatformService {
             final String fieldType = rs.getString("field_type");
             final Boolean optional = rs.getBoolean("optional");
             final String placeholder = rs.getString("placeholder");
-            return Field
-                    .fromSchema(fieldType, fieldName, optional, placeholder);
+            return Field.builder()
+                .fieldType(fieldType)
+                .fieldName(fieldName)
+                .optional(optional)
+                .placeholder(placeholder)
+                .build();
         }
     }
 

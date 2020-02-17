@@ -116,11 +116,15 @@ public class S3ContentRepository implements ContentRepository {
     @Override
     public FileData fetchFile(final DocumentData documentData) throws DocumentNotFoundException {
         FileData fileData = null;
-        final String fileName = documentData.fileName();
+        final String fileName = documentData.getFileName();
         try {
             log.info("Downloading an object");
-            final S3Object s3object = this.s3Client.getObject(new GetObjectRequest(this.s3BucketName, documentData.fileLocation()));
-            fileData = new FileData(s3object.getObjectContent(), fileName, documentData.contentType());
+            final S3Object s3object = this.s3Client.getObject(new GetObjectRequest(this.s3BucketName, documentData.getLocation()));
+            fileData = FileData.builder()
+                .inputStream(s3object.getObjectContent())
+                .fileName(fileName)
+                .contentType(documentData.getType())
+                .build();
         } catch (final AmazonClientException ace) {
             log.error(ace.getMessage());
             throw new DocumentNotFoundException(documentData.getParentEntityType(), documentData.getParentEntityId(), documentData.getId());
@@ -131,8 +135,8 @@ public class S3ContentRepository implements ContentRepository {
     @Override
     public ImageData fetchImage(final ImageData imageData) {
     	try {
-    		final S3Object s3object = this.s3Client.getObject(new GetObjectRequest(this.s3BucketName, imageData.location()));
-            imageData.updateContent(s3object.getObjectContent());	
+    		final S3Object s3object = this.s3Client.getObject(new GetObjectRequest(this.s3BucketName, imageData.getLocation()));
+            imageData.setInputStream(s3object.getObjectContent());
     	}catch(AmazonS3Exception e) {
     		log.error(e.getMessage());
     	}

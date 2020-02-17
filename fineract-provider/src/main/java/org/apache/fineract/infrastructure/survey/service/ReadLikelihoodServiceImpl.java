@@ -40,11 +40,12 @@ public class ReadLikelihoodServiceImpl implements ReadLikelihoodService {
         List<LikelihoodData> likelihoodDatas = new ArrayList<>();
 
         while (likelihood.next()) {
-            likelihoodDatas.add(new LikelihoodData(likelihood.getLong("id"), likelihood.getString("name"), likelihood.getString("code"),
-                    likelihood.getLong("enabled")
-
-            ));
-
+            likelihoodDatas.add(LikelihoodData.builder()
+                .resourceId(likelihood.getLong("id"))
+                .likeliHoodName(likelihood.getString("name"))
+                .likeliHoodCode(likelihood.getString("code"))
+                .enabled(likelihood.getLong("enabled"))
+                .build());
         }
 
         return likelihoodDatas;
@@ -57,7 +58,6 @@ public class ReadLikelihoodServiceImpl implements ReadLikelihoodService {
                 + " GROUP BY pl.likelihood_ppi_id ";
 
         return this.jdbcTemplate.queryForRowSet(sql, new Object[] { ppiName });
-
     }
 
     @Override
@@ -66,10 +66,12 @@ public class ReadLikelihoodServiceImpl implements ReadLikelihoodService {
 
         likelihood.first();
 
-        return new LikelihoodData(likelihood.getLong("id"), likelihood.getString("name"), likelihood.getString("code"),
-                likelihood.getLong("enabled")
-
-        );
+        return LikelihoodData.builder()
+            .resourceId(likelihood.getLong("id"))
+            .likeliHoodName(likelihood.getString("name"))
+            .likeliHoodCode(likelihood.getString("code"))
+            .enabled(likelihood.getLong("enabled"))
+            .build();
 
     }
 

@@ -697,7 +697,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
         for (final LocalDateInterval periodInterval : postingPeriodIntervals) {
             
             boolean isUserPosting = false;
-            if(postedAsOnDates.contains(periodInterval.endDate().plusDays(1))){
+            if(postedAsOnDates.contains(periodInterval.getEndDate().plusDays(1))){
                 isUserPosting = true;
             }
 

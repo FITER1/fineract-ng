@@ -125,9 +125,16 @@ public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatat
         Collection<LoanProductData> loanProductDatas = this.loanProductReadPlatformService.retrieveAllLoanProductsForLookup(true);
         Collection<SavingsProductData> savingsProductDatas = this.savingsProductReadPlatformService.retrieveAllForLookup();
 
-        return new EntityDataTableChecksTemplateData(entities, statusClient, statusGroup, statusSavings, statusLoan, dataTables,
-                loanProductDatas, savingsProductDatas);
-
+        return EntityDataTableChecksTemplateData.builder()
+            .entities(entities)
+            .statusClient(statusClient)
+            .statusGroup(statusGroup)
+            .statusSavings(statusSavings)
+            .statusLoans(statusLoan)
+            .datatables(dataTables)
+            .loanProductDatas(loanProductDatas)
+            .savingsProductDatas(savingsProductDatas)
+            .build();
     }
 
     private List<DatatableCheckStatusData> getStatusList(Integer[] statuses) {
@@ -135,7 +142,10 @@ public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatat
         if (statuses != null) {
             for (Integer status : statuses) {
                 StatusEnum statusEnum = StatusEnum.fromInt(status);
-                ret.add(new DatatableCheckStatusData(statusEnum.name(), statusEnum.getCode()));
+                ret.add(DatatableCheckStatusData.builder()
+                    .name(statusEnum.name())
+                    .code(statusEnum.getCode())
+                    .build());
             }
         }
         return ret;
@@ -155,7 +165,10 @@ public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatat
             final String entity = rs.getString("entity");
             final String tableName = rs.getString("tableName");
 
-            return new DatatableChecksData(entity, tableName);
+            return DatatableChecksData.builder()
+                .entity(entity)
+                .dataTableName(tableName)
+                .build();
         }
 
         public String schema() {
@@ -181,7 +194,15 @@ public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatat
             final Long productId = JdbcSupport.getLong(rs, "productId");
             final String productName = rs.getString("productName");
 
-            return new EntityDataTableChecksData(id, entity, statusEnum, datatableName, systemDefined, productId, productName);
+            return EntityDataTableChecksData.builder()
+                .id(id)
+                .entity(entity)
+                .status(statusEnum)
+                .datatableName(datatableName)
+                .systemDefined(systemDefined)
+                .productId(productId)
+                .productName(productName)
+                .build();
         }
 
         public String schema() {

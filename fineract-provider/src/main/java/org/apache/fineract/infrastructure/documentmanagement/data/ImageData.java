@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.data;
 
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.documentmanagement.contentrepository.ContentRepositoryUtils;
@@ -30,24 +31,19 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 
 @Slf4j
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ImageData {
-
-    @SuppressWarnings("unused")
-    private final Long imageId;
-    private final String location;
-    private final Integer storageType;
-    private final String entityDisplayName;
-
+    private Long imageId;
+    private String location;
+    private Integer storageType;
+    private String entityDisplayName;
     private File file;
     private ContentRepositoryUtils.IMAGE_FILE_EXTENSION fileExtension;
     private InputStream inputStream;
-
-    public ImageData(final Long imageId, final String location, final Integer storageType, final String entityDisplayName) {
-        this.imageId = imageId;
-        this.location = location;
-        this.storageType = storageType;
-        this.entityDisplayName = entityDisplayName;
-    }
 
     public byte[] getContent() {
         try {
@@ -125,45 +121,18 @@ public class ImageData {
         return out;
     }
 
-    private void setImageContentType(String filename) {
-        fileExtension = ContentRepositoryUtils.IMAGE_FILE_EXTENSION.JPEG;
-
-        if (StringUtils.endsWith(filename.toLowerCase(), ContentRepositoryUtils.IMAGE_FILE_EXTENSION.GIF.getValue())) {
-            fileExtension = ContentRepositoryUtils.IMAGE_FILE_EXTENSION.GIF;
-        } else if (StringUtils.endsWith(filename, ContentRepositoryUtils.IMAGE_FILE_EXTENSION.PNG.getValue())) {
-            fileExtension = ContentRepositoryUtils.IMAGE_FILE_EXTENSION.PNG;
-        }
-    }
-
     public void updateContent(final File file) {
         this.file = file;
+
         if (this.file != null) {
-            setImageContentType(this.file.getName());
+            this.fileExtension = ContentRepositoryUtils.IMAGE_FILE_EXTENSION.JPEG;
+
+            if (StringUtils.endsWith(file.getName().toLowerCase(), ContentRepositoryUtils.IMAGE_FILE_EXTENSION.GIF.getValue())) {
+                this.fileExtension = ContentRepositoryUtils.IMAGE_FILE_EXTENSION.GIF;
+            } else if (StringUtils.endsWith(file.getName(), ContentRepositoryUtils.IMAGE_FILE_EXTENSION.PNG.getValue())) {
+                this.fileExtension = ContentRepositoryUtils.IMAGE_FILE_EXTENSION.PNG;
+            }
         }
-    }
-
-    public String contentType() {
-        return ContentRepositoryUtils.IMAGE_MIME_TYPE.fromFileExtension(this.fileExtension).getValue();
-    }
-
-    public StorageType storageType() {
-        return StorageType.fromInt(this.storageType);
-    }
-
-    public String name() {
-        return this.file.getName();
-    }
-
-    public String location() {
-        return this.location;
-    }
-
-    public void updateContent(final InputStream objectContent) {
-        this.inputStream = objectContent;
-    }
-
-    public String getEntityDisplayName() {
-        return this.entityDisplayName;
     }
 
     public boolean available() {

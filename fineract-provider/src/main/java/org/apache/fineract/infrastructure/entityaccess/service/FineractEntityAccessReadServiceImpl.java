@@ -115,7 +115,7 @@ public class FineractEntityAccessReadServiceImpl implements FineractEntityAccess
         Collection<FineractEntityToEntityMappingData> entityAccessData = null;
         GetOneEntityMapper mapper = new GetOneEntityMapper();
 
-        if (includeAllSubOffices && (firstEntityType.getTable().equals("m_office"))) {
+        if (includeAllSubOffices && (firstEntityType.getTableName().equals("m_office"))) {
             sql += " where firstentity.hierarchy like ? order by firstEntity.hierarchy";
             entityAccessData = this.jdbcTemplate.query(sql, mapper, new Object[] { fromEntityId, fromEntityId, hierarchySearchString });
         } else {
@@ -169,7 +169,11 @@ public class FineractEntityAccessReadServiceImpl implements FineractEntityAccess
 
             FineractEntityAccessData returnFineractEntityAccessData = null;
             if (firstEntity != null && secondEntity != null && accessType != null) {
-                returnFineractEntityAccessData = new FineractEntityAccessData(firstEntity, accessType, secondEntity);
+                returnFineractEntityAccessData = FineractEntityAccessData.builder()
+                    .firstEntity(firstEntity)
+                    .accessType(accessType)
+                    .secondEntity(secondEntity)
+                    .build();
             }
             return returnFineractEntityAccessData;
         }
@@ -180,7 +184,7 @@ public class FineractEntityAccessReadServiceImpl implements FineractEntityAccess
 
         FineractEntityType firstEntityType = FineractEntityType.OFFICE;
         FineractEntityRelation fineractEntityRelation = fineractEntityRelationRepository
-        						.findOneByCodeName(FineractEntityAccessType.OFFICE_ACCESS_TO_LOAN_PRODUCTS.toStr());
+        						.findOneByCodeName(FineractEntityAccessType.OFFICE_ACCESS_TO_LOAN_PRODUCTS.getStr());
         Long relId = fineractEntityRelation.getId();
         return getSQLQueryInClause_WithListOfIDsForEntityAccess(firstEntityType, relId, officeId, includeAllOffices);
     }
@@ -190,7 +194,7 @@ public class FineractEntityAccessReadServiceImpl implements FineractEntityAccess
 
         FineractEntityType firstEntityType = FineractEntityType.OFFICE;
         FineractEntityRelation fineractEntityRelation = fineractEntityRelationRepository
-        		      .findOneByCodeName(FineractEntityAccessType.OFFICE_ACCESS_TO_SAVINGS_PRODUCTS.toStr());
+        		      .findOneByCodeName(FineractEntityAccessType.OFFICE_ACCESS_TO_SAVINGS_PRODUCTS.getStr());
         Long relId = fineractEntityRelation.getId();
 
         return getSQLQueryInClause_WithListOfIDsForEntityAccess(firstEntityType, relId, officeId, includeAllOffices);
@@ -201,7 +205,7 @@ public class FineractEntityAccessReadServiceImpl implements FineractEntityAccess
 
         FineractEntityType firstEntityType = FineractEntityType.OFFICE;
         FineractEntityRelation fineractEntityRelation = fineractEntityRelationRepository
-        						.findOneByCodeName(FineractEntityAccessType.OFFICE_ACCESS_TO_CHARGES.toStr());
+        						.findOneByCodeName(FineractEntityAccessType.OFFICE_ACCESS_TO_CHARGES.getStr());
         Long relId = fineractEntityRelation.getId();
 
         return getSQLQueryInClause_WithListOfIDsForEntityAccess(firstEntityType, relId, officeId, includeAllOffices);
@@ -227,7 +231,10 @@ public class FineractEntityAccessReadServiceImpl implements FineractEntityAccess
         public FineractEntityRelationData mapRow(final ResultSet rs, @SuppressWarnings("unused") final int rowNum) throws SQLException {
             final Long mappingTypesId = rs.getLong("id");
             final String mappingTypes = rs.getString("mapping_Types");
-            return FineractEntityRelationData.getMappingTypes(mappingTypesId, mappingTypes);
+            return FineractEntityRelationData.builder()
+                .id(mappingTypesId)
+                .mappingTypes(mappingTypes)
+                .build();
         }
     }
 
@@ -275,7 +282,13 @@ public class FineractEntityAccessReadServiceImpl implements FineractEntityAccess
             final Long toId = rs.getLong("toId");
             final Date startDate = rs.getDate("startDate");
             final Date endDate = rs.getDate("endDate");
-            return FineractEntityToEntityMappingData.getRelatedEntities(relId, fromId, toId, startDate, endDate);
+            return FineractEntityToEntityMappingData.builder()
+                .relationId(relId)
+                .fromId(fromId)
+                .toId(toId)
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
         }
 
     }
@@ -346,7 +359,16 @@ public class FineractEntityAccessReadServiceImpl implements FineractEntityAccess
             final String toEntity = rs.getString("to_name");
             final Date startDate = rs.getDate("startDate");
             final Date endDate = rs.getDate("endDate");
-            return FineractEntityToEntityMappingData.getRelatedEntities(mapId, relId, fromId, toId, startDate, endDate, fromEntity, toEntity);
+            return FineractEntityToEntityMappingData.builder()
+                .mapId(mapId)
+                .relationId(relId)
+                .fromId(fromId)
+                .toId(toId)
+                .startDate(startDate)
+                .endDate(endDate)
+                .fromEntity(fromEntity)
+                .toEntity(toEntity)
+                .build();
         }
     }
 

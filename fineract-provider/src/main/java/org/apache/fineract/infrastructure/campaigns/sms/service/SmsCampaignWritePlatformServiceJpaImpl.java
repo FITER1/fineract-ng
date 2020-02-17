@@ -204,8 +204,14 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
                     	if(mobileNo != null){
                     		mobileNumber = mobileNo.toString();
                     	}
-                        SmsMessage smsMessage = SmsMessage.pendingSms(null, null, client, null, textMessage, mobileNumber,
-                                smsCampaign, smsCampaign.isNotification());
+                        SmsMessage smsMessage = SmsMessage.builder()
+                            .statusType(SmsMessageStatusType.PENDING.getValue())
+                            .client(client)
+                            .message(textMessage)
+                            .mobileNo(mobileNumber)
+                            .smsCampaign(smsCampaign)
+                            .notification(smsCampaign.isNotification())
+                            .build();
                         this.smsMessageRepository.save(smsMessage);
                     }
                 }
@@ -259,8 +265,14 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
                         	if(mobileNo != null){
                         		mobileNumber = mobileNo.toString();
                         	}
-                            SmsMessage smsMessage = SmsMessage.pendingSms(null, null, client, null, textMessage, mobileNumber,
-                                    smsCampaign, smsCampaign.isNotification());
+                            SmsMessage smsMessage = SmsMessage.builder()
+                                .statusType(SmsMessageStatusType.PENDING.getValue())
+                                .client(client)
+                                .message(textMessage)
+                                .mobileNo(mobileNumber)
+                                .smsCampaign(smsCampaign)
+                                .notification(smsCampaign.isNotification())
+                                .build();
                             smsMessage.setStatusType(SmsMessageStatusType.WAITING_FOR_DELIVERY_REPORT.getValue());
                             this.smsMessageRepository.save(smsMessage);
                             Collection<SmsMessage> messages = new ArrayList<>() ;
@@ -305,8 +317,14 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
                     	if(mobileNo != null){
                     		mobileNumber = mobileNo.toString();
                     	}
-						SmsMessage smsMessage = SmsMessage.pendingSms(null, null, client, null, textMessage,
-								mobileNumber, smsCampaign, smsCampaign.isNotification());
+						SmsMessage smsMessage = SmsMessage.builder()
+                            .statusType(SmsMessageStatusType.PENDING.getValue())
+                            .client(client)
+                            .message(textMessage)
+                            .mobileNo(mobileNumber)
+                            .smsCampaign(smsCampaign)
+                            .notification(smsCampaign.isNotification())
+                            .build();
 						smsMessage.setStatusType(SmsMessageStatusType.WAITING_FOR_DELIVERY_REPORT.getValue());
 						this.smsMessageRepository.save(smsMessage);
 						Collection<SmsMessage> messages = new ArrayList<>();
@@ -349,8 +367,14 @@ public class SmsCampaignWritePlatformServiceJpaImpl implements SmsCampaignWriteP
                     	if(mobileNo != null){
                     		mobileNumber = mobileNo.toString();
                     	}
-						SmsMessage smsMessage = SmsMessage.pendingSms(null, null, client, null, textMessage,
-								mobileNumber, smsCampaign, smsCampaign.isNotification());
+						SmsMessage smsMessage = SmsMessage.builder()
+                            .statusType(SmsMessageStatusType.PENDING.getValue())
+                            .client(client)
+                            .message(textMessage)
+                            .mobileNo(mobileNumber)
+                            .smsCampaign(smsCampaign)
+                            .notification(smsCampaign.isNotification())
+                            .build();
 						smsMessage.setStatusType(SmsMessageStatusType.WAITING_FOR_DELIVERY_REPORT.getValue());
 						this.smsMessageRepository.save(smsMessage);
 						Collection<SmsMessage> messages = new ArrayList<>();

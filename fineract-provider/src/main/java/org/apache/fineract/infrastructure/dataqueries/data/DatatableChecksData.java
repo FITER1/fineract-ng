@@ -18,16 +18,16 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.data;
 
+import lombok.*;
+
 import java.io.Serializable;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class DatatableChecksData implements Serializable {
-
-	private static final long serialVersionUID = 3113568562509206452L;
-	private final String entity;
-	private final String dataTableName;
-
-	public DatatableChecksData(final String entity, final String dataTableName) {
-		this.entity = entity;
-		this.dataTableName = dataTableName;
-	}
+	private String entity;
+	private String dataTableName;
 }

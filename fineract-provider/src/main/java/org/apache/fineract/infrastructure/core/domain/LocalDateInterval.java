@@ -18,39 +18,23 @@
  */
 package org.apache.fineract.infrastructure.core.domain;
 
+import lombok.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class LocalDateInterval {
-
-    private final LocalDate startDate;
-    private final LocalDate endDate;
-
-    public static LocalDateInterval create(final LocalDate startDate, final LocalDate endDate) {
-        return new LocalDateInterval(startDate, endDate);
-    }
-
-    public LocalDateInterval(final LocalDate startDate, final LocalDate endDate) {
-        this.startDate = startDate;
-        this.endDate = endDate;
-    }
-
-    public LocalDate startDate() {
-        return this.startDate;
-    }
-
-    public LocalDate endDate() {
-        return this.endDate;
-    }
+    private LocalDate startDate;
+    private LocalDate endDate;
 
     public Integer daysInPeriodInclusiveOfEndDate() {
-        return daysBetween() + 1;
-    }
-
-    private Integer daysBetween() {
-        return Days.daysBetween(this.startDate, this.endDate).getDays();
+        return Days.daysBetween(this.startDate, this.endDate).getDays() + 1;
     }
 
     public boolean containsPortionOf(final LocalDateInterval interval) {
@@ -71,10 +55,5 @@ public class LocalDateInterval {
 
     public boolean fallsBefore(final LocalDate dateToCheck) {
         return this.endDate.isBefore(dateToCheck);
-    }
-
-    @Override
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }

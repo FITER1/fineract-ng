@@ -70,7 +70,11 @@ public class ReportMailingJobConfigurationReadPlatformServiceImpl implements Rep
             final String name = rs.getString("name");
             final String value = rs.getString("value");
             
-            return ReportMailingJobConfigurationData.newInstance(id, name, value);
+            return ReportMailingJobConfigurationData.builder()
+                .id(id)
+                .name(name)
+                .value(value)
+                .build();
         }
     }
 }

@@ -18,23 +18,15 @@
  */
 package org.apache.fineract.infrastructure.survey.data;
 
+import lombok.*;
 import org.apache.fineract.infrastructure.dataqueries.data.DatatableData;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class SurveyDataTableData {
-
-    @SuppressWarnings("unused")
-    private final DatatableData datatableData;
-
-    @SuppressWarnings("unused")
-    private final boolean enabled;
-
-    public static SurveyDataTableData create(final DatatableData datatableData, final boolean enabled) {
-
-        return new SurveyDataTableData(datatableData, enabled);
-    }
-
-    private SurveyDataTableData(final DatatableData datatableData, final boolean enabled) {
-        this.datatableData = datatableData;
-        this.enabled = enabled;
-    }
+    private DatatableData datatableData;
+    private boolean enabled;
 }

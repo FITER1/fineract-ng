@@ -150,8 +150,8 @@ public class InterestRateChartFields {
         LocalDate thatEndDate = that.getEndDateAsLocalDate();
         thatEndDate = thatEndDate == null ? DateUtils.getLocalDateOfTenant() : thatEndDate;
 
-        final LocalDateInterval thisInterval = LocalDateInterval.create(thisFromDate, thisEndDate);
-        final LocalDateInterval thatInterval = LocalDateInterval.create(thatFromDate, thatEndDate);
+        final LocalDateInterval thisInterval = new LocalDateInterval(thisFromDate, thisEndDate);
+        final LocalDateInterval thatInterval = new LocalDateInterval(thatFromDate, thatEndDate);
 
         if (thisInterval.containsPortionOf(thatInterval) || thatInterval.containsPortionOf(thisInterval)) { return true; }
         return false;// no overlapping
@@ -159,7 +159,7 @@ public class InterestRateChartFields {
 
     public boolean isApplicableChartFor(final LocalDate target) {
         final LocalDate endDate = this.endDate == null ? DateUtils.getLocalDateOfTenant() : this.getEndDateAsLocalDate();
-        final LocalDateInterval interval = LocalDateInterval.create(getFromDateAsLocalDate(), endDate);
+        final LocalDateInterval interval = new LocalDateInterval(getFromDateAsLocalDate(), endDate);
         return interval.contains(target);
     }
 

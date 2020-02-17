@@ -34,6 +34,7 @@ import org.apache.fineract.infrastructure.security.exception.OTPDeliveryMethodIn
 import org.apache.fineract.infrastructure.security.exception.OTPTokenInvalidException;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessage;
 import org.apache.fineract.infrastructure.sms.domain.SmsMessageRepository;
+import org.apache.fineract.infrastructure.sms.domain.SmsMessageStatusType;
 import org.apache.fineract.infrastructure.sms.scheduler.SmsMessageScheduledJobService;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.springframework.cache.annotation.CacheEvict;
@@ -86,8 +87,13 @@ public class TwoFactorServiceImpl implements TwoFactorService {
             }
             final OTPRequest request = generateNewToken(smsDelivery, extendedAccessToken);
             final String smsText = configurationService.getFormattedSmsTextFor(user, request);
-            SmsMessage smsMessage = SmsMessage.pendingSms(null, null, null, user.getStaff(), smsText,
-                    user.getStaff().getMobileNo(), null, false);
+            SmsMessage smsMessage = SmsMessage.builder()
+                .statusType(SmsMessageStatusType.PENDING.getValue())
+                .staff(user.getStaff())
+                .message(smsText)
+                .mobileNo(user.getStaff().getMobileNo())
+                .notification(false)
+                .build();
             this.smsMessageRepository.save(smsMessage);
             smsMessageScheduledJobService.sendTriggeredMessage(Collections.singleton(smsMessage),
                     configurationService.getSMSProviderId());
@@ -101,8 +107,12 @@ public class TwoFactorServiceImpl implements TwoFactorService {
             final OTPRequest request = generateNewToken(emailDelivery, extendedAccessToken);
             final String emailSubject = configurationService.getFormattedEmailSubjectFor(user, request);
             final String emailBody = configurationService.getFormattedEmailBodyFor(user, request);
-            final EmailDetail emailData = new EmailDetail(emailSubject, emailBody, user.getEmail(),
-                    user.getFirstname() + " " + user.getLastname());
+            final EmailDetail emailData = EmailDetail.builder()
+                .subject(emailSubject)
+                .body(emailBody)
+                .address(user.getEmail())
+                .contactName(user.getFirstname() + " " + user.getLastname())
+                .build();
             emailService.sendDefinedEmail(emailData);
             otpRequestRepository.addOTPRequest(user, request);
             return request;
@@ -187,7 +197,10 @@ public class TwoFactorServiceImpl implements TwoFactorService {
             return null;
         }
 
-        return new OTPDeliveryMethod(TwoFactorConstants.SMS_DELIVERY_METHOD_NAME, mobileNo);
+        return OTPDeliveryMethod.builder()
+            .name(TwoFactorConstants.SMS_DELIVERY_METHOD_NAME)
+            .target(mobileNo)
+            .build();
     }
 
     private OTPDeliveryMethod getEmailDeliveryMethodForUser(final AppUser user) {
@@ -195,7 +208,10 @@ public class TwoFactorServiceImpl implements TwoFactorService {
             return null;
         }
 
-        return new OTPDeliveryMethod(TwoFactorConstants.EMAIL_DELIVERY_METHOD_NAME, user.getEmail());
+        return OTPDeliveryMethod.builder()
+            .name(TwoFactorConstants.EMAIL_DELIVERY_METHOD_NAME)
+            .target(user.getEmail())
+            .build();
     }
 
     private OTPRequest generateNewToken(final OTPDeliveryMethod deliveryMethod, final boolean extendedAccessToken) {

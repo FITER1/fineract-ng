@@ -117,8 +117,31 @@ public class ReportMailingJobApiResource {
         ReportMailingJobData reportMailingJobData = this.reportMailingJobReadPlatformService.retrieveReportMailingJob(entityId);
         
         if (settings.isTemplate()) {
-            final ReportMailingJobData ReportMailingJobDataOptions = this.reportMailingJobReadPlatformService.retrieveReportMailingJobEnumOptions();
-            reportMailingJobData = ReportMailingJobData.newInstance(reportMailingJobData, ReportMailingJobDataOptions);
+            final ReportMailingJobData reportMailingJobDataOptions = this.reportMailingJobReadPlatformService.retrieveReportMailingJobEnumOptions();
+            reportMailingJobData = ReportMailingJobData.builder()
+                .id(reportMailingJobData.getId())
+                .name(reportMailingJobData.getName())
+                .description(reportMailingJobData.getDescription())
+                .startDateTime(reportMailingJobData.getStartDateTime())
+                .recurrence(reportMailingJobData.getRecurrence())
+                .timeline(reportMailingJobData.getTimeline())
+                .emailRecipients(reportMailingJobData.getEmailRecipients())
+                .emailSubject(reportMailingJobData.getEmailSubject())
+                .emailMessage(reportMailingJobData.getEmailMessage())
+                .emailAttachmentFileFormat(reportMailingJobData.getEmailAttachmentFileFormat())
+                .stretchyReport(reportMailingJobData.getStretchyReport())
+                .stretchyReportParamMap(reportMailingJobData.getStretchyReportParamMap())
+                .previousRunDateTime(reportMailingJobData.getPreviousRunDateTime())
+                .nextRunDateTime(reportMailingJobData.getNextRunDateTime())
+                .previousRunStatus(reportMailingJobData.getPreviousRunStatus())
+                .previousRunErrorLog(reportMailingJobData.getPreviousRunErrorLog())
+                .previousRunErrorMessage(reportMailingJobData.getPreviousRunErrorMessage())
+                .numberOfRuns(reportMailingJobData.getNumberOfRuns())
+                .active(reportMailingJobData.isActive())
+                .runAsUserId(reportMailingJobData.getRunAsUserId())
+                .emailAttachmentFileFormatOptions(reportMailingJobDataOptions.getEmailAttachmentFileFormatOptions())
+                .stretchyReportParamDateOptions(reportMailingJobDataOptions.getStretchyReportParamDateOptions())
+                .build();
         }
         
         return this.reportMailingToApiJsonSerializer.serialize(settings, reportMailingJobData, ReportMailingJobConstants.REPORT_MAILING_JOB_DATA_PARAMETERS);

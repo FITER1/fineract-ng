@@ -320,7 +320,7 @@ public class RecurringDepositAccount extends SavingsAccount {
         final Money minBalanceForInterestCalculation = Money.of(getCurrency(), minBalanceForInterestCalculation());
         for (final LocalDateInterval periodInterval : postingPeriodIntervals) {
             boolean isUserPosting = false;
-            if (PostedAsOnDates.contains(periodInterval.endDate())) {
+            if (PostedAsOnDates.contains(periodInterval.getEndDate())) {
                 isUserPosting = true;
             }
             final PostingPeriod postingPeriod = PostingPeriod.createFrom(periodInterval, periodStartingBalance, transactions,
@@ -1003,7 +1003,7 @@ public class RecurringDepositAccount extends SavingsAccount {
             LocalDate chartEndDate = this.chart.getEndDateAsLocalDate();
             chartEndDate = chartEndDate == null ? DateUtils.getLocalDateOfTenant() : chartEndDate;
 
-            final LocalDateInterval chartInterval = LocalDateInterval.create(chartFromDate, chartEndDate);
+            final LocalDateInterval chartInterval = new LocalDateInterval(chartFromDate, chartEndDate);
             if (!chartInterval.contains(accountSubmittedOrActivationDate())) {
                 baseDataValidator.reset().failWithCodeNoParameterAddedToErrorCode("no.valid.interest.rate.slab.available.for.date.range");
             }

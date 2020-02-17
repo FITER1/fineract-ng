@@ -18,7 +18,10 @@
  */
 package org.apache.fineract.infrastructure.hooks.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
@@ -42,12 +45,4 @@ public class HookResource extends AbstractPersistableCustom<Long> {
 
 	@Column(name = "action_name", nullable = false, length = 45)
 	private String actionName;
-
-	public static HookResource createNewWithoutHook(final String entityName,
-			final String actionName) {
-		return HookResource.builder()
-			.actionName(actionName)
-			.entityName(entityName)
-			.build();
-	}
 }

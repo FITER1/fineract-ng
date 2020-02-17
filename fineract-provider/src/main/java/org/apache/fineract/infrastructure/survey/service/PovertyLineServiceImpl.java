@@ -55,8 +55,12 @@ public class PovertyLineServiceImpl implements PovertyLineService {
                 String likelihoodCode = povertyLines.getString("code");
 
                 if (likelihoodCode.equals(codeName)) {
-                    povertyLineDatas.add(new PovertyLineData(povertyLines.getLong("id"), povertyLines.getLong("score_from"), povertyLines
-                            .getLong("score_to"), povertyLines.getDouble("poverty_line")));
+                    povertyLineDatas.add(PovertyLineData.builder()
+                        .resourceId(povertyLines.getLong("id"))
+                        .scoreFrom(povertyLines.getLong("score_from"))
+                        .scoreTo(povertyLines.getLong("score_to"))
+                        .povertyLine(povertyLines.getDouble("poverty_line"))
+                        .build());
                 }
             }
 
@@ -65,14 +69,22 @@ public class PovertyLineServiceImpl implements PovertyLineService {
             // create the likelihood object with the list of povertyLine object
             // belonging to it
 
-            LikeliHoodPovertyLineData likeliHoodPovertyLineData = new LikeliHoodPovertyLineData(likelihoods.getLong("id"),
-                    povertyLineDatas, likelihoods.getString("name"), likelihoods.getString("code"), likelihoods.getLong("enabled"));
+            LikeliHoodPovertyLineData likeliHoodPovertyLineData = LikeliHoodPovertyLineData.builder()
+                .resourceId(likelihoods.getLong("id"))
+                .povertyLineData(povertyLineDatas)
+                .likeliHoodName(likelihoods.getString("name"))
+                .likeliHoodCode(likelihoods.getString("code"))
+                .enabled(likelihoods.getLong("enabled"))
+                .build();
 
             listOfLikeliHoodPovertyLineData.add(likeliHoodPovertyLineData);
 
         }
 
-        PpiPovertyLineData ppiPovertyLineData = new PpiPovertyLineData(listOfLikeliHoodPovertyLineData, ppiName);
+        PpiPovertyLineData ppiPovertyLineData = PpiPovertyLineData.builder()
+            .likeliHoodPovertyLineData(listOfLikeliHoodPovertyLineData)
+            .ppi(ppiName)
+            .build();
 
         return ppiPovertyLineData;
     }
@@ -86,8 +98,12 @@ public class PovertyLineServiceImpl implements PovertyLineService {
 
         while (povertyLines.next()) {
 
-            povertyLineDatas.add(new PovertyLineData(povertyLines.getLong("id"), povertyLines.getLong("score_from"), povertyLines
-                    .getLong("score_to"), povertyLines.getDouble("poverty_line")));
+            povertyLineDatas.add(PovertyLineData.builder()
+                .resourceId(povertyLines.getLong("id"))
+                .scoreFrom(povertyLines.getLong("score_from"))
+                .scoreTo(povertyLines.getLong("score_to"))
+                .povertyLine(povertyLines.getDouble("poverty_line"))
+                .build());
         }
 
         povertyLines.first();
@@ -95,9 +111,13 @@ public class PovertyLineServiceImpl implements PovertyLineService {
         // create the likelihood object with the list of povertyLine object
         // belonging to it
 
-        return new LikeliHoodPovertyLineData(povertyLines.getLong("likelihood_id"), povertyLineDatas, povertyLines.getString("name"),
-                povertyLines.getString("code"), povertyLines.getLong("enabled"));
-
+        return LikeliHoodPovertyLineData.builder()
+            .resourceId(povertyLines.getLong("likelihood_id"))
+            .povertyLineData(povertyLineDatas)
+            .likeliHoodName(povertyLines.getString("name"))
+            .likeliHoodCode(povertyLines.getString("code"))
+            .enabled(povertyLines.getLong("enabled"))
+            .build();
     }
 
     private SqlRowSet _getLikelihoods() {

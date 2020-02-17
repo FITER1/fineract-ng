@@ -18,8 +18,12 @@
  */
 package org.apache.fineract.infrastructure.survey.data;
 
-/**
- * Created by Cieyou on 2/27/14.
- */
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class SurveyData {
 }

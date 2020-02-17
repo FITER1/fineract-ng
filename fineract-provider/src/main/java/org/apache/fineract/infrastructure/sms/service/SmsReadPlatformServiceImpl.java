@@ -99,7 +99,17 @@ public class SmsReadPlatformServiceImpl implements SmsReadPlatformService {
             
             final String campaignName = rs.getString("campaignName");
 
-            return SmsData.instance(id, groupId, clientId, staffId, status, mobileNo, message, providerId, campaignName);
+            return SmsData.builder()
+                .id(id)
+                .groupId(groupId)
+                .clientId(clientId)
+                .staffId(staffId)
+                .status(status)
+                .mobileNo(mobileNo)
+                .message(message)
+                .providerId(providerId)
+                .campaignName(campaignName)
+                .build();
         }
     }
 

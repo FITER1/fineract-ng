@@ -106,9 +106,13 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
                         	smsData.setStatusType(SmsMessageStatusType.WAITING_FOR_DELIVERY_REPORT.getValue());
                         	toSendNotificationMessages.add(smsData);
                         }else{
-                        	SmsMessageApiQueueResourceData apiQueueResourceData = SmsMessageApiQueueResourceData.instance(smsData.getId(),
-                                    fineractProperties.getTenantId(), null, null, smsData.getMobileNo(), smsData.getMessage(), smsData.getSmsCampaign()
-                                            .getProviderId());
+                        	SmsMessageApiQueueResourceData apiQueueResourceData = SmsMessageApiQueueResourceData.builder()
+                                .internalId(smsData.getId())
+                                .tenantId(fineractProperties.getTenantId())
+                                .mobileNumber(smsData.getMobileNo())
+                                .message(smsData.getMessage())
+                                .providerId(smsData.getSmsCampaign().getProviderId())
+                                .build();
                             apiQueueResourceDatas.add(apiQueueResourceData);
                             smsData.setStatusType(SmsMessageStatusType.WAITING_FOR_DELIVERY_REPORT.getValue());
                             toSaveMessages.add(smsData) ;
@@ -152,7 +156,7 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
     }
 
     private void connectAndSendToIntermediateServer(Collection<SmsMessageApiQueueResourceData> apiQueueResourceDatas) {
-    	Map<String, Object> hostConfig = this.smsConfigUtils.getMessageGateWayRequestURI("sms", SmsMessageApiQueueResourceData.toJsonString(apiQueueResourceDatas)) ;
+    	Map<String, Object> hostConfig = this.smsConfigUtils.getMessageGateWayRequestURI("sms", new Gson().toJson(apiQueueResourceDatas)) ;
         URI uri = (URI)hostConfig.get("uri") ;
         HttpEntity<?> entity = (HttpEntity<?>)hostConfig.get("entity") ;
         ResponseEntity<String> responseOne = restTemplate.exchange(uri, HttpMethod.POST, entity,
@@ -182,8 +186,12 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
                             smsMessage.setStatusType(SmsMessageStatusType.WAITING_FOR_DELIVERY_REPORT.getValue());
                             toSendNotificationMessages.add(smsMessage);
                         }else {
-                            SmsMessageApiQueueResourceData apiQueueResourceData = SmsMessageApiQueueResourceData.instance(smsMessage.getId(),
-                                    null, null, null, smsMessage.getMobileNo(), smsMessage.getMessage(), entry.getKey().getProviderId());
+                            SmsMessageApiQueueResourceData apiQueueResourceData = SmsMessageApiQueueResourceData.builder()
+                                .internalId(smsMessage.getId())
+                                .mobileNumber(smsMessage.getMobileNo())
+                                .message(smsMessage.getMessage())
+                                .providerId(entry.getKey().getProviderId())
+                                .build();
                             apiQueueResourceDatas.add(apiQueueResourceData);
                             smsMessage.setStatusType(SmsMessageStatusType.WAITING_FOR_DELIVERY_REPORT.getValue());
                             toSaveMessages.add(smsMessage) ;
@@ -213,14 +221,17 @@ public class SmsMessageScheduledJobServiceImpl implements SmsMessageScheduledJob
             StringBuilder request = new StringBuilder();
             for(SmsMessage smsMessage : smsMessages) {
                 SmsMessageApiQueueResourceData apiQueueResourceData =
-                        SmsMessageApiQueueResourceData.instance(smsMessage.getId(), null,
-                                null, null, smsMessage.getMobileNo(),
-                                smsMessage.getMessage(), providerId);
+                    SmsMessageApiQueueResourceData.builder()
+                        .internalId(smsMessage.getId())
+                        .mobileNumber(smsMessage.getMobileNo())
+                        .message(smsMessage.getMessage())
+                        .providerId(providerId)
+                        .build();
                 apiQueueResourceDatas.add(apiQueueResourceData);
                 smsMessage.setStatusType(SmsMessageStatusType.WAITING_FOR_DELIVERY_REPORT.getValue());
             }
             this.smsMessageRepository.saveAll(smsMessages);
-            request.append(SmsMessageApiQueueResourceData.toJsonString(apiQueueResourceDatas));
+            request.append(new Gson().toJson(apiQueueResourceDatas));
             log.info("Sending triggered SMS to specific provider with request - " + request.toString());
             this.triggeredExecutorService.execute(new SmsTask(apiQueueResourceDatas));
         } catch (Exception e) {

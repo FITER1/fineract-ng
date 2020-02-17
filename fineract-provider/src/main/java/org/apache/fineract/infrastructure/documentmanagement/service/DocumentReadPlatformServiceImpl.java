@@ -24,6 +24,7 @@ import org.apache.fineract.infrastructure.documentmanagement.contentrepository.C
 import org.apache.fineract.infrastructure.documentmanagement.contentrepository.ContentRepositoryFactory;
 import org.apache.fineract.infrastructure.documentmanagement.data.DocumentData;
 import org.apache.fineract.infrastructure.documentmanagement.data.FileData;
+import org.apache.fineract.infrastructure.documentmanagement.domain.StorageType;
 import org.apache.fineract.infrastructure.documentmanagement.exception.DocumentNotFoundException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -61,7 +62,7 @@ public class DocumentReadPlatformServiceImpl implements DocumentReadPlatformServ
         try {
             final DocumentMapper mapper = new DocumentMapper(false, false);
             final DocumentData documentData = fetchDocumentDetails(entityType, entityId, documentId, mapper);
-            final ContentRepository contentRepository = this.contentRepositoryFactory.getRepository(documentData.storageType());
+            final ContentRepository contentRepository = this.contentRepositoryFactory.getRepository(StorageType.fromInt(documentData.getStorageType()));
             return contentRepository.fetchFile(documentData);
         } catch (final EmptyResultDataAccessException e) {
             throw new DocumentNotFoundException(entityType, entityId, documentId);
@@ -127,8 +128,18 @@ public class DocumentReadPlatformServiceImpl implements DocumentReadPlatformServ
             if (!this.hideStorageType) {
                 storageType = rs.getInt("storageType");
             }
-            return new DocumentData(id, parentEntityType, parentEntityId, name, fileName, fileSize, fileType, description, location,
-                    storageType);
+            return DocumentData.builder()
+                .id(id)
+                .parentEntityType(parentEntityType)
+                .parentEntityId(parentEntityId)
+                .name(name)
+                .fileName(fileName)
+                .size(fileSize)
+                .type(fileType)
+                .description(description)
+                .location(location)
+                .storageType(storageType)
+                .build();
         }
     }
 

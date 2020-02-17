@@ -57,16 +57,6 @@ public class FineractEntityToEntityMapping extends AbstractPersistableCustom<Lon
     @Temporal(TemporalType.DATE)
     private Date endDate;
 
-    public static FineractEntityToEntityMapping newMap(FineractEntityRelation relationId, Long fromId, Long toId, Date startDate, Date endDate) {
-        return FineractEntityToEntityMapping.builder()
-            .relationId(relationId)
-            .fromId(fromId)
-            .toId(toId)
-            .startDate(startDate)
-            .endDate(endDate)
-            .build();
-    }
-
     public Map<String, Object> updateMap(final JsonCommand command) {
 
         final Map<String, Object> actualChanges = new LinkedHashMap<>(9);

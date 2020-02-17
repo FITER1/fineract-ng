@@ -169,8 +169,17 @@ public class SelfServiceRegistrationWritePlatformServiceImpl implements SelfServ
         Staff staff = null;
         SmsCampaign smsCampaign = null;
         boolean isNotification = false;
-        SmsMessage smsMessage = SmsMessage.instance(externalId, group, selfServiceRegistration.getClient(), staff,
-                SmsMessageStatusType.PENDING, message, selfServiceRegistration.getMobileNumber(), smsCampaign, isNotification);
+        SmsMessage smsMessage = SmsMessage.builder()
+            .statusType(SmsMessageStatusType.PENDING.getValue())
+            .externalId(externalId)
+            .group(group)
+            .client(selfServiceRegistration.getClient())
+            .staff(staff)
+            .message(message)
+            .mobileNo(selfServiceRegistration.getMobileNumber())
+            .smsCampaign(smsCampaign)
+            .notification(isNotification)
+            .build();
         this.smsMessageRepository.save(smsMessage);
         this.smsMessageScheduledJobService.sendTriggeredMessage(new ArrayList<>(Arrays.asList(smsMessage)), providerId);
     }
@@ -181,8 +190,12 @@ public class SelfServiceRegistrationWritePlatformServiceImpl implements SelfServ
                 + "Request Id : " + selfServiceRegistration.getId() + "\n Authentication Token : "
                 + selfServiceRegistration.getAuthenticationToken();
 
-        final EmailDetail emailDetail = new EmailDetail(subject, body, selfServiceRegistration.getEmail(),
-                selfServiceRegistration.getFirstName());
+        final EmailDetail emailDetail = EmailDetail.builder()
+            .subject(subject)
+            .body(body)
+            .address(selfServiceRegistration.getEmail())
+            .contactName(selfServiceRegistration.getFirstName())
+            .build();
         this.gmailBackedPlatformEmailService.sendDefinedEmail(emailDetail);
     }
 

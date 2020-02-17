@@ -72,7 +72,7 @@ public class UserDetailsApiResource {
             final AppUser principal = (AppUser) authentication.getPrincipal();
 
             final Collection<String> permissions = new ArrayList<>();
-            AuthenticatedOauthUserData authenticatedUserData = new AuthenticatedOauthUserData(principal.getUsername(), permissions);
+            AuthenticatedOauthUserData authenticatedUserData;
 
             final Collection<GrantedAuthority> authorities = new ArrayList<>(authentication.getAuthorities());
             for (final GrantedAuthority grantedAuthority : authorities) {
@@ -96,13 +96,26 @@ public class UserDetailsApiResource {
             final boolean requireTwoFactorAuth = twoFactorUtils.isTwoFactorAuthEnabled()
                     && !principal.hasSpecificPermissionTo(TwoFactorConstants.BYPASS_TWO_FACTOR_PERMISSION);
             if (this.springSecurityPlatformSecurityContext.doesPasswordHasToBeRenewed(principal)) {
-                authenticatedUserData = new AuthenticatedOauthUserData(principal.getUsername(),
-                        principal.getId(), accessToken, requireTwoFactorAuth);
+                authenticatedUserData = AuthenticatedOauthUserData.builder()
+                    .username(principal.getUsername())
+                    .userId(principal.getId())
+                    .accessToken(accessToken)
+                    .twoFactorAuthenticationRequired(requireTwoFactorAuth)
+                    .build();
             } else {
-
-                authenticatedUserData = new AuthenticatedOauthUserData(principal.getUsername(),
-                        officeId, officeName, staffId, staffDisplayName, organisationalRole, roles,
-                        permissions, principal.getId(), accessToken, requireTwoFactorAuth);
+                authenticatedUserData = AuthenticatedOauthUserData.builder()
+                    .username(principal.getUsername())
+                    .officeId(officeId)
+                    .officeName(officeName)
+                    .staffId(staffId)
+                    .staffDisplayName(staffDisplayName)
+                    .organisationalRole(organisationalRole)
+                    .roles(roles)
+                    .permissions(permissions)
+                    .userId(principal.getId())
+                    .accessToken(accessToken)
+                    .twoFactorAuthenticationRequired(requireTwoFactorAuth)
+                    .build();
             }
             return this.apiJsonSerializerService.serialize(authenticatedUserData);
         }

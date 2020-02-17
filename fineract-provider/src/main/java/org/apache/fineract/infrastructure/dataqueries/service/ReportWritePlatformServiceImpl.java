@@ -206,7 +206,7 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
                             final Long parameterId = jsonObject.get("parameterId").getAsLong();
                             reportParameter = this.reportParameterRepository.findById(parameterId)
                                     .orElseThrow(() -> new ReportParameterNotFoundException(parameterId));
-                            if (!reportParameterUsageItem.hasParameterIdOf(parameterId)) {
+                            if (reportParameterUsageItem.getParameter()!=null && !parameterId.equals(reportParameterUsageItem.getParameter().getId())) {
                                 //
                                 throw new ReportParameterNotFoundException(parameterId);
                             }
@@ -214,7 +214,7 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
 
                         if (jsonObject.has("reportParameterName")) {
                             reportParameterName = jsonObject.get("reportParameterName").getAsString();
-                            reportParameterUsageItem.updateParameterName(reportParameterName);
+                            reportParameterUsageItem.setReportParameterName(reportParameterName);
                         }
                     } else {
                         // new report parameter usage

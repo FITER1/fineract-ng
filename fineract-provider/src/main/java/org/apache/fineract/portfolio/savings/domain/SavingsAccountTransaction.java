@@ -412,7 +412,7 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom<L
         } else {
             this.balanceEndDate = null;
         }
-        this.balanceNumberOfDays = LocalDateInterval.create(getTransactionLocalDate(), endOfBalanceDate).daysInPeriodInclusiveOfEndDate();
+        this.balanceNumberOfDays = new LocalDateInterval(getTransactionLocalDate(), endOfBalanceDate).daysInPeriodInclusiveOfEndDate();
         this.cumulativeBalance = Money.of(currency, this.runningBalance).multipliedBy(this.balanceNumberOfDays).getAmount();
     }
 
@@ -507,12 +507,12 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom<L
         final Money endOfDayBalance = Money.of(currency, this.runningBalance);
         final Money openingBalance = endOfDayBalance;
 
-        LocalDate balanceDate = periodInterval.startDate();
+        LocalDate balanceDate = periodInterval.getStartDate();
 
         int numberOfDays = periodInterval.daysInPeriodInclusiveOfEndDate();
         if (periodInterval.contains(getTransactionLocalDate())) {
             balanceDate = getTransactionLocalDate();
-            final LocalDateInterval newInterval = LocalDateInterval.create(getTransactionLocalDate(), periodInterval.endDate());
+            final LocalDateInterval newInterval = new LocalDateInterval(getTransactionLocalDate(), periodInterval.getEndDate());
             numberOfDays = newInterval.daysInPeriodInclusiveOfEndDate();
         }
 
@@ -529,7 +529,7 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom<L
             endOfDayBalance = openingBalance.minus(getAmount(currency));
         }
 
-        int numberOfDays = LocalDateInterval.create(getTransactionLocalDate(), nextTransactionDate).daysInPeriodInclusiveOfEndDate();
+        int numberOfDays = new LocalDateInterval(getTransactionLocalDate(), nextTransactionDate).daysInPeriodInclusiveOfEndDate();
         if (!openingBalance.isEqualTo(endOfDayBalance) && numberOfDays > 1) {
             numberOfDays = numberOfDays - 1;
         }
@@ -563,9 +563,9 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom<L
         LocalDate balanceStartDate = getTransactionLocalDate();
         LocalDate balanceEndDate = getEndOfBalanceLocalDate();
 
-        if (boundedBy.startDate().isAfter(balanceStartDate)) {
-            balanceStartDate = boundedBy.startDate();
-            final LocalDateInterval spanOfBalance = LocalDateInterval.create(balanceStartDate, balanceEndDate);
+        if (boundedBy.getStartDate().isAfter(balanceStartDate)) {
+            balanceStartDate = boundedBy.getStartDate();
+            final LocalDateInterval spanOfBalance = new LocalDateInterval(balanceStartDate, balanceEndDate);
             numberOfDaysOfBalance = spanOfBalance.daysInPeriodInclusiveOfEndDate();
         } else {
             if (isDeposit() || isDividendPayoutAndNotReversed()) {
@@ -583,9 +583,9 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom<L
             }
         }
 
-        if (balanceEndDate.isAfter(boundedBy.endDate())) {
-            balanceEndDate = boundedBy.endDate();
-            final LocalDateInterval spanOfBalance = LocalDateInterval.create(balanceStartDate, balanceEndDate);
+        if (balanceEndDate.isAfter(boundedBy.getEndDate())) {
+            balanceEndDate = boundedBy.getEndDate();
+            final LocalDateInterval spanOfBalance = new LocalDateInterval(balanceStartDate, balanceEndDate);
             numberOfDaysOfBalance = spanOfBalance.daysInPeriodInclusiveOfEndDate();
         }
 
@@ -597,12 +597,12 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom<L
     }
 
     public boolean fallsWithin(final LocalDateInterval periodInterval) {
-        final LocalDateInterval balanceInterval = LocalDateInterval.create(getTransactionLocalDate(), getEndOfBalanceLocalDate());
+        final LocalDateInterval balanceInterval = new LocalDateInterval(getTransactionLocalDate(), getEndOfBalanceLocalDate());
         return periodInterval.contains(balanceInterval);
     }
 
     public boolean spansAnyPortionOf(final LocalDateInterval periodInterval) {
-        final LocalDateInterval balanceInterval = LocalDateInterval.create(getTransactionLocalDate(), getEndOfBalanceLocalDate());
+        final LocalDateInterval balanceInterval = new LocalDateInterval(getTransactionLocalDate(), getEndOfBalanceLocalDate());
         return balanceInterval.containsPortionOf(periodInterval);
     }
 

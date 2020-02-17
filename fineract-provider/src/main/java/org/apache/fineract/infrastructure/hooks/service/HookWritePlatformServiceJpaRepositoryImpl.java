@@ -120,7 +120,7 @@ public class HookWritePlatformServiceJpaRepositoryImpl
             this.fromApiJsonDeserializer.validateForUpdate(command.json());
 
             final Hook hook = retrieveHookBy(hookId);
-            final HookTemplate template = hook.getHookTemplate();
+            final HookTemplate template = hook.getTemplate();
             final Map<String, Object> changes = hook.update(command);
 
             if (!changes.isEmpty()) {
@@ -134,7 +134,7 @@ public class HookWritePlatformServiceJpaRepositoryImpl
                         changes.remove(templateIdParamName);
                         throw new TemplateNotFoundException(ugdTemplateId);
                     }
-                    hook.updateUgdTemplate(ugdTemplate);
+                    hook.setUgdTemplate(ugdTemplate);
                 }
 
                 if (changes.containsKey(eventsParamName)) {
@@ -220,10 +220,11 @@ public class HookWritePlatformServiceJpaRepositoryImpl
                 final String fieldName = field.getFieldName();
                 if (fieldName.equalsIgnoreCase(configEntry.getKey())) {
 
-                    final HookConfiguration config = HookConfiguration
-                            .createNewWithoutHook(field.getFieldType(),
-                                    configEntry.getKey(),
-                                    configEntry.getValue());
+                    final HookConfiguration config = HookConfiguration.builder()
+                        .fieldType(field.getFieldType())
+                        .fieldName(configEntry.getKey())
+                        .fieldValue(configEntry.getValue())
+                        .build();
                     configuration.add(config);
                     break;
                 }
@@ -247,8 +248,10 @@ public class HookWritePlatformServiceJpaRepositoryImpl
                     .extractStringNamed(entityNameParamName, eventElement);
             final String actionName = this.fromApiJsonHelper
                     .extractStringNamed(actionNameParamName, eventElement);
-            final HookResource event = HookResource.createNewWithoutHook(
-                    entityName, actionName);
+            final HookResource event = HookResource.builder()
+                .entityName(entityName)
+                .actionName(actionName)
+                .build();
             allEvents.add(event);
         }
 

@@ -62,8 +62,14 @@ public class ReadSurveyServiceImpl implements ReadSurveyService {
             final List<ResultsetColumnHeaderData> columnHeaderData = this.genericDataService
                     .fillResultsetColumnHeaders(registeredDatatableName);
 
-            surveyDataTables.add(SurveyDataTableData.create(DatatableData.create(appTableName, registeredDatatableName, columnHeaderData),
-                    enabled));
+            surveyDataTables.add(SurveyDataTableData.builder()
+                .datatableData(DatatableData.builder()
+                    .applicationTableName(appTableName)
+                    .registeredTableName(registeredDatatableName)
+                    .columnHeaderData(columnHeaderData)
+                    .build())
+                .enabled(enabled)
+                .build());
         }
 
         return surveyDataTables;
@@ -102,8 +108,14 @@ public class ReadSurveyServiceImpl implements ReadSurveyService {
             final List<ResultsetColumnHeaderData> columnHeaderData = this.genericDataService
                     .fillResultsetColumnHeaders(registeredDatatableName);
 
-            datatableData = SurveyDataTableData.create(DatatableData.create(appTableName, registeredDatatableName, columnHeaderData),
-                    enabled);
+            datatableData = SurveyDataTableData.builder()
+                .datatableData(DatatableData.builder()
+                    .applicationTableName(appTableName)
+                    .registeredTableName(registeredDatatableName)
+                    .columnHeaderData(columnHeaderData)
+                    .build())
+                .enabled(enabled)
+                .build();
 
         }
 
@@ -124,8 +136,15 @@ public class ReadSurveyServiceImpl implements ReadSurveyService {
         List<ClientScoresOverview> scoresOverviews = new ArrayList<>();
 
         while (rs.next()) {
-            scoresOverviews.add(new ClientScoresOverview(rs.getString("code"), rs.getString("name"), rs.getLong("score"), rs
-                    .getDouble("poverty_line"), new LocalDate(rs.getTimestamp("date").getTime()), rs.getLong("id"), surveyName));
+            scoresOverviews.add(ClientScoresOverview.builder()
+                    .likelihoodCode(rs.getString("code"))
+                    .likelihoodName(rs.getString("name"))
+                    .score(rs.getLong("score"))
+                    .povertyLine(rs.getDouble("poverty_line"))
+                    .date(new LocalDate(rs.getTimestamp("date").getTime()))
+                    .id(rs.getLong("id"))
+                    .surveyName(surveyName)
+                    .build());
         }
 
         return scoresOverviews;
@@ -153,11 +172,16 @@ public class ReadSurveyServiceImpl implements ReadSurveyService {
             final SqlRowSet rs = this.jdbcTemplate.queryForRowSet(sql);
 
             while (rs.next()) {
-                scoresOverviews.add(new ClientScoresOverview(rs.getString("code"), rs.getString("name"), rs.getLong("score"), rs
-                        .getDouble("poverty_line"), new LocalDate(rs.getTimestamp("date").getTime()), rs.getLong("id"), rs
-                        .getString("surveyName")));
+                scoresOverviews.add(ClientScoresOverview.builder()
+                    .likelihoodCode(rs.getString("code"))
+                    .likelihoodName(rs.getString("name"))
+                    .score(rs.getLong("score"))
+                    .povertyLine(rs.getDouble("poverty_line"))
+                    .date(new LocalDate(rs.getTimestamp("date").getTime()))
+                    .id(rs.getLong("id"))
+                    .surveyName(rs.getString("surveyName"))
+                    .build());
             }
-
         }
 
         return scoresOverviews;

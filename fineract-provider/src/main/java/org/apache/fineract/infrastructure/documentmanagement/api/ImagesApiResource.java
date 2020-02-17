@@ -117,9 +117,9 @@ public class ImagesApiResource {
 
         // TODO: Need a better way of determining image type
         String imageDataURISuffix = ContentRepositoryUtils.IMAGE_DATA_URI_SUFFIX.JPEG.getValue();
-        if (StringUtils.endsWith(imageData.location(), ContentRepositoryUtils.IMAGE_FILE_EXTENSION.GIF.getValue())) {
+        if (StringUtils.endsWith(imageData.getLocation(), ContentRepositoryUtils.IMAGE_FILE_EXTENSION.GIF.getValue())) {
             imageDataURISuffix = ContentRepositoryUtils.IMAGE_DATA_URI_SUFFIX.GIF.getValue();
-        } else if (StringUtils.endsWith(imageData.location(), ContentRepositoryUtils.IMAGE_FILE_EXTENSION.PNG.getValue())) {
+        } else if (StringUtils.endsWith(imageData.getLocation(), ContentRepositoryUtils.IMAGE_FILE_EXTENSION.PNG.getValue())) {
             imageDataURISuffix = ContentRepositoryUtils.IMAGE_DATA_URI_SUFFIX.PNG.getValue();
         }
 
@@ -149,7 +149,7 @@ public class ImagesApiResource {
 
         // TODO: Need a better way of determining image type
 
-        response.header("Content-Type", imageData.contentType());
+        response.header("Content-Type", ContentRepositoryUtils.IMAGE_MIME_TYPE.fromFileExtension(imageData.getFileExtension()));
         return response.build();
     }
 

@@ -25,6 +25,7 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.infrastructure.survey.data.LikelihoodDataValidator;
+import org.apache.fineract.infrastructure.survey.data.LikelihoodStatus;
 import org.apache.fineract.infrastructure.survey.domain.Likelihood;
 import org.apache.fineract.infrastructure.survey.domain.LikelihoodRepository;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -63,7 +64,7 @@ public class WriteLikelihoodServiceImpl implements WriteLikelihoodService {
                             .findByPpiNameAndLikeliHoodId(likelihood.getPpiName(), likelihood.getId());
 
                     for (Likelihood aLikelihood : likelihoods) {
-                        aLikelihood.disable();
+                        aLikelihood.setEnabled(LikelihoodStatus.DISABLED);
                     }
                     this.repository.saveAll(likelihoods);
                 }

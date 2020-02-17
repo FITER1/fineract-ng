@@ -34,7 +34,7 @@ public class HookProcessorProvider {
 
 	public HookProcessor getProcessor(final Hook hook) {
 		HookProcessor processor;
-		final String templateName = hook.getHookTemplate().getName();
+		final String templateName = hook.getTemplate().getName();
 		if (templateName.equalsIgnoreCase(smsTemplateName)) {
 			processor = this.applicationContext.getBean("twilioHookProcessor",
 					TwilioHookProcessor.class);

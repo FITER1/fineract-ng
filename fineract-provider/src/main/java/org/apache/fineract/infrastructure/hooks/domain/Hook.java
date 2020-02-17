@@ -110,20 +110,12 @@ public class Hook extends AbstractAuditableCustom<AppUser, Long> {
         return events;
     }
 
-    public HookTemplate getHookTemplate() {
-        return this.template;
-    }
-
     public Long getUgdTemplateId() {
         Long templateId = null;
         if (this.ugdTemplate != null) {
             templateId = this.ugdTemplate.getId();
         }
         return templateId;
-    }
-
-    public Set<HookConfiguration> getHookConfig() {
-        return this.config;
     }
 
     public Map<String, Object> update(final JsonCommand command) {
@@ -187,9 +179,4 @@ public class Hook extends AbstractAuditableCustom<AppUser, Long> {
         this.config.addAll(associateConfigWithThisHook(newHookConfig));
         return true;
     }
-
-    public void updateUgdTemplate(final Template ugdTemplate) {
-        this.ugdTemplate = ugdTemplate;
-    }
-
 }

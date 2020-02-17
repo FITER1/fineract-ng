@@ -200,7 +200,7 @@ public class Sender {
 		JsonObject jsonResponse;
 		try {
 			jsonResponse = (JsonObject) jsonParser.parse(responseBody);
-			Result.Builder resultBuilder = new Result.Builder();
+
 			if (jsonResponse.has("results")) {
 				// Handle response from message sent to specific device.
 				JsonArray jsonResults = (JsonArray) jsonResponse.get("results");
@@ -221,22 +221,22 @@ public class Sender {
 					}
 					int success = 0;
 					int failure = 0;
-					if(jsonResponse.get("success") != null){
+					if(jsonResponse.get("success") != null) {
 						success = Integer.parseInt(jsonResponse.get("success").toString());
 					}
-					if(jsonResponse.get("failure") != null){
+					if(jsonResponse.get("failure") != null) {
 						failure = Integer.parseInt(jsonResponse.get("failure").toString());
 					}
-					resultBuilder.messageId(messageId)
+
+					return Result.builder().messageId(messageId)
 							.canonicalRegistrationId(canonicalRegId)
 							.success(success)
 							.failure(failure)
 							.status(status)
-							.errorCode(error);
+							.errorCode(error)
+							.build();
 				} else {
-					logger.log(Level.WARNING,
-							"Found null or " + jsonResults.size()
-									+ " results, expected one");
+					logger.log(Level.WARNING, "Found null or " + jsonResults.size() + " results, expected one");
 					return null;
 				}
 			} else if (to.startsWith(TOPIC_PREFIX)) {
@@ -244,10 +244,10 @@ public class Sender {
 					// message_id is expected when this is the response from a
 					// topic message.
 					Long messageId = jsonResponse.get(JSON_MESSAGE_ID).getAsLong();
-					resultBuilder.messageId(messageId.toString());
+					return Result.builder().messageId(messageId.toString()).build();
 				} else if (jsonResponse.has(JSON_ERROR)) {
 					String error = jsonResponse.get(JSON_ERROR).getAsString();
-					resultBuilder.errorCode(error);
+					return Result.builder().errorCode(error).build();
 				} else {
 					logger.log(Level.WARNING, "Expected " + JSON_MESSAGE_ID
 							+ " or " + JSON_ERROR + " found: " + responseBody);
@@ -268,14 +268,16 @@ public class Sender {
 						failedIds.add(jFailedIds.get(i).getAsString());
 					}
 				}
-				resultBuilder.success(success).failure(failure)
-						.failedRegistrationIds(failedIds);
+				return Result.builder()
+					.success(success)
+					.failure(failure)
+					.failedRegistrationIds(failedIds)
+					.build();
 			} else {
 				logger.warning("Unrecognized response: " + responseBody);
 				throw newIoException(responseBody, new Exception(
 						"Unrecognized response."));
 			}
-			return resultBuilder.build();
 		} catch (CustomParserException e) {
 			throw newIoException(responseBody, e);
 		}
@@ -366,17 +368,23 @@ public class Sender {
 				failure++;
 			}
 		}
+
 		// build a new object with the overall result
 		long multicastId = multicastIds.remove(0);
-		MulticastResult.Builder builder = new MulticastResult.Builder(success,
-				failure, canonicalIds, multicastId)
-				.retryMulticastIds(multicastIds);
+		MulticastResult result = MulticastResult.builder()
+			.success(success)
+			.failure(failure)
+			.canonicalIds(canonicalIds)
+			.multicastId(multicastId)
+			.retryMulticastIds(multicastIds)
+			.results(new ArrayList<>())
+			.build();
+
 		// add results, in the same order as the input
 		for (String regId : regIds) {
-			Result result = results.get(regId);
-			builder.addResult(result);
+			result.getResults().add(results.get(regId));
 		}
-		return builder.build();
+		return result;
 	}
 
 	/**
@@ -406,7 +414,7 @@ public class Sender {
 			String regId = unsentRegIds.get(i);
 			Result result = results.get(i);
 			allResults.put(regId, result);
-			String error = result.getErrorCodeName();
+			String error = result.getErrorCode();
 			if (error != null
 					&& (error.equals(GcmConstants.ERROR_UNAVAILABLE) || error
 							.equals(GcmConstants.ERROR_INTERNAL_SERVER_ERROR))) {
@@ -458,24 +466,27 @@ public class Sender {
 					.intValue();
 			long multicastId = getNumber(responseMap, JSON_MULTICAST_ID)
 					.longValue();
-			MulticastResult.Builder builder = new MulticastResult.Builder(
-					success, failure, canonicalIds, multicastId);
-			@SuppressWarnings("unchecked")
-			List<Map<String, Object>> results = (List<Map<String, Object>>) jsonResponse
-					.get(JSON_RESULTS);
+			MulticastResult multicastResult = MulticastResult.builder()
+				.success(success)
+				.failure(failure)
+				.canonicalIds(canonicalIds)
+				.multicastId(multicastId)
+				.results(new ArrayList<>())
+				.build();
+
+			List<Map<String, Object>> results = (List<Map<String, Object>>)jsonResponse.get(JSON_RESULTS);
+
 			if (results != null) {
 				for (Map<String, Object> jsonResult : results) {
 					String messageId = (String) jsonResult.get(JSON_MESSAGE_ID);
-					String canonicalRegId = (String) jsonResult
-							.get(TOKEN_CANONICAL_REG_ID);
+					String canonicalRegId = (String) jsonResult.get(TOKEN_CANONICAL_REG_ID);
 					String error = (String) jsonResult.get(JSON_ERROR);
-					Result result = new Result.Builder().messageId(messageId)
-							.canonicalRegistrationId(canonicalRegId)
-							.errorCode(error).build();
-					builder.addResult(result);
+					multicastResult.getResults().add(Result.builder().messageId(messageId)
+						.canonicalRegistrationId(canonicalRegId)
+						.errorCode(error).build());
 				}
 			}
-			return builder.build();
+			return multicastResult;
 		} catch (CustomParserException e) {
 			throw newIoException(responseBody, e);
 		}
@@ -542,8 +553,8 @@ public class Sender {
 		setJsonField(mapRequest, PARAM_RESTRICTED_PACKAGE_NAME,
 				message.getRestrictedPackageName());
 		setJsonField(mapRequest, PARAM_DELAY_WHILE_IDLE,
-				message.isDelayWhileIdle());
-		setJsonField(mapRequest, PARAM_DRY_RUN, message.isDryRun());
+				message.getDelayWhileIdle());
+		setJsonField(mapRequest, PARAM_DRY_RUN, message.getDryRun());
 		Map<String, String> payload = message.getData();
 		if (!payload.isEmpty()) {
 			mapRequest.put(JSON_PAYLOAD, payload);

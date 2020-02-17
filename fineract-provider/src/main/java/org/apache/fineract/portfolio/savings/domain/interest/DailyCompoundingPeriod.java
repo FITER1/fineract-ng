@@ -56,7 +56,7 @@ public class DailyCompoundingPeriod implements CompoundingPeriod {
             } else if (endOfDayBalance.contains(compoundingPeriodInterval)) {
                 cappedToPeriodEndDate = endOfDayBalance.upTo(compoundingPeriodInterval, upToInterestCalculationDate);
             } else {
-                final LocalDateInterval latestPeriod = LocalDateInterval.create(compoundingPeriodInterval.startDate(),
+                final LocalDateInterval latestPeriod = new LocalDateInterval(compoundingPeriodInterval.getStartDate(),
                         upToInterestCalculationDate);
                 cappedToPeriodEndDate = endOfDayBalance.upTo(latestPeriod, upToInterestCalculationDate);
             }

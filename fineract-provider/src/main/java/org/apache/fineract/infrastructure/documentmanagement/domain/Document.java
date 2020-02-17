@@ -18,7 +18,10 @@
  */
 package org.apache.fineract.infrastructure.documentmanagement.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.documentmanagement.command.DocumentCommand;
@@ -63,21 +66,6 @@ public class Document extends AbstractPersistableCustom<Long> {
     @Column(name = "storage_type_enum")
     private Integer storageType;
 
-    public static Document createNew(final String parentEntityType, final Long parentEntityId, final String name, final String fileName,
-            final Long size, final String type, final String description, final String location, final StorageType storageType) {
-        return Document.builder()
-            .parentEntityId(parentEntityId)
-            .parentEntityType(parentEntityType)
-            .name(name)
-            .fileName(fileName)
-            .size(size)
-            .type(type)
-            .description(description)
-            .location(location)
-            .storageType(storageType.getValue())
-            .build();
-    }
-
     public void update(final DocumentCommand command) {
         if (command.isDescriptionChanged()) {
             this.description = command.getDescription();
@@ -97,9 +85,5 @@ public class Document extends AbstractPersistableCustom<Long> {
         if (command.isSizeChanged()) {
             this.size = command.getSize();
         }
-    }
-
-    public StorageType storageType() {
-        return StorageType.fromInt(this.storageType);
     }
 }

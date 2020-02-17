@@ -66,17 +66,20 @@ public class FineractEntityAccessUtil {
             
             if (restrictToUserOfficeProperty.isEnabled() ) {
             	final Long officeId = thisUser.getOffice().getId();
-            					Date startDateFormapping = null;
-            					Date endDateFormapping = null;
-            					FineractEntityRelation fineractEntityRelation = fineractEntityRelationRepositoryWrapper
-            							.findOneByCodeName(fineractEntityAccessType.toStr());
-            					Long relId = fineractEntityRelation.getId();
-            					final FineractEntityRelation mapId = this.fineractEntityRelationRepositoryWrapper
-            							.findOneWithNotFoundDetection(relId);
-            					final FineractEntityToEntityMapping newMap = FineractEntityToEntityMapping.newMap(mapId, officeId,
-            							productOrChargeId, startDateFormapping, endDateFormapping);
-            					this.fineractEntityToEntityMappingRepository.save(newMap);
-            				}
+				Date startDateFormapping = null;
+				Date endDateFormapping = null;
+				FineractEntityRelation fineractEntityRelation = fineractEntityRelationRepositoryWrapper.findOneByCodeName(fineractEntityAccessType.getStr());
+				Long relId = fineractEntityRelation.getId();
+				final FineractEntityRelation mapId = this.fineractEntityRelationRepositoryWrapper.findOneWithNotFoundDetection(relId);
+				final FineractEntityToEntityMapping newMap = FineractEntityToEntityMapping.builder()
+					.relationId(mapId)
+					.fromId(officeId)
+					.toId(productOrChargeId)
+					.startDate(startDateFormapping)
+					.endDate(endDateFormapping)
+					.build();
+				this.fineractEntityToEntityMappingRepository.save(newMap);
+			}
         }
 		
 	}

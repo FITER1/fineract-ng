@@ -18,7 +18,10 @@
  */
 package org.apache.fineract.infrastructure.security.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -36,8 +39,7 @@ import javax.persistence.UniqueConstraint;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "twofactor_configuration",
-        uniqueConstraints = {@UniqueConstraint(columnNames = { "name" }, name = "name_UNIQUE")})
+@Table(name = "twofactor_configuration", uniqueConstraints = {@UniqueConstraint(columnNames = { "name" }, name = "name_UNIQUE")})
 public class TwoFactorConfiguration extends AbstractPersistableCustom<Long> {
 
     @Column(name = "name", nullable = false, length = 32)
@@ -45,10 +47,6 @@ public class TwoFactorConfiguration extends AbstractPersistableCustom<Long> {
 
     @Column(name = "value", nullable = true, length = 1024)
     private String value;
-
-    public String getStringValue() {
-        return value;
-    }
 
     public Boolean getBooleanValue() {
         return BooleanUtils.toBooleanObject(value);
@@ -70,11 +68,7 @@ public class TwoFactorConfiguration extends AbstractPersistableCustom<Long> {
             return getBooleanValue();
         }
 
-        return getStringValue();
-    }
-
-    public void setStringValue(String value) {
-        this.value = value;
+        return getValue();
     }
 
     public void setBooleanValue(boolean value) {

@@ -18,7 +18,10 @@
  */
 package org.apache.fineract.infrastructure.gcm.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.portfolio.client.domain.Client;
@@ -45,11 +48,4 @@ public class DeviceRegistration extends AbstractPersistableCustom<Long> {
 	@Column(name = "updatedon_date", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date updatedOnDate;
-
-	public static DeviceRegistration instance(final Client client, final String registrationId) {
-		return DeviceRegistration.builder()
-			.client(client)
-			.registrationId(registrationId)
-			.build();
-	}
 }

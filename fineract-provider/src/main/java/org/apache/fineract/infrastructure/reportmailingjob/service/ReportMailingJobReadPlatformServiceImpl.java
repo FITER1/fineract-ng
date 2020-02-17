@@ -112,7 +112,10 @@ public class ReportMailingJobReadPlatformServiceImpl implements ReportMailingJob
         final List<EnumOptionData> emailAttachmentFileFormatOptions = ReportMailingJobEmailAttachmentFileFormat.validOptions();
         final List<EnumOptionData> stretchyReportParamDateOptions = ReportMailingJobStretchyReportParamDateOption.validOptions();
         
-        return ReportMailingJobData.newInstance(emailAttachmentFileFormatOptions, stretchyReportParamDateOptions);
+        return ReportMailingJobData.builder()
+            .emailAttachmentFileFormatOptions(emailAttachmentFileFormatOptions)
+            .stretchyReportParamDateOptions(stretchyReportParamDateOptions)
+            .build();
     }
     
     private static final class ReportMailingJobMapper implements RowMapper<ReportMailingJobData> {
@@ -175,8 +178,16 @@ public class ReportMailingJobReadPlatformServiceImpl implements ReportMailingJob
             final String updatedByUsername = rs.getString("updatedByUsername");
             final String updatedByFirstname = rs.getString("updatedByFirstname");
             final String updatedByLastname = rs.getString("updatedByLastname");
-            final ReportMailingJobTimelineData timeline = new ReportMailingJobTimelineData(createdOnDate, createdByUsername, 
-                    createdByFirstname, createdByLastname, updatedOnDate, updatedByUsername, updatedByFirstname, updatedByLastname);
+            final ReportMailingJobTimelineData timeline = ReportMailingJobTimelineData.builder()
+                .createdOnDate(createdOnDate)
+                .createdByUsername(createdByUsername)
+                .createdByFirstname(createdByFirstname)
+                .createdByLastname(createdByLastname)
+                .updatedOnDate(updatedOnDate)
+                .updatedByUsername(updatedByUsername)
+                .updatedByFirstname(updatedByFirstname)
+                .updatedByLastname(updatedByLastname)
+                .build();
             final Long runAsUserId = JdbcSupport.getLong(rs, "runAsUserId");
             
             final Long reportId = JdbcSupport.getLong(rs, "reportId");
@@ -188,14 +199,41 @@ public class ReportMailingJobReadPlatformServiceImpl implements ReportMailingJob
             final String reportDescription = rs.getString("reportDescription");
             final boolean coreReport = rs.getBoolean("coreReport");
             final boolean useReport = rs.getBoolean("useReport");
-            
-            final ReportData stretchyReport = new ReportData(reportId, reportName, reportType, reportSubType, reportCategory, 
-                    reportDescription, reportSql, coreReport, useReport, null);
-            
-            return ReportMailingJobData.newInstance(id, name, description, startDateTime, recurrence, timeline, emailRecipients, 
-                    emailSubject, emailMessage, emailAttachmentFileFormat, stretchyReport, stretchyReportParamMap, previousRunDateTime, 
-                    nextRunDateTime, previousRunStatus, previousRunErrorLog, previousRunErrorMessage, numberOfRuns, isActive, 
-                    runAsUserId);
+
+            final ReportData stretchyReport = ReportData.builder()
+                .id(reportId)
+                .reportName(reportName)
+                .reportType(reportType)
+                .reportSubType(reportSubType)
+                .reportCategory(reportCategory)
+                .description(reportDescription)
+                .reportSql(reportSql)
+                .coreReport(coreReport)
+                .useReport(useReport)
+                .build();
+
+            return ReportMailingJobData.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .startDateTime(startDateTime)
+                .recurrence(recurrence)
+                .timeline(timeline)
+                .emailRecipients(emailRecipients)
+                .emailSubject(emailSubject)
+                .emailMessage(emailMessage)
+                .emailAttachmentFileFormat(emailAttachmentFileFormat)
+                .stretchyReport(stretchyReport)
+                .stretchyReportParamMap(stretchyReportParamMap)
+                .previousRunDateTime(previousRunDateTime)
+                .nextRunDateTime(nextRunDateTime)
+                .previousRunStatus(previousRunStatus)
+                .previousRunErrorLog(previousRunErrorLog)
+                .previousRunErrorMessage(previousRunErrorMessage)
+                .numberOfRuns(numberOfRuns)
+                .active(isActive)
+                .runAsUserId(runAsUserId)
+                .build();
         }
     }
 }

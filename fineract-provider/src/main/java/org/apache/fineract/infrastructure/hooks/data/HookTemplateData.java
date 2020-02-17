@@ -18,34 +18,19 @@
  */
 package org.apache.fineract.infrastructure.hooks.data;
 
+import lombok.*;
+
 import java.io.Serializable;
 import java.util.List;
 
-@SuppressWarnings("unused")
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class HookTemplateData implements Serializable {
-
-	private final Long id;
-	private final String name;
-
+	private Long id;
+	private String name;
 	// associations
-	private final List<Field> schema;
-
-	public static HookTemplateData instance(final Long id, final String name,
-			final List<Field> schema) {
-		return new HookTemplateData(id, name, schema);
-	}
-
-	private HookTemplateData(final Long id, final String name,
-			final List<Field> schema) {
-		this.id = id;
-		this.name = name;
-
-		// associations
-		this.schema = schema;
-	}
-
-	public Long getServiceId() {
-		return this.id;
-	}
-
+	private List<Field> schema;
 }

@@ -18,14 +18,14 @@
  */
 package org.apache.fineract.infrastructure.dataqueries.data;
 
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class DatatableCheckStatusData {
-
-	private final String name;
-	private final int code;
-
-	public DatatableCheckStatusData(final String name, final int code) {
-		this.name = name;
-		this.code = code;
-	}
-
+	private String name;
+	private int code;
 }

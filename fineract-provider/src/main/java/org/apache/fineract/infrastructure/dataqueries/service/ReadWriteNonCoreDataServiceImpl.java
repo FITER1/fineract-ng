@@ -140,7 +140,11 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
             final List<ResultsetColumnHeaderData> columnHeaderData = this.genericDataService
                     .fillResultsetColumnHeaders(registeredDatatableName);
 
-            datatables.add(DatatableData.create(appTableName, registeredDatatableName, columnHeaderData));
+            datatables.add(DatatableData.builder()
+                .applicationTableName(appTableName)
+                .registeredTableName(registeredDatatableName)
+                .columnHeaderData(columnHeaderData)
+                .build());
         }
 
         return datatables;
@@ -167,7 +171,11 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
             final List<ResultsetColumnHeaderData> columnHeaderData = this.genericDataService
                     .fillResultsetColumnHeaders(registeredDatatableName);
 
-            datatableData = DatatableData.create(appTableName, registeredDatatableName, columnHeaderData);
+            datatableData = DatatableData.builder()
+                .applicationTableName(appTableName)
+                .registeredTableName(registeredDatatableName)
+                .columnHeaderData(columnHeaderData)
+                .build();
         }
 
         return datatableData;
@@ -1076,9 +1084,9 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
 
         final GenericResultsetData grs = retrieveDataTableGenericResultSetForUpdate(appTable, dataTableName, appTableId, datatableId);
 
-        if (grs.hasNoEntries()) { throw new DatatableNotFoundException(dataTableName, appTableId); }
+        if (grs.getData()==null || grs.getData().isEmpty()) { throw new DatatableNotFoundException(dataTableName, appTableId); }
 
-        if (grs.hasMoreThanOneEntry()) { throw new PlatformDataIntegrityException("error.msg.attempting.multiple.update",
+        if (grs.getData().size()>1) { throw new PlatformDataIntegrityException("error.msg.attempting.multiple.update",
                 "Application table: " + dataTableName + " Foreign key id: " + appTableId); }
 
         final Type typeOfMap = new TypeToken<Map<String, String>>() {}.getType();
@@ -1176,7 +1184,9 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
 
         final List<ResultsetRowData> result = fillDatatableResultSetDataRows(sql);
 
-        return new GenericResultsetData(columnHeaders, result);
+        return GenericResultsetData.builder()
+            .columnHeaders(columnHeaders).data(result)
+            .build();
     }
 
     private GenericResultsetData retrieveDataTableGenericResultSetForUpdate(final String appTable, final String dataTableName,
@@ -1198,7 +1208,9 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
 
         final List<ResultsetRowData> result = fillDatatableResultSetDataRows(sql);
 
-        return new GenericResultsetData(columnHeaders, result);
+        return GenericResultsetData.builder()
+            .columnHeaders(columnHeaders).data(result)
+            .build();
     }
 
     private CommandProcessingResult checkMainResourceExistsWithinScope(final String appTable, final Long appTableId) {
@@ -1332,7 +1344,7 @@ public class ReadWriteNonCoreDataServiceImpl implements ReadWriteNonCoreDataServ
                 columnValues.add(columnValue);
             }
 
-            final ResultsetRowData resultsetDataRow = ResultsetRowData.create(columnValues);
+            final ResultsetRowData resultsetDataRow = new ResultsetRowData(columnValues);
             resultsetDataRows.add(resultsetDataRow);
         }
 
