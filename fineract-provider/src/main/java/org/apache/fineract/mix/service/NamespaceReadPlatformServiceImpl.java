@@ -45,7 +45,11 @@ public class NamespaceReadPlatformServiceImpl implements NamespaceReadPlatformSe
             final long id = rs.getLong("id");
             final String prefix = rs.getString("prefix");
             final String url = rs.getString("url");
-            return new NamespaceData(id, prefix, url);
+            return NamespaceData.builder()
+                .id(id)
+                .prefix(prefix)
+                .url(url)
+                .build();
         }
 
     }

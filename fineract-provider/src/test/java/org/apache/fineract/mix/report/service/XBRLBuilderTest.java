@@ -18,20 +18,6 @@
  */
 package org.apache.fineract.mix.report.service;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.HashMap;
-
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.mix.data.MixTaxonomyData;
 import org.apache.fineract.mix.data.NamespaceData;
@@ -48,21 +34,37 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-@RunWith(MockitoJUnitRunner.class)
-@Slf4j
-public class XBRLBuilderTest {
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.HashMap;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
+
+@Slf4j
+@RunWith(MockitoJUnitRunner.class)
+public class XBRLBuilderTest {
     @Mock
     private NamespaceReadPlatformServiceImpl readNamespaceService;
+
     @InjectMocks
-    private final XBRLBuilder xbrlBuilder = new XBRLBuilder();
+    private XBRLBuilder xbrlBuilder;
 
     @Before
     public void setUp() {
 
         this.readNamespaceService = Mockito.mock(NamespaceReadPlatformServiceImpl.class);
         lenient().when(this.readNamespaceService.retrieveNamespaceByPrefix(Matchers.anyString())).thenReturn(
-                new NamespaceData(1l, "mockedprefix", "mockedurl"));
+                NamespaceData.builder()
+                    .id(1l)
+                    .prefix("mockedprefix")
+                    .url("mockedurl").build());
 
     }
 

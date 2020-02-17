@@ -47,7 +47,7 @@ public class NotificationEventListener implements SessionAwareMessageListener {
         if (message instanceof ObjectMessage) {
             NotificationData notificationData = (NotificationData) ((ObjectMessage) message).getObject();
 
-            Long appUserId = notificationData.getActor();
+            Long appUserId = notificationData.getActorId();
 
             List<Long> userIds = notificationData.getUserIds();
 
@@ -68,9 +68,9 @@ public class NotificationEventListener implements SessionAwareMessageListener {
             notificationWritePlatformService.notify(
                     userIds,
                     notificationData.getObjectType(),
-                    notificationData.getObjectIdentfier(),
+                    notificationData.getObjectId(),
                     notificationData.getAction(),
-                    notificationData.getActor(),
+                    notificationData.getActorId(),
                     notificationData.getContent(),
                     notificationData.isSystemGenerated()
             );

@@ -45,17 +45,15 @@ public class SenderTest {
         Long actorId = 1L;
         String notificationContent = "A client was created";
 
-        NotificationData notificationData = new NotificationData(
-                objectType,
-                objectIdentifier,
-                action,
-                actorId,
-                notificationContent,
-                false,
-                false,
-                null,
-                null,
-                null
+        NotificationData notificationData = NotificationData.builder()
+            .objectType(objectType)
+            .objectId(objectIdentifier)
+            .action(action)
+            .actorId(actorId)
+            .content(notificationContent)
+            .read(false)
+            .systemGenerated(false)
+            .build();
         );
 
         jmsTemplate.send(session -> {

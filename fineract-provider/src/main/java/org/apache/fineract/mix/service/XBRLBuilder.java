@@ -99,7 +99,7 @@ public class XBRLBuilder {
             final NamespaceData ns = this.readNamespaceService.retrieveNamespaceByPrefix(prefix);
             if (ns != null) {
 
-                this.root.addNamespace(prefix, ns.url());
+                this.root.addNamespace(prefix, ns.getUrl());
             }
             qname = prefix + ":" + taxonomy.getName();
 
@@ -114,7 +114,11 @@ public class XBRLBuilder {
             final String[] dims = dimension.split(":");
 
             if (dims.length == 2) {
-                context = new ContextData(dims[0], dims[1], taxonomy.getType());
+                context = ContextData.builder()
+                    .dimensionType(dims[0])
+                    .dimension(dims[1])
+                    .periodType(taxonomy.getType())
+                    .build();
                 if (this.contextMap.containsKey(context)) {
 
                 } else {
@@ -124,7 +128,9 @@ public class XBRLBuilder {
         }
 
         if (context == null) {
-            context = new ContextData(null, null, taxonomy.getType());
+            context = ContextData.builder()
+                .periodType(taxonomy.getType())
+                .build();
         }
 
         if (!this.contextMap.containsKey(context)) {
@@ -149,7 +155,7 @@ public class XBRLBuilder {
     }
 
     private String getUnitRef(final MixTaxonomyData tx) {
-        return tx.isPortfolio() ? UNITID_PURE : UNITID_CUR;
+        return MixTaxonomyData.PORTFOLIO.equals(tx.getType()) ? UNITID_PURE : UNITID_CUR;
     }
 
     /**

@@ -42,7 +42,7 @@ public class SpringEventListener implements ApplicationListener<SpringEvent> {
 	public void onApplicationEvent(SpringEvent event) {
 		NotificationData notificationData = event.getNotificationData();
 
-        Long appUserId = notificationData.getActor();
+        Long appUserId = notificationData.getActorId();
 
         List<Long> userIds = notificationData.getUserIds();
 
@@ -63,9 +63,9 @@ public class SpringEventListener implements ApplicationListener<SpringEvent> {
         notificationWritePlatformService.notify(
                 userIds,
                 notificationData.getObjectType(),
-                notificationData.getObjectIdentfier(),
+                notificationData.getObjectId(),
                 notificationData.getAction(),
-                notificationData.getActor(),
+                notificationData.getActorId(),
                 notificationData.getContent(),
                 notificationData.isSystemGenerated()
         );

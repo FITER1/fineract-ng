@@ -18,13 +18,15 @@
  */
 package org.apache.fineract.interoperation.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @SuperBuilder
@@ -63,18 +65,4 @@ public class InteropIdentifier extends AbstractPersistableCustom<Long> {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modified_on")
     private Date modifiedOn;
-
-
-    public InteropIdentifier(@NotNull SavingsAccount account, @NotNull InteropIdentifierType type, @NotNull String value, String subValueOrType, @NotNull String createdBy, @NotNull Date createdOn) {
-        this.account = account;
-        this.type = type;
-        this.value = value;
-        this.subValueOrType = subValueOrType;
-        this.createdBy = createdBy;
-        this.createdOn = createdOn;
-    }
-
-    public InteropIdentifier(@NotNull SavingsAccount account, @NotNull InteropIdentifierType type, @NotNull String createdBy, @NotNull Date createdOn) {
-        this(account, type, null, null, createdBy, createdOn);
-    }
 }

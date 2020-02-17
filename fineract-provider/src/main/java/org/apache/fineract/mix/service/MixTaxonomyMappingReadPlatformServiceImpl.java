@@ -44,7 +44,10 @@ public class MixTaxonomyMappingReadPlatformServiceImpl implements MixTaxonomyMap
         public MixTaxonomyMappingData mapRow(final ResultSet rs, @SuppressWarnings("unused") final int rowNum) throws SQLException {
             final String identifier = rs.getString("identifier");
             final String config = rs.getString("config");
-            return new MixTaxonomyMappingData(identifier, config);
+            return MixTaxonomyMappingData.builder()
+                .identifier(identifier)
+                .config(config)
+                .build();
         }
 
     }

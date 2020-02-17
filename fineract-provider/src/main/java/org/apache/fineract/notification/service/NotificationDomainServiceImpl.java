@@ -543,18 +543,18 @@ public class NotificationDomainServiceImpl implements NotificationDomainService 
 
 		Queue queue = new ActiveMQQueue("NotificationQueue");
 		List<Long> userIds = retrieveSubscribers(officeId, permission);
-		NotificationData notificationData = new NotificationData(
-				objectType,
-				objectIdentifier,
-				eventType,
-				appUserId,
-				notificationContent,
-				false,
-				false,
-				fineractProperties.getTenantId(),
-				officeId,
-				userIds
-		);
+		NotificationData notificationData = NotificationData.builder()
+			.objectType(objectType)
+			.objectId(objectIdentifier)
+			.objectType(eventType)
+			.actorId(appUserId)
+			.content(notificationContent)
+			.read(false)
+			.systemGenerated(false)
+			.tenantIdentifier(fineractProperties.getTenantId())
+			.officeId(officeId)
+			.userIds(userIds)
+			.build();
 		try {
 			this.notificationEvent.broadcastNotification(queue, notificationData);
 		} catch(Exception e) {

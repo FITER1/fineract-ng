@@ -60,7 +60,12 @@ public class TopicSubscriberReadPlatformServiceImpl implements TopicSubscriberRe
 			final Long userId = rs.getLong("userId");
 			final LocalDate subscriptionDate = JdbcSupport.getLocalDate(rs, "subscriptionDate");
 
-			return new TopicSubscriberData(id, topicId, userId, subscriptionDate);
+			return TopicSubscriberData.builder()
+				.id(id)
+				.topicId(topicId)
+				.userId(userId)
+				.subscriptionDate(subscriptionDate)
+				.build();
 		}
 
 	}

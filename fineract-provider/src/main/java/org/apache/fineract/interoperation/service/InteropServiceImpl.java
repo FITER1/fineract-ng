@@ -147,8 +147,14 @@ public class InteropServiceImpl implements InteropService {
 
         AppUser createdBy = getLoginUser();
 
-        InteropIdentifier identifier = new InteropIdentifier(savingsAccount, request.getIdType(), request.getIdValue(),
-                request.getSubIdOrType(), createdBy.getUsername(), DateUtils.getDateOfTenant());
+        InteropIdentifier identifier = InteropIdentifier.builder()
+            .account(savingsAccount)
+            .type(request.getIdType())
+            .value(request.getIdValue())
+            .subValueOrType(request.getSubIdOrType())
+            .createdBy(createdBy.getUsername())
+            .createdOn(DateUtils.getDateOfTenant())
+            .build();
 
         identifierRepository.save(identifier);
 

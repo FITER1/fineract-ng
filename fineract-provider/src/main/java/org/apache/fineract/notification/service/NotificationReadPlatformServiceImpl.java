@@ -188,10 +188,10 @@ public class NotificationReadPlatformServiceImpl implements NotificationReadPlat
             notificationData.setObjectType(objectType);
 
             final Long objectId = rs.getLong("objectId");
-            notificationData.entifier(objectId);
+            notificationData.setObjectId(objectId);
 
             final Long actorId = rs.getLong("actor");
-            notificationData.setActor(actorId);
+            notificationData.setActorId(actorId);
 
             final String action = rs.getString("action");
             notificationData.setAction(action);

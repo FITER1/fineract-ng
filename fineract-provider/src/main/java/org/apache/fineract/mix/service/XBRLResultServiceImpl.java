@@ -55,7 +55,12 @@ public class XBRLResultServiceImpl implements XBRLResultService {
 
         final HashMap<MixTaxonomyData, BigDecimal> config = retrieveTaxonomyConfig(startDate, endDate);
         if (config == null || config.size() == 0) { throw new XBRLMappingInvalidException("Mapping is empty"); }
-        return new XBRLData(config, startDate, endDate, currency);
+        return XBRLData.builder()
+            .resultMap(config)
+            .startDate(startDate)
+            .endDate(endDate)
+            .currency(currency)
+            .build();
     }
 
     @SuppressWarnings("unchecked")

@@ -61,7 +61,14 @@ public class TopicReadPlatformServiceImpl implements TopicReadPlatformService {
             final String entityType = rs.getString("entityType");
             final String memberType = rs.getString("memberType");
 
-            return new TopicData(id, title, enabled, entityId, entityType, memberType);
+            return TopicData.builder()
+                .id(id)
+                .title(title)
+                .enabled(enabled)
+                .entityId(entityId)
+                .entityType(entityType)
+                .memberType(memberType)
+                .build();
         }
         
     }
