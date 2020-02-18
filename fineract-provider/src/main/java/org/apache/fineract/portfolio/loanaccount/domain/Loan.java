@@ -247,22 +247,26 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @Column(name = "loan_product_counter")
     private Integer loanProductCounter;
 
+    @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true, fetch=FetchType.LAZY)
     private Set<LoanCharge> charges = new HashSet<>();
 
+    @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true, fetch=FetchType.LAZY)
     private Set<LoanTrancheCharge> trancheCharges = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true, fetch=FetchType.LAZY)
-    private Set<LoanCollateral> collateral = null;
+    private Set<LoanCollateral> collateral;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true, fetch=FetchType.LAZY)
     private Set<LoanOfficerAssignmentHistory> loanOfficerHistory;
 
+    @Builder.Default
     @OrderBy(value = "installmentNumber")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true, fetch=FetchType.LAZY)
     private List<LoanRepaymentScheduleInstallment> repaymentScheduleInstallments = new ArrayList<>();
 
+    @Builder.Default
     @OrderBy(value = "dateOf, id")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true, fetch=FetchType.LAZY)
     private List<LoanTransaction> loanTransactions = new ArrayList<>();
@@ -292,10 +296,12 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @Column(name = "max_outstanding_loan_balance", scale = 6, precision = 19)
     private BigDecimal maxOutstandingLoanBalance;
 
+    @Builder.Default
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true, fetch=FetchType.LAZY)
     @OrderBy(value = "expectedDisbursementDate, id")
     private List<LoanDisbursementDetails> disbursementDetails = new ArrayList<>();
 
+    @Builder.Default
     @OrderBy(value = "termApplicableFrom, id")
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true, fetch=FetchType.LAZY)
     private List<LoanTermVariations> loanTermVariations = new ArrayList<>();
@@ -337,7 +343,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     private Integer loanSubStatus;
 
     @Column(name = "is_topup", nullable = false)
-    private boolean isTopup = false;
+    private boolean isTopup;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "loan", optional = true, orphanRemoval = true, fetch=FetchType.EAGER)
     private LoanTopupDetails loanTopupDetails;

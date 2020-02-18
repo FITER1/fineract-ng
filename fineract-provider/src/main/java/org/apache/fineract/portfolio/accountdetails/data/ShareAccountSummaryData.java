@@ -18,56 +18,26 @@
  */
 package org.apache.fineract.portfolio.accountdetails.data;
 
+import lombok.*;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountApplicationTimelineData;
 import org.apache.fineract.portfolio.shareaccounts.data.ShareAccountStatusEnumData;
 
-@SuppressWarnings("unused")
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ShareAccountSummaryData {
-
-	private final Long id;
-	private final String accountNo;
-	private final Long totalApprovedShares;
-	private final Long totalPendingForApprovalShares;
-	private final String externalId;
-	private final Long productId;
-	private final String productName;
-	private final String shortProductName;
-	private final ShareAccountStatusEnumData status;
-	private final CurrencyData currency;
-	private final ShareAccountApplicationTimelineData timeline;
-
-	public ShareAccountSummaryData(final Long id, final String accountNo,
-			final String externalId, final Long productId,
-			final String productName, final String shortProductName,
-			final ShareAccountStatusEnumData status,
-			final CurrencyData currency, final Long approvedShares,
-			final Long pendingForApprovalShares,
-			final ShareAccountApplicationTimelineData timeline) {
-		this.id = id;
-		this.accountNo = accountNo;
-		this.externalId = externalId;
-		if(approvedShares == null) {
-			this.totalApprovedShares = new Long(0) ;
-		}else {
-			this.totalApprovedShares = approvedShares;	
-		}
-		if(pendingForApprovalShares == null) {
-			this.totalPendingForApprovalShares = new Long(0) ;
-		}else {
-			this.totalPendingForApprovalShares = pendingForApprovalShares;	
-		}
-		this.productId = productId;
-		this.productName = productName;
-		this.shortProductName = shortProductName;
-		this.status = status;
-		this.currency = currency;
-		this.timeline = timeline;
-	}
-
-    
-    public String getAccountNo() {
-        return this.accountNo;
-    }
-
+	private Long id;
+	private String accountNo;
+	private Long totalApprovedShares;
+	private Long totalPendingForApprovalShares;
+	private String externalId;
+	private Long productId;
+	private String productName;
+	private String shortProductName;
+	private ShareAccountStatusEnumData status;
+	private CurrencyData currency;
+	private ShareAccountApplicationTimelineData timeline;
 }

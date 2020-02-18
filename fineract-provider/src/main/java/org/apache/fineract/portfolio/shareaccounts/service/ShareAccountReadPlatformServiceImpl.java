@@ -333,8 +333,19 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
             }
 
             final String shortProductName = null;
-            final ShareAccountSummaryData summary = new ShareAccountSummaryData(id, accountNo, externalId, productId, productName,
-                    shortProductName, status, currency, totalApprovedShares, totalPendingShares, timeline);
+            final ShareAccountSummaryData summary = ShareAccountSummaryData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .externalId(externalId)
+                .productId(productId)
+                .productName(productName)
+                .shortProductName(shortProductName)
+                .status(status)
+                .currency(currency)
+                .totalApprovedShares(totalApprovedShares)
+                .totalPendingForApprovalShares(totalPendingShares)
+                .timeline(timeline)
+                .build();
             return new ShareAccountData(id, accountNo, externalId, savingsAccountId, savingsAccountNumber, clientId, clientName,
                     productId, productName, status, timeline, currency, summary, charges, purchasedShares, lockinPeriodFrequency,
                     lockinPeriodFrequencyType, minimumActivePeriod, minimumActivePeriodType, allowdividendsforinactiveclients);
@@ -401,8 +412,19 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
                 }
             }
 
-            final ShareAccountSummaryData summary = new ShareAccountSummaryData(id, accountNo, externalId, productId, productName,
-                    shortProductName, status, currency, totalApprovedShares, totalPendingShares, timeline);
+            final ShareAccountSummaryData summary = ShareAccountSummaryData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .externalId(externalId)
+                .productId(productId)
+                .productName(productName)
+                .shortProductName(shortProductName)
+                .status(status)
+                .currency(currency)
+                .totalApprovedShares(totalApprovedShares)
+                .totalPendingForApprovalShares(totalPendingShares)
+                .timeline(timeline)
+                .build();
 
             return new ShareAccountData(id, accountNo, externalId, clientId, clientName, productId, shortProductName, productId,
                     shortProductName, status, timeline, currency, summary, charges, purchasedSharesData, lockinPeriod, lockPeriodTypeEnum,

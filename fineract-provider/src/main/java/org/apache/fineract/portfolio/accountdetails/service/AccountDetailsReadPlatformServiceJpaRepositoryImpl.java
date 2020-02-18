@@ -69,7 +69,12 @@ public class AccountDetailsReadPlatformServiceJpaRepositoryImpl implements Accou
         final List<ShareAccountSummaryData> shareAccounts = retrieveShareAccountDetails(clientId) ;
         final List<GuarantorAccountSummaryData> guarantorloanAccounts = retrieveGuarantorLoanAccountDetails(
 				guarantorWhereClause, new Object[] { clientId });
-        return new AccountSummaryCollectionData(loanAccounts, savingsAccounts, shareAccounts, guarantorloanAccounts);
+        return AccountSummaryCollectionData.builder()
+            .loanAccounts(loanAccounts)
+            .savingsAccounts(savingsAccounts)
+            .shareAccounts(shareAccounts)
+            .guarantorAccounts(guarantorloanAccounts)
+            .build();
     }
 
     @Override
@@ -94,7 +99,14 @@ public class AccountDetailsReadPlatformServiceJpaRepositoryImpl implements Accou
                 new Object[] { groupId });
         final List<GuarantorAccountSummaryData> memberGuarantorloanAccounts = retrieveGuarantorLoanAccountDetails(
         		guarantorWhereClauseForMembers, new Object[] { groupId });
-        return new AccountSummaryCollectionData(groupLoanAccounts, groupSavingsAccounts, groupGuarantorloanAccounts, memberLoanAccounts, memberSavingsAccounts, memberGuarantorloanAccounts);
+        return AccountSummaryCollectionData.builder()
+            .loanAccounts(groupLoanAccounts)
+            .savingsAccounts(groupSavingsAccounts)
+            .guarantorAccounts(groupGuarantorloanAccounts)
+            .memberLoanAccounts(memberLoanAccounts)
+            .memberSavingsAccounts(memberSavingsAccounts)
+            .guarantorAccounts(memberGuarantorloanAccounts)
+            .build();
     }
 
     @Override
@@ -125,10 +137,6 @@ public class AccountDetailsReadPlatformServiceJpaRepositoryImpl implements Accou
         return this.jdbcTemplate.query(sql, rm, inputs);
     }
 
-    /**
-     * @param entityId
-     * @return
-     */
     private List<SavingsAccountSummaryData> retrieveAccountDetails(final String savingswhereClause, final Object[] inputs) {
         final SavingsAccountSummaryDataMapper savingsAccountSummaryDataMapper = new SavingsAccountSummaryDataMapper();
         final String savingsSql = "select " + savingsAccountSummaryDataMapper.schema() + savingswhereClause;
@@ -238,8 +246,19 @@ public class AccountDetailsReadPlatformServiceJpaRepositoryImpl implements Accou
                     activatedByUsername, activatedByFirstname, activatedByLastname, closedOnDate, closedByUsername, closedByFirstname,
                     closedByLastname);
 
-            return new ShareAccountSummaryData(id, accountNo, externalId, productId, productName, shortProductName, status, currency,
-                    approvedShares, pendingShares, timeline);
+            return ShareAccountSummaryData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .externalId(externalId)
+                .productId(productId)
+                .productName(productName)
+                .shortProductName(shortProductName)
+                .status(status)
+                .currency(currency)
+                .totalApprovedShares(approvedShares)
+                .totalPendingForApprovalShares(pendingShares)
+                .timeline(timeline)
+                .build();
         }
     	
 		public String schema() {
@@ -377,8 +396,22 @@ public class AccountDetailsReadPlatformServiceJpaRepositoryImpl implements Accou
                     activatedByUsername, activatedByFirstname, activatedByLastname, closedOnDate, closedByUsername, closedByFirstname,
                     closedByLastname);
 
-            return new SavingsAccountSummaryData(id, accountNo, externalId, productId, productName, shortProductName, status, currency, accountBalance,
-                    accountTypeData, timeline, depositTypeData, subStatus, lastActiveTransactionDate);
+            return SavingsAccountSummaryData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .externalId(externalId)
+                .productId(productId)
+                .productName(productName)
+                .shortProductName(shortProductName)
+                .status(status)
+                .currency(currency)
+                .accountBalance(accountBalance)
+                .accountType(accountTypeData)
+                .timeline(timeline)
+                .depositType(depositTypeData)
+                .subStatus(subStatus)
+                .lastActiveTransactionDate(lastActiveTransactionDate)
+                .build();
         }
     }
 
@@ -496,8 +529,22 @@ public class AccountDetailsReadPlatformServiceJpaRepositoryImpl implements Accou
                     disbursedByFirstname, disbursedByLastname, closedOnDate, closedByUsername, closedByFirstname, closedByLastname,
                     expectedMaturityDate, writtenOffOnDate, closedByUsername, closedByFirstname, closedByLastname);
 
-            return new LoanAccountSummaryData(id, accountNo, externalId, productId, loanProductName, shortLoanProductName, loanStatus, loanType, loanCycle,
-                    timeline, inArrears,originalLoan,loanBalance,amountPaid);
+            return LoanAccountSummaryData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .externalId(externalId)
+                .productId(productId)
+                .productName(loanProductName)
+                .shortProductName(shortLoanProductName)
+                .status(loanStatus)
+                .loanType(loanType)
+                .loanCycle(loanCycle)
+                .timeline(timeline)
+                .inArrears(inArrears)
+                .originalLoan(originalLoan)
+                .loanBalance(loanBalance)
+                .amountPaid(amountPaid)
+                .build();
         }
         
     }
@@ -583,11 +630,24 @@ public class AccountDetailsReadPlatformServiceJpaRepositoryImpl implements Accou
 		final Boolean isActive = rs.getBoolean("isActive");
 
 		final String relationship = rs.getString("relationship");
-		return new GuarantorAccountSummaryData(id, accountNo, externalId,
-				productId, loanProductName, shortLoanProductName,
-				loanStatus, loanType, loanCycle, inArrears, originalLoan,
-				loanBalance, amountPaid, isActive, relationship,
-				onHoldAmount);
+		return GuarantorAccountSummaryData.builder()
+            .id(id)
+            .accountNo(accountNo)
+            .externalId(externalId)
+            .productId(productId)
+            .productName(loanProductName)
+            .shortProductName(shortLoanProductName)
+            .status(loanStatus)
+            .loanType(loanType)
+            .loanCycle(loanCycle)
+            .inArrears(inArrears)
+            .originalLoan(originalLoan)
+            .loanBalance(loanBalance)
+            .amountPaid(amountPaid)
+            .active(isActive)
+            .relationship(relationship)
+            .onHoldAmount(onHoldAmount)
+            .build();
 	}
 	
     }
