@@ -18,15 +18,24 @@
  */
 package org.apache.fineract.spm.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_surveys")
 public class Survey extends AbstractPersistableCustom<Long> {
@@ -59,78 +68,4 @@ public class Survey extends AbstractPersistableCustom<Long> {
     @Column(name = "valid_to")
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date validTo;
-
-    public Survey() {
-        super();
-    }
-
-    public List<Component> getComponents() {
-        return components;
-    }
-
-    public void setComponents(List<Component> components) {
-        this.components = components;
-    }
-
-    public List<Question> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(List<Question> questions) {
-        if(this.questions != null){
-            this.questions.clear();;
-        }else{
-            this.questions = new ArrayList<>();
-        }
-        
-        this.questions.addAll(questions);
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getCountryCode() {
-        return countryCode;
-    }
-
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
-    }
-
-    public Date getValidFrom() {
-        return validFrom;
-    }
-
-    public void setValidFrom(Date validFrom) {
-        this.validFrom = validFrom;
-    }
-
-    public Date getValidTo() {
-        return validTo;
-    }
-
-    public void setValidTo(Date validTo) {
-        this.validTo = validTo;
-    }
 }

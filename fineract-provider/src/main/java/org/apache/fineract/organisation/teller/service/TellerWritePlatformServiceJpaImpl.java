@@ -45,11 +45,15 @@ import org.apache.fineract.organisation.teller.exception.CashierNotFoundExceptio
 import org.apache.fineract.organisation.teller.serialization.TellerCommandFromApiJsonDeserializer;
 import org.apache.fineract.portfolio.client.domain.ClientTransaction;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.PersistenceException;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -82,7 +86,7 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
             // final Office parent =
             // validateUserPriviledgeOnOfficeAndRetrieve(currentUser, officeId);
             final Office tellerOffice = this.officeRepositoryWrapper.findOneWithNotFoundDetection(officeId);
-            final Teller teller = Teller.fromJson(tellerOffice, command);
+            final Teller teller = fromJson(tellerOffice, command);
 
             // pre save to generate id for use in office hierarchy
             this.tellerRepositoryWrapper.save(teller);
@@ -115,7 +119,7 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
 
             final Teller teller = validateUserPriviledgeOnTellerAndRetrieve(currentUser, tellerId);
 
-            final Map<String, Object> changes = teller.update(tellerOffice, command);
+            final Map<String, Object> changes = update(teller, tellerOffice, command);
 
             if (!changes.isEmpty()) {
                 this.tellerRepositoryWrapper.saveAndFlush(teller);
@@ -137,21 +141,6 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
         }
     }
 
-    /*
-     * used to restrict modifying operations to office that are either the users
-     * office or lower (child) in the office hierarchy
-     */
-    private Teller validateUserPriviledgeOnTellerAndRetrieve(final AppUser currentUser, final Long tellerId) {
-
-        final Long userOfficeId = currentUser.getOffice().getId();
-        final Office userOffice = this.officeRepositoryWrapper.findOfficeHierarchy(userOfficeId);
-        final Teller tellerToReturn = this.tellerRepositoryWrapper.findOneWithNotFoundDetection(tellerId);
-        final Long tellerOfficeId = tellerToReturn.getOffice().getId();
-        if (userOffice.doesNotHaveAnOfficeInHierarchyWithId(tellerOfficeId)) { throw new NoAuthorizationException(
-                    "User does not have sufficient priviledges to act on the provided office."); }
-        return tellerToReturn;
-    }
-
     @Override
     @Transactional
     public CommandProcessingResult deleteTeller(Long tellerId) {
@@ -170,6 +159,103 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
                 .resourceId(teller.getId()) //
                 .build();
 
+    }
+
+    private Teller fromJson(final Office tellerOffice, final JsonCommand command) {
+        final String name = command.stringValueOfParameterNamed("name");
+        final String description = command.stringValueOfParameterNamed("description");
+        final LocalDate startDate = command.localDateValueOfParameterNamed("startDate");
+        final LocalDate endDate = command.localDateValueOfParameterNamed("endDate");
+        final Integer tellerStatusInt = command.integerValueOfParameterNamed("status");
+        final TellerStatus status = TellerStatus.fromInt(tellerStatusInt);
+
+        return Teller.builder()
+            .office(tellerOffice)
+            .name(name)
+            .description(description)
+            .startDate(startDate==null ? null : startDate.toDate())
+            .endDate(endDate==null ? null : endDate.toDate())
+            .status(status==null ? null : status.getValue())
+            .build();
+    }
+
+    private Map<String, Object> update(final Teller teller, final Office tellerOffice, final JsonCommand command) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
+
+        final String dateFormatAsInput = command.dateFormat();
+        final String localeAsInput = command.locale();
+
+        final String officeIdParamName = "officeId";
+        if (command.isChangeInLongParameterNamed(officeIdParamName, teller.getOffice().getId())) {
+            final long newValue = command.longValueOfParameterNamed(officeIdParamName);
+            actualChanges.put(officeIdParamName, newValue);
+            teller.setOffice(tellerOffice);
+        }
+
+        final String nameParamName = "name";
+        if (command.isChangeInStringParameterNamed(nameParamName, teller.getName())) {
+            final String newValue = command.stringValueOfParameterNamed(nameParamName);
+            actualChanges.put(nameParamName, newValue);
+            teller.setName(newValue);
+        }
+
+        final String descriptionParamName = "description";
+        if (command.isChangeInStringParameterNamed(descriptionParamName, teller.getDescription())) {
+            final String newValue = command.stringValueOfParameterNamed(descriptionParamName);
+            actualChanges.put(descriptionParamName, newValue);
+            teller.setDescription(newValue);
+        }
+
+        final String startDateParamName = "startDate";
+        if (command.isChangeInLocalDateParameterNamed(startDateParamName, toLocalDate(teller.getStartDate()))) {
+            final String valueAsInput = command.stringValueOfParameterNamed(startDateParamName);
+            actualChanges.put(startDateParamName, valueAsInput);
+            actualChanges.put("dateFormat", dateFormatAsInput);
+            actualChanges.put("locale", localeAsInput);
+
+            final LocalDate newValue = command.localDateValueOfParameterNamed(startDateParamName);
+            teller.setStartDate(newValue.toDate());
+        }
+
+        final String endDateParamName = "endDate";
+        if (command.isChangeInLocalDateParameterNamed(endDateParamName, toLocalDate(teller.getEndDate()))) {
+            final String valueAsInput = command.stringValueOfParameterNamed(endDateParamName);
+            actualChanges.put(endDateParamName, valueAsInput);
+            actualChanges.put("dateFormat", dateFormatAsInput);
+            actualChanges.put("locale", localeAsInput);
+
+            final LocalDate newValue = command.localDateValueOfParameterNamed(endDateParamName);
+            teller.setEndDate(newValue.toDate());
+        }
+
+        final String statusParamName = "status";
+        if (command.isChangeInIntegerParameterNamed(statusParamName, teller.getStatus())) {
+            final Integer valueAsInput = command.integerValueOfParameterNamed(statusParamName);
+            actualChanges.put(statusParamName, valueAsInput);
+            final Integer newValue = command.integerValueOfParameterNamed(statusParamName);
+            final TellerStatus status = TellerStatus.fromInt(newValue);
+            if (status != TellerStatus.INVALID) {
+                teller.setStatus(status.getValue());
+            }
+        }
+
+        return actualChanges;
+    }
+
+    /*
+     * used to restrict modifying operations to office that are either the users
+     * office or lower (child) in the office hierarchy
+     */
+    private Teller validateUserPriviledgeOnTellerAndRetrieve(final AppUser currentUser, final Long tellerId) {
+
+        final Long userOfficeId = currentUser.getOffice().getId();
+        final Office userOffice = this.officeRepositoryWrapper.findOfficeHierarchy(userOfficeId);
+        final Teller tellerToReturn = this.tellerRepositoryWrapper.findOneWithNotFoundDetection(tellerId);
+        final Long tellerOfficeId = tellerToReturn.getOffice().getId();
+        if (userOffice.doesNotHaveAnOfficeInHierarchyWithId(tellerOfficeId)) { throw new NoAuthorizationException(
+            "User does not have sufficient priviledges to act on the provided office."); }
+        return tellerToReturn;
     }
 
     /*
@@ -226,7 +312,7 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
                     endTime = hourEndTime.toString() + ":" + minEndTime.toString();
 
             }
-            final Cashier cashier = Cashier.fromJson(tellerOffice, teller, staff, startTime, endTime, command);
+            final Cashier cashier = fromJson(tellerOffice, teller, staff, startTime, endTime, command);
             this.cashierTransactionDataValidator.validateCashierAllowedDateAndTime(cashier, teller);
             
             this.cashierRepository.save(cashier);
@@ -264,7 +350,7 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
 
             // TODO - check if staff office and teller office match
 
-            final Map<String, Object> changes = cashier.update(command);
+            final Map<String, Object> changes = update(cashier, command);
 
             if (!changes.isEmpty()) {
                 this.cashierRepository.saveAndFlush(cashier);
@@ -343,6 +429,138 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
                                                                                    // cashier
     }
 
+    private Cashier fromJson(final Office cashierOffice, final Teller teller, final Staff staff, final String startTime,
+                             final String endTime, final JsonCommand command) {
+        // final Long tellerId = teller.getId();
+        // final Long staffId = command.longValueOfParameterNamed("staffId");
+        final String description = command.stringValueOfParameterNamed("description");
+        final LocalDate startDate = command.localDateValueOfParameterNamed("startDate");
+        final LocalDate endDate = command.localDateValueOfParameterNamed("endDate");
+        final Boolean isFullDay = command.booleanObjectValueOfParameterNamed("isFullDay");
+        /*
+         * final String startTime =
+         * command.stringValueOfParameterNamed("startTime"); final String
+         * endTime = command.stringValueOfParameterNamed("endTime");
+         */
+
+        return Cashier.builder()
+            .office(cashierOffice)
+            .teller(teller)
+            .staff(staff)
+            .description(description)
+            .startDate(startDate.toDate())
+            .endDate(endDate.toDate())
+            .fullDay(isFullDay)
+            .startTime(startTime)
+            .endTime(endTime)
+            .build();
+    }
+
+    private Map<String, Object> update(final Cashier cashier, final JsonCommand command) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>();
+
+        final String dateFormatAsInput = command.dateFormat();
+        final String localeAsInput = command.locale();
+
+        final String descriptionParamName = "description";
+        if (command.isChangeInStringParameterNamed(descriptionParamName, cashier.getDescription())) {
+            final String newValue = command.stringValueOfParameterNamed(descriptionParamName);
+            actualChanges.put(descriptionParamName, newValue);
+            cashier.setDescription(newValue);
+        }
+
+        final String startDateParamName = "startDate";
+        if (command.isChangeInLocalDateParameterNamed(startDateParamName, toLocalDate(cashier.getStartDate()))) {
+            final String valueAsInput = command.stringValueOfParameterNamed(startDateParamName);
+            actualChanges.put(startDateParamName, valueAsInput);
+            actualChanges.put("dateFormat", dateFormatAsInput);
+            actualChanges.put("locale", localeAsInput);
+
+            final LocalDate newValue = command.localDateValueOfParameterNamed(startDateParamName);
+            cashier.setStartDate(newValue.toDate());
+        }
+
+        final String endDateParamName = "endDate";
+        if (command.isChangeInLocalDateParameterNamed(endDateParamName, toLocalDate(cashier.getEndDate()))) {
+            final String valueAsInput = command.stringValueOfParameterNamed(endDateParamName);
+            actualChanges.put(endDateParamName, valueAsInput);
+            actualChanges.put("dateFormat", dateFormatAsInput);
+            actualChanges.put("locale", localeAsInput);
+
+            final LocalDate newValue = command.localDateValueOfParameterNamed(endDateParamName);
+            cashier.setEndDate(newValue.toDate());
+        }
+
+        final Boolean isFullDay = command.booleanObjectValueOfParameterNamed("isFullDay");
+
+        final String isFullDayParamName = "isFullDay";
+        if (command.isChangeInBooleanParameterNamed(isFullDayParamName, cashier.getFullDay())) {
+            final Boolean newValue = command.booleanObjectValueOfParameterNamed(isFullDayParamName);
+            actualChanges.put(isFullDayParamName, newValue);
+            cashier.setFullDay(newValue);
+        }
+
+        if (!isFullDay) {
+            String newStartHour = "";
+            String newStartMin = "";
+            String newEndHour = "";
+            String newEndMin = "";
+            final String hourStartTimeParamName = "hourStartTime";
+            final String minStartTimeParamName = "minStartTime";
+            final String hourEndTimeParamName = "hourEndTime";
+            final String minEndTimeParamName = "minEndTime";
+            if (command.isChangeInLongParameterNamed(hourStartTimeParamName, toTimePart(cashier.getStartTime(), 0))
+                || command.isChangeInLongParameterNamed(minStartTimeParamName, toTimePart(cashier.getStartTime(), 1))) {
+                newStartHour = command.stringValueOfParameterNamed(hourStartTimeParamName);
+                if(newEndHour.equalsIgnoreCase("0")){
+                    newEndHour= newEndHour + "0";
+                }
+                actualChanges.put(hourStartTimeParamName, newStartHour);
+                newStartMin = command.stringValueOfParameterNamed(minStartTimeParamName);
+                if(newStartMin.equalsIgnoreCase("0")){
+                    newStartMin= newStartMin + "0";
+                }
+                actualChanges.put(minStartTimeParamName, newStartMin);
+                cashier.setStartTime(newStartHour + ":" + newStartMin);
+            }
+
+            if (command.isChangeInLongParameterNamed(hourEndTimeParamName, toTimePart(cashier.getEndTime(), 0))
+                || command.isChangeInLongParameterNamed(minEndTimeParamName, toTimePart(cashier.getEndTime(), 1))) {
+                newEndHour = command.stringValueOfParameterNamed(hourEndTimeParamName);
+                if(newEndHour.equalsIgnoreCase("0")){
+                    newEndHour= newEndHour + "0";
+                }
+                actualChanges.put(hourEndTimeParamName, newEndHour);
+                newEndMin = command.stringValueOfParameterNamed(minEndTimeParamName);
+                if(newEndMin.equalsIgnoreCase("0")){
+                    newEndMin= newEndMin + "0";
+                }
+                actualChanges.put(minEndTimeParamName, newEndMin);
+                cashier.setEndTime(newEndHour + ":" + newEndMin);
+            }
+
+        }
+
+        return actualChanges;
+    }
+
+    private Long toTimePart(String time, int index) {
+        if (time != null && !time.equalsIgnoreCase("")) {
+            String[] extractHourFromStartTime = time.split(":");
+            return Long.valueOf(extractHourFromStartTime[index]);
+        }
+        return null;
+    }
+
+    private LocalDate toLocalDate(Date date) {
+        LocalDate localDate = null;
+        if (date != null) {
+            localDate = LocalDate.fromDateFields(date);
+        }
+        return localDate;
+    }
+
     private CommandProcessingResult doTransactionForCashier(final Long cashierId, final CashierTxnType txnType, JsonCommand command) {
         try {
             final AppUser currentUser = this.context.authenticatedUser();
@@ -377,7 +595,7 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
                 }
             }
 
-            final CashierTransaction cashierTxn = CashierTransaction.fromJson(cashier, command);
+            final CashierTransaction cashierTxn = fromJson(cashier, command);
             cashierTxn.setTxnType(txnType.getId());
 
             this.cashierTxnRepository.save(cashierTxn);
@@ -451,4 +669,74 @@ public class TellerWritePlatformServiceJpaImpl implements TellerWritePlatformSer
         }
     }
 
+    private CashierTransaction fromJson(final Cashier cashier, final JsonCommand command) {
+        final Integer txnType = command.integerValueOfParameterNamed("txnType");
+        final BigDecimal txnAmount = command.bigDecimalValueOfParameterNamed("txnAmount");
+        final LocalDate txnDate = command.localDateValueOfParameterNamed("txnDate");
+        final String entityType = command.stringValueOfParameterNamed("entityType");
+        final String txnNote = command.stringValueOfParameterNamed("txnNote");
+        final Long entityId = command.longValueOfParameterNamed("entityId");
+        final String currencyCode = command.stringValueOfParameterNamed("currencyCode");
+
+        // TODO: get client/loan/savings details
+        return CashierTransaction.builder()
+            .cashier(cashier)
+            .txnType(txnType)
+            .txnAmount(txnAmount)
+            .txnDate(txnDate==null ? null : txnDate.toDate())
+            .entityType(entityType)
+            .entityId(entityId)
+            .txnNote(txnNote)
+            .currencyCode(currencyCode)
+            .build();
+    }
+
+    private Map<String, Object> update(final CashierTransaction cashierTransaction, final JsonCommand command) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>();
+
+        final String dateFormatAsInput = command.dateFormat();
+        final String localeAsInput = command.locale();
+
+        final String txnTypeParamName = "txnType";
+        if (command.isChangeInIntegerParameterNamed(txnTypeParamName, cashierTransaction.getTxnType())) {
+            final Integer newValue = command.integerValueOfParameterNamed(txnTypeParamName);
+            actualChanges.put(txnTypeParamName, newValue);
+            cashierTransaction.setTxnType(newValue);
+        }
+
+        final String txnDateParamName = "txnDate";
+        if (command.isChangeInLocalDateParameterNamed(txnDateParamName, toLocalDate(cashierTransaction.getTxnDate()))) {
+            final String valueAsInput = command.stringValueOfParameterNamed(txnDateParamName);
+            actualChanges.put(txnDateParamName, valueAsInput);
+            actualChanges.put("dateFormat", dateFormatAsInput);
+            actualChanges.put("locale", localeAsInput);
+
+            final LocalDate newValue = command.localDateValueOfParameterNamed(txnDateParamName);
+            cashierTransaction.setTxnDate(newValue.toDate());
+        }
+
+        final String txnAmountParamName = "txnAmount";
+        if (command.isChangeInBigDecimalParameterNamed(txnAmountParamName, cashierTransaction.getTxnAmount())) {
+            final BigDecimal newValue = command.bigDecimalValueOfParameterNamed(txnAmountParamName);
+            actualChanges.put(txnAmountParamName, newValue);
+            cashierTransaction.setTxnAmount(newValue);
+        }
+
+        final String txnNoteParamName = "txnNote";
+        if (command.isChangeInStringParameterNamed(txnNoteParamName, cashierTransaction.getTxnNote())) {
+            final String newValue = command.stringValueOfParameterNamed(txnNoteParamName);
+            actualChanges.put(txnNoteParamName, newValue);
+            cashierTransaction.setTxnNote(newValue);
+        }
+
+        final String currencyCodeParamName = "currencyCode";
+        if (command.isChangeInStringParameterNamed(currencyCodeParamName, cashierTransaction.getCurrencyCode())) {
+            final String newValue = command.stringValueOfParameterNamed(currencyCodeParamName);
+            actualChanges.put(currencyCodeParamName, newValue);
+            cashierTransaction.setCurrencyCode(newValue);
+        }
+
+        return actualChanges;
+    }
 }

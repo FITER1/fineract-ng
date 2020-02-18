@@ -24,6 +24,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Arrays;
 import java.util.Iterator;
 
 @Builder
@@ -47,17 +48,14 @@ public class Money implements Comparable<Money> {
     private BigDecimal amount;
 
     public static Money total(final Money... monies) {
-        if (monies.length == 0) { throw new IllegalArgumentException("Money array must not be empty"); }
-        Money total = monies[0];
-        for (int i = 1; i < monies.length; i++) {
-            total = total.plus(monies[i]);
-        }
-        return total;
+        return total(Arrays.asList(monies));
     }
 
     public static Money total(final Iterable<? extends Money> monies) {
         final Iterator<? extends Money> it = monies.iterator();
-        if (it.hasNext() == false) { throw new IllegalArgumentException("Money iterator must not be empty"); }
+        if (it.hasNext() == false) {
+            throw new IllegalArgumentException("Money iterator must not be empty");
+        }
         Money total = it.next();
         while (it.hasNext()) {
             total = total.plus(it.next());

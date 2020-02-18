@@ -44,28 +44,4 @@ public class ProvisioningCategory extends AbstractPersistableCustom<Long> {
 
     @Column(name = "description", nullable = true)
     private String categoryDescription;
-
-    public static ProvisioningCategory fromJson(JsonCommand jsonCommand) {
-        final String categoryName = jsonCommand.stringValueOfParameterNamed("categoryname");
-        final String description = jsonCommand.stringValueOfParameterNamed("description");
-        return new ProvisioningCategory(categoryName, description);
-    }
-
-    public Map<String, Object> update(JsonCommand command) {
-        final Map<String, Object> actualChanges = new LinkedHashMap<>(2);
-        final String nameParamName = "categoryname";
-        if (command.isChangeInStringParameterNamed(nameParamName, this.categoryName)) {
-            final String newValue = command.stringValueOfParameterNamed(nameParamName);
-            actualChanges.put(nameParamName, newValue);
-            this.categoryName = newValue;
-        }
-
-        final String descriptionParamName = "categorydescription";
-        if (command.isChangeInStringParameterNamed(descriptionParamName, this.categoryDescription)) {
-            final String newValue = command.stringValueOfParameterNamed(descriptionParamName);
-            actualChanges.put(descriptionParamName, newValue);
-            this.categoryDescription = newValue;
-        }
-        return actualChanges;
-    }
 }

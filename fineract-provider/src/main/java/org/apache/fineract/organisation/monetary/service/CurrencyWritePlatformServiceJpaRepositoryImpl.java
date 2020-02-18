@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepositoryWrapper;
 import org.apache.fineract.organisation.monetary.exception.CurrencyInUseException;
@@ -65,7 +66,14 @@ public class CurrencyWritePlatformServiceJpaRepositoryImpl implements CurrencyWr
 
             final ApplicationCurrency currency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currencyCode);
 
-            final OrganisationCurrency allowedCurrency = currency.toOrganisationCurrency();
+            final OrganisationCurrency allowedCurrency = OrganisationCurrency.builder()
+                .code(currency.getCode())
+                .name(currency.getName())
+                .decimalPlaces(currency.getDecimalPlaces())
+                .inMultiplesOf(currency.getInMultiplesOf())
+                .displaySymbol(currency.getDisplaySymbol())
+                .nameCode(currency.getNameCode())
+                .build();
 
             allowedCurrencyCodes.add(currencyCode);
             allowedCurrencies.add(allowedCurrency);

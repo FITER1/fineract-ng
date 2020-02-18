@@ -18,10 +18,20 @@
  */
 package org.apache.fineract.spm.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 import javax.persistence.*;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_survey_lookup_tables")
 public class LookupTable extends AbstractPersistableCustom<Long> {
@@ -44,56 +54,4 @@ public class LookupTable extends AbstractPersistableCustom<Long> {
 
     @Column(name = "score", precision = 5, scale = 2)
     private Double score;
-
-    public LookupTable() {
-        super();
-    }
-
-    public Survey getSurvey() {
-        return survey;
-    }
-
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getValueFrom() {
-        return valueFrom;
-    }
-
-    public void setValueFrom(Integer valueFrom) {
-        this.valueFrom = valueFrom;
-    }
-
-    public Integer getValueTo() {
-        return valueTo;
-    }
-
-    public void setValueTo(Integer valueTo) {
-        this.valueTo = valueTo;
-    }
-
-    public Double getScore() {
-        return score;
-    }
-
-    public void setScore(Double score) {
-        this.score = score;
-    }
 }

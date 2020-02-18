@@ -214,7 +214,14 @@ public class FixedDepositProductsApiResource {
 
         final EnumOptionData accountingRule = AccountingEnumerations.accountingRuleType(AccountingRuleType.NONE);
 
-        CurrencyData currency = CurrencyData.blank();
+        CurrencyData currency = CurrencyData.builder()
+            .code("")
+            .name("")
+            .decimalPlaces(0)
+            .inMultiplesOf(0)
+            .displaySymbol("")
+            .nameCode("")
+            .build();
         final Collection<CurrencyData> currencyOptions = this.currencyReadPlatformService.retrieveAllowedCurrencies();
         if (currencyOptions.size() == 1) {
             currency = new ArrayList<>(currencyOptions).get(0);

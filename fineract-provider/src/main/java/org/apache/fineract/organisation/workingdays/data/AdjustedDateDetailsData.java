@@ -16,10 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.organisation.holiday.data;
+package org.apache.fineract.organisation.workingdays.data;
 
 import lombok.*;
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.joda.time.LocalDate;
 
 @Builder
@@ -27,14 +26,8 @@ import org.joda.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class HolidayData {
-    private Long id;
-    private String name;
-    private String description;
-    private LocalDate fromDate;
-    private LocalDate toDate;
-    private LocalDate repaymentsRescheduledTo;
-    private Long officeId;
-    private EnumOptionData status;
-    private Integer reschedulingType;
+public class AdjustedDateDetailsData {
+    private LocalDate changedScheduleDate;
+    private LocalDate changedActualRepaymentDate;
+    private LocalDate nextRepaymentPeriodDueDate;
 }

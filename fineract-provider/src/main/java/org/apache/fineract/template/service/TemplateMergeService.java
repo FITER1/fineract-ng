@@ -24,6 +24,7 @@ import com.github.mustachejava.MustacheFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.template.domain.Template;
 import org.apache.fineract.template.domain.TemplateFunctions;
+import org.apache.fineract.template.domain.TemplateMapper;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -34,8 +35,10 @@ import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -56,7 +59,11 @@ public class TemplateMergeService {
         final MustacheFactory mf = new DefaultMustacheFactory();
         final Mustache mustache = mf.compile(new StringReader(template.getText()), template.getName());
 
-        final Map<String, Object> mappers = getCompiledMapFromMappers(template.getMappersAsMap());
+        final Map<String, Object> mappers = getCompiledMapFromMappers(template.getMappers().stream().collect(Collectors.toMap(
+            TemplateMapper::getMapperkey, TemplateMapper::getMappervalue,
+            (oldValue, newValue) -> oldValue,
+            LinkedHashMap::new
+        )));
         this.scopes.putAll(mappers);
 
         expandMapArrays(scopes);

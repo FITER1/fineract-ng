@@ -192,7 +192,11 @@ public class LoanProductRelatedDetail implements LoanProductMinimumRepaymentSche
 
     @Override
     public MonetaryCurrency getCurrency() {
-        return this.currency.copy();
+        return MonetaryCurrency.builder()
+            .code(this.currency.getCode())
+            .digitsAfterDecimal(this.currency.getDigitsAfterDecimal())
+            .inMultiplesOf(this.currency.getInMultiplesOf())
+            .build();
     }
 
     @Override

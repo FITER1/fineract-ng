@@ -53,7 +53,7 @@ public class ConfigurationDomainServiceJpa implements ConfigurationDomainService
         final String makerCheckerConfigurationProperty = "maker-checker";
         final GlobalConfigurationPropertyData property = getGlobalConfigurationPropertyData(makerCheckerConfigurationProperty);
 
-        return thisTask.hasMakerCheckerEnabled() && property.isEnabled();
+        return thisTask.isCanMakerChecker() && property.isEnabled();
     }
 
     @Override

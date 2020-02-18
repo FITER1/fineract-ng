@@ -22,9 +22,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
+import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
+import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
@@ -32,6 +36,8 @@ import org.apache.fineract.organisation.holiday.api.HolidayApiConstants;
 import org.apache.fineract.organisation.holiday.data.HolidayDataValidator;
 import org.apache.fineract.organisation.holiday.domain.Holiday;
 import org.apache.fineract.organisation.holiday.domain.HolidayRepositoryWrapper;
+import org.apache.fineract.organisation.holiday.domain.HolidayStatusType;
+import org.apache.fineract.organisation.holiday.domain.RescheduleType;
 import org.apache.fineract.organisation.holiday.exception.HolidayDateException;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
@@ -44,11 +50,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.PersistenceException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import static org.apache.fineract.organisation.holiday.api.HolidayApiConstants.officesParamName;
+import static org.apache.fineract.organisation.holiday.api.HolidayApiConstants.*;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.dateFormatParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.localeParamName;
 
 @Slf4j
 @Service
@@ -74,7 +80,7 @@ public class HolidayWritePlatformServiceJpaRepositoryImpl implements HolidayWrit
 
             final Set<Office> offices = getSelectedOffices(command);
 
-            final Holiday holiday = Holiday.createNew(offices, command);
+            final Holiday holiday = createNew(offices, command);
 
             this.holidayRepository.save(holiday);
 
@@ -98,13 +104,13 @@ public class HolidayWritePlatformServiceJpaRepositoryImpl implements HolidayWrit
             this.fromApiJsonDeserializer.validateForUpdate(command.json());
 
             final Holiday holiday = this.holidayRepository.findOneWithNotFoundDetection(command.entityId());
-            Map<String, Object> changes = holiday.update(command);
+            Map<String, Object> changes = update(holiday, command);
 
             validateInputDates(holiday.getFromDateLocalDate(), holiday.getToDateLocalDate(), holiday.getRepaymentsRescheduledToLocalDate());
 
             if (changes.containsKey(officesParamName)) {
                 final Set<Office> offices = getSelectedOffices(command);
-                final boolean updated = holiday.update(offices);
+                final boolean updated = update(holiday, offices);
                 if (!updated) {
                     changes.remove(officesParamName);
                 }
@@ -129,7 +135,7 @@ public class HolidayWritePlatformServiceJpaRepositoryImpl implements HolidayWrit
         this.context.authenticatedUser();
         final Holiday holiday = this.holidayRepository.findOneWithNotFoundDetection(holidayId);
 
-        holiday.activate();
+        activate(holiday);
         this.holidayRepository.saveAndFlush(holiday);
         return CommandProcessingResult.builder().resourceId(holiday.getId()).build();
     }
@@ -139,9 +145,178 @@ public class HolidayWritePlatformServiceJpaRepositoryImpl implements HolidayWrit
     public CommandProcessingResult deleteHoliday(final Long holidayId) {
         this.context.authenticatedUser();
         final Holiday holiday = this.holidayRepository.findOneWithNotFoundDetection(holidayId);
-        holiday.delete();
+        delete(holiday);
         this.holidayRepository.saveAndFlush(holiday);
         return CommandProcessingResult.builder().resourceId(holidayId).build();
+    }
+
+    private Map<String, Object> update(final Holiday holiday, final JsonCommand command) {
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
+
+        final List<ApiParameterError> dataValidationErrors = new ArrayList<>();
+        final DataValidatorBuilder baseDataValidator = new DataValidatorBuilder(dataValidationErrors).resource("holiday" + ".update");
+
+        final HolidayStatusType currentStatus = HolidayStatusType.fromInt(holiday.getStatus());
+
+        final String dateFormatAsInput = command.dateFormat();
+        final String localeAsInput = command.locale();
+
+        if (command.isChangeInStringParameterNamed(nameParamName, holiday.getName())) {
+            final String newValue = command.stringValueOfParameterNamed(nameParamName);
+            actualChanges.put(nameParamName, newValue);
+            holiday.setName(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        if (command.isChangeInStringParameterNamed(descriptionParamName, holiday.getDescription())) {
+            final String newValue = command.stringValueOfParameterNamed(descriptionParamName);
+            actualChanges.put(descriptionParamName, newValue);
+            holiday.setDescription(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+
+        if (command.isChangeInIntegerParameterNamed(HolidayApiConstants.reschedulingType, holiday.getReschedulingType())) {
+            final Integer newValue =command.integerValueOfParameterNamed(HolidayApiConstants.reschedulingType);
+            actualChanges.put(HolidayApiConstants.reschedulingType, newValue);
+            holiday.setReschedulingType(RescheduleType.fromInt(newValue).getValue());
+            if(newValue.equals(RescheduleType.RESCHEDULETONEXTREPAYMENTDATE.getValue())){
+                holiday.setReschedulingType(null);
+            }
+        }
+
+        if (currentStatus.isPendingActivation()) {
+            if (command.isChangeInLocalDateParameterNamed(fromDateParamName, holiday.getFromDateLocalDate())) {
+                final String valueAsInput = command.stringValueOfParameterNamed(fromDateParamName);
+                actualChanges.put(fromDateParamName, valueAsInput);
+                actualChanges.put(dateFormatParamName, dateFormatAsInput);
+                actualChanges.put(localeParamName, localeAsInput);
+                final LocalDate newValue = command.localDateValueOfParameterNamed(fromDateParamName);
+                holiday.setFromDate(newValue.toDate());
+            }
+
+            if (command.isChangeInLocalDateParameterNamed(toDateParamName, holiday.getToDateLocalDate())) {
+                final String valueAsInput = command.stringValueOfParameterNamed(toDateParamName);
+                actualChanges.put(toDateParamName, valueAsInput);
+                actualChanges.put(dateFormatParamName, dateFormatAsInput);
+                actualChanges.put(localeParamName, localeAsInput);
+
+                final LocalDate newValue = command.localDateValueOfParameterNamed(toDateParamName);
+                holiday.setToDate(newValue.toDate());
+            }
+
+            if (command.isChangeInLocalDateParameterNamed(repaymentsRescheduledToParamName, holiday.getRepaymentsRescheduledToLocalDate())) {
+                final String valueAsInput = command.stringValueOfParameterNamed(repaymentsRescheduledToParamName);
+                actualChanges.put(repaymentsRescheduledToParamName, valueAsInput);
+                actualChanges.put(dateFormatParamName, dateFormatAsInput);
+                actualChanges.put(localeParamName, localeAsInput);
+
+                final LocalDate newValue = command.localDateValueOfParameterNamed(repaymentsRescheduledToParamName);
+                holiday.setRepaymentsRescheduledTo(newValue.toDate());
+            }
+
+            if (command.hasParameter(officesParamName)) {
+                final JsonArray jsonArray = command.arrayOfParameterNamed(officesParamName);
+                if (jsonArray != null) {
+                    actualChanges.put(officesParamName, command.jsonFragment(officesParamName));
+                }
+            }
+        } else {
+            if (command.isChangeInLocalDateParameterNamed(fromDateParamName, holiday.getFromDateLocalDate())) {
+                baseDataValidator.reset().parameter(fromDateParamName).failWithCode("cannot.edit.holiday.in.active.state");
+            }
+
+            if (command.isChangeInLocalDateParameterNamed(toDateParamName, holiday.getToDateLocalDate())) {
+                baseDataValidator.reset().parameter(toDateParamName).failWithCode("cannot.edit.holiday.in.active.state");
+            }
+
+            if (command.isChangeInLocalDateParameterNamed(repaymentsRescheduledToParamName, holiday.getRepaymentsRescheduledToLocalDate())) {
+                baseDataValidator.reset().parameter(repaymentsRescheduledToParamName).failWithCode("cannot.edit.holiday.in.active.state");
+            }
+
+            if (command.hasParameter(officesParamName)) {
+                baseDataValidator.reset().parameter(repaymentsRescheduledToParamName).failWithCode("cannot.edit.holiday.in.active.state");
+            }
+
+            if (!dataValidationErrors.isEmpty()) {
+                throw new PlatformApiDataValidationException(dataValidationErrors);
+            }
+        }
+
+        return actualChanges;
+    }
+
+    private Holiday createNew(final Set<Office> offices, final JsonCommand command) {
+        final String name = command.stringValueOfParameterNamed(HolidayApiConstants.nameParamName);
+        final LocalDate fromDate = command.localDateValueOfParameterNamed(HolidayApiConstants.fromDateParamName);
+        final LocalDate toDate = command.localDateValueOfParameterNamed(HolidayApiConstants.toDateParamName);
+        Integer reschedulingType = null;
+        if(command.parameterExists(HolidayApiConstants.reschedulingType)){
+            reschedulingType = command.integerValueOfParameterNamed(HolidayApiConstants.reschedulingType);
+        }
+        LocalDate repaymentsRescheduledTo = null;
+        if(reschedulingType == null || reschedulingType.equals(RescheduleType.RESCHEDULETOSPECIFICDATE.getValue())){
+            repaymentsRescheduledTo = command
+                .localDateValueOfParameterNamed(HolidayApiConstants.repaymentsRescheduledToParamName);
+        }
+        final Integer status = HolidayStatusType.PENDING_FOR_ACTIVATION.getValue();
+        final boolean processed = false;// default it to false. Only batch job
+        // should update this field.
+        final String description = command.stringValueOfParameterNamed(HolidayApiConstants.descriptionParamName);
+
+        return Holiday.builder()
+            .name(name)
+            .fromDate(fromDate!=null ? fromDate.toDate() : null)
+            .toDate(toDate!=null ? toDate.toDate() : null)
+            .repaymentsRescheduledTo(repaymentsRescheduledTo!=null ? repaymentsRescheduledTo.toDate() : null)
+            .status(status)
+            .processed(processed)
+            .description(description)
+            .offices(offices)
+            .reschedulingType(reschedulingType)
+            .build();
+    }
+
+    private boolean update(final Holiday holiday, final Set<Office> newOffices) {
+        if (newOffices == null) { return false; }
+
+        boolean updated = false;
+        if (holiday.getOffices() != null) {
+            final Set<Office> currentSetOfOffices = new HashSet<>(holiday.getOffices());
+            final Set<Office> newSetOfOffices = new HashSet<>(newOffices);
+
+            if (!(currentSetOfOffices.equals(newSetOfOffices))) {
+                updated = true;
+                holiday.setOffices(newOffices);
+            }
+        } else {
+            updated = true;
+            holiday.setOffices(newOffices);
+        }
+        return updated;
+    }
+
+    private void delete(final Holiday holiday) {
+        final List<ApiParameterError> dataValidationErrors = new ArrayList<>();
+        final DataValidatorBuilder baseDataValidator = new DataValidatorBuilder(dataValidationErrors).resource("holiday" + ".delete");
+
+        final HolidayStatusType currentStatus = HolidayStatusType.fromInt(holiday.getStatus());
+        if (currentStatus.isDeleted()) {
+            baseDataValidator.reset().failWithCodeNoParameterAddedToErrorCode("already.in.deleted.state");
+            if (!dataValidationErrors.isEmpty()) { throw new PlatformApiDataValidationException(dataValidationErrors); }
+        }
+        holiday.setStatus(HolidayStatusType.DELETED.getValue());
+    }
+
+    private void activate(final Holiday holiday) {
+        final List<ApiParameterError> dataValidationErrors = new ArrayList<>();
+        final DataValidatorBuilder baseDataValidator = new DataValidatorBuilder(dataValidationErrors).resource("holiday" + ".activate");
+
+        final HolidayStatusType currentStatus = HolidayStatusType.fromInt(holiday.getStatus());
+        if (!currentStatus.isPendingActivation()) {
+            baseDataValidator.reset().failWithCodeNoParameterAddedToErrorCode("not.in.pending.for.activation.state");
+            if (!dataValidationErrors.isEmpty()) { throw new PlatformApiDataValidationException(dataValidationErrors); }
+        }
+
+        holiday.setStatus(HolidayStatusType.ACTIVE.getValue());
     }
 
     private Set<Office> getSelectedOffices(final JsonCommand command) {

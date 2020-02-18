@@ -303,7 +303,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
             if (StringUtils.isNotBlank(officeIdStr)) {
                 officeId = Long.valueOf(officeIdStr);
                 final OfficeData office = this.officeReadPlatformService.retrieveOffice(officeId);
-                commandAsJsonMap.put("officeName", office.name());
+                commandAsJsonMap.put("officeName", office.getName());
             } else {
                 commandAsJsonMap.put("officeName", "");
             }

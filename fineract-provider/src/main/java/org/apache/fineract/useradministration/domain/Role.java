@@ -18,14 +18,23 @@
  */
 package org.apache.fineract.useradministration.domain;
 
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-import org.apache.fineract.useradministration.data.RoleData;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Set;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_role", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }, name = "unq_name") })
 public class Role extends AbstractPersistableCustom<Long> implements Serializable {
@@ -43,98 +52,11 @@ public class Role extends AbstractPersistableCustom<Long> implements Serializabl
     @JoinTable(name = "m_role_permission", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
     private Set<Permission> permissions = new HashSet<>();
 
-    public static Role fromJson(final JsonCommand command) {
-        final String name = command.stringValueOfParameterNamed("name");
-        final String description = command.stringValueOfParameterNamed("description");
-        return new Role(name, description);
-    }
-
-    protected Role() {
-        //
-    }
-
-    public Role(final String name, final String description) {
-        this.name = name.trim();
-        this.description = description.trim();
-        this.disabled = false;
-    }
-
-    public Map<String, Object> update(final JsonCommand command) {
-
-        final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
-
-        final String nameParamName = "name";
-        if (command.isChangeInStringParameterNamed(nameParamName, this.name)) {
-            final String newValue = command.stringValueOfParameterNamed(nameParamName);
-            actualChanges.put(nameParamName, newValue);
-            this.name = newValue;
-        }
-
-        final String descriptionParamName = "description";
-        if (command.isChangeInStringParameterNamed(descriptionParamName, this.description)) {
-            final String newValue = command.stringValueOfParameterNamed(descriptionParamName);
-            actualChanges.put(descriptionParamName, newValue);
-            this.description = newValue;
-        }
-
-        return actualChanges;
-    }
-
-    public boolean updatePermission(final Permission permission, final boolean isSelected) {
-        boolean changed = false;
-        if (isSelected) {
-            changed = addPermission(permission);
-        } else {
-            changed = removePermission(permission);
-        }
-
-        return changed;
-    }
-
-    private boolean addPermission(final Permission permission) {
-        return this.permissions.add(permission);
-    }
-
-    private boolean removePermission(final Permission permission) {
-        return this.permissions.remove(permission);
-    }
-
-    public Collection<Permission> getPermissions() {
-        return this.permissions;
-    }
-
     public boolean hasPermissionTo(final String permissionCode) {
-        boolean match = false;
-        for (final Permission permission : this.permissions) {
-            if (permission.hasCode(permissionCode)) {
-                match = true;
-                break;
-            }
+        if(this.permissions==null) {
+            return false;
         }
-        return match;
-    }
 
-    public RoleData toData() {
-        return new RoleData(getId(), this.name, this.description, this.disabled);
-    }
-
-    public String getName() {
-    	return this.name;
-    }
-    
-    public void disableRole() {
-        this.disabled = true;
-    }
-
-    public Boolean isDisabled() {
-        return this.disabled;
-    }
-
-    public void enableRole() {
-        this.disabled = false;
-    }
-
-    public Boolean isEnabled() {
-        return this.disabled;
+        return this.permissions.stream().anyMatch(p -> p.getCode().equalsIgnoreCase(permissionCode));
     }
 }

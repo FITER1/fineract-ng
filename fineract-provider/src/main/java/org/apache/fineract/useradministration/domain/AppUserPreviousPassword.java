@@ -18,12 +18,22 @@
  */
 package org.apache.fineract.useradministration.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 
 import javax.persistence.*;
 import java.util.Date;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_appuser_previous_password")
 public class AppUserPreviousPassword extends AbstractPersistableCustom<Long> {
@@ -37,19 +47,4 @@ public class AppUserPreviousPassword extends AbstractPersistableCustom<Long> {
 
     @Column(name = "password", nullable = false)
     private String password;
-
-    protected AppUserPreviousPassword() {
-
-    }
-
-    public AppUserPreviousPassword(final AppUser user) {
-        this.userId = user.getId();
-        this.password = user.getPassword().trim();
-        this.removalDate = DateUtils.getDateOfTenant();
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
 }

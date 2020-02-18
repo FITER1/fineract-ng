@@ -72,7 +72,11 @@ public class ReportWritePlatformServiceImpl implements ReportWritePlatformServic
 
             this.reportRepository.save(report);
 
-            final Permission permission = new Permission("report", report.getReportName(), "READ");
+            final Permission permission = Permission.builder()
+                .grouping("report")
+                .entityName(report.getReportName())
+                .actionName("READ")
+                .build();
             this.permissionRepository.save(permission);
 
             return CommandProcessingResult.builder() //

@@ -312,7 +312,14 @@ public class LoanAccountDomainServiceJpa implements LoanAccountDomainService {
         final MonetaryCurrency currency = loanAccount.getCurrency();
         final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepositoryWrapper.findOneWithNotFoundDetection(currency);
 
-        final Map<String, Object> accountingBridgeData = loanAccount.deriveAccountingBridgeData(applicationCurrency.toData(),
+        final Map<String, Object> accountingBridgeData = loanAccount.deriveAccountingBridgeData(CurrencyData.builder()
+                .code(applicationCurrency.getCode())
+                .name(applicationCurrency.getName())
+                .decimalPlaces(applicationCurrency.getDecimalPlaces())
+                .inMultiplesOf(applicationCurrency.getInMultiplesOf())
+                .displaySymbol(applicationCurrency.getDisplaySymbol())
+                .nameCode(applicationCurrency.getNameCode())
+                .build(),
                 existingTransactionIds, existingReversedTransactionIds, isAccountTransfer);
         accountingBridgeData.put("isLoanToLoanTransfer", isLoanToLoanTransfer);
         this.journalEntryWritePlatformService.createJournalEntriesForLoan(accountingBridgeData);
@@ -453,7 +460,14 @@ public class LoanAccountDomainServiceJpa implements LoanAccountDomainService {
         Long loanProductId = loan.productId();
         MonetaryCurrency currency = loan.getCurrency();
         ApplicationCurrency applicationCurrency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currency);
-        CurrencyData currencyData = applicationCurrency.toData();
+        CurrencyData currencyData = CurrencyData.builder()
+            .code(applicationCurrency.getCode())
+            .name(applicationCurrency.getName())
+            .decimalPlaces(applicationCurrency.getDecimalPlaces())
+            .inMultiplesOf(applicationCurrency.getInMultiplesOf())
+            .displaySymbol(applicationCurrency.getDisplaySymbol())
+            .nameCode(applicationCurrency.getNameCode())
+            .build();
         Set<LoanCharge> loanCharges = loan.charges();
 
         for (LoanRepaymentScheduleInstallment installment : installments) {

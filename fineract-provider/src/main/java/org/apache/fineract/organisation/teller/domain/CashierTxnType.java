@@ -18,8 +18,14 @@
  */
 package org.apache.fineract.organisation.teller.domain;
 
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class CashierTxnType {
-	
 	private Integer id;
 	private String value;
 	
@@ -28,36 +34,20 @@ public class CashierTxnType {
 	public static final CashierTxnType INWARD_CASH_TXN 	= new CashierTxnType (103, "Cash In");
 	public static final CashierTxnType OUTWARD_CASH_TXN 	= new CashierTxnType (104, "Cash Out");
 	
-	private CashierTxnType () {
-	}
-	
-	private CashierTxnType (Integer id, String value) {
-		this.id = id;
-		this.value = value;
-	}
-		
-	public Integer getId () {
-		return id;
-	}
-	
-	public String getValue () {
-		return value;
-	}
-	
 	public static CashierTxnType getCashierTxnType (Integer id) {
 		CashierTxnType retVal = null;
 		
 		switch(id) {
-		case 101: 
-			retVal = ALLOCATE; break;
-		case 102: 
-			retVal = SETTLE; break;
-		case 103: 
-			retVal = INWARD_CASH_TXN; break;
-		case 104: 
-			retVal = OUTWARD_CASH_TXN; break;
-		default:
-			break;
+			case 101:
+				retVal = ALLOCATE; break;
+			case 102:
+				retVal = SETTLE; break;
+			case 103:
+				retVal = INWARD_CASH_TXN; break;
+			case 104:
+				retVal = OUTWARD_CASH_TXN; break;
+			default:
+				break;
 		}
 		return retVal;
 	}

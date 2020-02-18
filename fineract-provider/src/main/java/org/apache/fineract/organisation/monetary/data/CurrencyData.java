@@ -18,37 +18,24 @@
  */
 package org.apache.fineract.organisation.monetary.data;
 
-/**
- * Immutable data object representing currency.
- */
+import lombok.*;
+
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class CurrencyData {
+    private String code;
+    private String name;
+    @Builder.Default
+    private Integer decimalPlaces = 0;
+    private Integer inMultiplesOf;
+    private String displaySymbol;
+    private String nameCode;
+    private String displayLabel;
 
-    private final String code;
-    private final String name;
-    private final int decimalPlaces;
-    private final Integer inMultiplesOf;
-    private final String displaySymbol;
-    @SuppressWarnings("unused")
-    private final String nameCode;
-    @SuppressWarnings("unused")
-    private final String displayLabel;
-
-    public static CurrencyData blank() {
-        return new CurrencyData("", "", 0, 0, "", "");
-    }
-
-    public CurrencyData(String code) {
-        this.code = code;
-        this.name = null;
-        this.decimalPlaces =0;
-        this.inMultiplesOf = null;
-        this.displaySymbol = null;
-        this.nameCode = null;
-        this.displayLabel = null;
-    }
-
-    public CurrencyData(final String code, final String name, final int decimalPlaces, final Integer inMultiplesOf,
-            final String displaySymbol, final String nameCode) {
+    public CurrencyData(final String code, final String name, final int decimalPlaces, final Integer inMultiplesOf, final String displaySymbol, final String nameCode) {
         this.code = code;
         this.name = name;
         this.decimalPlaces = decimalPlaces;
@@ -56,29 +43,6 @@ public class CurrencyData {
         this.displaySymbol = displaySymbol;
         this.nameCode = nameCode;
         this.displayLabel = generateDisplayLabel();
-    }
-
-    public String code() {
-        return this.code;
-    }
-
-    public int decimalPlaces() {
-        return this.decimalPlaces;
-    }
-
-    public Integer currencyInMultiplesOf() {
-        return this.inMultiplesOf;
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        final CurrencyData currencyData = (CurrencyData) obj;
-        return currencyData.code.equals(this.code);
-    }
-
-    @Override
-    public int hashCode() {
-        return this.code.hashCode();
     }
 
     private String generateDisplayLabel() {
@@ -92,9 +56,5 @@ public class CurrencyData {
         }
 
         return builder.toString();
-    }
-
-    public String getName() {
-        return name;
     }
 }

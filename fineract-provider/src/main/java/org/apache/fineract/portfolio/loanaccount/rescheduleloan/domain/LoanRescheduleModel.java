@@ -89,7 +89,14 @@ public final class LoanRescheduleModel {
 
         final int decimalPlaces = this.totalPrincipalDisbursed.getCurrencyDigitsAfterDecimal();
         final Integer inMultiplesOf = this.totalPrincipalDisbursed.getCurrencyInMultiplesOf();
-        final CurrencyData currency = this.applicationCurrency.toData(decimalPlaces, inMultiplesOf);
+        final CurrencyData currency = CurrencyData.builder()
+            .code(this.applicationCurrency.getCode())
+            .name(this.applicationCurrency.getName())
+            .displaySymbol(this.applicationCurrency.getDisplaySymbol())
+            .nameCode(this.applicationCurrency.getNameCode())
+            .decimalPlaces(decimalPlaces)
+            .inMultiplesOf(inMultiplesOf)
+            .build();
 
         final Collection<LoanSchedulePeriodData> periodsData = new ArrayList<>();
         for (final LoanRescheduleModalPeriod modelPeriod : this.periods) {

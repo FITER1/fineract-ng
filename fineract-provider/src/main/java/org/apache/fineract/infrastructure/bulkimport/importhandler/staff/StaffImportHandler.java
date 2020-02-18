@@ -79,8 +79,19 @@ public class StaffImportHandler implements ImportHandler {
         String externalId=ImportHandlerUtils.readAsString(StaffConstants.EXTERNAL_ID_COL,row);
         Boolean isActive=ImportHandlerUtils.readAsBoolean(StaffConstants.IS_ACTIVE_COL,row);
 
-        return StaffData.importInstance(externalId,firstName,lastName,mobileNo,officeId,isLoanOfficer,isActive,
-                joinedOnDate,row.getRowNum(),locale,dateFormat);
+        return StaffData.builder()
+            .externalId(externalId)
+            .firstname(firstName)
+            .lastname(lastName)
+            .mobileNo(mobileNo)
+            .officeId(officeId)
+            .loanOfficer(isLoanOfficer)
+            .active(isActive)
+            .joiningDate(joinedOnDate)
+            .rowIndex(row.getRowNum())
+            .locale(locale)
+            .dateFormat(dateFormat)
+            .build();
     }
 
     public Count importEntity(String dateFormat) {

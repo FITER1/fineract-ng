@@ -33,7 +33,9 @@ import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityEx
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.organisation.provisioning.constants.ProvisioningCriteriaConstants;
 import org.apache.fineract.organisation.provisioning.data.ProvisioningCriteriaDefinitionData;
+import org.apache.fineract.organisation.provisioning.domain.LoanProductProvisionCriteria;
 import org.apache.fineract.organisation.provisioning.domain.ProvisioningCriteria;
+import org.apache.fineract.organisation.provisioning.domain.ProvisioningCriteriaDefinition;
 import org.apache.fineract.organisation.provisioning.domain.ProvisioningCriteriaRepository;
 import org.apache.fineract.organisation.provisioning.exception.ProvisioningCategoryNotFoundException;
 import org.apache.fineract.organisation.provisioning.exception.ProvisioningCriteriaCannotBeDeletedException;
@@ -45,9 +47,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -98,7 +98,7 @@ public class ProvisioningCriteriaWritePlatformServiceJpaRepositoryImpl implement
                 throw new ProvisioningCategoryNotFoundException(criteriaId) ;
             }
             List<LoanProduct> products = this.provisioningCriteriaAssembler.parseLoanProducts(command.parsedJson()) ;
-            final Map<String, Object> changes = provisioningCriteria.update(command, products) ;
+            final Map<String, Object> changes = update(provisioningCriteria, command, products) ;
             if(!changes.isEmpty()) {
                 updateProvisioningCriteriaDefinitions(provisioningCriteria, command) ;
                 provisioningCriteriaRepository.saveAndFlush(provisioningCriteria) ;    
@@ -112,6 +112,37 @@ public class ProvisioningCriteriaWritePlatformServiceJpaRepositoryImpl implement
         	handleDataIntegrityIssues(command, throwable, dve);
         	return new CommandProcessingResult();
         }
+    }
+
+
+    private Map<String, Object> update(final ProvisioningCriteria criteria, final JsonCommand command, final List<LoanProduct> loanProducts) {
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
+        if(command.isChangeInStringParameterNamed(ProvisioningCriteriaConstants.JSON_CRITERIANAME_PARAM, criteria.getCriteriaName())) {
+            final String valueAsInput = command.stringValueOfParameterNamed(ProvisioningCriteriaConstants.JSON_CRITERIANAME_PARAM);
+            actualChanges.put(ProvisioningCriteriaConstants.JSON_CRITERIANAME_PARAM, valueAsInput);
+            criteria.setCriteriaName(valueAsInput);
+        }
+
+        Set<LoanProductProvisionCriteria> temp = new HashSet<>() ;
+        Set<LoanProduct> productsTemp = new HashSet<>() ;
+
+        for(LoanProductProvisionCriteria mapping: criteria.getLoanProductMapping()) {
+            if(!loanProducts.contains(mapping.getLoanProduct())) {
+                temp.add(mapping) ;
+            }else {
+                productsTemp.add(mapping.getLoanProduct()) ;
+            }
+        }
+        criteria.getLoanProductMapping().removeAll(temp) ;
+
+        for(LoanProduct loanProduct: loanProducts) {
+            if(!productsTemp.contains(loanProduct)) {
+                criteria.getLoanProductMapping().add( new LoanProductProvisionCriteria(criteria, loanProduct)) ;
+            }
+        }
+
+        actualChanges.put(ProvisioningCriteriaConstants.JSON_LOANPRODUCTS_PARAM, criteria.getLoanProductMapping());
+        return actualChanges ;
     }
 
     private void updateProvisioningCriteriaDefinitions(ProvisioningCriteria provisioningCriteria, JsonCommand command) {
@@ -133,13 +164,39 @@ public class ProvisioningCriteriaWritePlatformServiceJpaRepositoryImpl implement
             String categoryName = null ;
             String liabilityAccountName = null ;
             String expenseAccountName = null ;
-            ProvisioningCriteriaDefinitionData data = new ProvisioningCriteriaDefinitionData(id, categoryId, 
-                    categoryName, minimumAge, maximumAge, provisioningpercentage, 
-                    liabilityAccount.getId(), liabilityAccount.getGlCode(), liabilityAccountName, expenseAccount.getId(), expenseAccount.getGlCode(), expenseAccountName) ;
-            provisioningCriteria.update(data, liabilityAccount, expenseAccount) ;
+            ProvisioningCriteriaDefinitionData data = ProvisioningCriteriaDefinitionData.builder()
+                .id(id)
+                .categoryId(categoryId)
+                .categoryName(categoryName)
+                .minAge(minimumAge)
+                .maxAge(maximumAge)
+                .provisioningPercentage(provisioningpercentage)
+                .liabilityAccount(liabilityAccount.getId())
+                .liabilityCode(liabilityAccount.getGlCode())
+                .liabilityName(liabilityAccountName)
+                .expenseAccount(expenseAccount.getId())
+                .expenseCode(expenseAccount.getGlCode())
+                .expenseName(expenseAccountName)
+                .build();
+            update(provisioningCriteria, data, liabilityAccount, expenseAccount) ;
         }
     }
-    
+
+    private void update(final ProvisioningCriteria criteria, final ProvisioningCriteriaDefinitionData data, final GLAccount liability, final GLAccount expense) {
+        for(ProvisioningCriteriaDefinition def: criteria.getProvisioningCriteriaDefinition()) {
+            if(data.getId().equals(def.getId())) {
+                def.toBuilder()
+                    .minimumAge(data.getMinAge())
+                    .maximumAge(data.getMaxAge())
+                    .provisioningPercentage(data.getProvisioningPercentage())
+                    .liabilityAccount(liability)
+                    .expenseAccount(expense)
+                    .build();
+                break ;
+            }
+        }
+    }
+
     /*
      * Guaranteed to throw an exception no matter what the data integrity issue
      * is.

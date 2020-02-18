@@ -461,7 +461,7 @@ public class JournalEntryReadPlatformServiceImpl implements JournalEntryReadPlat
 
         return OfficeOpeningBalancesData.builder()
             .officeId(officeId)
-            .officeName(officeData.name())
+            .officeName(officeData.getName())
             .transactionDate(transactionDate)
             .contraAccount(contraAccount)
             .assetAccountOpeningBalances(assetAccountOpeningBalances)

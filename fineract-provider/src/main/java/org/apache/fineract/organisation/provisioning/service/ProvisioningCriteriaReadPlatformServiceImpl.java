@@ -57,7 +57,11 @@ public class ProvisioningCriteriaReadPlatformServiceImpl implements Provisioning
         final Collection<LoanProductData> allLoanProducts = this.loanProductReadPlatformService
                 .retrieveAllLoanProductsForLookup(onlyActive);
         final Collection<GLAccountData> glAccounts = this.glAccountReadPlatformService.retrieveAllEnabledDetailGLAccounts();
-        return ProvisioningCriteriaData.toTemplate(constructCriteriaTemplate(categories), allLoanProducts, glAccounts);
+        return ProvisioningCriteriaData.builder()
+            .definitions(constructCriteriaTemplate(categories))
+            .loanProducts(allLoanProducts)
+            .glAccounts(glAccounts)
+            .build();
     }
 
     @Override
@@ -68,13 +72,25 @@ public class ProvisioningCriteriaReadPlatformServiceImpl implements Provisioning
         final Collection<LoanProductData> allLoanProducts = this.loanProductReadPlatformService
                 .retrieveAllLoanProductsForLookup(onlyActive);
         final Collection<GLAccountData> glAccounts = this.glAccountReadPlatformService.retrieveAllEnabledDetailGLAccounts();
-        return ProvisioningCriteriaData.toTemplate(data, constructCriteriaTemplate(categories), allLoanProducts, glAccounts);
+        return ProvisioningCriteriaData.builder()
+            .criteriaId(data.getCriteriaId())
+            .criteriaName(data.getCriteriaName())
+            .loanProducts(data.getLoanProducts())
+            .definitions(data.getDefinitions())
+            .createdBy(data.getCreatedBy())
+            .definitions(constructCriteriaTemplate(categories))
+            .selectedLoanProducts(allLoanProducts)
+            .glAccounts(glAccounts)
+            .build();
     }
     
     private Collection<ProvisioningCriteriaDefinitionData> constructCriteriaTemplate(Collection<ProvisioningCategoryData> categories) {
         List<ProvisioningCriteriaDefinitionData> definitions = new ArrayList<>();
         for (ProvisioningCategoryData data : categories) {
-            definitions.add(ProvisioningCriteriaDefinitionData.template(data.getId(), data.getCategoryName()));
+            definitions.add(ProvisioningCriteriaDefinitionData.builder()
+                .id(data.getId())
+                .categoryName(data.getCategoryName())
+                .build());
         }
         return definitions;
     }
@@ -92,7 +108,11 @@ public class ProvisioningCriteriaReadPlatformServiceImpl implements Provisioning
             Long criteriaId = rs.getLong("id") ;
             String criteriaName = rs.getString("criteriaName");
             String createdBy = rs.getString("username") ;
-            return ProvisioningCriteriaData.toLookup(criteriaId, criteriaName, createdBy) ;
+            return ProvisioningCriteriaData.builder()
+                .criteriaId(criteriaId)
+                .criteriaName(criteriaName)
+                .createdBy(createdBy)
+                .build();
         }
         public String schema() {
             return "mpc.id as id, mpc.criteria_name as criteriaName, appu.username as username from m_provisioning_criteria as mpc LEFT JOIN m_appuser appu on mpc.createdby_id=appu.id";
@@ -107,7 +127,12 @@ public class ProvisioningCriteriaReadPlatformServiceImpl implements Provisioning
                     .retrieveAllLoanProductsForLookup("select product_id from m_loanproduct_provisioning_mapping where m_loanproduct_provisioning_mapping.criteria_id="
                             + criteriaId);
             List<ProvisioningCriteriaDefinitionData> definitions = retrieveProvisioningDefinitions(criteriaId);
-            return ProvisioningCriteriaData.toLookup(criteriaId, criteriaName, loanProducts, definitions);
+            return ProvisioningCriteriaData.builder()
+                .criteriaId(criteriaId)
+                .criteriaName(criteriaName)
+                .loanProducts(loanProducts)
+                .definitions(definitions)
+                .build();
         }catch(EmptyResultDataAccessException e) {
             throw new ProvisioningCriteriaNotFoundException(criteriaId) ;
         }
@@ -148,8 +173,20 @@ public class ProvisioningCriteriaReadPlatformServiceImpl implements Provisioning
             String expenseAccountCode = rs.getString("expensecode");
             String expenseAccountName = rs.getString("expensename") ;
             
-            return new ProvisioningCriteriaDefinitionData(id, categoryId, categoryName, minAge, maxAge, provisioningPercentage,
-                    liabilityAccount, liabilityAccountCode, liabilityAccountName, expenseAccount, expenseAccountCode, expenseAccountName);
+            return ProvisioningCriteriaDefinitionData.builder()
+                .id(id)
+                .categoryId(categoryId)
+                .categoryName(categoryName)
+                .minAge(minAge)
+                .maxAge(maxAge)
+                .provisioningPercentage(provisioningPercentage)
+                .liabilityAccount(liabilityAccount)
+                .liabilityCode(liabilityAccountCode)
+                .liabilityName(liabilityAccountName)
+                .expenseAccount(expenseAccount)
+                .expenseCode(expenseAccountCode)
+                .expenseName(expenseAccountName)
+                .build();
         }
 
         public String schema() {

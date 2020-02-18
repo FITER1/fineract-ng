@@ -97,7 +97,11 @@ public class AppUserReadPlatformServiceImpl implements AppUserReadPlatformServic
         final Collection<RoleData> availableRoles = this.roleReadPlatformService.retrieveAllActiveRoles();
         final Collection<RoleData> selfServiceRoles = this.roleReadPlatformService.retrieveAllSelfServiceRoles();
 
-        return AppUserData.template(offices, availableRoles, selfServiceRoles);
+        return AppUserData.builder()
+            .allowedOffices(offices)
+            .availableRoles(availableRoles)
+            .selfServiceRoles(selfServiceRoles)
+            .build();
     }
 
     @Override
@@ -114,23 +118,39 @@ public class AppUserReadPlatformServiceImpl implements AppUserReadPlatformServic
         final Collection<RoleData> selectedUserRoles = new ArrayList<>();
         final Set<Role> userRoles = user.getRoles();
         for (final Role role : userRoles) {
-            selectedUserRoles.add(role.toData());
+            selectedUserRoles.add(RoleData.builder()
+                .id(role.getId())
+                .name(role.getName())
+                .description(role.getDescription())
+                .disabled(role.getDisabled())
+                .build());
         }
 
         availableRoles.removeAll(selectedUserRoles);
 
         final StaffData linkedStaff;
         if (user.getStaff() != null) {
-            linkedStaff = this.staffReadPlatformService.retrieveStaff(user.getStaffId());
+            linkedStaff = this.staffReadPlatformService.retrieveStaff(user.getStaff()!=null ? user.getStaff().getId() : null);
         } else {
             linkedStaff = null;
         }
 
-        AppUserData retUser = AppUserData.instance(user.getId(), user.getUsername(), user.getEmail(), user.getOffice().getId(),
-                user.getOffice().getName(), user.getFirstname(), user.getLastname(), availableRoles, null, selectedUserRoles, linkedStaff,
-                user.getPasswordNeverExpires(), user.isSelfServiceUser());
+        AppUserData retUser = AppUserData.builder()
+            .id(user.getId())
+            .username(user.getUsername())
+            .email(user.getEmail())
+            .officeId(user.getOffice().getId())
+            .officeName(user.getOffice().getName())
+            .firstname(user.getFirstname())
+            .lastname(user.getLastname())
+            .availableRoles(availableRoles)
+            .selectedRoles(selectedUserRoles)
+            .staff(linkedStaff)
+            .passwordNeverExpires(user.isPasswordNeverExpires())
+            .selfServiceUser(user.isSelfServiceUser())
+            .build();
         
-        if(retUser.isSelfServiceUser()){
+        if(Boolean.TRUE.equals(retUser.getSelfServiceUser())) {
         	Set<ClientData> clients = new HashSet<>();
         	for(AppUserClientMapping clientMap : user.getAppUserClientMappings()){
         		Client client = clientMap.getClient();
@@ -174,8 +194,19 @@ public class AppUserReadPlatformServiceImpl implements AppUserReadPlatformServic
             } else {
                 linkedStaff = null;
             }
-            return AppUserData.instance(id, username, email, officeId, officeName, firstname, lastname, null, null, selectedRoles, linkedStaff,
-                    passwordNeverExpire, isSelfServiceUser);
+            return AppUserData.builder()
+                .id(id)
+                .username(username)
+                .email(email)
+                .officeId(officeId)
+                .officeName(officeName)
+                .firstname(firstname)
+                .lastname(lastname)
+                .selectedRoles(selectedRoles)
+                .staff(linkedStaff)
+                .passwordNeverExpires(passwordNeverExpire)
+                .selfServiceUser(isSelfServiceUser)
+                .build();
         }
 
         public String schema() {
@@ -194,7 +225,10 @@ public class AppUserReadPlatformServiceImpl implements AppUserReadPlatformServic
             final Long id = rs.getLong("id");
             final String username = rs.getString("username");
 
-            return AppUserData.dropdown(id, username);
+            return AppUserData.builder()
+                .id(id)
+                .username(username)
+                .build();
         }
 
         public String schema() {

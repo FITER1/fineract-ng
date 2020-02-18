@@ -18,27 +18,18 @@
  */
 package org.apache.fineract.useradministration.data;
 
+import lombok.*;
+
 import java.io.Serializable;
 
-/**
- * Immutable data object for role data.
- */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class PasswordValidationPolicyData implements Serializable {
-
-    @SuppressWarnings("unused")
-    private final Long id;
-    @SuppressWarnings("unused")
-    private final String description;
-    @SuppressWarnings("unused")
-    private final boolean active;
-    @SuppressWarnings("unused")
-    private final String key;
-
-    public PasswordValidationPolicyData(final Long id, final Boolean active, final String description, final String key) {
-        this.id = id;
-        this.active = active;
-        this.description = description;
-        this.key = key;
-    }
-
+    private Long id;
+    private String description;
+    private boolean active;
+    private String key;
 }

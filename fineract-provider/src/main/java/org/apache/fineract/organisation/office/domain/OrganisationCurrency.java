@@ -18,10 +18,12 @@
  */
 package org.apache.fineract.organisation.office.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -56,18 +58,4 @@ public class OrganisationCurrency extends AbstractPersistableCustom<Long> {
 
     @Column(name = "display_symbol", nullable = true, length = 10)
     private String displaySymbol;
-
-    public OrganisationCurrency(final String code, final String name, final int decimalPlaces, final Integer inMultiplesOf,
-            final String nameCode, final String displaySymbol) {
-        this.code = code;
-        this.name = name;
-        this.decimalPlaces = decimalPlaces;
-        this.inMultiplesOf = inMultiplesOf;
-        this.nameCode = nameCode;
-        this.displaySymbol = displaySymbol;
-    }
-
-    public final MonetaryCurrency toMonetaryCurrency() {
-        return new MonetaryCurrency(this.code, this.decimalPlaces, this.inMultiplesOf);
-    }
 }

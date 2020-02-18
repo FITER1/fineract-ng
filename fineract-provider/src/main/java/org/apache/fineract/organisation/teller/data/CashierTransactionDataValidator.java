@@ -80,8 +80,8 @@ public class CashierTransactionDataValidator {
 		Long staffId = cashier.getStaff().getId();
 		final LocalDate fromDate = new LocalDate(cashier.getStartDate());
 		final LocalDate endDate = new LocalDate(cashier.getEndDate());
-		final LocalDate tellerFromDate = teller.getStartLocalDate();
-		final LocalDate tellerEndDate = teller.getEndLocalDate();
+		final LocalDate tellerFromDate = new LocalDate(teller.getStartDate());
+		final LocalDate tellerEndDate = new LocalDate(teller.getEndDate());
 		/**
 		 * to validate cashier date range in range of teller date range
 		 */
@@ -102,7 +102,7 @@ public class CashierTransactionDataValidator {
 				+ " OR ( c.start_date BETWEEN '" + fromDate + "' AND '"
 				+ endDate + "' OR c.end_date BETWEEN '" + fromDate + "' AND '"
 				+ endDate + "'))";
-		if (!cashier.getIsFullDay()) {
+		if (!cashier.getFullDay()) {
 			String startTime = cashier.getStartTime();
 			String endTime = cashier.getEndTime();
 			sql = sql + " AND ( Time(c.start_time) BETWEEN TIME('" + startTime

@@ -401,7 +401,7 @@ public final class Group extends AbstractPersistableCustom<Long> {
     }
 
     public boolean isOfficeIdentifiedBy(final Long officeId) {
-        return this.office.identifiedBy(officeId);
+        return this.office.getId().equals(officeId);
     }
 
     public Long officeId() {
@@ -657,7 +657,7 @@ public final class Group extends AbstractPersistableCustom<Long> {
         }
 
         if (getActivationLocalDate() != null) {
-            if (this.office.isOpeningDateAfter(getActivationLocalDate())) {
+            if (this.office.getOpeningLocalDate().isAfter(getActivationLocalDate())) {
                 final String defaultUserMessage = "Activation date cannot be a date before the office opening date.";
                 final ApiParameterError error = ApiParameterError.parameterError(
                         "error.msg.group.activationDate.cannot.be.before.office.activation.date", defaultUserMessage,

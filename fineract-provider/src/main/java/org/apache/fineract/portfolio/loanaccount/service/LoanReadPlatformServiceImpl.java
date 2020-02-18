@@ -375,7 +375,14 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
         final MonetaryCurrency currency = loan.getCurrency();
         final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currency);
 
-        final CurrencyData currencyData = applicationCurrency.toData();
+        final CurrencyData currencyData = CurrencyData.builder()
+            .code(applicationCurrency.getCode())
+            .name(applicationCurrency.getName())
+            .decimalPlaces(applicationCurrency.getDecimalPlaces())
+            .inMultiplesOf(applicationCurrency.getInMultiplesOf())
+            .displaySymbol(applicationCurrency.getDisplaySymbol())
+            .nameCode(applicationCurrency.getNameCode())
+            .build();
 
         final LocalDate earliestUnpaidInstallmentDate = LocalDate.now();
         final LocalDate recalculateFrom = null;
@@ -424,7 +431,14 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
         final Loan loan = this.loanRepositoryWrapper.findOneWithNotFoundDetection(loanId, true);
         final MonetaryCurrency currency = loan.getCurrency();
         final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currency);
-        final CurrencyData currencyData = applicationCurrency.toData();
+        final CurrencyData currencyData = CurrencyData.builder()
+            .code(applicationCurrency.getCode())
+            .name(applicationCurrency.getName())
+            .decimalPlaces(applicationCurrency.getDecimalPlaces())
+            .inMultiplesOf(applicationCurrency.getInMultiplesOf())
+            .displaySymbol(applicationCurrency.getDisplaySymbol())
+            .nameCode(applicationCurrency.getNameCode())
+            .build();
 
         final LoanTransaction waiveOfInterest = loan.deriveDefaultInterestWaiverTransaction(DateUtils.getLocalDateTimeOfTenant(),
                 currentUser);
@@ -1007,8 +1021,8 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
                     this.disbursement.isDisbursed());
 
             final Collection<LoanSchedulePeriodData> periods = new ArrayList<>();
-            final MonetaryCurrency monCurrency = new MonetaryCurrency(this.currency.code(), this.currency.decimalPlaces(),
-                    this.currency.currencyInMultiplesOf());
+            final MonetaryCurrency monCurrency = new MonetaryCurrency(this.currency.getCode(), this.currency.getDecimalPlaces(),
+                    this.currency.getInMultiplesOf());
             BigDecimal totalPrincipalDisbursed = BigDecimal.ZERO;
             BigDecimal disbursementChargeAmount = this.totalFeeChargesDueAtDisbursement;
             if (disbursementData == null || disbursementData.isEmpty()) {
@@ -1998,7 +2012,14 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
         final MonetaryCurrency currency = loan.getCurrency();
         final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currency);
 
-        final CurrencyData currencyData = applicationCurrency.toData();
+        final CurrencyData currencyData = CurrencyData.builder()
+            .code(applicationCurrency.getCode())
+            .name(applicationCurrency.getName())
+            .decimalPlaces(applicationCurrency.getDecimalPlaces())
+            .inMultiplesOf(applicationCurrency.getInMultiplesOf())
+            .displaySymbol(applicationCurrency.getDisplaySymbol())
+            .nameCode(applicationCurrency.getNameCode())
+            .build();
 
         final LocalDate earliestUnpaidInstallmentDate = new LocalDate();
 
@@ -2083,7 +2104,14 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
         final MonetaryCurrency currency = loan.getCurrency();
         final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currency);
 
-        final CurrencyData currencyData = applicationCurrency.toData();
+        final CurrencyData currencyData = CurrencyData.builder()
+            .code(applicationCurrency.getCode())
+            .name(applicationCurrency.getName())
+            .decimalPlaces(applicationCurrency.getDecimalPlaces())
+            .inMultiplesOf(applicationCurrency.getInMultiplesOf())
+            .displaySymbol(applicationCurrency.getDisplaySymbol())
+            .nameCode(applicationCurrency.getNameCode())
+            .build();
 
         final LocalDate earliestUnpaidInstallmentDate = DateUtils.getLocalDateOfTenant();
 

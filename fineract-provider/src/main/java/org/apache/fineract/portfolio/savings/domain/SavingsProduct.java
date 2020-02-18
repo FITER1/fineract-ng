@@ -276,7 +276,11 @@ public class SavingsProduct extends AbstractPersistableCustom<Long> {
     }
 
     public MonetaryCurrency currency() {
-        return this.currency.copy();
+        return MonetaryCurrency.builder()
+            .code(this.currency.getCode())
+            .digitsAfterDecimal(this.currency.getDigitsAfterDecimal())
+            .inMultiplesOf(this.currency.getInMultiplesOf())
+            .build();
     }
 
     public BigDecimal nominalAnnualInterestRate() {

@@ -251,10 +251,23 @@ public class SelfServiceRegistrationWritePlatformServiceImpl implements SelfServ
             }else{
                 throw new RoleNotFoundException(SelfServiceApiConstants.SELF_SERVICE_USER_ROLE);
             }
-            List<Client> clients = new ArrayList<>(Arrays.asList(client));
             User user = new User(selfServiceRegistration.getUsername(), selfServiceRegistration.getPassword(), authorities);
-            AppUser appUser = new AppUser(client.getOffice(), user, allRoles, selfServiceRegistration.getEmail(), client.getFirstname(),
-                    client.getLastname(), null, passwordNeverExpire, isSelfServiceUser, clients);
+            AppUser appUser = AppUser.builder()
+                .office(client.getOffice())
+                .username(user.getUsername().trim())
+                .password(user.getPassword().trim())
+                .accountNonExpired(user.isAccountNonExpired())
+                .accountNonLocked(user.isAccountNonLocked())
+                .credentialsNonExpired(user.isCredentialsNonExpired())
+                .enabled(user.isEnabled())
+                .roles(allRoles)
+                .email(selfServiceRegistration.getEmail())
+                .firstname(client.getFirstname())
+                .lastname(client.getLastname())
+                .passwordNeverExpires(passwordNeverExpire)
+                .selfServiceUser(isSelfServiceUser)
+                .appUserClientMappings(Set.of(new AppUserClientMapping(client)))
+                .build();
             this.userDomainService.create(appUser, true);
             return appUser;
 

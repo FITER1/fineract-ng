@@ -45,6 +45,7 @@ import org.apache.fineract.infrastructure.jobs.service.JobName;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.holiday.domain.Holiday;
 import org.apache.fineract.organisation.holiday.domain.HolidayRepositoryWrapper;
+import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepositoryWrapper;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
@@ -631,7 +632,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 }
             }
             boolean isAccountTransfer = false;
-            final Map<String, Object> accountingBridgeData = loan.deriveAccountingBridgeData(applicationCurrency.toData(),
+            final Map<String, Object> accountingBridgeData = loan.deriveAccountingBridgeData(CurrencyData.builder()
+                    .code(applicationCurrency.getCode())
+                    .name(applicationCurrency.getName())
+                    .decimalPlaces(applicationCurrency.getDecimalPlaces())
+                    .inMultiplesOf(applicationCurrency.getInMultiplesOf())
+                    .displaySymbol(applicationCurrency.getDisplaySymbol())
+                    .nameCode(applicationCurrency.getNameCode())
+                    .build(),
                     existingTransactionIds, existingReversedTransactionIds, isAccountTransfer);
             this.journalEntryWritePlatformService.createJournalEntriesForLoan(accountingBridgeData);
             this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_UNDO_DISBURSAL,
@@ -1922,7 +1930,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         final MonetaryCurrency currency = loan.getCurrency();
         final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currency);
         boolean isAccountTransfer = false;
-        final Map<String, Object> accountingBridgeData = loan.deriveAccountingBridgeData(applicationCurrency.toData(),
+        final Map<String, Object> accountingBridgeData = loan.deriveAccountingBridgeData(CurrencyData.builder()
+                .code(applicationCurrency.getCode())
+                .name(applicationCurrency.getName())
+                .decimalPlaces(applicationCurrency.getDecimalPlaces())
+                .inMultiplesOf(applicationCurrency.getInMultiplesOf())
+                .displaySymbol(applicationCurrency.getDisplaySymbol())
+                .nameCode(applicationCurrency.getNameCode())
+                .build(),
                 existingTransactionIds, existingReversedTransactionIds, isAccountTransfer);
         this.journalEntryWritePlatformService.createJournalEntriesForLoan(accountingBridgeData);
     }
@@ -2798,7 +2813,14 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 }
             }
             boolean isAccountTransfer = false;
-            final Map<String, Object> accountingBridgeData = loan.deriveAccountingBridgeData(applicationCurrency.toData(),
+            final Map<String, Object> accountingBridgeData = loan.deriveAccountingBridgeData(CurrencyData.builder()
+                    .code(applicationCurrency.getCode())
+                    .name(applicationCurrency.getName())
+                    .decimalPlaces(applicationCurrency.getDecimalPlaces())
+                    .inMultiplesOf(applicationCurrency.getInMultiplesOf())
+                    .displaySymbol(applicationCurrency.getDisplaySymbol())
+                    .nameCode(applicationCurrency.getNameCode())
+                    .build(),
                     existingTransactionIds, existingReversedTransactionIds, isAccountTransfer);
             this.journalEntryWritePlatformService.createJournalEntriesForLoan(accountingBridgeData);
             this.businessEventNotifierService.notifyBusinessEventWasExecuted(BUSINESS_EVENTS.LOAN_UNDO_LASTDISBURSAL,

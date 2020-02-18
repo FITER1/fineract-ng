@@ -18,11 +18,12 @@
  */
 package org.apache.fineract.organisation.monetary.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-import org.apache.fineract.organisation.monetary.data.CurrencyData;
-import org.apache.fineract.organisation.office.domain.OrganisationCurrency;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -54,24 +55,4 @@ public class ApplicationCurrency extends AbstractPersistableCustom<Long> {
 
     @Column(name = "display_symbol", nullable = true, length = 10)
     private String displaySymbol;
-
-    public static ApplicationCurrency from(final ApplicationCurrency currency, final int decimalPlaces, final Integer inMultiplesOf) {
-        return ApplicationCurrency.builder()
-            .code(currency.code)
-            .decimalPlaces(decimalPlaces)
-            .inMultiplesOf(inMultiplesOf)
-            .build();
-    }
-
-    public CurrencyData toData() {
-        return new CurrencyData(this.code, this.name, this.decimalPlaces, this.inMultiplesOf, this.displaySymbol, this.nameCode);
-    }
-
-    public CurrencyData toData(final int digitsAfterDecimalSupported, final Integer inMultiplesOf) {
-        return new CurrencyData(this.code, this.name, digitsAfterDecimalSupported, inMultiplesOf, this.displaySymbol, this.nameCode);
-    }
-
-    public OrganisationCurrency toOrganisationCurrency() {
-        return new OrganisationCurrency(this.code, this.name, this.decimalPlaces, this.inMultiplesOf, this.nameCode, this.displaySymbol);
-    }
 }

@@ -310,7 +310,7 @@ public class LoansApiResource {
         final CurrencyData currencyData = newLoanAccount.currency();
         String currencyCode = null;
         if (currencyData != null) {
-            currencyCode = currencyData.code();
+            currencyCode = currencyData.getCode();
         }
         final long[] accountStatus = { SavingsAccountStatusType.ACTIVE.getValue() };
         final PortfolioAccountDTO portfolioAccountDTO = new PortfolioAccountDTO(PortfolioAccountType.SAVINGS.getValue(), clientId, currencyCode,
@@ -530,7 +530,7 @@ public class LoansApiResource {
             final CurrencyData currencyData = loanBasicDetails.currency();
             String currencyCode = null;
             if (currencyData != null) {
-                currencyCode = currencyData.code();
+                currencyCode = currencyData.getCode();
             }
             final long[] accountStatus = { SavingsAccountStatusType.ACTIVE.getValue() };
             PortfolioAccountDTO portfolioAccountDTO = new PortfolioAccountDTO(PortfolioAccountType.SAVINGS.getValue(),

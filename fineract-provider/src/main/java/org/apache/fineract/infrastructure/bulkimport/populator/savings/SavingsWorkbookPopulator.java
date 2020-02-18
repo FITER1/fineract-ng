@@ -399,7 +399,7 @@ public class SavingsWorkbookPopulator extends AbstractWorkbookPopulator {
                 lockinPeriodFrequencyName.setNameName("Lockin_Frequency_" + productName);
                 lockinPeriodFrequencyName.setRefersToFormula(TemplatePopulateImportConstants.PRODUCT_SHEET_NAME+"!$J$" + (i + 2));
             }
-            if (product.getCurrency().currencyInMultiplesOf() != null) {
+            if (product.getCurrency().getInMultiplesOf() != null) {
                 inMultiplesOfName.setNameName("In_Multiples_" + productName);
                 inMultiplesOfName.setRefersToFormula(TemplatePopulateImportConstants.PRODUCT_SHEET_NAME+"!$M$" + (i + 2));
             }

@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.organisation.workingdays.service;
 
-import org.apache.fineract.organisation.workingdays.data.AdjustedDateDetailsDTO;
+import org.apache.fineract.organisation.workingdays.data.AdjustedDateDetailsData;
 import org.apache.fineract.organisation.workingdays.domain.RepaymentRescheduleType;
 import org.apache.fineract.organisation.workingdays.domain.WorkingDays;
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
@@ -58,10 +58,10 @@ public class WorkingDaysUtil {
         return !isWorkingDay(workingDays, date);
     }
     
-    public static void updateWorkingDayIfRepaymentDateIsNonWorkingDay(final AdjustedDateDetailsDTO adjustedDateDetailsDTO, final WorkingDays workingDays) {
-        final LocalDate changedScheduleDate = getOffSetDateIfNonWorkingDay(adjustedDateDetailsDTO.getChangedScheduleDate(),
-                adjustedDateDetailsDTO.getNextRepaymentPeriodDueDate(), workingDays);
-        adjustedDateDetailsDTO.setChangedScheduleDate(changedScheduleDate);
+    public static void updateWorkingDayIfRepaymentDateIsNonWorkingDay(final AdjustedDateDetailsData adjustedDateDetailsData, final WorkingDays workingDays) {
+        final LocalDate changedScheduleDate = getOffSetDateIfNonWorkingDay(adjustedDateDetailsData.getChangedScheduleDate(),
+                adjustedDateDetailsData.getNextRepaymentPeriodDueDate(), workingDays);
+        adjustedDateDetailsData.setChangedScheduleDate(changedScheduleDate);
     }
     
     public static RepaymentRescheduleType getRepaymentRescheduleType(final WorkingDays workingDays, final LocalDate date) {

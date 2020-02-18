@@ -76,10 +76,10 @@ public class SavingsProductSheetPopulator extends AbstractWorkbookPopulator {
             if(product.getLockinPeriodFrequencyType() != null)
                 writeString(LOCKIN_PERIOD_FREQUENCY_COL, row, product.getLockinPeriodFrequencyType().getValue());
             CurrencyData currency = product.getCurrency();
-            writeString(CURRENCY_COL, row, currency.code());
-            writeInt(DECIMAL_PLACES_COL, row, currency.decimalPlaces());
-            if(currency.currencyInMultiplesOf() != null)
-                writeInt(IN_MULTIPLES_OF_COL, row, currency.currencyInMultiplesOf());
+            writeString(CURRENCY_COL, row, currency.getCode());
+            writeInt(DECIMAL_PLACES_COL, row, currency.getDecimalPlaces());
+            if(currency.getInMultiplesOf() != null)
+                writeInt(IN_MULTIPLES_OF_COL, row, currency.getInMultiplesOf());
             writeBoolean(WITHDRAWAL_FEE_COL, row, product.isWithdrawalFeeForTransfers());
             writeBoolean(ALLOW_OVERDRAFT_COL, row,product.isAllowOverdraft());
             if(product.getOverdraftLimit() != null)

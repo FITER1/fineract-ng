@@ -694,7 +694,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
         }
 
         if (getActivationLocalDate() != null) {
-            if (this.office.isOpeningDateAfter(getActivationLocalDate())) {
+            if (this.office.getOpeningLocalDate().isAfter(getActivationLocalDate())) {
                 final String defaultUserMessage = "Client activation date cannot be a date before the office opening date.";
                 final ApiParameterError error = ApiParameterError.parameterError(
                         "error.msg.clients.activationDate.cannot.be.before.office.activation.date", defaultUserMessage,
@@ -757,7 +757,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     }
 
     public boolean isOfficeIdentifiedBy(final Long officeId) {
-        return this.office.identifiedBy(officeId);
+        return this.office.getId().equals(officeId);
     }
 
     private Long staffId() {

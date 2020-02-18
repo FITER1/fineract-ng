@@ -34,6 +34,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Slf4j
@@ -50,7 +51,7 @@ public class ProvisioningCategoryWritePlatformServiceJpaRepositoryImpl implement
     public CommandProcessingResult createProvisioningCateogry(JsonCommand command) {
         try {
             this.fromApiJsonDeserializer.validateForCreate(command.json());
-            final ProvisioningCategory provisioningCategory = ProvisioningCategory.fromJson(command);
+            final ProvisioningCategory provisioningCategory = fromJson(command);
             this.provisioningCategoryRepository.save(provisioningCategory);
             return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(provisioningCategory.getId())
                     .build();
@@ -67,7 +68,7 @@ public class ProvisioningCategoryWritePlatformServiceJpaRepositoryImpl implement
     @Override
     public CommandProcessingResult deleteProvisioningCateogry(JsonCommand command) {
         this.fromApiJsonDeserializer.validateForCreate(command.json());
-        final ProvisioningCategory provisioningCategory = ProvisioningCategory.fromJson(command);
+        final ProvisioningCategory provisioningCategory = fromJson(command);
         boolean isProvisioningCategoryInUse = isAnyLoanProductsAssociateWithThisProvisioningCategory(provisioningCategory.getId()) ;
         if(isProvisioningCategoryInUse) {
             throw new ProvisioningCategoryCannotBeDeletedException(
@@ -84,7 +85,7 @@ public class ProvisioningCategoryWritePlatformServiceJpaRepositoryImpl implement
             this.fromApiJsonDeserializer.validateForUpdate(command.json());
             final ProvisioningCategory provisioningCategoryForUpdate = this.provisioningCategoryRepository.findById(categoryId)
                     .orElseThrow(() -> new ProvisioningCategoryNotFoundException(categoryId));
-            final Map<String, Object> changes = provisioningCategoryForUpdate.update(command);
+            final Map<String, Object> changes = update(provisioningCategoryForUpdate, command);
             if (!changes.isEmpty()) {
                 this.provisioningCategoryRepository.save(provisioningCategoryForUpdate);
             }
@@ -97,6 +98,30 @@ public class ProvisioningCategoryWritePlatformServiceJpaRepositoryImpl implement
         	handleDataIntegrityIssues(command, throwable, dve);
         	return new CommandProcessingResult();
         }
+    }
+
+    private Map<String, Object> update(final ProvisioningCategory provisioningCategory, final JsonCommand command) {
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(2);
+        final String nameParamName = "categoryname";
+        if (command.isChangeInStringParameterNamed(nameParamName, provisioningCategory.getCategoryName())) {
+            final String newValue = command.stringValueOfParameterNamed(nameParamName);
+            actualChanges.put(nameParamName, newValue);
+            provisioningCategory.setCategoryName(newValue);
+        }
+
+        final String descriptionParamName = "categorydescription";
+        if (command.isChangeInStringParameterNamed(descriptionParamName, provisioningCategory.getCategoryDescription())) {
+            final String newValue = command.stringValueOfParameterNamed(descriptionParamName);
+            actualChanges.put(descriptionParamName, newValue);
+            provisioningCategory.setCategoryDescription(newValue);
+        }
+        return actualChanges;
+    }
+
+    private ProvisioningCategory fromJson(JsonCommand jsonCommand) {
+        final String categoryName = jsonCommand.stringValueOfParameterNamed("categoryname");
+        final String description = jsonCommand.stringValueOfParameterNamed("description");
+        return new ProvisioningCategory(categoryName, description);
     }
 
     private boolean isAnyLoanProductsAssociateWithThisProvisioningCategory(final Long categoryID) {

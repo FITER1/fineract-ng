@@ -24,6 +24,7 @@ import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
+import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OrganisationCurrency;
@@ -186,7 +187,11 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
     }
 
     public Money getAmount() {
-        return Money.of(this.currency.toMonetaryCurrency(), this.amount);
+        return Money.of(MonetaryCurrency.builder()
+            .code(this.currency.getCode())
+            .digitsAfterDecimal(this.currency.getDecimalPlaces())
+            .inMultiplesOf(this.currency.getInMultiplesOf())
+            .build(), this.amount);
     }
 
     public LocalDate getTransactionDate() {

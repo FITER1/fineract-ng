@@ -18,6 +18,11 @@
  */
 package org.apache.fineract.useradministration.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 import javax.persistence.Column;
@@ -25,6 +30,11 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_permission")
 public class Permission extends AbstractPersistableCustom<Long> implements Serializable {
@@ -43,38 +53,6 @@ public class Permission extends AbstractPersistableCustom<Long> implements Seria
 
     @Column(name = "can_maker_checker", nullable = false)
     private boolean canMakerChecker;
-
-    public Permission(final String grouping, final String entityName, final String actionName) {
-        this.grouping = grouping;
-        this.entityName = entityName;
-        this.actionName = actionName;
-        this.code = actionName + "_" + entityName;
-        this.canMakerChecker = false;
-    }
-
-    protected Permission() {
-        this.grouping = null;
-        this.entityName = null;
-        this.actionName = null;
-        this.code = null;
-        this.canMakerChecker = false;
-    }
-
-    public boolean hasCode(final String checkCode) {
-        return this.code.equalsIgnoreCase(checkCode);
-    }
-
-    public String getCode() {
-        return this.code;
-    }
-
-    public boolean hasMakerCheckerEnabled() {
-        return this.canMakerChecker;
-    }
-
-    public String getGrouping() {
-        return this.grouping;
-    }
 
     public boolean enableMakerChecker(final boolean canMakerChecker) {
         final boolean isUpdatedValueSame = this.canMakerChecker == canMakerChecker;

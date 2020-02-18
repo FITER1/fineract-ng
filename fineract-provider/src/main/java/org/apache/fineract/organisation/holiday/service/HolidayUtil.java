@@ -19,7 +19,8 @@
 package org.apache.fineract.organisation.holiday.service;
 
 import org.apache.fineract.organisation.holiday.domain.Holiday;
-import org.apache.fineract.organisation.workingdays.data.AdjustedDateDetailsDTO;
+import org.apache.fineract.organisation.holiday.domain.RescheduleType;
+import org.apache.fineract.organisation.workingdays.data.AdjustedDateDetailsData;
 import org.joda.time.LocalDate;
 
 import java.util.List;
@@ -67,10 +68,10 @@ public class HolidayUtil {
         }
         return referedHoliday;
     }
-    public static void updateRepaymentRescheduleDateToWorkingDayIfItIsHoliday(final AdjustedDateDetailsDTO adjustedDateDetailsDTO,
+    public static void updateRepaymentRescheduleDateToWorkingDayIfItIsHoliday(final AdjustedDateDetailsData adjustedDateDetailsData,
             final Holiday holiday) {
-        if (holiday.getReScheduleType().isRescheduleToSpecificDate()) {
-            adjustedDateDetailsDTO.setChangedScheduleDate(holiday.getRepaymentsRescheduledToLocalDate());
+        if (RescheduleType.fromInt(holiday.getReschedulingType()).isRescheduleToSpecificDate()) {
+            adjustedDateDetailsData.setChangedScheduleDate(holiday.getRepaymentsRescheduledToLocalDate());
         }
     }
 }

@@ -212,11 +212,17 @@ public class StandingInstructionHistoryReadPlatformServiceImpl implements Standi
 
             final Long fromOfficeId = JdbcSupport.getLong(rs, "fromOfficeId");
             final String fromOfficeName = rs.getString("fromOfficeName");
-            final OfficeData fromOffice = OfficeData.dropdown(fromOfficeId, fromOfficeName, null);
+            final OfficeData fromOffice = OfficeData.builder()
+                .id(fromOfficeId)
+                .name(fromOfficeName)
+                .build();
 
             final Long toOfficeId = JdbcSupport.getLong(rs, "toOfficeId");
             final String toOfficeName = rs.getString("toOfficeName");
-            final OfficeData toOffice = OfficeData.dropdown(toOfficeId, toOfficeName, null);
+            final OfficeData toOffice = OfficeData.builder()
+                .id(toOfficeId)
+                .name(toOfficeName)
+                .build();
 
             final Long fromClientId = JdbcSupport.getLong(rs, "fromClientId");
             final String fromClientName = rs.getString("fromClientName");

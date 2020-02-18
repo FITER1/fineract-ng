@@ -82,7 +82,13 @@ public class PermissionReadPlatformServiceImpl implements PermissionReadPlatform
             final String actionName = rs.getString("actionName");
             final Boolean selected = rs.getBoolean("selected");
 
-            return PermissionData.instance(grouping, code, entityName, actionName, selected);
+            return PermissionData.builder()
+                .grouping(grouping)
+                .code(code)
+                .entityName(entityName)
+                .actionName(actionName)
+                .selected(selected)
+                .build();
         }
 
         public String permissionSchema() {

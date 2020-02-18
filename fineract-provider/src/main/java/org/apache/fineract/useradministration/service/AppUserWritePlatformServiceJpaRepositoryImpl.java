@@ -29,9 +29,11 @@ import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.PlatformEmailSendException;
 import org.apache.fineract.infrastructure.security.service.PlatformPasswordEncoder;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.apache.fineract.infrastructure.security.service.RandomPasswordGenerator;
 import org.apache.fineract.notification.service.TopicDomainService;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
@@ -50,12 +52,15 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.persistence.PersistenceException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -114,7 +119,7 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
             	clients = this.clientRepositoryWrapper.findAll(clientIds);
             }
 
-            appUser = AppUser.fromJson(userOffice, linkedStaff, allRoles, clients, command);
+            appUser = fromJson(userOffice, linkedStaff, allRoles, clients, command);
 
             final Boolean sendPasswordToEmail = command.booleanObjectValueOfParameterNamed("sendPasswordToEmail");
             this.userDomainService.create(appUser, sendPasswordToEmail);
@@ -180,13 +185,13 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
             	clients = this.clientRepositoryWrapper.findAll(clientIds);
             }
 
-            final Map<String, Object> changes = userToUpdate.update(command, this.platformPasswordEncoder, clients);
+            final Map<String, Object> changes = update(userToUpdate, command, this.platformPasswordEncoder, clients);
 
             this.topicDomainService.updateUserSubscription(userToUpdate, changes);
             if (changes.containsKey("officeId")) {
                 final Long officeId = (Long) changes.get("officeId");
                 final Office office = this.officeRepositoryWrapper.findOneWithNotFoundDetection(officeId);
-                userToUpdate.changeOffice(office);
+                userToUpdate.setOffice(office);
             }
 
             if (changes.containsKey("staffId")) {
@@ -195,14 +200,14 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
                 if (staffId != null) {
                     linkedStaff = this.staffRepositoryWrapper.findByOfficeWithNotFoundDetection(staffId, userToUpdate.getOffice().getId());
                 }
-                userToUpdate.changeStaff(linkedStaff);
+                userToUpdate.setStaff(linkedStaff);
             }
 
             if (changes.containsKey("roles")) {
                 final String[] roleIds = (String[]) changes.get("roles");
                 final Set<Role> allRoles = assembleSetOfRoles(roleIds);
 
-                userToUpdate.updateRoles(allRoles);
+                userToUpdate.setRoles(allRoles);
             }
 
             if (!changes.isEmpty()) {
@@ -229,6 +234,169 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
                     .commandId(command.commandId()) //
                     .build();
         }
+    }
+
+    private Map<String, Object> update(final AppUser user, final JsonCommand command, final PlatformPasswordEncoder platformPasswordEncoder,
+                                      final Collection<Client> clients) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
+
+        // unencoded password provided
+        final String passwordParamName = "password";
+        final String passwordEncodedParamName = "passwordEncoded";
+        if (command.hasParameter(passwordParamName)) {
+            if (command.isChangeInPasswordParameterNamed(passwordParamName, user.getPassword(), platformPasswordEncoder, user.getId())) {
+                final String passwordEncodedValue = command.passwordValueOfParameterNamed(passwordParamName, platformPasswordEncoder,
+                    user.getId());
+                actualChanges.put(passwordEncodedParamName, passwordEncodedValue);
+                user.toBuilder()
+                    .password(passwordEncodedValue)
+                    .firstTimeLoginRemaining(false)
+                    .lastTimePasswordUpdated(DateUtils.getDateOfTenant())
+                    .build();
+            }
+        }
+
+        if (command.hasParameter(passwordEncodedParamName)) {
+            if (command.isChangeInStringParameterNamed(passwordEncodedParamName, user.getPassword())) {
+                final String newValue = command.stringValueOfParameterNamed(passwordEncodedParamName);
+                actualChanges.put(passwordEncodedParamName, newValue);
+                user.toBuilder()
+                    .password(newValue)
+                    .firstTimeLoginRemaining(false)
+                    .lastTimePasswordUpdated(DateUtils.getDateOfTenant())
+                    .build();
+            }
+        }
+
+        final String officeIdParamName = "officeId";
+        if (command.isChangeInLongParameterNamed(officeIdParamName, user.getOffice().getId())) {
+            final Long newValue = command.longValueOfParameterNamed(officeIdParamName);
+            actualChanges.put(officeIdParamName, newValue);
+        }
+
+        final String staffIdParamName = "staffId";
+        if (command.hasParameter(staffIdParamName)
+            && (user.getStaff() == null || command.isChangeInLongParameterNamed(staffIdParamName, user.getStaff().getId()))) {
+            final Long newValue = command.longValueOfParameterNamed(staffIdParamName);
+            actualChanges.put(staffIdParamName, newValue);
+        }
+
+        final String rolesParamName = "roles";
+
+        if (command.isChangeInArrayParameterNamed(rolesParamName, user.getRoles().stream().map(r -> r.getId().toString()).collect(Collectors.toList()).toArray(new String[user.getRoles().size()]))) {
+            final String[] newValue = command.arrayValueOfParameterNamed(rolesParamName);
+            actualChanges.put(rolesParamName, newValue);
+        }
+
+        final String usernameParamName = "username";
+        if (command.isChangeInStringParameterNamed(usernameParamName, user.getUsername())) {
+            final String newValue = command.stringValueOfParameterNamed(usernameParamName);
+            actualChanges.put(usernameParamName, newValue);
+            user.setUsername(newValue);
+        }
+
+        final String firstnameParamName = "firstname";
+        if (command.isChangeInStringParameterNamed(firstnameParamName, user.getFirstname())) {
+            final String newValue = command.stringValueOfParameterNamed(firstnameParamName);
+            actualChanges.put(firstnameParamName, newValue);
+            user.setFirstname(newValue);
+        }
+
+        final String lastnameParamName = "lastname";
+        if (command.isChangeInStringParameterNamed(lastnameParamName, user.getLastname())) {
+            final String newValue = command.stringValueOfParameterNamed(lastnameParamName);
+            actualChanges.put(lastnameParamName, newValue);
+            user.setLastname(newValue);
+        }
+
+        final String emailParamName = "email";
+        if (command.isChangeInStringParameterNamed(emailParamName, user.getEmail())) {
+            final String newValue = command.stringValueOfParameterNamed(emailParamName);
+            actualChanges.put(emailParamName, newValue);
+            user.setEmail(newValue);
+        }
+
+        final String passwordNeverExpire = "passwordNeverExpires";
+
+        if (command.hasParameter(passwordNeverExpire)) {
+            if (command.isChangeInBooleanParameterNamed(passwordNeverExpire, user.isPasswordNeverExpires())) {
+                final boolean newValue = command.booleanPrimitiveValueOfParameterNamed(passwordNeverExpire);
+                actualChanges.put(passwordNeverExpire, newValue);
+                user.setPasswordNeverExpires(newValue);
+            }
+        }
+
+        if(command.hasParameter(AppUserConstants.IS_SELF_SERVICE_USER)){
+            if (command.isChangeInBooleanParameterNamed(AppUserConstants.IS_SELF_SERVICE_USER, user.isSelfServiceUser())){
+                final boolean newValue = command.booleanPrimitiveValueOfParameterNamed(AppUserConstants.IS_SELF_SERVICE_USER);
+                actualChanges.put(AppUserConstants.IS_SELF_SERVICE_USER, newValue);
+                user.setSelfServiceUser(newValue);
+            }
+        }
+
+        if(user.isSelfServiceUser() && command.hasParameter(AppUserConstants.CLIENTS)){
+            actualChanges.put(AppUserConstants.CLIENTS, command.arrayValueOfParameterNamed(AppUserConstants.CLIENTS));
+            if(clients!=null) {
+                user.setAppUserClientMappings(clients.stream().map(AppUserClientMapping::new).collect(Collectors.toSet()));
+            }
+        }else if(!user.isSelfServiceUser() && actualChanges.containsKey(AppUserConstants.IS_SELF_SERVICE_USER)){
+            actualChanges.put(AppUserConstants.CLIENTS, new ArrayList<>());
+            user.setAppUserClientMappings(Collections.emptySet());
+        }
+
+        return actualChanges;
+    }
+
+    private AppUser fromJson(final Office userOffice, final Staff linkedStaff, final Set<Role> allRoles, final Collection<Client> clients, final JsonCommand command) {
+
+        final String username = command.stringValueOfParameterNamed("username");
+        String password = command.stringValueOfParameterNamed("password");
+        final Boolean sendPasswordToEmail = command.booleanObjectValueOfParameterNamed("sendPasswordToEmail");
+
+        if (sendPasswordToEmail.booleanValue()) {
+            password = new RandomPasswordGenerator(13).generate();
+        }
+
+        boolean passwordNeverExpire = false;
+
+        if (command.parameterExists(AppUserConstants.PASSWORD_NEVER_EXPIRES)) {
+            passwordNeverExpire = command.booleanPrimitiveValueOfParameterNamed(AppUserConstants.PASSWORD_NEVER_EXPIRES);
+        }
+
+        final boolean userEnabled = true;
+        final boolean userAccountNonExpired = true;
+        final boolean userCredentialsNonExpired = true;
+        final boolean userAccountNonLocked = true;
+
+        final Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("DUMMY_ROLE_NOT_USED_OR_PERSISTED_TO_AVOID_EXCEPTION"));
+
+        final User user = new User(username, password, userEnabled, userAccountNonExpired, userCredentialsNonExpired, userAccountNonLocked,
+            authorities);
+
+        final String email = command.stringValueOfParameterNamed("email");
+        final String firstname = command.stringValueOfParameterNamed("firstname");
+        final String lastname = command.stringValueOfParameterNamed("lastname");
+
+        final boolean isSelfServiceUser = command.booleanPrimitiveValueOfParameterNamed(AppUserConstants.IS_SELF_SERVICE_USER);
+
+        return AppUser.builder()
+            .office(userOffice)
+            .username(user.getUsername().trim())
+            .password(user.getPassword().trim())
+            .accountNonExpired(user.isAccountNonExpired())
+            .accountNonLocked(user.isAccountNonLocked())
+            .credentialsNonExpired(user.isCredentialsNonExpired())
+            .enabled(user.isEnabled())
+            .roles(allRoles)
+            .email(email)
+            .firstname(firstname)
+            .lastname(lastname)
+            .passwordNeverExpires(passwordNeverExpire)
+            .selfServiceUser(isSelfServiceUser)
+            .appUserClientMappings(clients.stream().map(AppUserClientMapping::new).collect(Collectors.toSet()))
+            .build();
     }
 
     /**
@@ -261,8 +429,11 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
                 }
             }
 
-            currentPasswordToSaveAsPreview = new AppUserPreviousPassword(user);
-
+            currentPasswordToSaveAsPreview = AppUserPreviousPassword.builder()
+                .userId(user.getId())
+                .password(user.getPassword().trim())
+                .removalDate(DateUtils.getDateOfTenant())
+                .build();
         }
 
         return currentPasswordToSaveAsPreview;
@@ -290,11 +461,18 @@ public class AppUserWritePlatformServiceJpaRepositoryImpl implements AppUserWrit
     @Caching(evict = { @CacheEvict(value = "users", allEntries = true), @CacheEvict(value = "usersByUsername", allEntries = true) })
     public CommandProcessingResult deleteUser(final Long userId) {
 
-        final AppUser user = this.appUserRepository.findById(userId)
+        AppUser user = this.appUserRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
         if (user.isDeleted()) { throw new UserNotFoundException(userId); }
 
-        user.delete();
+        user = user.toBuilder()
+            .deleted(true)
+            .enabled(false)
+            .accountNonExpired(false)
+            .firstTimeLoginRemaining(true)
+            .username(user.getId() + "_DELETED_" + user.getUsername())
+            .roles(Collections.emptySet())
+            .build();
         this.topicDomainService.unsubcribeUserFromTopic(user);
         this.appUserRepository.save(user);
 

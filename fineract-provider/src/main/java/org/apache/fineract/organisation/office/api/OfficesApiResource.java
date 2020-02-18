@@ -106,7 +106,17 @@ public class OfficesApiResource {
         OfficeData office = this.readPlatformService.retrieveNewOfficeTemplate();
 
         final Collection<OfficeData> allowedParents = this.readPlatformService.retrieveAllOfficesForDropdown();
-        office = OfficeData.appendedTemplate(office, allowedParents);
+        office = OfficeData.builder()
+            .id(office.getId())
+            .name(office.getName())
+            .nameDecorated(office.getNameDecorated())
+            .externalId(office.getExternalId())
+            .openingDate(office.getOpeningDate())
+            .hierarchy(office.getHierarchy())
+            .parentId(office.getParentId())
+            .parentName(office.getParentName())
+            .allowedParents(allowedParents)
+            .build();
 
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
         return this.toApiJsonSerializer.serialize(settings, office, this.RESPONSE_DATA_PARAMETERS);
@@ -145,7 +155,17 @@ public class OfficesApiResource {
         OfficeData office = this.readPlatformService.retrieveOffice(officeId);
         if (settings.isTemplate()) {
             final Collection<OfficeData> allowedParents = this.readPlatformService.retrieveAllowedParents(officeId);
-            office = OfficeData.appendedTemplate(office, allowedParents);
+            office = OfficeData.builder()
+                .id(office.getId())
+                .name(office.getName())
+                .nameDecorated(office.getNameDecorated())
+                .externalId(office.getExternalId())
+                .openingDate(office.getOpeningDate())
+                .hierarchy(office.getHierarchy())
+                .parentId(office.getParentId())
+                .parentName(office.getParentName())
+                .allowedParents(allowedParents)
+                .build();
         }
 
         return this.toApiJsonSerializer.serialize(settings, office, this.RESPONSE_DATA_PARAMETERS);

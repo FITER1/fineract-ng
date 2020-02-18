@@ -46,6 +46,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Path("templates")
 @Consumes({ MediaType.APPLICATION_JSON })
@@ -98,7 +99,7 @@ public class TemplatesApiResource {
 
         this.context.authenticatedUser().validateHasReadPermission(this.RESOURCE_NAME_FOR_PERMISSION);
 
-        final TemplateData templateData = TemplateData.template();
+        final TemplateData templateData = new TemplateData();
 
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
         return this.templateDataApiJsonSerializer.serialize(settings, templateData, this.RESPONSE_TEMPLATES_DATA_PARAMETERS);
@@ -136,7 +137,10 @@ public class TemplatesApiResource {
 
         this.context.authenticatedUser().validateHasReadPermission(this.RESOURCE_NAME_FOR_PERMISSION);
 
-        final TemplateData template = TemplateData.template(this.templateService.findOneById(templateId));
+        final TemplateData template = TemplateData.builder()
+            .entities(Arrays.stream(TemplateEntity.values()).map(t -> Map.<String, Object>of("id", t.getId(), "name", t.getName())).collect(Collectors.toList()))
+            .types(Arrays.stream(TemplateType.values()).map(t -> Map.<String, Object>of("id", t.getId(), "name", t.getName())).collect(Collectors.toList()))
+            .build();
 
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
         return this.templateDataApiJsonSerializer.serialize(settings, template, this.RESPONSE_TEMPLATE_DATA_PARAMETERS);

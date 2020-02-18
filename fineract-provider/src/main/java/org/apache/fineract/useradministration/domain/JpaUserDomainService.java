@@ -19,6 +19,7 @@
 package org.apache.fineract.useradministration.domain;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.core.service.PlatformEmailService;
 import org.apache.fineract.infrastructure.security.service.PlatformPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,11 @@ public class JpaUserDomainService implements UserDomainService {
         final String unencodedPassword = appUser.getPassword();
 
         final String encodePassword = this.applicationPasswordEncoder.encode(appUser);
-        appUser.updatePassword(encodePassword);
+        appUser.toBuilder()
+            .password(encodePassword)
+            .firstTimeLoginRemaining(false)
+            .lastTimePasswordUpdated(DateUtils.getDateOfTenant())
+            .build();
 
         this.userRepository.saveAndFlush(appUser);
 

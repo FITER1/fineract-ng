@@ -130,7 +130,20 @@ public class StaffApiResource {
         StaffData staff = this.readPlatformService.retrieveStaff(staffId);
         if (settings.isTemplate()) {
             final Collection<OfficeData> allowedOffices = this.officeReadPlatformService.retrieveAllOfficesForDropdown();
-            staff = StaffData.templateData(staff, allowedOffices);
+            staff = StaffData.builder()
+                .id(staff.getId())
+                .firstname(staff.getFirstname())
+                .lastname(staff.getLastname())
+                .displayName(staff.getDisplayName())
+                .officeId(staff.getOfficeId())
+                .officeName(staff.getOfficeName())
+                .loanOfficer(staff.getLoanOfficer())
+                .externalId(staff.getExternalId())
+                .mobileNo(staff.getMobileNo())
+                .active(staff.getActive())
+                .joiningDate(staff.getJoiningDate())
+                .allowedOffices(allowedOffices)
+                .build();
         }
         return this.toApiJsonSerializer.serialize(settings, staff, this.RESPONSE_DATA_PARAMETERS);
     }

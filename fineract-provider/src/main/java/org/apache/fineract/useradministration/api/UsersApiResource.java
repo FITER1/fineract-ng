@@ -106,7 +106,22 @@ public class UsersApiResource {
         AppUserData user = this.readPlatformService.retrieveUser(userId);
         if (settings.isTemplate()) {
             final Collection<OfficeData> offices = this.officeReadPlatformService.retrieveAllOfficesForDropdown();
-            user = AppUserData.template(user, offices);
+            user = AppUserData.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .officeId(user.getOfficeId())
+                .officeName(user.getOfficeName())
+                .firstname(user.getFirstname())
+                .lastname(user.getLastname())
+                .availableRoles(user.getAvailableRoles())
+                .selfServiceRoles(user.getSelfServiceRoles())
+                .selectedRoles(user.getSelectedRoles())
+                .staff(user.getStaff())
+                .passwordNeverExpires(user.getPasswordNeverExpires())
+                .selfServiceUser(user.getSelfServiceUser())
+                .allowedOffices(offices)
+                .build();
         }
 
         return this.toApiJsonSerializer.serialize(settings, user, this.RESPONSE_DATA_PARAMETERS);

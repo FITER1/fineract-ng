@@ -61,7 +61,7 @@ public class JpaTemplateDomainService implements TemplateDomainService {
         // name, text populated etc
         // FIXME - handle cases where data integrity constraints are fired from
         // database when saving.
-        final Template template = Template.fromJson(command);
+        final Template template = fromJson(command);
 
         this.templateRepository.saveAndFlush(template);
         return CommandProcessingResult.builder().resourceId(
@@ -134,5 +134,40 @@ public class JpaTemplateDomainService implements TemplateDomainService {
             final TemplateType type) {
 
         return this.templateRepository.findByEntityAndType(entity, type);
+    }
+
+    private Template fromJson(final JsonCommand command) {
+        final String name = command.stringValueOfParameterNamed("name");
+        final String text = command.stringValueOfParameterNamed("text");
+        final TemplateEntity entity = TemplateEntity.values()[command.integerValueSansLocaleOfParameterNamed("entity")];
+        final int templateTypeId = command.integerValueSansLocaleOfParameterNamed("type");
+        TemplateType type = null;
+        switch (templateTypeId) {
+            case 0 :
+                type = TemplateType.DOCUMENT;
+                break;
+            case 2 :
+                type = TemplateType.SMS;
+                break;
+        }
+
+        final JsonArray array = command.arrayOfParameterNamed("mappers");
+
+        final List<TemplateMapper> mappersList = new ArrayList<>();
+
+        for (final JsonElement element : array) {
+            mappersList.add(new TemplateMapper(element.getAsJsonObject()
+                .get("mappersorder").getAsInt(), element.getAsJsonObject()
+                .get("mapperskey").getAsString(), element.getAsJsonObject()
+                .get("mappersvalue").getAsString()));
+        }
+
+        return Template.builder()
+            .name(name)
+            .text(text)
+            .entity(entity)
+            .type(type)
+            .mappers(mappersList)
+            .build();
     }
 }

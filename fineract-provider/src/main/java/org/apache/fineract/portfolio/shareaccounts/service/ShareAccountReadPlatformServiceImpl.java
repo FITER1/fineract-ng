@@ -92,7 +92,7 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
             final Collection<EnumOptionData> minimumActivePeriodFrequencyTypeOptions = this.shareProductDropdownReadPlatformService
                     .retrieveMinimumActivePeriodFrequencyTypeOptions();
             final Collection<SavingsAccountData> clientSavingsAccounts = this.savingsAccountReadPlatformService
-                    .retrieveActiveForLookup(clientId, DepositAccountType.SAVINGS_DEPOSIT, productData.getCurrency().code());
+                    .retrieveActiveForLookup(clientId, DepositAccountType.SAVINGS_DEPOSIT, productData.getCurrency().getCode());
             toReturn = new ShareAccountData(client.id(), client.displayName(), productData.getCurrency(), charges, marketPrice,
                     minimumActivePeriodFrequencyTypeOptions, lockinPeriodFrequencyTypeOptions, clientSavingsAccounts, productData.getNominaltShares());
         } else {
@@ -140,7 +140,7 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
                     .retrieveLockinPeriodFrequencyTypeOptions();
             final Collection<EnumOptionData> minimumActivePeriodFrequencyTypeOptions = lockinPeriodFrequencyTypeOptions;
             final Collection<SavingsAccountData> clientSavingsAccounts = this.savingsAccountReadPlatformService
-                    .retrieveActiveForLookup(data.getClientId(), DepositAccountType.SAVINGS_DEPOSIT, productData.getCurrency().code());
+                    .retrieveActiveForLookup(data.getClientId(), DepositAccountType.SAVINGS_DEPOSIT, productData.getCurrency().getCode());
             Collection<ProductData> productOptions = service.retrieveAllForLookup();
             final Collection<ChargeData> chargeOptions = this.chargeReadPlatformService.retrieveSharesApplicableCharges();
             data = ShareAccountData.template(data, productOptions, chargeOptions, clientSavingsAccounts, lockinPeriodFrequencyTypeOptions,

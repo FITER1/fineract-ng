@@ -23,6 +23,7 @@ import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlat
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepositoryWrapper;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
@@ -195,7 +196,14 @@ public class SavingsAccountDomainServiceJpa implements SavingsAccountDomainServi
         final MonetaryCurrency currency = savingsAccount.getCurrency();
         final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepositoryWrapper.findOneWithNotFoundDetection(currency);
 
-        final Map<String, Object> accountingBridgeData = savingsAccount.deriveAccountingBridgeData(applicationCurrency.toData(),
+        final Map<String, Object> accountingBridgeData = savingsAccount.deriveAccountingBridgeData(CurrencyData.builder()
+                .code(applicationCurrency.getCode())
+                .name(applicationCurrency.getName())
+                .decimalPlaces(applicationCurrency.getDecimalPlaces())
+                .inMultiplesOf(applicationCurrency.getInMultiplesOf())
+                .displaySymbol(applicationCurrency.getDisplaySymbol())
+                .nameCode(applicationCurrency.getNameCode())
+                .build(),
                 existingTransactionIds, existingReversedTransactionIds, isAccountTransfer);
         this.journalEntryWritePlatformService.createJournalEntriesForSavings(accountingBridgeData);
     }

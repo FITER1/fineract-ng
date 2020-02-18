@@ -64,7 +64,10 @@ public class TopicTest {
 	@Test
 	public void testTopicStorage() {
 		Office office = officeRepository.getOne(1L);
-		Role role = new Role("New Member_Type", "Testing topic creation");
+		Role role = Role.builder()
+			.name("New Member_Type")
+			.description("Testing topic creation")
+			.build();
 		
 		String title = role.getName() + " of " + office.getName();
 		Long entityId = office.getId();

@@ -22,7 +22,7 @@ import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
-import org.apache.fineract.organisation.workingdays.data.AdjustedDateDetailsDTO;
+import org.apache.fineract.organisation.workingdays.data.AdjustedDateDetailsData;
 import org.apache.fineract.organisation.workingdays.domain.RepaymentRescheduleType;
 import org.apache.fineract.portfolio.calendar.domain.CalendarInstance;
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
@@ -172,11 +172,11 @@ public abstract class AbstractLoanScheduleGenerator implements LoanScheduleGener
             LocalDate previousRepaymentDate = scheduleParams.getActualRepaymentDate();
             scheduleParams.setActualRepaymentDate(this.scheduledDateGenerator.generateNextRepaymentDate(
                     scheduleParams.getActualRepaymentDate(), loanApplicationTerms, isFirstRepayment));
-            AdjustedDateDetailsDTO adjustedDateDetailsDTO = this.scheduledDateGenerator.adjustRepaymentDate(
+            AdjustedDateDetailsData adjustedDateDetailsData = this.scheduledDateGenerator.adjustRepaymentDate(
                     scheduleParams.getActualRepaymentDate(), loanApplicationTerms, holidayDetailDTO);
-            scheduleParams.setActualRepaymentDate(adjustedDateDetailsDTO.getChangedActualRepaymentDate());
+            scheduleParams.setActualRepaymentDate(adjustedDateDetailsData.getChangedActualRepaymentDate());
             isFirstRepayment = false;
-            LocalDate scheduledDueDate = adjustedDateDetailsDTO.getChangedScheduleDate();
+            LocalDate scheduledDueDate = adjustedDateDetailsData.getChangedScheduleDate();
             
             // calculated interest start date for the period
             LocalDate periodStartDateApplicableForInterest = calculateInterestStartDateForPeriod(loanApplicationTerms,

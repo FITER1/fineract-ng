@@ -88,8 +88,14 @@ public class BulkLoansApiResource {
             staffAccountSummaryCollectionData = this.bulkLoansReadPlatformService.retrieveLoanOfficerAccountSummary(loanOfficerId);
         }
 
-        final BulkTransferLoanOfficerData loanReassignmentData = BulkTransferLoanOfficerData.templateForBulk(officeId, loanOfficerId,
-                new LocalDate(), offices, loanOfficers, staffAccountSummaryCollectionData);
+        final BulkTransferLoanOfficerData loanReassignmentData = BulkTransferLoanOfficerData.builder()
+            .officeId(officeId)
+            .fromLoanOfficerId(loanOfficerId)
+            .assignmentDate(new LocalDate())
+            .officeOptions(offices)
+            .loanOfficerOptions(loanOfficers)
+            .accountSummaryCollection(staffAccountSummaryCollectionData)
+            .build();
 
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
         return this.toApiJsonSerializer.serialize(settings, loanReassignmentData, this.RESPONSE_DATA_PARAMETERS);

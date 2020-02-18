@@ -29,7 +29,7 @@ import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,7 +39,7 @@ public abstract class AbstractPersistableCustom<PK extends Serializable> impleme
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+        protected Long id;
 
         /*
          * (non-Javadoc)
@@ -51,6 +51,4 @@ public abstract class AbstractPersistableCustom<PK extends Serializable> impleme
 
                 return null == this.id;
         }
-
-        //We have removed toString(), hashCode() and equals() methods. By adding them end up issues with OpenJPA
 }

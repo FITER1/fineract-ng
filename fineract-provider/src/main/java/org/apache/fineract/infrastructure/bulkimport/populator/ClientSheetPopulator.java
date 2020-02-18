@@ -110,10 +110,10 @@ public class ClientSheetPopulator extends AbstractWorkbookPopulator {
 		Row row = clientSheet.createRow(rowIndex);
 		for (OfficeData office : officesDataList) {
 			startIndex = rowIndex + 1;
-			writeString(OFFICE_NAME_COL, row, office.name());
+			writeString(OFFICE_NAME_COL, row, office.getName());
 			ArrayList<String> clientList = new ArrayList<String>();
-			if (officeToClients.containsKey(office.name().trim().replaceAll("[ )(]", "_")))
-				clientList = officeToClients.get(office.name().trim().replaceAll("[ )(]", "_"));
+			if (officeToClients.containsKey(office.getName().trim().replaceAll("[ )(]", "_")))
+				clientList = officeToClients.get(office.getName().trim().replaceAll("[ )(]", "_"));
 			if (!clientList.isEmpty()) {
 				for (String clientName : clientList) {
 					writeString(CLIENT_NAME_COL, row, clientName);

@@ -18,6 +18,11 @@
  */
 package org.apache.fineract.spm.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.portfolio.client.domain.Client;
 import org.apache.fineract.useradministration.domain.AppUser;
@@ -25,6 +30,11 @@ import org.apache.fineract.useradministration.domain.AppUser;
 import javax.persistence.*;
 import java.util.Date;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_survey_scorecards")
 public class Scorecard extends AbstractPersistableCustom<Long> {
@@ -56,64 +66,4 @@ public class Scorecard extends AbstractPersistableCustom<Long> {
 
     @Column(name = "a_value", precision = 4)
     private Integer value;
-
-    public Scorecard() {
-        super();
-    }
-
-    public Survey getSurvey() {
-        return survey;
-    }
-
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
-
-    public Response getResponse() {
-        return response;
-    }
-
-    public void setResponse(Response response) {
-        this.response = response;
-    }
-
-    public AppUser getAppUser() {
-        return appUser;
-    }
-
-    public void setAppUser(AppUser appUser) {
-        this.appUser = appUser;
-    }
-
-    public Client getClient() {
-        return client;
-    }
-
-    public void setClient(Client client) {
-        this.client = client;
-    }
-
-    public Date getCreatedOn() {
-        return createdOn;
-    }
-
-    public void setCreatedOn(Date createdOn) {
-        this.createdOn = createdOn;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
-    }
 }

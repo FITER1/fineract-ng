@@ -190,7 +190,13 @@ public class RolesApiResource {
 
         final RoleData role = this.roleReadPlatformService.retrieveOne(roleId);
         final Collection<PermissionData> permissionUsageData = this.permissionReadPlatformService.retrieveAllRolePermissions(roleId);
-        final RolePermissionsData permissionsData = role.toRolePermissionData(permissionUsageData);
+        final RolePermissionsData permissionsData = RolePermissionsData.builder()
+            .id(role.getId())
+            .name(role.getName())
+            .description(role.getDescription())
+            .disabled(role.getDisabled())
+            .permissionUsageData(permissionUsageData)
+            .build();
         return this.permissionsToApiJsonSerializer.serialize(settings, permissionsData, this.PERMISSIONS_RESPONSE_DATA_PARAMETERS);
     }
 

@@ -41,8 +41,4 @@ public class MonetaryCurrency {
     @Builder.Default
     @Column(name = "currency_multiplesof")
     private Integer inMultiplesOf = 0;
-
-    public MonetaryCurrency copy() {
-        return new MonetaryCurrency(this.code, this.digitsAfterDecimal, this.inMultiplesOf);
-    }
 }

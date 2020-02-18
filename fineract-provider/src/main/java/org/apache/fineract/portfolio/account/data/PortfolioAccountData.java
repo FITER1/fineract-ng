@@ -110,7 +110,7 @@ public class PortfolioAccountData {
     }
 
     public String currencyCode() {
-        return this.currency.code();
+        return this.currency.getCode();
     }
 
     public BigDecimal getAmtForTransfer() {

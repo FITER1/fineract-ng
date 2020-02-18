@@ -49,7 +49,11 @@ public class ProvisioningCategoryReadPlatformServiceImpl implements Provisioning
             final Long id = JdbcSupport.getLong(rs, "id");
             final String categoryName = rs.getString("category_name");
             final String description = rs.getString("description");
-            return new ProvisioningCategoryData(id, categoryName, description);
+            return ProvisioningCategoryData.builder()
+                .id(id)
+                .categoryName(categoryName)
+                .categoryDescription(description)
+                .build();
         }
 
         public String schema() {

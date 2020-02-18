@@ -18,20 +18,17 @@
  */
 package org.apache.fineract.organisation.staff.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.documentmanagement.domain.Image;
 import org.apache.fineract.organisation.office.domain.Office;
-import org.joda.time.LocalDate;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @SuperBuilder
 @Data
@@ -39,9 +36,11 @@ import java.util.Map;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "m_staff", uniqueConstraints = { @UniqueConstraint(columnNames = { "display_name" }, name = "display_name"),
-        @UniqueConstraint(columnNames = { "external_id" }, name = "external_id_UNIQUE"),
-        @UniqueConstraint(columnNames = { "mobile_no" }, name = "mobile_no_UNIQUE") })
+@Table(name = "m_staff", uniqueConstraints = {
+    @UniqueConstraint(columnNames = { "display_name" }, name = "display_name"),
+    @UniqueConstraint(columnNames = { "external_id" }, name = "external_id_UNIQUE"),
+    @UniqueConstraint(columnNames = { "mobile_no" }, name = "mobile_no_UNIQUE")
+})
 public class Staff extends AbstractPersistableCustom<Long> {
 
     @Column(name = "firstname", length = 50)
@@ -87,138 +86,7 @@ public class Staff extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "image_id", nullable = true)
     private Image image;
 
-    public static Staff fromJson(final Office staffOffice, final JsonCommand command) {
-
-        final String firstnameParamName = "firstname";
-        final String firstname = command.stringValueOfParameterNamed(firstnameParamName);
-
-        final String lastnameParamName = "lastname";
-        final String lastname = command.stringValueOfParameterNamed(lastnameParamName);
-
-        final String externalIdParamName = "externalId";
-        final String externalId = command.stringValueOfParameterNamedAllowingNull(externalIdParamName);
-
-        final String mobileNoParamName = "mobileNo";
-        final String mobileNo = command.stringValueOfParameterNamedAllowingNull(mobileNoParamName);
-
-        final String isLoanOfficerParamName = "isLoanOfficer";
-        final boolean isLoanOfficer = command.booleanPrimitiveValueOfParameterNamed(isLoanOfficerParamName);
-
-        final String isActiveParamName = "isActive";
-        final Boolean isActive = command.booleanObjectValueOfParameterNamed(isActiveParamName);
-
-        LocalDate joiningDate = null;
-
-        final String joiningDateParamName = "joiningDate";
-        if (command.hasParameter(joiningDateParamName)) {
-            joiningDate = command.localDateValueOfParameterNamed(joiningDateParamName);
-        }
-
-        return Staff.builder()
-            .office(staffOffice)
-            .firstname(firstname)
-            .lastname(lastname)
-            .externalId(externalId)
-            .mobileNo(mobileNo)
-            .loanOfficer(isLoanOfficer)
-            .active(isActive)
-            .joiningDate(joiningDate==null ? null : joiningDate.toDate())
-            .displayName(deriveDisplayName(firstname, lastname))
-            .build();
-    }
-
-    public EnumOptionData organisationalRoleData() {
-        EnumOptionData organisationalRole = null;
-        if (this.organisationalRoleType != null) {
-            organisationalRole = StaffEnumerations.organisationalRole(this.organisationalRoleType);
-        }
-        return organisationalRole;
-    }
-
-    public void changeOffice(final Office newOffice) {
-        this.office = newOffice;
-    }
-
-    public Map<String, Object> update(final JsonCommand command) {
-
-        final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
-
-        final String officeIdParamName = "officeId";
-        if (command.isChangeInLongParameterNamed(officeIdParamName, this.office.getId())) {
-            final Long newValue = command.longValueOfParameterNamed(officeIdParamName);
-            actualChanges.put(officeIdParamName, newValue);
-        }
-
-        boolean firstnameChanged = false;
-        final String firstnameParamName = "firstname";
-        if (command.isChangeInStringParameterNamed(firstnameParamName, this.firstname)) {
-            final String newValue = command.stringValueOfParameterNamed(firstnameParamName);
-            actualChanges.put(firstnameParamName, newValue);
-            this.firstname = newValue;
-            firstnameChanged = true;
-        }
-
-        boolean lastnameChanged = false;
-        final String lastnameParamName = "lastname";
-        if (command.isChangeInStringParameterNamed(lastnameParamName, this.lastname)) {
-            final String newValue = command.stringValueOfParameterNamed(lastnameParamName);
-            actualChanges.put(lastnameParamName, newValue);
-            this.lastname = newValue;
-            lastnameChanged = true;
-        }
-
-        if (firstnameChanged || lastnameChanged) {
-            this.displayName = deriveDisplayName(this.firstname, this.lastname);
-        }
-
-        final String externalIdParamName = "externalId";
-        if (command.isChangeInStringParameterNamed(externalIdParamName, this.externalId)) {
-            final String newValue = command.stringValueOfParameterNamed(externalIdParamName);
-            actualChanges.put(externalIdParamName, newValue);
-            this.externalId = newValue;
-        }
-
-        final String mobileNoParamName = "mobileNo";
-        if (command.isChangeInStringParameterNamed(mobileNoParamName, this.mobileNo)) {
-            final String newValue = command.stringValueOfParameterNamed(mobileNoParamName);
-            actualChanges.put(mobileNoParamName, newValue);
-            this.mobileNo = StringUtils.defaultIfEmpty(newValue, null);
-        }
-
-        final String isLoanOfficerParamName = "isLoanOfficer";
-        if (command.isChangeInBooleanParameterNamed(isLoanOfficerParamName, this.loanOfficer)) {
-            final boolean newValue = command.booleanPrimitiveValueOfParameterNamed(isLoanOfficerParamName);
-            actualChanges.put(isLoanOfficerParamName, newValue);
-            this.loanOfficer = newValue;
-        }
-
-        final String isActiveParamName = "isActive";
-        if (command.isChangeInBooleanParameterNamed(isActiveParamName, this.active)) {
-            final boolean newValue = command.booleanPrimitiveValueOfParameterNamed(isActiveParamName);
-            actualChanges.put(isActiveParamName, newValue);
-            this.active = newValue;
-        }
-
-        final String joiningDateParamName = "joiningDate";
-        if (command.isChangeInDateParameterNamed(joiningDateParamName, this.joiningDate)) {
-            final String valueAsInput = command.stringValueOfParameterNamed(joiningDateParamName);
-            actualChanges.put(joiningDateParamName, valueAsInput);
-            final LocalDate newValue = command.localDateValueOfParameterNamed(joiningDateParamName);
-            this.joiningDate = newValue.toDate();
-        }
-
-        return actualChanges;
-    }
-
     public boolean identifiedBy(final Staff staff) {
         return getId().equals(staff.getId());
-    }
-
-    private static String deriveDisplayName(String firstname, String lastname) {
-        if (!StringUtils.isBlank(firstname)) {
-            return lastname + ", " + firstname;
-        } else {
-            return lastname;
-        }
     }
 }

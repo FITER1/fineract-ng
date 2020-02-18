@@ -27,6 +27,7 @@ import org.apache.fineract.notification.service.NotificationGeneratorWritePlatfo
 import org.apache.fineract.notification.service.NotificationMapperWritePlatformService;
 import org.apache.fineract.notification.service.NotificationWritePlatformServiceImpl;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.apache.fineract.useradministration.domain.AppUserClientMapping;
 import org.apache.fineract.useradministration.domain.AppUserRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,6 +39,7 @@ import org.springframework.security.core.userdetails.User;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -89,10 +91,20 @@ public class StorageTest {
                 getCurrentDateTime()
         );
 
-        AppUser appUser = new AppUser(null, new User("J.J.", "", true, true,
-                true, true, Collections.emptyList()),
-                null, "user@com", "John", "", null, false,
-                 false, null);
+
+        AppUser appUser = AppUser.builder()
+            .username("J.J.")
+            .password("")
+            .accountNonExpired(true)
+            .accountNonLocked(true)
+            .credentialsNonExpired(true)
+            .enabled(true)
+            .email("user@com")
+            .firstname("John")
+            .lastname("")
+            .passwordNeverExpires(false)
+            .selfServiceUser(false)
+            .build();
 
         NotificationMapper notificationMapper = new NotificationMapper(
                 notification,

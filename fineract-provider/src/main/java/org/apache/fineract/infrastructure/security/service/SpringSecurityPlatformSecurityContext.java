@@ -53,7 +53,7 @@ public class SpringSecurityPlatformSecurityContext implements PlatformSecurityCo
 
     private final AppUserRepository appUserRepository;
 
-    protected static final List<CommandWrapper> EXEMPT_FROM_PASSWORD_RESET_CHECK = new ArrayList<CommandWrapper>() {
+    protected static final List<CommandWrapper> EXEMPT_FROM_PASSWORD_RESET_CHECK = new ArrayList<>() {
 
         {
             add(new CommandWrapperBuilder().updateUser(null).build());
@@ -143,7 +143,7 @@ public class SpringSecurityPlatformSecurityContext implements PlatformSecurityCo
     @Override
     public boolean doesPasswordHasToBeRenewed(AppUser currentUser) {
 
-        if (this.configurationDomainService.isPasswordForcedResetEnable() && !currentUser.getPasswordNeverExpires()) {
+        if (this.configurationDomainService.isPasswordForcedResetEnable() && !currentUser.isPasswordNeverExpires()) {
 
             Long passwordDurationDays = this.configurationDomainService.retrievePasswordLiveTime();
             final Date passWordLastUpdateDate = currentUser.getLastTimePasswordUpdated();

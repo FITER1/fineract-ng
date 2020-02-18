@@ -27,6 +27,7 @@ import org.apache.fineract.infrastructure.security.constants.TwoFactorConstants;
 import org.apache.fineract.infrastructure.security.data.AuthenticatedUserData;
 import org.apache.fineract.infrastructure.security.service.SpringSecurityPlatformSecurityContext;
 import org.apache.fineract.infrastructure.security.service.TwoFactorUtils;
+import org.apache.fineract.organisation.staff.domain.StaffEnumerations;
 import org.apache.fineract.useradministration.data.RoleData;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.apache.fineract.useradministration.domain.Role;
@@ -93,16 +94,21 @@ public class AuthenticationApiResource {
             final Collection<RoleData> roles = new ArrayList<>();
             final Set<Role> userRoles = principal.getRoles();
             for (final Role role : userRoles) {
-                roles.add(role.toData());
+                roles.add(RoleData.builder()
+                    .id(role.getId())
+                    .name(role.getName())
+                    .description(role.getDescription())
+                    .disabled(role.getDisabled())
+                    .build());
             }
 
             final Long officeId = principal.getOffice().getId();
             final String officeName = principal.getOffice().getName();
 
-            final Long staffId = principal.getStaffId();
-            final String staffDisplayName = principal.getStaffDisplayName();
+            final Long staffId = principal.getStaff()!=null ? principal.getStaff().getId() : null;
+            final String staffDisplayName = principal.getStaff()!=null ? principal.getStaff().getDisplayName() : null;
 
-            final EnumOptionData organisationalRole = principal.organisationalRoleData();
+            final EnumOptionData organisationalRole = principal.getStaff()!=null ? StaffEnumerations.organisationalRole(principal.getStaff().getOrganisationalRoleType()) : null;
 
             boolean isTwoFactorRequired = twoFactorUtils.isTwoFactorAuthEnabled() && !
                     principal.hasSpecificPermissionTo(TwoFactorConstants.BYPASS_TWO_FACTOR_PERMISSION);

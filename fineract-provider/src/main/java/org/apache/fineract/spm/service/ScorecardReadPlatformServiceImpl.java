@@ -64,7 +64,14 @@ public class ScorecardReadPlatformServiceImpl implements ScorecardReadPlatformSe
             final Long userId = rs.getLong("userId");
             final String username = rs.getString("username");
 
-            return ScorecardData.instance(id, userId, username, surveyId, surveyName, clientId);
+            return ScorecardData.builder()
+                .id(id)
+                .userId(userId)
+                .username(username)
+                .surveyId(surveyId)
+                .surveyName(surveyName)
+                .clientId(clientId)
+                .build();
         }
     }
 
@@ -88,7 +95,12 @@ public class ScorecardReadPlatformServiceImpl implements ScorecardReadPlatformSe
             final LocalDate createdOn = JdbcSupport.getLocalDate(rs, "createdOn");
             final Integer value = rs.getInt("value");
 
-            return ScorecardValue.instance(questionId, responseId, value, createdOn.toDate());
+            return ScorecardValue.builder()
+                .questionId(questionId)
+                .responseId(responseId)
+                .value(value)
+                .createdOn(createdOn.toDate())
+                .build();
         }
     }
 

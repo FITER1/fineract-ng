@@ -101,8 +101,18 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
             final LocalDate startDate = JdbcSupport.getLocalDate(rs, "start_date");
             final LocalDate endDate = JdbcSupport.getLocalDate(rs, "end_date");
 
-            return TellerData.instance(id, officeId, debitAccountId, creditAccountId, tellerName, description, startDate, endDate,
-                    tellerStatus, officeName, null, null);
+            return TellerData.builder()
+                .id(id)
+                .officeId(officeId)
+                .debitAccountId(debitAccountId)
+                .creditAccountId(creditAccountId)
+                .name(tellerName)
+                .description(description)
+                .startDate(startDate)
+                .endDate(endDate)
+                .status(tellerStatus)
+                .officeName(officeName)
+                .build();
         }
     }
 
@@ -143,9 +153,18 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
             final LocalDate startDate = JdbcSupport.getLocalDate(rs, "start_date");
             final LocalDate endDate = JdbcSupport.getLocalDate(rs, "end_date");
 
-            return TellerData.instance(id, officeId, debitAccountId, creditAccountId, tellerName, description, startDate, endDate,
-                    tellerStatus, officeName, null, null);
-
+            return TellerData.builder()
+                .id(id)
+                .officeId(officeId)
+                .debitAccountId(debitAccountId)
+                .creditAccountId(creditAccountId)
+                .name(tellerName)
+                .description(description)
+                .startDate(startDate)
+                .endDate(endDate)
+                .status(tellerStatus)
+                .officeName(officeName)
+                .build();
         }
     }
 
@@ -168,10 +187,12 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
 
         @Override
         public TellerData mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-
             final Long id = rs.getLong("id");
             final String tellerName = rs.getString("teller_name");
-            return TellerData.lookup(id, tellerName);
+            return TellerData.builder()
+                .id(id)
+                .name(tellerName)
+                .build();
         }
     }
 
@@ -376,7 +397,7 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
         final OfficeData officeData = this.officeReadPlatformService.retrieveOffice(defaultOfficeId);
         String officeName = "";
         if (officeData != null) {
-            officeName = officeData.name();
+            officeName = officeData.getName();
         }
 
         TellerData tellerData = findTeller(tellerId);
@@ -400,7 +421,13 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
             staffOptions = null;
         }
 
-        return CashierData.template(officeId, officeName, tellerId, tellerName, staffOptions);
+        return CashierData.builder()
+            .officeId(officeId)
+            .officeName(officeName)
+            .tellerId(tellerId)
+            .tellerName(tellerName)
+            .staffOptions(staffOptions)
+            .build();
     }
 
     @Override
@@ -430,8 +457,18 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
         // Fetching all currency type from m_organisation_currency table
         final Collection<CurrencyData> currencyOptions = this.currencyReadPlatformService.retrieveAllowedCurrencies();
 
-        return CashierTransactionData.template(cashierId, tellerId, tellerName, officeId, officeName, cashierName, cashierData, startDate,
-                endDate, currencyOptions);
+        return CashierTransactionData.builder()
+            .cashierId(cashierId)
+            .tellerId(tellerId)
+            .tellerName(tellerName)
+            .officeId(officeId)
+            .officeName(officeName)
+            .cashierName(cashierName)
+            .cashierData(cashierData)
+            .startDate(startDate)
+            .endDate(endDate)
+            .currencyOptions(currencyOptions)
+            .build();
     }
 
     @Override
@@ -481,10 +518,24 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
 
         CashierTransactionData cashierTxnTemplate = retrieveCashierTxnTemplate(cashierId);
 
-        CashierTransactionsWithSummaryData txnsWithSummary = CashierTransactionsWithSummaryData.instance(cashierTransactions, allocAmount,
-                cashInAmount, cashOutAmount, settleAmount, cashierTxnTemplate.getOfficeName(), cashierTxnTemplate.getTellerId(),
-                cashierTxnTemplate.getTellerName(), cashierTxnTemplate.getCashierId(), cashierTxnTemplate.getCashierName());
-        return txnsWithSummary;
+        final BigDecimal netCash = allocAmount
+            .add(cashInAmount)
+            .subtract(cashOutAmount)
+            .subtract(settleAmount);
+
+        return CashierTransactionsWithSummaryData.builder()
+            .cashierTransactions(cashierTransactions)
+            .sumCashAllocation(allocAmount)
+            .sumInwardCash(cashInAmount)
+            .sumOutwardCash(cashOutAmount)
+            .sumCashSettlement(settleAmount)
+            .netCash(netCash)
+            .officeName(cashierTxnTemplate.getOfficeName())
+            .tellerId(cashierTxnTemplate.getTellerId())
+            .tellerName(cashierTxnTemplate.getTellerName())
+            .cashierId(cashierTxnTemplate.getCashierId())
+            .cashierName(cashierTxnTemplate.getCashierName())
+            .build();
     }
 
     @Override
@@ -583,8 +634,19 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
             final String startTime = rs.getString("start_time");
             final String endTime = rs.getString("end_time");
 
-            return CashierData.instance(id, null, null, staffId, staffName, tellerId, tellerName, description, startDate.toDate(),
-                    endDate.toDate(), fullDay, startTime, endTime);
+            return CashierData.builder()
+                .id(id)
+                .staffId(staffId)
+                .staffName(staffName)
+                .tellerId(tellerId)
+                .tellerName(tellerName)
+                .description(description)
+                .startDate(startDate.toDate())
+                .endDate(endDate.toDate())
+                .fullDay(fullDay)
+                .startTime(startTime)
+                .endTime(endTime)
+                .build();
         }
     }
 
@@ -745,8 +807,22 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
             final String tellerName = rs.getString("teller_name");
             final String cashierName = rs.getString("cashier_name");
 
-            return CashierTransactionData.instance(id, cashierId, txnType, txnAmount, txnDate, txnNote, entityType, entityId, createdDate,
-                    officeId, officeName, tellerId, tellerName, cashierName, null, null, null);
+            return CashierTransactionData.builder()
+                .id(id)
+                .cashierId(cashierId)
+                .txnType(txnType)
+                .txnAmount(txnAmount)
+                .txnDate(txnDate)
+                .txnNote(txnNote)
+                .entityType(entityType)
+                .entityId(entityId)
+                .createdDate(createdDate)
+                .officeId(officeId)
+                .officeName(officeName)
+                .tellerId(tellerId)
+                .tellerName(tellerName)
+                .cashierName(cashierName)
+                .build();
         }
     }
 
@@ -897,7 +973,10 @@ public class TellerManagementReadPlatformServiceImpl implements TellerManagement
             final Integer cashierTxnType = rs.getInt("cash_txn_type");
             final BigDecimal txnTotal = rs.getBigDecimal("txn_total");
 
-            return CashierTransactionTypeTotalsData.instance(cashierTxnType, txnTotal);
+            return CashierTransactionTypeTotalsData.builder()
+                .cashierTxnType(cashierTxnType)
+                .cashTotal(txnTotal)
+                .build();
         }
     }
 

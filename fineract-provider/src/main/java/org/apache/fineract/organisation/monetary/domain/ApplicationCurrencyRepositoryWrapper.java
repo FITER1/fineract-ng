@@ -46,10 +46,11 @@ public class ApplicationCurrencyRepositoryWrapper {
         final ApplicationCurrency defaultApplicationCurrency = this.repository.findOneByCode(currency.getCode());
         if (defaultApplicationCurrency == null) { throw new CurrencyNotFoundException(currency.getCode()); }
 
-        final ApplicationCurrency applicationCurrency = ApplicationCurrency.from(defaultApplicationCurrency,
-                currency.getDigitsAfterDecimal(), currency.getInMultiplesOf());
-
-        return applicationCurrency;
+        return ApplicationCurrency.builder()
+            .code(defaultApplicationCurrency.getCode())
+            .decimalPlaces(currency.getDigitsAfterDecimal())
+            .inMultiplesOf(currency.getInMultiplesOf())
+            .build();
     }
 
     /**

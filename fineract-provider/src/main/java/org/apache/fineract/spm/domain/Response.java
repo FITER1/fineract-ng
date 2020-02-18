@@ -18,10 +18,20 @@
  */
 package org.apache.fineract.spm.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 import javax.persistence.*;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_survey_responses")
 public class Response extends AbstractPersistableCustom<Long> {
@@ -38,40 +48,4 @@ public class Response extends AbstractPersistableCustom<Long> {
 
     @Column(name = "sequence_no", precision = 4)
     private Integer sequenceNo;
-
-    public Response() {
-        super();
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Integer getValue() {
-        return value;
-    }
-
-    public void setValue(Integer value) {
-        this.value = value;
-    }
-
-    public Integer getSequenceNo() {
-        return sequenceNo;
-    }
-
-    public void setSequenceNo(Integer sequenceNo) {
-        this.sequenceNo = sequenceNo;
-    }
 }

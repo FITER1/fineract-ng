@@ -20,6 +20,7 @@ package org.apache.fineract.organisation.office.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -35,9 +36,12 @@ import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
 import org.apache.fineract.organisation.office.domain.OfficeTransaction;
 import org.apache.fineract.organisation.office.domain.OfficeTransactionRepository;
+import org.apache.fineract.organisation.office.exception.CannotUpdateOfficeWithParentOfficeSameAsSelf;
+import org.apache.fineract.organisation.office.exception.RootOfficeParentCannotBeUpdated;
 import org.apache.fineract.organisation.office.serialization.OfficeCommandFromApiJsonDeserializer;
 import org.apache.fineract.organisation.office.serialization.OfficeTransactionCommandFromApiJsonDeserializer;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -45,6 +49,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.PersistenceException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Slf4j
@@ -78,7 +83,7 @@ public class OfficeWritePlatformServiceJpaRepositoryImpl implements OfficeWriteP
             }
 
             final Office parent = validateUserPriviledgeOnOfficeAndRetrieve(currentUser, parentId);
-            final Office office = Office.fromJson(parent, command);
+            final Office office = fromJson(parent, command);
 
             // pre save to generate id for use in office hierarchy
             this.officeRepositoryWrapper.save(office);
@@ -124,11 +129,11 @@ public class OfficeWritePlatformServiceJpaRepositoryImpl implements OfficeWriteP
 
             final Office office = validateUserPriviledgeOnOfficeAndRetrieve(currentUser, officeId);
 
-            final Map<String, Object> changes = office.update(command);
+            final Map<String, Object> changes = update(office, command);
 
             if (changes.containsKey("parentId")) {
                 final Office parent = validateUserPriviledgeOnOfficeAndRetrieve(currentUser, parentId);
-                office.update(parent);
+                update(office, parent);
             }
 
             if (!changes.isEmpty()) {
@@ -182,7 +187,7 @@ public class OfficeWritePlatformServiceJpaRepositoryImpl implements OfficeWriteP
                 appCurrency.getInMultiplesOf());
         final Money amount = Money.of(currency, command.bigDecimalValueOfParameterNamed("transactionAmount"));
 
-        final OfficeTransaction entity = OfficeTransaction.fromJson(fromOffice, toOffice, amount, command);
+        final OfficeTransaction entity = fromJson(fromOffice, toOffice, amount, command);
 
         this.officeTransactionRepository.save(entity);
 
@@ -205,6 +210,89 @@ public class OfficeWritePlatformServiceJpaRepositoryImpl implements OfficeWriteP
                 .commandId(command.commandId()) //
                 .resourceId(transactionId) //
                 .build();
+    }
+
+    private Office fromJson(final Office parentOffice, final JsonCommand command) {
+
+        final String name = command.stringValueOfParameterNamed("name");
+        final LocalDate openingDate = command.localDateValueOfParameterNamed("openingDate");
+        final String externalId = command.stringValueOfParameterNamed("externalId");
+
+        return Office.builder().parent(parentOffice).name(name).openingDate(openingDate.toDate()).externalId(externalId).build();
+    }
+
+    public void update(final Office office, final Office newParent) {
+
+        if (office.getParent() == null) {
+            throw new RootOfficeParentCannotBeUpdated();
+        }
+
+        if (office.getId().equals(newParent.getId())) {
+            throw new CannotUpdateOfficeWithParentOfficeSameAsSelf(office.getId(), newParent.getId());
+        }
+
+        office.setParent(newParent);
+        office.generateHierarchy();
+    }
+
+    private OfficeTransaction fromJson(final Office fromOffice, final Office toOffice, final Money amount, final JsonCommand command) {
+
+        final LocalDate transactionLocalDate = command.localDateValueOfParameterNamed("transactionDate");
+        final String description = command.stringValueOfParameterNamed("description");
+
+        return OfficeTransaction.builder()
+            .from(fromOffice)
+            .to(toOffice)
+            .transactionDate(transactionLocalDate.toDate())
+            .transactionAmount(amount.getAmount())
+            .description(description)
+            .build();
+    }
+
+    private Map<String, Object> update(final Office office, final JsonCommand command) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
+
+        final String dateFormatAsInput = command.dateFormat();
+        final String localeAsInput = command.locale();
+
+        final String parentIdParamName = "parentId";
+
+        if (command.parameterExists(parentIdParamName) && office.getParent() == null) {
+            throw new RootOfficeParentCannotBeUpdated();
+        }
+
+        if (office.getParent() != null && command.isChangeInLongParameterNamed(parentIdParamName, office.getParent().getId())) {
+            final Long newValue = command.longValueOfParameterNamed(parentIdParamName);
+            actualChanges.put(parentIdParamName, newValue);
+        }
+
+        final String openingDateParamName = "openingDate";
+        if (command.isChangeInLocalDateParameterNamed(openingDateParamName, office.getOpeningLocalDate())) {
+            final String valueAsInput = command.stringValueOfParameterNamed(openingDateParamName);
+            actualChanges.put(openingDateParamName, valueAsInput);
+            actualChanges.put("dateFormat", dateFormatAsInput);
+            actualChanges.put("locale", localeAsInput);
+
+            final LocalDate newValue = command.localDateValueOfParameterNamed(openingDateParamName);
+            office.setOpeningDate(newValue.toDate());
+        }
+
+        final String nameParamName = "name";
+        if (command.isChangeInStringParameterNamed(nameParamName, office.getName())) {
+            final String newValue = command.stringValueOfParameterNamed(nameParamName);
+            actualChanges.put(nameParamName, newValue);
+            office.setName(newValue);
+        }
+
+        final String externalIdParamName = "externalId";
+        if (command.isChangeInStringParameterNamed(externalIdParamName, office.getExternalId())) {
+            final String newValue = command.stringValueOfParameterNamed(externalIdParamName);
+            actualChanges.put(externalIdParamName, newValue);
+            office.setExternalId(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        return actualChanges;
     }
 
     /*
@@ -240,7 +328,7 @@ public class OfficeWritePlatformServiceJpaRepositoryImpl implements OfficeWriteP
                 "User does not have sufficient priviledges to act on the provided office."); }
 
         Office officeToReturn = userOffice;
-        if (!userOffice.identifiedBy(officeId)) {
+        if (!userOffice.getId().equals(officeId)) {
             officeToReturn = this.officeRepositoryWrapper.findOfficeHierarchy(officeId);
         }
 

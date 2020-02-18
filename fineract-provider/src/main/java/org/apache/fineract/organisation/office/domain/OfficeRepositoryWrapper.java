@@ -44,7 +44,7 @@ public class OfficeRepositoryWrapper {
     public Office findOfficeHierarchy(final Long id) {
         final Office office = this.repository.findById(id)
                 .orElseThrow(() -> new OfficeNotFoundException(id));
-        office.loadLazyCollections();
+        office.getChildren().size();
         return office ;
         
     }

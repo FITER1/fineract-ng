@@ -95,22 +95,21 @@ public class ProvisioningCriteriaAssembler {
         for (LoanProduct loanProduct : loanProducts) {
             mapping.add(new LoanProductProvisionCriteria(provisioningCriteria, loanProduct));
         }
-        provisioningCriteria.setProvisioningCriteriaDefinitions(criteriaDefinitions);
-        provisioningCriteria.setLoanProductProvisioningCriteria(mapping);
+        provisioningCriteria.setProvisioningCriteriaDefinition(criteriaDefinitions);
+        provisioningCriteria.setLoanProductMapping(mapping);
         return provisioningCriteria;
     }
 
     private ProvisioningCriteria createCriteria(final JsonElement jsonElement) {
         final String criteriaName = this.fromApiJsonHelper.extractStringNamed(ProvisioningCriteriaConstants.JSON_CRITERIANAME_PARAM, jsonElement);
-        AppUser modifiedBy = null;
-        DateTime modifiedOn = null;
-        ProvisioningCriteria criteria = new ProvisioningCriteria(criteriaName, platformSecurityContext.authenticatedUser(), new DateTime(),
-                modifiedBy, modifiedOn);
-        return criteria;
+        return ProvisioningCriteria.builder()
+            .criteriaName(criteriaName)
+            .createdBy(platformSecurityContext.authenticatedUser())
+            .createdDate(DateTime.now().toDate())
+            .build();
     }
 
-    private ProvisioningCriteriaDefinition createProvisioningCriteriaDefinitions(JsonObject jsonObject, Locale locale,
-            ProvisioningCriteria criteria) {
+    private ProvisioningCriteriaDefinition createProvisioningCriteriaDefinitions(JsonObject jsonObject, Locale locale, ProvisioningCriteria criteria) {
         Long categoryId = this.fromApiJsonHelper.extractLongNamed(ProvisioningCriteriaConstants.JSON_CATEOGRYID_PARAM, jsonObject);
         Long minimumAge = this.fromApiJsonHelper.extractLongNamed(ProvisioningCriteriaConstants.JSON_MINIMUM_AGE_PARAM, jsonObject);
         Long maximumAge = this.fromApiJsonHelper.extractLongNamed(ProvisioningCriteriaConstants.JSON_MAXIMUM_AGE_PARAM, jsonObject);
@@ -122,7 +121,14 @@ public class ProvisioningCriteriaAssembler {
         ProvisioningCategory provisioningCategory = provisioningCategoryRepository.findById(categoryId).orElse(null);
         GLAccount liabilityAccount = glAccountRepository.findById(liabilityAccountId).orElse(null);
         GLAccount expenseAccount = glAccountRepository.findById(expenseAccountId).orElse(null);
-        return ProvisioningCriteriaDefinition.newPrivisioningCriteria(criteria, provisioningCategory, minimumAge, maximumAge,
-                provisioningpercentage, liabilityAccount, expenseAccount);
+        return ProvisioningCriteriaDefinition.builder()
+            .criteria(criteria)
+            .provisioningCategory(provisioningCategory)
+            .minimumAge(minimumAge)
+            .maximumAge(maximumAge)
+            .provisioningPercentage(provisioningpercentage)
+            .liabilityAccount(liabilityAccount)
+            .expenseAccount(expenseAccount)
+            .build();
     }
 }

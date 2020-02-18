@@ -18,11 +18,21 @@
  */
 package org.apache.fineract.spm.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 import javax.persistence.*;
 import java.util.List;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_survey_questions")
 public class Question extends AbstractPersistableCustom<Long> {
@@ -49,64 +59,4 @@ public class Question extends AbstractPersistableCustom<Long> {
 
     @Column(name = "sequence_no", precision = 4)
     private Integer sequenceNo;
-
-    public Question() {
-        super();
-    }
-
-    public Survey getSurvey() {
-        return survey;
-    }
-
-    public void setSurvey(Survey survey) {
-        this.survey = survey;
-    }
-
-    public List<Response> getResponses() {
-        return responses;
-    }
-
-    public void setResponses(List<Response> responses) {
-        this.responses = responses;
-    }
-
-    public String getComponentKey() {
-        return componentKey;
-    }
-
-    public void setComponentKey(String componentKey) {
-        this.componentKey = componentKey;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getSequenceNo() {
-        return sequenceNo;
-    }
-
-    public void setSequenceNo(Integer sequenceNo) {
-        this.sequenceNo = sequenceNo;
-    }
 }

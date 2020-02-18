@@ -376,7 +376,14 @@ public class LoanProductData {
         final String name = null;
         final String shortName = null;
         final String description = null;
-        final CurrencyData currency = CurrencyData.blank();
+        final CurrencyData currency = CurrencyData.builder()
+            .code("")
+            .name("")
+            .decimalPlaces(0)
+            .inMultiplesOf(0)
+            .displaySymbol("")
+            .nameCode("")
+            .build();
         final BigDecimal principal = null;
         final BigDecimal minPrincipal = null;
         final BigDecimal maxPrincipal = null;
@@ -478,7 +485,14 @@ public class LoanProductData {
             final boolean isFloatingInterestRateCalculationAllowed) {
         final String shortName = null;
         final String description = null;
-        final CurrencyData currency = CurrencyData.blank();
+        final CurrencyData currency = CurrencyData.builder()
+            .code("")
+            .name("")
+            .decimalPlaces(0)
+            .inMultiplesOf(0)
+            .displaySymbol("")
+            .nameCode("")
+            .build();
         final BigDecimal principal = null;
         final BigDecimal minPrincipal = null;
         final BigDecimal maxPrincipal = null;

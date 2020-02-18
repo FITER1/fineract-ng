@@ -31,11 +31,13 @@ import org.apache.fineract.organisation.staff.domain.Staff;
 import org.apache.fineract.organisation.staff.domain.StaffRepository;
 import org.apache.fineract.organisation.staff.exception.StaffNotFoundException;
 import org.apache.fineract.organisation.staff.serialization.StaffCommandFromApiJsonDeserializer;
+import org.joda.time.LocalDate;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.PersistenceException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Slf4j
@@ -57,7 +59,7 @@ public class StaffWritePlatformServiceJpaRepositoryImpl implements StaffWritePla
             final Long officeId = command.longValueOfParameterNamed("officeId");
 
             final Office staffOffice = this.officeRepositoryWrapper.findOneWithNotFoundDetection(officeId);
-            final Staff staff = Staff.fromJson(staffOffice, command);
+            final Staff staff = fromJson(staffOffice, command);
 
             this.staffRepository.save(staff);
 
@@ -84,12 +86,12 @@ public class StaffWritePlatformServiceJpaRepositoryImpl implements StaffWritePla
 
             final Staff staffForUpdate = this.staffRepository.findById(staffId)
                     .orElseThrow(() -> new StaffNotFoundException(staffId));
-            final Map<String, Object> changesOnly = staffForUpdate.update(command);
+            final Map<String, Object> changesOnly = update(staffForUpdate, command);
 
             if (changesOnly.containsKey("officeId")) {
                 final Long officeId = (Long) changesOnly.get("officeId");
                 final Office newOffice = this.officeRepositoryWrapper.findOneWithNotFoundDetection(officeId);
-                staffForUpdate.changeOffice(newOffice);
+                staffForUpdate.setOffice(newOffice);
             }
 
             if (!changesOnly.isEmpty()) {
@@ -105,6 +107,125 @@ public class StaffWritePlatformServiceJpaRepositoryImpl implements StaffWritePla
         	Throwable throwable = ExceptionUtils.getRootCause(dve.getCause()) ;
         	handleStaffDataIntegrityIssues(command, throwable, dve);
         	return new CommandProcessingResult();
+        }
+    }
+
+    private Staff fromJson(final Office staffOffice, final JsonCommand command) {
+
+        final String firstnameParamName = "firstname";
+        final String firstname = command.stringValueOfParameterNamed(firstnameParamName);
+
+        final String lastnameParamName = "lastname";
+        final String lastname = command.stringValueOfParameterNamed(lastnameParamName);
+
+        final String externalIdParamName = "externalId";
+        final String externalId = command.stringValueOfParameterNamedAllowingNull(externalIdParamName);
+
+        final String mobileNoParamName = "mobileNo";
+        final String mobileNo = command.stringValueOfParameterNamedAllowingNull(mobileNoParamName);
+
+        final String isLoanOfficerParamName = "isLoanOfficer";
+        final boolean isLoanOfficer = command.booleanPrimitiveValueOfParameterNamed(isLoanOfficerParamName);
+
+        final String isActiveParamName = "isActive";
+        final Boolean isActive = command.booleanObjectValueOfParameterNamed(isActiveParamName);
+
+        LocalDate joiningDate = null;
+
+        final String joiningDateParamName = "joiningDate";
+        if (command.hasParameter(joiningDateParamName)) {
+            joiningDate = command.localDateValueOfParameterNamed(joiningDateParamName);
+        }
+
+        return Staff.builder()
+            .office(staffOffice)
+            .firstname(firstname)
+            .lastname(lastname)
+            .externalId(externalId)
+            .mobileNo(mobileNo)
+            .loanOfficer(isLoanOfficer)
+            .active(isActive)
+            .joiningDate(joiningDate==null ? null : joiningDate.toDate())
+            .displayName(deriveDisplayName(firstname, lastname))
+            .build();
+    }
+
+    private Map<String, Object> update(final Staff staff, final JsonCommand command) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>();
+
+        final String officeIdParamName = "officeId";
+        if (command.isChangeInLongParameterNamed(officeIdParamName, staff.getOffice().getId())) {
+            final Long newValue = command.longValueOfParameterNamed(officeIdParamName);
+            actualChanges.put(officeIdParamName, newValue);
+        }
+
+        boolean firstnameChanged = false;
+        final String firstnameParamName = "firstname";
+        if (command.isChangeInStringParameterNamed(firstnameParamName, staff.getFirstname())) {
+            final String newValue = command.stringValueOfParameterNamed(firstnameParamName);
+            actualChanges.put(firstnameParamName, newValue);
+            staff.setFirstname(newValue);
+            firstnameChanged = true;
+        }
+
+        boolean lastnameChanged = false;
+        final String lastnameParamName = "lastname";
+        if (command.isChangeInStringParameterNamed(lastnameParamName, staff.getLastname())) {
+            final String newValue = command.stringValueOfParameterNamed(lastnameParamName);
+            actualChanges.put(lastnameParamName, newValue);
+            staff.setLastname(newValue);
+            lastnameChanged = true;
+        }
+
+        if (firstnameChanged || lastnameChanged) {
+            staff.setDisplayName(deriveDisplayName(staff.getFirstname(), staff.getLastname()));
+        }
+
+        final String externalIdParamName = "externalId";
+        if (command.isChangeInStringParameterNamed(externalIdParamName, staff.getExternalId())) {
+            final String newValue = command.stringValueOfParameterNamed(externalIdParamName);
+            actualChanges.put(externalIdParamName, newValue);
+            staff.setExternalId(newValue);
+        }
+
+        final String mobileNoParamName = "mobileNo";
+        if (command.isChangeInStringParameterNamed(mobileNoParamName, staff.getMobileNo())) {
+            final String newValue = command.stringValueOfParameterNamed(mobileNoParamName);
+            actualChanges.put(mobileNoParamName, newValue);
+            staff.setMobileNo(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        final String isLoanOfficerParamName = "isLoanOfficer";
+        if (command.isChangeInBooleanParameterNamed(isLoanOfficerParamName, staff.isLoanOfficer())) {
+            final boolean newValue = command.booleanPrimitiveValueOfParameterNamed(isLoanOfficerParamName);
+            actualChanges.put(isLoanOfficerParamName, newValue);
+            staff.setLoanOfficer(newValue);
+        }
+
+        final String isActiveParamName = "isActive";
+        if (command.isChangeInBooleanParameterNamed(isActiveParamName, staff.isActive())) {
+            final boolean newValue = command.booleanPrimitiveValueOfParameterNamed(isActiveParamName);
+            actualChanges.put(isActiveParamName, newValue);
+            staff.setActive(newValue);
+        }
+
+        final String joiningDateParamName = "joiningDate";
+        if (command.isChangeInDateParameterNamed(joiningDateParamName, staff.getJoiningDate())) {
+            final String valueAsInput = command.stringValueOfParameterNamed(joiningDateParamName);
+            actualChanges.put(joiningDateParamName, valueAsInput);
+            final LocalDate newValue = command.localDateValueOfParameterNamed(joiningDateParamName);
+            staff.setJoiningDate(newValue.toDate());
+        }
+
+        return actualChanges;
+    }
+
+    private static String deriveDisplayName(String firstname, String lastname) {
+        if (!StringUtils.isBlank(firstname)) {
+            return lastname + ", " + firstname;
+        } else {
+            return lastname;
         }
     }
 

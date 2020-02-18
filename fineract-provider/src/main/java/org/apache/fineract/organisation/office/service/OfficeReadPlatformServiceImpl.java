@@ -73,7 +73,16 @@ public class OfficeReadPlatformServiceImpl implements OfficeReadPlatformService 
             final Long parentId = JdbcSupport.getLong(rs, "parentId");
             final String parentName = rs.getString("parentName");
 
-            return new OfficeData(id, name, nameDecorated, externalId, openingDate, hierarchy, parentId, parentName, null);
+            return OfficeData.builder()
+                .id(id)
+                .name(name)
+                .nameDecorated(nameDecorated)
+                .externalId(externalId)
+                .openingDate(openingDate)
+                .hierarchy(hierarchy)
+                .parentId(parentId)
+                .parentName(parentName)
+                .build();
         }
     }
 
@@ -90,7 +99,11 @@ public class OfficeReadPlatformServiceImpl implements OfficeReadPlatformService 
             final String name = rs.getString("name");
             final String nameDecorated = rs.getString("nameDecorated");
 
-            return OfficeData.dropdown(id, name, nameDecorated);
+            return OfficeData.builder()
+                .id(id)
+                .name(name)
+                .nameDecorated(nameDecorated)
+                .build();
         }
     }
 
@@ -129,8 +142,17 @@ public class OfficeReadPlatformServiceImpl implements OfficeReadPlatformService 
             final BigDecimal transactionAmount = rs.getBigDecimal("transactionAmount");
             final String description = rs.getString("description");
 
-            return OfficeTransactionData.instance(id, transactionDate, fromOfficeId, fromOfficeName, toOfficeId, toOfficeName,
-                    currencyData, transactionAmount, description);
+            return OfficeTransactionData.builder()
+                .id(id)
+                .transactionDate(transactionDate)
+                .fromOfficeId(fromOfficeId)
+                .fromOfficeName(fromOfficeName)
+                .toOfficeId(toOfficeId)
+                .toOfficeName(toOfficeName)
+                .currency(currencyData)
+                .transactionAmount(transactionAmount)
+                .description(description)
+                .build();
         }
     }
 
@@ -202,7 +224,9 @@ public class OfficeReadPlatformServiceImpl implements OfficeReadPlatformService 
 
         this.context.authenticatedUser();
 
-        return OfficeData.template(null, new LocalDate());
+        return OfficeData.builder()
+            .openingDate(new LocalDate())
+            .build();
     }
 
     @Override
@@ -215,7 +239,7 @@ public class OfficeReadPlatformServiceImpl implements OfficeReadPlatformService 
             final Collection<OfficeData> parentLookups = retrieveAllOfficesForDropdown();
 
             for (final OfficeData office : parentLookups) {
-                if (!office.hasIdentifyOf(officeId)) {
+                if (!office.getId().equals(officeId)) {
                     filterParentLookups.add(office);
                 }
             }
@@ -250,7 +274,11 @@ public class OfficeReadPlatformServiceImpl implements OfficeReadPlatformService 
         final Collection<OfficeData> parentLookups = retrieveAllOfficesForDropdown();
         final Collection<CurrencyData> currencyOptions = this.currencyReadPlatformService.retrieveAllowedCurrencies();
 
-        return OfficeTransactionData.template(new LocalDate(), parentLookups, currencyOptions);
+        return OfficeTransactionData.builder()
+            .transactionDate(new LocalDate())
+            .allowedOffices(parentLookups)
+            .currencyOptions(currencyOptions)
+            .build();
     }
 
     public PlatformSecurityContext getContext() {

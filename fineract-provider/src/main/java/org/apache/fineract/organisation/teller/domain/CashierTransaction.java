@@ -19,18 +19,17 @@
 package org.apache.fineract.organisation.teller.domain;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.office.domain.Office;
-import org.joda.time.LocalDate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @SuperBuilder
 @Data
@@ -76,85 +75,4 @@ public class CashierTransaction extends AbstractPersistableCustom<Long> {
     
     @Column(name = "currency_code", nullable = true)
     private String currencyCode;
-
-    public static CashierTransaction fromJson(
-    		final Cashier cashier,
-    		final JsonCommand command) {
-        final Integer txnType = command.integerValueOfParameterNamed("txnType");
-        final BigDecimal txnAmount = command.bigDecimalValueOfParameterNamed("txnAmount");
-        final LocalDate txnDate = command.localDateValueOfParameterNamed("txnDate");
-        final String entityType = command.stringValueOfParameterNamed("entityType");
-        final String txnNote = command.stringValueOfParameterNamed("txnNote");
-        final Long entityId = command.longValueOfParameterNamed("entityId");
-        final String currencyCode = command.stringValueOfParameterNamed("currencyCode");
-
-        // TODO: get client/loan/savings details
-        return CashierTransaction.builder()
-            .cashier(cashier)
-            .txnType(txnType)
-            .txnAmount(txnAmount)
-            .txnDate(txnDate==null ? null : txnDate.toDate())
-            .entityType(entityType)
-            .entityId(entityId)
-            .txnNote(txnNote)
-            .currencyCode(currencyCode)
-            .build();
-    }
-    
-    public Map<String, Object> update(final JsonCommand command) {
-
-        final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
-
-        final String dateFormatAsInput = command.dateFormat();
-        final String localeAsInput = command.locale();        
-      
-        final String txnTypeParamName = "txnType";
-        if (command.isChangeInIntegerParameterNamed(txnTypeParamName, this.txnType)) {
-            final Integer newValue = command.integerValueOfParameterNamed(txnTypeParamName);
-            actualChanges.put(txnTypeParamName, newValue);
-            this.txnType = newValue;
-        }
-
-        final String txnDateParamName = "txnDate";
-        if (command.isChangeInLocalDateParameterNamed(txnDateParamName, getTxnLocalDate())) {
-            final String valueAsInput = command.stringValueOfParameterNamed(txnDateParamName);
-            actualChanges.put(txnDateParamName, valueAsInput);
-            actualChanges.put("dateFormat", dateFormatAsInput);
-            actualChanges.put("locale", localeAsInput);
-
-            final LocalDate newValue = command.localDateValueOfParameterNamed(txnDateParamName);
-            this.txnDate = newValue.toDate();
-        }
-        
-        final String txnAmountParamName = "txnAmount";
-        if (command.isChangeInBigDecimalParameterNamed(txnAmountParamName, this.txnAmount)) {
-            final BigDecimal newValue = command.bigDecimalValueOfParameterNamed(txnAmountParamName);
-            actualChanges.put(txnAmountParamName, newValue);
-            this.txnAmount = newValue;
-        }
-        
-        final String txnNoteParamName = "txnNote";
-        if (command.isChangeInStringParameterNamed(txnNoteParamName, this.txnNote)) {
-            final String newValue = command.stringValueOfParameterNamed(txnNoteParamName);
-            actualChanges.put(txnNoteParamName, newValue);
-            this.txnNote = newValue;
-        }
-        
-        final String currencyCodeParamName = "currencyCode";
-        if (command.isChangeInStringParameterNamed(currencyCodeParamName, this.currencyCode)) {
-            final String newValue = command.stringValueOfParameterNamed(currencyCodeParamName);
-            actualChanges.put(currencyCodeParamName, newValue);
-            this.currencyCode = newValue;
-        }
-                
-        return actualChanges;
-    }
-
-    private LocalDate getTxnLocalDate() {
-        LocalDate txnLocalDate = null;
-        if (this.txnDate != null) {
-            txnLocalDate = LocalDate.fromDateFields(this.txnDate);
-        }
-        return txnLocalDate;
-    }
 }

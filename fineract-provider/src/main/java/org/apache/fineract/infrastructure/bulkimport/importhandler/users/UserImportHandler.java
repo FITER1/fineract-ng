@@ -90,9 +90,18 @@ public class UserImportHandler implements ImportHandler{
             if (!rolesIds.contains(roleId))
              rolesIds.add(roleId);
         }
-        return AppUserData.importInstance(officeId,staffId,userName,firstName,lastName,email,
-                autoGenPw,overridepw,rolesIds,row.getRowNum());
-
+        return AppUserData.builder()
+            .officeId(officeId)
+            .staffId(staffId)
+            .username(userName)
+            .firstname(firstName)
+            .lastname(lastName)
+            .email(email)
+            .sendPasswordToEmail(autoGenPw)
+            .passwordNeverExpires(overridepw)
+            .roles(rolesIds)
+            .rowIndex(row.getRowNum())
+            .build();
     }
 
     public Count importEntity(String dateFormat) {

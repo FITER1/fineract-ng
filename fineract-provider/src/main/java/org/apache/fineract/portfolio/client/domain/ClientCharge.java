@@ -238,7 +238,11 @@ public class ClientCharge extends AbstractPersistableCustom<Long> {
     }
 
     public MonetaryCurrency getCurrency() {
-        return this.currency.toMonetaryCurrency();
+        return MonetaryCurrency.builder()
+            .code(this.currency.getCode())
+            .digitsAfterDecimal(this.currency.getDecimalPlaces())
+            .inMultiplesOf(this.currency.getInMultiplesOf())
+            .build();
     }
 
     public Money getAmount() {

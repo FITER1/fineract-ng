@@ -75,7 +75,16 @@ public class HolidayReadPlatformServiceImpl implements HolidayReadPlatformServic
             final Integer reschedulingType = JdbcSupport.getInteger(rs, "reschedulingType");
             final EnumOptionData status = HolidayEnumerations.holidayStatusType(statusEnum);
 
-            return new HolidayData(id, name, description, fromDate, toDate, repaymentsScheduleTO, status, reschedulingType);
+            return HolidayData.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .fromDate(fromDate)
+                .toDate(toDate)
+                .repaymentsRescheduledTo(repaymentsScheduleTO)
+                .status(status)
+                .reschedulingType(reschedulingType)
+                .build();
         }
 
     }

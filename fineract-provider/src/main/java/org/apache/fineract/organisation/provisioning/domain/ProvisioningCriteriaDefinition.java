@@ -18,7 +18,10 @@
  */
 package org.apache.fineract.organisation.provisioning.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
@@ -26,7 +29,7 @@ import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import javax.persistence.*;
 import java.math.BigDecimal;
 
-@SuperBuilder
+@SuperBuilder(toBuilder = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -60,29 +63,6 @@ public class ProvisioningCriteriaDefinition extends AbstractPersistableCustom<Lo
     @JoinColumn(name = "expense_account", nullable = false)
     private GLAccount expenseAccount;
 
-    public static ProvisioningCriteriaDefinition newPrivisioningCriteria(ProvisioningCriteria criteria,
-            ProvisioningCategory provisioningCategory, Long minimumAge, Long maximumAge, BigDecimal provisioningPercentage,
-            GLAccount liabilityAccount, GLAccount expenseAccount) {
-
-        return ProvisioningCriteriaDefinition.builder()
-            .criteria(criteria)
-            .provisioningCategory(provisioningCategory)
-            .minimumAge(minimumAge)
-            .maximumAge(maximumAge)
-            .provisioningPercentage(provisioningPercentage)
-            .liabilityAccount(liabilityAccount)
-            .expenseAccount(expenseAccount)
-            .build();
-    }
-    
-    public void update(Long minAge, Long maxAge, BigDecimal percentage, GLAccount lia, GLAccount exp) {
-        this.minimumAge = minAge ;
-        this.maximumAge = maxAge ;
-        this.provisioningPercentage = percentage ;
-        this.liabilityAccount = lia ;
-        this.expenseAccount = exp ;
-    }
-    
     public boolean isOverlapping(ProvisioningCriteriaDefinition def) {
         return this.minimumAge <= def.maximumAge && def.minimumAge <= this.maximumAge;
     }

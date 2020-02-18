@@ -83,7 +83,7 @@ public class PermissionWritePlatformServiceJpaRepositoryImpl implements Permissi
 
         if (allPermissions != null) {
             for (final Permission permission : allPermissions) {
-                if (permission.hasCode(permissionCode)) { return permission; }
+                if (permission.getCode().equalsIgnoreCase(permissionCode)) { return permission; }
             }
         }
 

@@ -238,12 +238,12 @@ public class GroupsWorkbookPopulator extends AbstractWorkbookPopulator {
     		Name centerName=centerWorkbook.createName();
 
     		 if(officeNameToBeginEndIndexesOfStaff != null) {
-    	        loanOfficerName.setNameName("Staff_" + offices.get(i).name().trim().replaceAll("[ )(]", "_"));
+    	        loanOfficerName.setNameName("Staff_" + offices.get(i).getName().trim().replaceAll("[ )(]", "_"));
     	        loanOfficerName.setRefersToFormula(TemplatePopulateImportConstants.STAFF_SHEET_NAME+
 						"!$B$" + officeNameToBeginEndIndexesOfStaff[0] + ":$B$" + officeNameToBeginEndIndexesOfStaff[1]);
     		 }
     		 if (officeNameToBeginEndIndexesOfCenters!=null) {
-    			 centerName.setNameName("Center_" + offices.get(i).name().trim().replaceAll("[ )(]", "_"));
+    			 centerName.setNameName("Center_" + offices.get(i).getName().trim().replaceAll("[ )(]", "_"));
     			 centerName.setRefersToFormula(TemplatePopulateImportConstants.CENTER_SHEET_NAME+
 						 "!$B$" + officeNameToBeginEndIndexesOfCenters[0] + ":$B$" + officeNameToBeginEndIndexesOfCenters[1]);
 			}

@@ -26,12 +26,15 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.organisation.workingdays.api.WorkingDaysApiConstants;
 import org.apache.fineract.organisation.workingdays.data.WorkingDayValidator;
+import org.apache.fineract.organisation.workingdays.domain.RepaymentRescheduleType;
 import org.apache.fineract.organisation.workingdays.domain.WorkingDays;
+import org.apache.fineract.organisation.workingdays.domain.WorkingDaysEnumerations;
 import org.apache.fineract.organisation.workingdays.domain.WorkingDaysRepositoryWrapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Service
@@ -54,7 +57,7 @@ public class WorkingDaysWritePlatformServiceJpaRepositoryImpl implements Working
             rrule = new RRule(recurrence);
             rrule.validate();
 
-            Map<String, Object> changes = workingDays.update(command);
+            Map<String, Object> changes = update(workingDays, command);
             this.daysRepositoryWrapper.saveAndFlush(workingDays);
             return CommandProcessingResult.builder().commandId(command.commandId()).resourceId(workingDays.getId()).changes(changes)
                     .build();
@@ -67,4 +70,35 @@ public class WorkingDaysWritePlatformServiceJpaRepositoryImpl implements Working
         }
     }
 
+    private Map<String, Object> update(final WorkingDays workingDays, final JsonCommand command) {
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
+
+        final String recurrenceParamName = "recurrence";
+        if (command.isChangeInStringParameterNamed(recurrenceParamName, workingDays.getRecurrence())) {
+            final String newValue = command.stringValueOfParameterNamed(recurrenceParamName);
+            actualChanges.put(recurrenceParamName, newValue);
+            workingDays.setRecurrence(newValue);
+        }
+
+        final String repaymentRescheduleTypeParamName = "repaymentRescheduleType";
+        if (command.isChangeInIntegerParameterNamed(repaymentRescheduleTypeParamName, workingDays.getRepaymentReschedulingType())) {
+            final Integer newValue =command.integerValueOfParameterNamed(repaymentRescheduleTypeParamName);
+            actualChanges.put(repaymentRescheduleTypeParamName,  WorkingDaysEnumerations.workingDaysStatusType(newValue));
+            workingDays.setRepaymentReschedulingType(RepaymentRescheduleType.fromInt(newValue).getValue());
+        }
+
+        if(command.isChangeInBooleanParameterNamed(WorkingDaysApiConstants.extendTermForDailyRepayments, workingDays.getExtendTermForDailyRepayments())){
+            final Boolean newValue = command.booleanPrimitiveValueOfParameterNamed(WorkingDaysApiConstants.extendTermForDailyRepayments);
+            actualChanges.put(WorkingDaysApiConstants.extendTermForDailyRepayments, newValue);
+            workingDays.setExtendTermForDailyRepayments(newValue);
+        }
+
+        if (command.isChangeInBooleanParameterNamed(WorkingDaysApiConstants.extendTermForRepaymentsOnHolidays, workingDays.getExtendTermForRepaymentsOnHolidays())) {
+            final Boolean newValue = command.booleanPrimitiveValueOfParameterNamed(WorkingDaysApiConstants.extendTermForRepaymentsOnHolidays);
+            actualChanges.put(WorkingDaysApiConstants.extendTermForRepaymentsOnHolidays, newValue);
+            workingDays.setExtendTermForRepaymentsOnHolidays(newValue);
+        }
+
+        return actualChanges;
+    }
 }

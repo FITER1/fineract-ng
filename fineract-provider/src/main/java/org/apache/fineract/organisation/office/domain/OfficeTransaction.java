@@ -59,18 +59,4 @@ public class OfficeTransaction extends AbstractPersistableCustom<Long> {
 
     @Column(name = "description", nullable = true, length = 100)
     private String description;
-
-    public static OfficeTransaction fromJson(final Office fromOffice, final Office toOffice, final Money amount, final JsonCommand command) {
-
-        final LocalDate transactionLocalDate = command.localDateValueOfParameterNamed("transactionDate");
-        final String description = command.stringValueOfParameterNamed("description");
-
-        return OfficeTransaction.builder()
-            .from(fromOffice)
-            .to(toOffice)
-            .transactionDate(transactionLocalDate.toDate())
-            .transactionAmount(amount.getAmount())
-            .description(description)
-            .build();
-    }
 }

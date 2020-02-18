@@ -44,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.PersistenceException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Slf4j
@@ -67,7 +68,7 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
 
             this.roleCommandFromApiJsonDeserializer.validateForCreate(command.json());
 
-            final Role entity = Role.fromJson(command);
+            final Role entity = fromJson(command);
             this.roleRepository.save(entity);
             
             this.topicDomainService.createTopic(entity);
@@ -85,6 +86,15 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
                     .commandId(command.commandId()) //
                     .build();
         }
+    }
+
+    private Role fromJson(final JsonCommand command) {
+        final String name = command.stringValueOfParameterNamed("name");
+        final String description = command.stringValueOfParameterNamed("description");
+        return Role.builder()
+            .name(name)
+            .description(description)
+            .build();
     }
 
     /*
@@ -117,7 +127,7 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
             final Role role = this.roleRepository.findById(roleId).orElseThrow(() -> new RoleNotFoundException(roleId));
 
             String previousRoleName = role.getName();
-            final Map<String, Object> changes = role.update(command);
+            final Map<String, Object> changes = update(role, command);
             if (!changes.isEmpty()) {
                 this.roleRepository.saveAndFlush(role);
                 if (changes.containsKey("name")) {
@@ -163,7 +173,7 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
             final boolean isSelected = commandPermissions.get(permissionCode).booleanValue();
 
             final Permission permission = findPermissionByCode(allPermissions, permissionCode);
-            final boolean changed = role.updatePermission(permission, isSelected);
+            final boolean changed = isSelected ? role.getPermissions().add(permission) : role.getPermissions().remove(permission);
             if (changed) {
                 changedPermissions.put(permissionCode, isSelected);
             }
@@ -185,7 +195,7 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
 
         if (allPermissions != null) {
             for (final Permission permission : allPermissions) {
-                if (permission.hasCode(permissionCode)) { return permission; }
+                if (permission.getCode().equalsIgnoreCase(permissionCode)) { return permission; }
             }
         }
         throw new PermissionNotFoundException(permissionCode);
@@ -242,7 +252,7 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
             /**
              * Disabling the role
              */
-            role.disableRole();
+            role.setDisabled(true);
             this.roleRepository.save(role);
             return CommandProcessingResult.builder().resourceId(roleId).build();
 
@@ -266,7 +276,7 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
                     .orElseThrow(() -> new RoleNotFoundException(roleId));
             //if(!role.isEnabled()){throw new RoleNotFoundException(roleId);}
             
-            role.enableRole();
+            role.setDisabled(false);
             this.roleRepository.save(role);
             return CommandProcessingResult.builder().resourceId(roleId).build();
 
@@ -274,5 +284,26 @@ public class RoleWritePlatformServiceJpaRepositoryImpl implements RoleWritePlatf
             throw new PlatformDataIntegrityException("error.msg.unknown.data.integrity.issue",
                     "Unknown data integrity issue with resource: " + e.getMostSpecificCause());
         }
+    }
+
+    private Map<String, Object> update(final Role role, final JsonCommand command) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>();
+
+        final String nameParamName = "name";
+        if (command.isChangeInStringParameterNamed(nameParamName, role.getName())) {
+            final String newValue = command.stringValueOfParameterNamed(nameParamName);
+            actualChanges.put(nameParamName, newValue);
+            role.setName(newValue);
+        }
+
+        final String descriptionParamName = "description";
+        if (command.isChangeInStringParameterNamed(descriptionParamName, role.getDescription())) {
+            final String newValue = command.stringValueOfParameterNamed(descriptionParamName);
+            actualChanges.put(descriptionParamName, newValue);
+            role.setDescription(newValue);
+        }
+
+        return actualChanges;
     }
 }

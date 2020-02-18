@@ -16,25 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.organisation.holiday.data;
+package org.apache.fineract.organisation.staff.data;
 
 import lombok.*;
-import org.apache.fineract.infrastructure.core.data.EnumOptionData;
-import org.joda.time.LocalDate;
+import org.apache.fineract.portfolio.accountdetails.data.LoanAccountSummaryData;
+
+import java.util.Collection;
 
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class HolidayData {
+public final class LoanAccountSummary {
     private Long id;
-    private String name;
-    private String description;
-    private LocalDate fromDate;
-    private LocalDate toDate;
-    private LocalDate repaymentsRescheduledTo;
-    private Long officeId;
-    private EnumOptionData status;
-    private Integer reschedulingType;
+    private String displayName;
+    private Collection<LoanAccountSummaryData> loans;
 }

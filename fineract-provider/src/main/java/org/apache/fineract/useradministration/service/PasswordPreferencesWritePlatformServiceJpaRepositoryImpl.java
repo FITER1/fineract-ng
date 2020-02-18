@@ -64,7 +64,7 @@ public class PasswordPreferencesWritePlatformServiceJpaRepositoryImpl implements
                         changes = policy.activate();
                     }
                 } else if (policy.isActive() && !policy.getId().equals(validationPolicyId)) {
-                    policy.deActivate();
+                    policy.setActive(false);
                 }
             }
 

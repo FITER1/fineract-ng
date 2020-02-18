@@ -76,8 +76,19 @@ public class StaffReadPlatformServiceImpl implements StaffReadPlatformService {
             final boolean isActive = rs.getBoolean("isActive");
             final LocalDate joiningDate = JdbcSupport.getLocalDate(rs, "joiningDate");
 
-            return StaffData.instance(id, firstname, lastname, displayName, officeId, officeName, isLoanOfficer, externalId, mobileNo,
-                    isActive, joiningDate);
+            return StaffData.builder()
+                .id(id)
+                .firstname(firstname)
+                .lastname(lastname)
+                .displayName(displayName)
+                .officeId(officeId)
+                .officeName(officeName)
+                .loanOfficer(isLoanOfficer)
+                .externalId(externalId)
+                .mobileNo(mobileNo)
+                .active(isActive)
+                .joiningDate(joiningDate)
+                .build();
         }
     }
 
@@ -119,8 +130,19 @@ public class StaffReadPlatformServiceImpl implements StaffReadPlatformService {
             final boolean isActive = rs.getBoolean("isActive");
             final LocalDate joiningDate = JdbcSupport.getLocalDate(rs, "joiningDate");
 
-            return StaffData.instance(id, firstname, lastname, displayName, officeId, officeName, isLoanOfficer, externalId, mobileNo,
-                    isActive, joiningDate);
+            return StaffData.builder()
+                .id(id)
+                .firstname(firstname)
+                .lastname(lastname)
+                .displayName(displayName)
+                .officeId(officeId)
+                .officeName(officeName)
+                .loanOfficer(isLoanOfficer)
+                .externalId(externalId)
+                .mobileNo(mobileNo)
+                .active(isActive)
+                .joiningDate(joiningDate)
+                .build();
         }
     }
 
@@ -147,7 +169,10 @@ public class StaffReadPlatformServiceImpl implements StaffReadPlatformService {
 
             final Long id = rs.getLong("id");
             final String displayName = rs.getString("displayName");
-            return StaffData.lookup(id, displayName);
+            return StaffData.builder()
+                .id(id)
+                .displayName(displayName)
+                .build();
         }
     }
 

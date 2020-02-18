@@ -72,8 +72,18 @@ public class OfficeImportHandler implements ImportHandler {
         Long parentId= ImportHandlerUtils.readAsLong(OfficeConstants.PARENT_OFFICE_ID_COL,row);
         LocalDate openedDate= ImportHandlerUtils.readAsDate(OfficeConstants.OPENED_ON_COL,row);
         String externalId= ImportHandlerUtils.readAsString(OfficeConstants.EXTERNAL_ID_COL,row);
-        OfficeData office = OfficeData.importInstance(officeName,parentId,openedDate,externalId);
-        office.setImportFields(row.getRowNum(), locale, dateFormat);
+        OfficeData office = OfficeData.builder()
+            .name(officeName)
+            .parentId(parentId)
+            .openingDate(openedDate)
+            .externalId(externalId)
+            .build();
+        office
+            .toBuilder()
+            .rowIndex(row.getRowNum())
+            .locale(locale)
+            .dateFormat(dateFormat)
+            .build();
         return office;
     }
 

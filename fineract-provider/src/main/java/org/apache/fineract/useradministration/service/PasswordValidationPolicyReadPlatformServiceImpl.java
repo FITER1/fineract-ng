@@ -65,7 +65,12 @@ public class PasswordValidationPolicyReadPlatformServiceImpl implements Password
             final String description = rs.getString("description");
             final String key = rs.getString("key");
 
-            return new PasswordValidationPolicyData(id, active, description, key);
+            return PasswordValidationPolicyData.builder()
+                .id(id)
+                .active(active)
+                .description(description)
+                .key(key)
+                .build();
         }
 
         public String schema() {

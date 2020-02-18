@@ -18,12 +18,22 @@
  */
 package org.apache.fineract.template.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+@SuperBuilder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_templatemappers")
 public class TemplateMapper extends AbstractPersistableCustom<Long> {
@@ -36,37 +46,4 @@ public class TemplateMapper extends AbstractPersistableCustom<Long> {
 
     @Column(name = "mappervalue")
     private String mappervalue;
-
-    protected TemplateMapper() {}
-
-    public TemplateMapper(final int mapperorder, final String mapperkey, final String mappervalue) {
-        this.mapperorder = mapperorder;
-        this.mapperkey = mapperkey;
-        this.mappervalue = mappervalue;
-    }
-
-    public String getMapperkey() {
-        return this.mapperkey;
-    }
-
-    public int getMapperorder() {
-        return this.mapperorder;
-    }
-
-    public void setMapperorder(final int mapperorder) {
-        this.mapperorder = mapperorder;
-    }
-
-    public void setMapperkey(final String mapperkey) {
-        this.mapperkey = mapperkey;
-    }
-
-    public String getMappervalue() {
-        return this.mappervalue;
-    }
-
-    public void setMappervalue(final String mappervalue) {
-        this.mappervalue = mappervalue;
-    }
-
 }

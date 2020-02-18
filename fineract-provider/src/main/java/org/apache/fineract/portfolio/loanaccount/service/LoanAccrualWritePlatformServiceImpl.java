@@ -21,6 +21,7 @@ package org.apache.fineract.portfolio.loanaccount.service;
 import lombok.RequiredArgsConstructor;
 import org.apache.fineract.accounting.journalentry.service.JournalEntryWritePlatformService;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
+import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrency;
 import org.apache.fineract.organisation.monetary.domain.ApplicationCurrencyRepositoryWrapper;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
@@ -142,7 +143,7 @@ public class LoanAccrualWritePlatformServiceImpl implements LoanAccrualWritePlat
             double iterest = interestPerDay * daysToBeAccrued;
             interestportion = BigDecimal.valueOf(iterest);
         }
-        interestportion = interestportion.setScale(accrualData.getCurrencyData().decimalPlaces(), MoneyHelper.getRoundingMode());
+        interestportion = interestportion.setScale(accrualData.getCurrencyData().getDecimalPlaces(), MoneyHelper.getRoundingMode());
 
         BigDecimal totalAccInterest = accrualData.getAccruedInterestIncome();
         BigDecimal totalAccPenalty = accrualData.getAccruedPenaltyIncome();
@@ -479,7 +480,14 @@ public class LoanAccrualWritePlatformServiceImpl implements LoanAccrualWritePlat
         final MonetaryCurrency currency = loan.getCurrency();
         final ApplicationCurrency applicationCurrency = this.applicationCurrencyRepository.findOneWithNotFoundDetection(currency);
         boolean isAccountTransfer = false;
-        final Map<String, Object> accountingBridgeData = loan.deriveAccountingBridgeData(applicationCurrency.toData(),
+        final Map<String, Object> accountingBridgeData = loan.deriveAccountingBridgeData(CurrencyData.builder()
+                .code(applicationCurrency.getCode())
+                .name(applicationCurrency.getName())
+                .decimalPlaces(applicationCurrency.getDecimalPlaces())
+                .inMultiplesOf(applicationCurrency.getInMultiplesOf())
+                .displaySymbol(applicationCurrency.getDisplaySymbol())
+                .nameCode(applicationCurrency.getNameCode())
+                .build(),
                 existingTransactionIds, existingReversedTransactionIds, isAccountTransfer);
         this.journalEntryWritePlatformService.createJournalEntriesForLoan(accountingBridgeData);
     }
