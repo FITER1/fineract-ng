@@ -35,7 +35,7 @@ public class ShareAccountTransaction extends AbstractPersistableCustom<Long> {
     private ShareAccount shareAccount;
 
     @Column(name = "transaction_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date transactionDate;
 
     @Column(name = "total_shares")

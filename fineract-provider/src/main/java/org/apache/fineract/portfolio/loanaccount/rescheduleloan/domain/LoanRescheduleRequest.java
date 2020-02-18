@@ -47,7 +47,7 @@ public class LoanRescheduleRequest extends AbstractPersistableCustom<Long> {
     @Column(name = "reschedule_from_installment")
     private Integer rescheduleFromInstallment;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "reschedule_from_date")
     private Date rescheduleFromDate;
 
@@ -61,7 +61,7 @@ public class LoanRescheduleRequest extends AbstractPersistableCustom<Long> {
     @Column(name = "reschedule_reason_comment")
     private String rescheduleReasonComment;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "submitted_on_date")
     private Date submittedOnDate;
 
@@ -69,7 +69,7 @@ public class LoanRescheduleRequest extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "submitted_by_user_id")
     private AppUser submittedByUser;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "approved_on_date")
     private Date approvedOnDate;
 	
@@ -77,7 +77,7 @@ public class LoanRescheduleRequest extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "approved_by_user_id")
     private AppUser approvedByUser;
 	
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "rejected_on_date")
     private Date rejectedOnDate;
 	

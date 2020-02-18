@@ -39,14 +39,14 @@ public class LoanTermVariations extends AbstractPersistableCustom<Long> {
     @Column(name = "term_type", nullable = false)
     private Integer termType;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "applicable_date", nullable = false)
     private Date termApplicableFrom;
 
     @Column(name = "decimal_value", scale = 6, precision = 19)
     private BigDecimal decimalValue;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "date_value")
     private Date dateValue;
 

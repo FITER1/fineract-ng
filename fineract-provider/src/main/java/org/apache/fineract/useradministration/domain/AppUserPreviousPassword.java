@@ -42,7 +42,7 @@ public class AppUserPreviousPassword extends AbstractPersistableCustom<Long> {
     private Long userId;
 
     @Column(name = "removal_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date removalDate;
 
     @Column(name = "password", nullable = false)

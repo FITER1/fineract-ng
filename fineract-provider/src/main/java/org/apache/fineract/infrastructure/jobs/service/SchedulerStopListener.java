@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.quartz.JobListener;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -40,7 +41,8 @@ public class SchedulerStopListener implements JobListener {
     // code base, the following fields are not final, and there is no
     // constructor, but setters.
 
-    private final JobRegisterService jobRegisterService;
+    // private final JobRegisterService jobRegisterService;
+    private final ApplicationContext applicationContext;
 
     @Override
     public String getName() {
@@ -61,13 +63,8 @@ public class SchedulerStopListener implements JobListener {
     public void jobWasExecuted(final JobExecutionContext context, @SuppressWarnings("unused") final JobExecutionException jobException) {
         final String schedulerName = context.getTrigger().getJobDataMap().getString(SchedulerServiceConstants.SCHEDULER_NAME);
         if (schedulerName != null) {
-            final Thread newThread = new Thread(new Runnable() {
-
-                @Override
-                public void run() {
-                    SchedulerStopListener.this.jobRegisterService.stopScheduler(schedulerName);
-                }
-            });
+            final JobRegisterService jobRegisterService = applicationContext.getBean(JobRegisterService.class);
+            final Thread newThread = new Thread(() -> jobRegisterService.stopScheduler(schedulerName));
             newThread.run();
         }
     }

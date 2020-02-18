@@ -40,11 +40,11 @@ public class ImportDocument extends AbstractPersistableCustom<Long>{
     @JoinColumn(name = "document_id")
     private Document document;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "import_time")
     private Date importTime;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_time")
     private Date endTime;
 

@@ -64,7 +64,7 @@ public class AccountTransferTransaction extends AbstractPersistableCustom<Long> 
     @Column(name = "is_reversed", nullable = false)
     private boolean reversed = false;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "transaction_date")
     private Date date;
 

@@ -42,11 +42,11 @@ public class LoanRepaymentScheduleHistory extends AbstractPersistableCustom<Long
     @Column(name = "installment", nullable = false)
     private Integer installmentNumber;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "fromdate")
     private Date fromDate;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "duedate", nullable = false)
     private Date dueDate;
 
@@ -62,7 +62,7 @@ public class LoanRepaymentScheduleHistory extends AbstractPersistableCustom<Long
     @Column(name = "penalty_charges_amount", scale = 6, precision = 19)
     private BigDecimal penaltyCharges;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "created_date")
     private Date createdOnDate;
 
@@ -74,7 +74,7 @@ public class LoanRepaymentScheduleHistory extends AbstractPersistableCustom<Long
     @JoinColumn(name = "lastmodifiedby_id")
     private AppUser lastModifiedByUser;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "lastmodified_date")
     private Date lastModifiedOnDate;
 

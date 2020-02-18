@@ -41,11 +41,11 @@ public class ReportMailingJobRunHistory extends AbstractPersistableCustom<Long> 
     private ReportMailingJob reportMailingJob;
     
     @Column(name = "start_datetime", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private Date startDateTime;
     
     @Column(name = "end_datetime", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private Date endDateTime;
     
     @Column(name = "status", nullable = false)

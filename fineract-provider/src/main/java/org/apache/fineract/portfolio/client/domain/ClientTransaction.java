@@ -63,7 +63,7 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
     @Column(name = "transaction_type_enum", nullable = false)
     private Integer typeOf;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "transaction_date", nullable = false)
     private Date dateOf;
 
@@ -76,7 +76,7 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
     @Column(name = "external_id", length = 100, unique = true)
     private String externalId;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date", nullable = false)
     private Date createdDate;
 

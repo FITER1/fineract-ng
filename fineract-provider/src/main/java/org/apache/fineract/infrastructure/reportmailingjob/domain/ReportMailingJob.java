@@ -54,7 +54,7 @@ public class ReportMailingJob extends AbstractAuditableCustom<AppUser, Long> {
     private String description;
     
     @Column(name = "start_datetime", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private DateTime startDateTime;
     
     @Column(name = "recurrence")
@@ -80,11 +80,11 @@ public class ReportMailingJob extends AbstractAuditableCustom<AppUser, Long> {
     private String stretchyReportParamMap;
     
     @Column(name = "previous_run_datetime")
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private DateTime previousRunDateTime;
 
     @Column(name = "next_run_datetime")
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private DateTime nextRunDateTime;
     
     @Column(name = "previous_run_status")

@@ -57,7 +57,7 @@ public class TaxComponent extends AbstractAuditableCustom<AppUser, Long> {
     private GLAccount creditAcount;
 
     @Column(name = "start_date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date startDate;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.EAGER)

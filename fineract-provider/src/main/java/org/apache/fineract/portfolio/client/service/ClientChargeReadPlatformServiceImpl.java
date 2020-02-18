@@ -49,7 +49,7 @@ public class ClientChargeReadPlatformServiceImpl implements ClientChargeReadPlat
     private final PaginationHelper<ClientChargeData> paginationHelper = new PaginationHelper<>();
     private final JdbcTemplate jdbcTemplate;
     private final PlatformSecurityContext context;
-    private final ClientChargeMapper clientChargeMapper;
+    private final ClientChargeMapper clientChargeMapper = new ClientChargeMapper();
 
     public static final class ClientChargeMapper implements RowMapper<ClientChargeData> {
 

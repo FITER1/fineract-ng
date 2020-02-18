@@ -60,7 +60,7 @@ public class SavingsAccountCharge extends AbstractPersistableCustom<Long> {
     @Column(name = "charge_time_enum", nullable = false)
     private Integer chargeTime;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "charge_due_date")
     private Date dueDate;
 
@@ -110,7 +110,7 @@ public class SavingsAccountCharge extends AbstractPersistableCustom<Long> {
     @Column(name = "is_active", nullable = false)
     private boolean status = true;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "inactivated_on_date")
     private Date inactivationDate;
 

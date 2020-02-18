@@ -62,10 +62,10 @@ public class Survey extends AbstractPersistableCustom<Long> {
     private String countryCode;
 
     @Column(name = "valid_from")
-    @Temporal(value = TemporalType.TIMESTAMP)
+    // @Temporal(value = TemporalType.TIMESTAMP)
     private Date validFrom;
 
     @Column(name = "valid_to")
-    @Temporal(value = TemporalType.TIMESTAMP)
+    // @Temporal(value = TemporalType.TIMESTAMP)
     private Date validTo;
 }

@@ -46,6 +46,6 @@ public class DeviceRegistration extends AbstractPersistableCustom<Long> {
 	private String registrationId;
 
 	@Column(name = "updatedon_date", nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
+	// @Temporal(TemporalType.TIMESTAMP)
 	private Date updatedOnDate;
 }

@@ -55,14 +55,14 @@ public class InteropIdentifier extends AbstractPersistableCustom<Long> {
     @Column(name = "created_by", nullable = false, length = 32)
     private String createdBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_on", nullable = false)
     private Date createdOn;
 
     @Column(name = "modified_by", length = 32)
     private String modifiedBy;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "modified_on")
     private Date modifiedOn;
 }

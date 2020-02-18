@@ -43,7 +43,7 @@ public class Meeting extends AbstractPersistableCustom<Long> {
     private CalendarInstance calendarInstance;
 
     @Column(name = "meeting_date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date meetingDate;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "meeting", orphanRemoval = true)

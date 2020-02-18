@@ -47,7 +47,7 @@ import java.util.Collection;
 public class ClientTransactionReadPlatformServiceImpl implements ClientTransactionReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-    private final ClientTransactionMapper clientTransactionMapper;
+    private final ClientTransactionMapper clientTransactionMapper = new ClientTransactionMapper();
     private final PaginationHelper<ClientTransactionData> paginationHelper;
 
     private static final class ClientTransactionMapper implements RowMapper<ClientTransactionData> {

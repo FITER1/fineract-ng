@@ -45,14 +45,14 @@ public class ClientTransferDetails extends AbstractPersistableCustom<Long> {
 	private Long toOfficeId;
 
 	@Column(name = "proposed_transfer_date")
-	@Temporal(TemporalType.DATE)
+	// @Temporal(TemporalType.DATE)
 	private Date proposedTransferDate;
 
 	@Column(name = "transfer_type", nullable = false)
 	private Integer transferEventType;
 
 	@Column(name = "submitted_on", nullable = false)
-	@Temporal(TemporalType.DATE)
+	// @Temporal(TemporalType.DATE)
 	private Date submittedOn;
 
 	@Column(name = "submitted_by", nullable = false)

@@ -39,11 +39,11 @@ public class RecurringDepositScheduleInstallment extends AbstractAuditableCustom
     @Column(name = "installment", nullable = false)
     private Integer installmentNumber;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "fromdate")
     private Date fromDate;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "duedate", nullable = false)
     private Date dueDate;
 
@@ -62,7 +62,7 @@ public class RecurringDepositScheduleInstallment extends AbstractAuditableCustom
     @Column(name = "completed_derived", nullable = false)
     private boolean obligationsMet;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "obligations_met_on_date")
     private Date obligationsMetOnDate;
 

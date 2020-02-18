@@ -58,7 +58,7 @@ public class TellerTransaction extends AbstractPersistableCustom<Long> {
     @Column(name = "amount", nullable = false)
     private Double amount;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "posting_date", nullable = false)
     private Date postingDate;
 }

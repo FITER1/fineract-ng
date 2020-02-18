@@ -79,7 +79,7 @@ public class ClientFamilyMembers extends AbstractPersistableCustom<Long> {
     private CodeValue profession;
 
     @Column(name = "date_of_birth")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
     private ClientFamilyMembers(final Client client, final String firstName, final String middleName, final String lastName, final String qualification, final String mobileNumber, final Long age, final Boolean isDependent, final CodeValue relationship, final CodeValue maritalStatus, final CodeValue gender, final Date dateOfBirth, final CodeValue profession) {

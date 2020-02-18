@@ -30,7 +30,7 @@ public class ClientAddressRepositoryWrapper {
 	public ClientAddress findOneByClientIdAndAddressTypeAndIsActive(final long clientId, final CodeValue addressType,
 			final boolean isActive) {
 		final ClientAddress clientAddress = this.clientAddressRepository
-				.findByClientIdAndAddressTypeAndIsActive(clientId, addressType, isActive);
+				.findByClientIdAndAddressTypeAndActive(clientId, addressType, isActive);
 		// if (clientAddress == null) { throw new
 		// AddressNotFoundException(clientId, addressType); }
 		return clientAddress;

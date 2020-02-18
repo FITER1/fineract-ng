@@ -75,11 +75,11 @@ public class SmsMessage extends AbstractPersistableCustom<Long> {
     private String message;
 
     @Column(name = "submittedon_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date submittedOnDate;
 
     @Column(name = "delivered_on_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private Date deliveredOnDate; 
     
     @Column(name = "is_notification")

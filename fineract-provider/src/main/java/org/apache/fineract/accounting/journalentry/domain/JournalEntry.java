@@ -86,7 +86,7 @@ public class JournalEntry extends AbstractAuditableCustom<AppUser, Long> {
     private boolean manualEntry = false;
 
     @Column(name = "entry_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date transactionDate;
 
     @Column(name = "type_enum", nullable = false)

@@ -44,11 +44,11 @@ public class DepositAccountTermAndPreClosure extends AbstractPersistableCustom<L
     @Column(name = "maturity_amount", scale = 6, precision = 19)
     private BigDecimal maturityAmount;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "maturity_date")
     private Date maturityDate;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "expected_firstdepositon_date")
     private Date expectedFirstDepositOnDate;
 

@@ -49,7 +49,7 @@ public class GLClosure extends AbstractAuditableCustom<AppUser, Long> {
     private boolean deleted = true;
 
     @Column(name = "closing_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date closingDate;
 
     @Column(name = "comments", length = 500)

@@ -53,7 +53,7 @@ public class CashierTransaction extends AbstractPersistableCustom<Long> {
     @Column(name = "txn_type", nullable = false)
     private Integer txnType;
     
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "txn_date", nullable = false)
     private Date txnDate;
 
@@ -69,7 +69,7 @@ public class CashierTransaction extends AbstractPersistableCustom<Long> {
     @Column(name = "entity_id")
     private Long entityId;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date", nullable = false)
     private Date createdDate;
     

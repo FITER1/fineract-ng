@@ -61,11 +61,11 @@ public class LoanTransaction extends AbstractPersistableCustom<Long> {
     @Column(name = "transaction_type_enum", nullable = false)
     private Integer typeOf;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "transaction_date", nullable = false)
     private Date dateOf;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "submitted_on_date", nullable = false)
     private Date submittedOnDate;
 
@@ -96,7 +96,7 @@ public class LoanTransaction extends AbstractPersistableCustom<Long> {
     @Column(name = "external_id", length = 100, unique = true)
     private String externalId;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date", nullable = false)
     private Date createdDate;
 

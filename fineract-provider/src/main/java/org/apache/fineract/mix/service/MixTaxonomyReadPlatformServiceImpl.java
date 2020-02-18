@@ -33,7 +33,7 @@ import java.util.List;
 public class MixTaxonomyReadPlatformServiceImpl implements MixTaxonomyReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-    private final MixTaxonomyMapper mixTaxonomyMapper;
+    private final MixTaxonomyMapper mixTaxonomyMapper = new MixTaxonomyMapper();
 
     private static final class MixTaxonomyMapper implements RowMapper<MixTaxonomyData> {
 

@@ -34,11 +34,11 @@ public class LoanDisbursementDetails extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "loan_id", nullable = false)
     private Loan loan;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "expected_disburse_date")
     private Date expectedDisbursementDate;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "disbursedon_date")
     private Date actualDisbursementDate;
 

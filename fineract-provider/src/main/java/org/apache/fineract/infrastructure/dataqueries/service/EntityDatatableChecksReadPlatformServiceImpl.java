@@ -46,12 +46,12 @@ import java.util.List;
 public class EntityDatatableChecksReadPlatformServiceImpl implements EntityDatatableChecksReadService {
 
     private final JdbcTemplate jdbcTemplate;
-    private final RegisterDataTableMapper registerDataTableMapper;
-    private final EntityDataTableChecksMapper entityDataTableChecksMapper;
     private final EntityDatatableChecksRepository entityDatatableChecksRepository;
     private final ReadWriteNonCoreDataService readWriteNonCoreDataService;
     private final LoanProductReadPlatformService loanProductReadPlatformService;
     private final SavingsProductReadPlatformService savingsProductReadPlatformService;
+    private final EntityDataTableChecksMapper entityDataTableChecksMapper = new EntityDataTableChecksMapper();
+    private final RegisterDataTableMapper registerDataTableMapper = new RegisterDataTableMapper();
     private final PaginationHelper<EntityDataTableChecksData> paginationHelper = new PaginationHelper<>();
 
     @Override

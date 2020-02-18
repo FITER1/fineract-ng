@@ -49,7 +49,7 @@ public class ProvisioningEntry extends AbstractPersistableCustom<Long> {
     private AppUser createdBy;
 
     @Column(name = "created_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date createdDate;
 
     @OneToOne
@@ -57,6 +57,6 @@ public class ProvisioningEntry extends AbstractPersistableCustom<Long> {
     private AppUser lastModifiedBy;
 
     @Column(name = "lastmodified_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date lastModifiedDate;
 }

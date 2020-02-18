@@ -31,6 +31,7 @@ import org.joda.time.MonthDay;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.springframework.format.number.NumberStyleFormatter;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -42,6 +43,7 @@ import java.util.*;
 /**
  * Helper class to extract values of json named attributes.
  */
+@Component
 public class JsonParserHelper {
 
     public boolean parameterExists(final String parameterName, final JsonElement element) {

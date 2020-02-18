@@ -74,7 +74,7 @@ public class EmailMessage extends AbstractPersistableCustom<Long> {
     private String campaignName;
 
     @Column(name = "submittedon_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date submittedOnDate;
 
     @Column(name = "error_message")

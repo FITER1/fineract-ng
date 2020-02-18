@@ -57,11 +57,11 @@ public class AccountTransferStandingInstruction extends AbstractPersistableCusto
     @Column(name = "amount", scale = 6, precision = 19)
     private BigDecimal amount;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "valid_from")
     private Date validFrom;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "valid_till")
     private Date validTill;
 
@@ -80,7 +80,7 @@ public class AccountTransferStandingInstruction extends AbstractPersistableCusto
     @Column(name = "recurrence_on_month")
     private Integer recurrenceOnMonth;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "last_run_date")
     private Date latsRunDate;
 

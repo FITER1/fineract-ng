@@ -49,7 +49,7 @@ public class ScheduledJobDetail extends AbstractPersistableCustom<Long> {
     private String cronExpression;
 
     @Column(name = "create_time")
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
 
     @Column(name = "task_priority")
@@ -59,11 +59,11 @@ public class ScheduledJobDetail extends AbstractPersistableCustom<Long> {
     private String groupName;
 
     @Column(name = "previous_run_start_time")
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private Date previousRunStartTime;
 
     @Column(name = "next_run_time")
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private Date nextRunTime;
 
     @Column(name = "job_key")

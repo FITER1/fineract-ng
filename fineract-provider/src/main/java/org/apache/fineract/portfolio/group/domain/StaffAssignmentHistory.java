@@ -38,11 +38,11 @@ public class StaffAssignmentHistory extends AbstractAuditableCustom<AppUser, Lon
     @JoinColumn(name = "staff_id")
     private Staff staff;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "start_date")
     private Date startDate;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "end_date")
     private Date endDate;
 

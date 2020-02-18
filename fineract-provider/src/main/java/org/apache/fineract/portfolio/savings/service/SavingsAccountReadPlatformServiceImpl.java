@@ -88,7 +88,6 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
     private final SavingsAccountTransactionTemplateMapper transactionTemplateMapper = new SavingsAccountTransactionTemplateMapper();
     private final SavingsAccountTransactionsMapper transactionsMapper = new SavingsAccountTransactionsMapper();
     private final SavingAccountMapper savingAccountMapper = new SavingAccountMapper();
-    // private final SavingsAccountAnnualFeeMapper annualFeeMapper;
 
     // pagination
     private final PaginationHelper<SavingsAccountData> paginationHelper = new PaginationHelper<>();

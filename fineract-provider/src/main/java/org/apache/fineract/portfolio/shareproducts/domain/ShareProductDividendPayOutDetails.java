@@ -40,11 +40,11 @@ public class ShareProductDividendPayOutDetails extends AbstractAuditableCustom<A
     private BigDecimal amount;
 
     @Column(name = "dividend_period_start_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date dividendPeriodStartDate;
 
     @Column(name = "dividend_period_end_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date dividendPeriodEndDate;
 
     @Column(name = "status", nullable = false)

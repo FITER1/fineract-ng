@@ -37,7 +37,7 @@ import java.util.Collection;
 public class AdHocReadPlatformServiceImpl implements AdHocReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-    private final AdHocMapper adHocRowMapper;
+    private final AdHocMapper adHocRowMapper = new AdHocMapper();
 
     @Override
     public Collection<AdHocData> retrieveAllAdHocQuery() {

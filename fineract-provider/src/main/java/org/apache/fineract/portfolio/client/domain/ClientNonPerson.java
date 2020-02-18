@@ -53,7 +53,7 @@ public class ClientNonPerson extends AbstractPersistableCustom<Long> {
 	private String incorpNumber;
 	
 	@Column(name = "incorp_validity_till")
-	@Temporal(TemporalType.DATE)
+	// @Temporal(TemporalType.DATE)
 	private Date incorpValidityTill;
 	
 	@ManyToOne(fetch = FetchType.LAZY)

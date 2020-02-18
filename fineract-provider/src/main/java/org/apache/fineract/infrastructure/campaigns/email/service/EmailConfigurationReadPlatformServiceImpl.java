@@ -36,7 +36,7 @@ import java.util.Collection;
 public class EmailConfigurationReadPlatformServiceImpl implements EmailConfigurationReadPlatformService {
 	
 	private final JdbcTemplate jdbcTemplate;
-    private final EmailConfigurationRowMapper emailConfigurationRowMapper;
+    private final EmailConfigurationRowMapper emailConfigurationRowMapper = new EmailConfigurationRowMapper();
     
 	private static final class EmailConfigurationRowMapper implements RowMapper<EmailConfigurationData> {
 		

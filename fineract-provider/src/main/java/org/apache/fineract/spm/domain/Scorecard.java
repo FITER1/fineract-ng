@@ -60,7 +60,7 @@ public class Scorecard extends AbstractPersistableCustom<Long> {
     private Client client;
 
     @Column(name = "created_on")
-    @Temporal(value = TemporalType.TIMESTAMP)
+    // @Temporal(value = TemporalType.TIMESTAMP)
     @OrderBy("createdOn DESC")
     private Date createdOn;
 

@@ -51,10 +51,10 @@ import java.util.*;
 @RequiredArgsConstructor
 public class SmsCampaignReadPlatformServiceImpl implements SmsCampaignReadPlatformService {
 
-    private final BusinessRuleMapper businessRuleMapper;
+    private final BusinessRuleMapper businessRuleMapper = new BusinessRuleMapper();
     private final JdbcTemplate jdbcTemplate;
     private final SmsCampaignDropdownReadPlatformService smsCampaignDropdownReadPlatformService;
-    private final SmsCampaignMapper smsCampaignMapper;
+    private final SmsCampaignMapper smsCampaignMapper = new SmsCampaignMapper();
     private final CalendarDropdownReadPlatformService calendarDropdownReadPlatformService;
     private final PaginationHelper<SmsCampaignData> paginationHelper = new PaginationHelper<>();
 

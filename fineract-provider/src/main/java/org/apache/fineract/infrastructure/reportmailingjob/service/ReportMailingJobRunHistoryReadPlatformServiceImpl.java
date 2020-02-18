@@ -39,7 +39,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ReportMailingJobRunHistoryReadPlatformServiceImpl implements ReportMailingJobRunHistoryReadPlatformService {
     private final JdbcTemplate jdbcTemplate;
-    private final ReportMailingJobRunHistoryMapper reportMailingJobRunHistoryMapper;
+    private final ReportMailingJobRunHistoryMapper reportMailingJobRunHistoryMapper = new ReportMailingJobRunHistoryMapper();
     private final ColumnValidator columnValidator;
     private final PaginationHelper<ReportMailingJobRunHistoryData> paginationHelper = new PaginationHelper<>();
 

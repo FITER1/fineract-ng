@@ -60,11 +60,11 @@ public class Teller extends AbstractPersistableCustom<Long> {
     @Column(name = "description", length = 500)
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "valid_from")
     private Date startDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "valid_to")
     private Date endDate;
 

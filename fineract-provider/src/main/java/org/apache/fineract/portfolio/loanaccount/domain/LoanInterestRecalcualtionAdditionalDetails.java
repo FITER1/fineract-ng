@@ -29,7 +29,7 @@ import java.util.Date;
 @Table(name = "m_loan_interest_recalculation_additional_details")
 public class LoanInterestRecalcualtionAdditionalDetails extends AbstractPersistableCustom<Long> {
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "effective_date")
     private Date effectiveDate;
 

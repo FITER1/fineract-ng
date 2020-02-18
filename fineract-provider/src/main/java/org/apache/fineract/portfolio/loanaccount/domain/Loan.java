@@ -158,7 +158,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     private Boolean syncDisbursementWithMeeting;
 
     // loan application states
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "submittedon_date")
     private Date submittedOnDate;
 
@@ -166,7 +166,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "submittedon_userid")
     private AppUser submittedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "rejectedon_date")
     private Date rejectedOnDate;
 
@@ -174,7 +174,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "rejectedon_userid")
     private AppUser rejectedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "withdrawnon_date")
     private Date withdrawnOnDate;
 
@@ -182,7 +182,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "withdrawnon_userid")
     private AppUser withdrawnBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "approvedon_date")
     private Date approvedOnDate;
 
@@ -190,11 +190,11 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "approvedon_userid")
     private AppUser approvedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "expected_disbursedon_date")
     private Date expectedDisbursementDate;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "disbursedon_date")
     private Date actualDisbursementDate;
 
@@ -202,7 +202,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "disbursedon_userid")
     private AppUser disbursedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "closedon_date")
     private Date closedOnDate;
 
@@ -210,11 +210,11 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "closedon_userid")
     private AppUser closedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "writtenoffon_date")
     private Date writtenOffOnDate;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "rescheduledon_date")
     private Date rescheduledOnDate;
 
@@ -222,19 +222,19 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "rescheduledon_userid")
     private AppUser rescheduledByUser;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "expected_maturedon_date")
     private Date expectedMaturityDate;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "maturedon_date")
     private Date actualMaturityDate;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "expected_firstrepaymenton_date")
     private Date expectedFirstRepaymentOnDate;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "interest_calculated_from_date")
     private Date interestChargedFromDate;
 
@@ -309,7 +309,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @Column(name = "is_npa", nullable = false)
     private boolean isNpa;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "accrued_till")
     private Date accruedTill;
 
@@ -319,7 +319,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @Column(name = "guarantee_amount_derived", scale = 6, precision = 19)
     private BigDecimal guaranteeAmountDerived;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "interest_recalcualated_on")
     private Date interestRecalculatedOn;
 

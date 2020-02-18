@@ -42,11 +42,11 @@ public class ScheduledJobRunHistory extends AbstractPersistableCustom<Long> {
     private Long version;
 
     @Column(name = "start_time")
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
 
     @Column(name = "end_time")
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
     @Column(name = "status")

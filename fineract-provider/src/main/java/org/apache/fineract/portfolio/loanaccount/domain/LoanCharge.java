@@ -52,7 +52,7 @@ public class LoanCharge extends AbstractPersistableCustom<Long> {
     @Column(name = "charge_time_enum", nullable = false)
     private Integer chargeTime;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "due_for_collection_as_of_date")
     private Date dueDate;
 

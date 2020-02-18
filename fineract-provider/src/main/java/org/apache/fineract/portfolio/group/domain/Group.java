@@ -55,7 +55,7 @@ public final class Group extends AbstractPersistableCustom<Long> {
     private Integer status;
 
     @Column(name = "activation_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date activationDate;
 
     @ManyToOne(optional = true)
@@ -98,7 +98,7 @@ public final class Group extends AbstractPersistableCustom<Long> {
     private CodeValue closureReason;
 
     @Column(name = "closedon_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date closureDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
@@ -106,7 +106,7 @@ public final class Group extends AbstractPersistableCustom<Long> {
     private AppUser closedBy;
 
     @Column(name = "submittedon_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date submittedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)

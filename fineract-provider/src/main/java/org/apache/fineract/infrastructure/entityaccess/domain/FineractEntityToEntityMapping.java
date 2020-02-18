@@ -50,11 +50,11 @@ public class FineractEntityToEntityMapping extends AbstractPersistableCustom<Lon
     private Long toId;
 
     @Column(name = "start_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date startDate;
 
     @Column(name = "end_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date endDate;
 
     public Map<String, Object> updateMap(final JsonCommand command) {

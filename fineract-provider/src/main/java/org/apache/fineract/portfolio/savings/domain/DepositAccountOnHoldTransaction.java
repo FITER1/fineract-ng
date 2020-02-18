@@ -43,14 +43,14 @@ public class DepositAccountOnHoldTransaction extends AbstractPersistableCustom<L
     @Column(name = "transaction_type_enum", nullable = false)
     private Integer transactionType;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "transaction_date", nullable = false)
     private Date transactionDate;
 
     @Column(name = "is_reversed", nullable = false)
     private boolean reversed;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date", nullable = false)
     private Date createdDate;
 

@@ -33,7 +33,7 @@ public class ShareProductMarketPrice extends AbstractPersistableCustom<Long> {
     private ShareProduct product;
     
     @Column(name = "from_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date fromDate;
     
     @Column(name = "share_value", nullable = false)

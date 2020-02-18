@@ -44,9 +44,9 @@ public class PortfolioAccountReadPlatformServiceImpl implements PortfolioAccount
     private final JdbcTemplate jdbcTemplate;
 
     // mapper
-    private final PortfolioSavingsAccountMapper savingsAccountMapper;
-    private final PortfolioLoanAccountMapper loanAccountMapper;
-    private final PortfolioLoanAccountRefundByTransferMapper accountRefundByTransferMapper;
+    private final PortfolioSavingsAccountMapper savingsAccountMapper = new PortfolioSavingsAccountMapper();
+    private final PortfolioLoanAccountMapper loanAccountMapper = new PortfolioLoanAccountMapper();
+    private final PortfolioLoanAccountRefundByTransferMapper accountRefundByTransferMapper = new PortfolioLoanAccountRefundByTransferMapper();
 
     @Override
     public PortfolioAccountData retrieveOne(final Long accountId, final Integer accountTypeId) {

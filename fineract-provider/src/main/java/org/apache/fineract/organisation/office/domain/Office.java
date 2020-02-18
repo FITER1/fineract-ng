@@ -55,7 +55,7 @@ public class Office extends AbstractPersistableCustom<Long> {
     private String hierarchy;
 
     @Column(name = "opening_date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date openingDate;
 
     @Column(name = "external_id", length = 100)

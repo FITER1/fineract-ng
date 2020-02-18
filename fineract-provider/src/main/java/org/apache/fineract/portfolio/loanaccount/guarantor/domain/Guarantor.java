@@ -53,7 +53,7 @@ public class Guarantor extends AbstractPersistableCustom<Long> {
     private String lastname;
 
     @Column(name = "dob")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
     @Column(name = "address_line_1", length = 500)

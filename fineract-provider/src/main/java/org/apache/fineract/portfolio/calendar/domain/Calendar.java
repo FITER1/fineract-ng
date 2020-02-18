@@ -53,11 +53,11 @@ public class Calendar extends AbstractAuditableCustom<AppUser, Long> {
     private String location;
 
     @Column(name = "start_date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date startDate;
 
     @Column(name = "end_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date endDate;
 
     @Column(name = "duration")
@@ -82,7 +82,7 @@ public class Calendar extends AbstractAuditableCustom<AppUser, Long> {
     private Integer secondReminder;
     
     @Column(name="meeting_time",nullable=true)
-    @Temporal(TemporalType.TIME)
+    // @Temporal(TemporalType.TIME)
     private Date meetingtime;
     
     @OneToMany(fetch = FetchType.EAGER)

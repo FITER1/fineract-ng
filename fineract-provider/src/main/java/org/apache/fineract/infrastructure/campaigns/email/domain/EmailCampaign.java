@@ -82,7 +82,7 @@ public class EmailCampaign extends AbstractPersistableCustom<Long> {
     private String stretchyReportParamMap;
 
     @Column(name = "closedon_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date closureDate;
 
     @ManyToOne(optional = true)
@@ -90,7 +90,7 @@ public class EmailCampaign extends AbstractPersistableCustom<Long> {
     private AppUser closedBy;
 
     @Column(name = "submittedon_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date submittedOnDate;
 
     @ManyToOne(optional = true)
@@ -98,7 +98,7 @@ public class EmailCampaign extends AbstractPersistableCustom<Long> {
     private AppUser submittedBy;
 
     @Column(name = "approvedon_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date approvedOnDate;
 
     @ManyToOne(optional = true)
@@ -109,15 +109,15 @@ public class EmailCampaign extends AbstractPersistableCustom<Long> {
     private String recurrence;
 
     @Column(name = "next_trigger_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private Date nextTriggerDate;
 
     @Column(name = "last_trigger_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private Date lastTriggerDate;
 
     @Column(name = "recurrence_start_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private Date recurrenceStartDate;
 
     @Column(name="is_visible",nullable = true)

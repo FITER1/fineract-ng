@@ -34,11 +34,11 @@ public class TaxComponentHistory extends AbstractAuditableCustom<AppUser, Long> 
     private BigDecimal percentage;
 
     @Column(name = "start_date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date startDate;
 
     @Column(name = "end_date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date endDate;
 
     protected TaxComponentHistory() {

@@ -50,9 +50,9 @@ public class EmailCampaignReadPlatformServiceImpl implements EmailCampaignReadPl
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final BusinessRuleMapper businessRuleMapper;
+    private final BusinessRuleMapper businessRuleMapper = new BusinessRuleMapper();
 
-    private final EmailCampaignMapper emailCampaignMapper;
+    private final EmailCampaignMapper emailCampaignMapper = new EmailCampaignMapper();
 
     private static final class EmailCampaignMapper implements RowMapper<EmailCampaignData>{
 

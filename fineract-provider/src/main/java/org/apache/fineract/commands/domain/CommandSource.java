@@ -76,7 +76,7 @@ public class CommandSource extends AbstractPersistableCustom<Long> {
     private AppUser maker;
 
     @Column(name = "made_on_date", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private Date madeOnDate;
 
     @ManyToOne
@@ -84,7 +84,7 @@ public class CommandSource extends AbstractPersistableCustom<Long> {
     private AppUser checker;
 
     @Column(name = "checked_on_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     private Date checkedOnDate;
 
     @Column(name = "processing_result_enum", nullable = false)

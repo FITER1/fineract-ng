@@ -46,11 +46,11 @@ public class TrialBalance extends AbstractPersistableCustom<Long> {
     private BigDecimal amount;
 
     @Column(name = "entry_date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date entryDate;
 
     @Column(name = "created_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date transactionDate;
 
     @Column(name = "closing_balance", nullable = false)

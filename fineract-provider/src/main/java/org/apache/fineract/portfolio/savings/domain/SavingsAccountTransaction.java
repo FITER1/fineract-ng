@@ -62,7 +62,7 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom<L
     @Column(name = "transaction_type_enum", nullable = false)
     private Integer typeOf;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "transaction_date", nullable = false)
     private  Date dateOf;
 
@@ -78,7 +78,7 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom<L
     @Column(name = "cumulative_balance_derived", scale = 6, precision = 19)
     private BigDecimal cumulativeBalance;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "balance_end_date_derived")
     private Date balanceEndDate;
 
@@ -91,7 +91,7 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom<L
     @Column(name = "overdraft_amount_derived", scale = 6, precision = 19)
     private BigDecimal overdraftAmount;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date", nullable = false)
     private Date createdDate;
 

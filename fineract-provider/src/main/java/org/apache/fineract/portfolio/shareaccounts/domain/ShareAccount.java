@@ -49,14 +49,14 @@ public class ShareAccount extends AbstractPersistableCustom<Long> {
     protected Integer status;
 
     @Column(name = "submitted_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date submittedDate;
 
     @ManyToOne(optional = true)
     @JoinColumn(name = "submitted_userid")
     protected AppUser submittedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "approved_date")
     protected Date approvedDate;
 
@@ -64,7 +64,7 @@ public class ShareAccount extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "approved_userid")
     protected AppUser approvedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "rejected_date")
     protected Date rejectedDate;
 
@@ -72,7 +72,7 @@ public class ShareAccount extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "rejected_userid")
     protected AppUser rejectedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "activated_date")
     protected Date activatedDate;
 
@@ -80,7 +80,7 @@ public class ShareAccount extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "activated_userid")
     protected AppUser activatedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "closed_date")
     protected Date closedDate;
 
@@ -88,7 +88,7 @@ public class ShareAccount extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "closed_userid")
     protected AppUser closedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "lastmodified_date")
     protected Date modifiedDate;
 

@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.self.account.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
@@ -34,7 +35,6 @@ import org.apache.fineract.portfolio.self.account.domain.SelfBeneficiariesTPTRep
 import org.apache.fineract.portfolio.self.account.exception.InvalidAccountInformationException;
 import org.apache.fineract.portfolio.self.account.exception.InvalidBeneficiaryException;
 import org.apache.fineract.useradministration.domain.AppUser;
-import org.slf4j.Logger;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,11 +44,11 @@ import java.util.Map;
 
 import static org.apache.fineract.portfolio.self.account.api.SelfBeneficiariesTPTApiConstants.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class SelfBeneficiariesTPTWritePlatformServiceImpl implements SelfBeneficiariesTPTWritePlatformService {
 
-	private final Logger logger;
 	private final PlatformSecurityContext context;
 	private final SelfBeneficiariesTPTRepository repository;
 	private final SelfBeneficiariesTPTDataValidator validator;
@@ -179,7 +179,7 @@ public class SelfBeneficiariesTPTWritePlatformServiceImpl implements SelfBenefic
 					NAME_PARAM_NAME, name);
 		}
 
-		this.logger.error(dae.getMessage(), dae);
+		this.log.error(dae.getMessage(), dae);
 		throw new PlatformDataIntegrityException(
 				"error.msg.beneficiary.unknown.data.integrity.issue",
 				"Unknown data integrity issue with resource.");

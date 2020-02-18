@@ -42,11 +42,11 @@ public class InterestRateChartFields {
     @Column(name = "description")
     private String description;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "from_date", nullable = false)
     private Date fromDate;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "end_date")
     private Date endDate;
 

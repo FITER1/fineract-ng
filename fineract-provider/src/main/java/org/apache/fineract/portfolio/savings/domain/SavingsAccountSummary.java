@@ -76,7 +76,7 @@ public final class SavingsAccountSummary {
     @Column(name = "total_withhold_tax_derived", scale = 6, precision = 19)
     private BigDecimal totalWithholdTax;
     
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "last_interest_calculation_date")
     private Date lastInterestCalculationDate;
 

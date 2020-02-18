@@ -48,7 +48,7 @@ public class OfficeTransaction extends AbstractPersistableCustom<Long> {
     private Office to;
 
     @Column(name = "transaction_date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date transactionDate;
 
     @Embedded

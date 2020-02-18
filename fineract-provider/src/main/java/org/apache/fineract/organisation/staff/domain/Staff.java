@@ -75,7 +75,7 @@ public class Staff extends AbstractPersistableCustom<Long> {
     private boolean active;
 
     @Column(name = "joining_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date joiningDate;
 
     @ManyToOne

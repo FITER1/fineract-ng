@@ -55,11 +55,11 @@ public class Cashier extends AbstractPersistableCustom<Long> {
     @Column(name = "description", length = 500)
     private String description;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_date", nullable = false)
     private Date startDate;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_date", nullable = false)
     private Date endDate;
 

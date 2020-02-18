@@ -100,11 +100,11 @@ public class LoanProduct extends AbstractPersistableCustom<Long> {
     private LoanProductTrancheDetails loanProducTrancheDetails;
 
     @Column(name = "start_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date startDate;
 
     @Column(name = "close_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date closeDate;
 
     @Column(name = "external_id", length = 100, unique = true)

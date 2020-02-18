@@ -78,11 +78,11 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private CodeValue subStatus;
     
     @Column(name = "activation_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date activationDate;
 
     @Column(name = "office_joining_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date officeJoiningDate;
 
     @Column(name = "firstname", length = 50)
@@ -113,7 +113,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private String externalId;
 
     @Column(name = "date_of_birth")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -136,7 +136,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private CodeValue closureReason;
 
     @Column(name = "closedon_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date closureDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -144,7 +144,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private CodeValue rejectionReason;
 
     @Column(name = "rejectedon_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date rejectionDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
@@ -156,7 +156,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private CodeValue withdrawalReason;
 
     @Column(name = "withdrawn_on_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date withdrawalDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
@@ -164,7 +164,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private AppUser withdrawnBy;
 
     @Column(name = "reactivated_on_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date reactivateDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
@@ -176,7 +176,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private AppUser closedBy;
 
     @Column(name = "submittedon_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date submittedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
@@ -184,7 +184,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private AppUser submittedBy;
 
     @Column(name = "updated_on")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date updatedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
@@ -213,7 +213,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private Integer legalForm;
 
     @Column(name = "reopened_on_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date reopenedDate;
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
@@ -221,7 +221,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private AppUser reopenedBy;
     
     @Column(name = "proposed_transfer_date")
- 	@Temporal(TemporalType.DATE)
+ 	// @Temporal(TemporalType.DATE)
  	private Date proposedTransferDate;
 
     public static Client createNew(final AppUser currentUser, final Office clientOffice, final Group clientParentGroup, final Staff staff,

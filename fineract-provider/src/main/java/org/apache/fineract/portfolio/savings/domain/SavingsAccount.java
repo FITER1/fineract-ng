@@ -105,7 +105,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     @Column(name = "account_type_enum", nullable = false)
     protected Integer accountType;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "submittedon_date")
     protected Date submittedOnDate;
 
@@ -113,7 +113,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "submittedon_userid")
     protected AppUser submittedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "rejectedon_date")
     protected Date rejectedOnDate;
 
@@ -121,7 +121,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "rejectedon_userid")
     protected AppUser rejectedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "withdrawnon_date")
     protected Date withdrawnOnDate;
 
@@ -129,7 +129,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "withdrawnon_userid")
     protected AppUser withdrawnBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "approvedon_date")
     protected Date approvedOnDate;
 
@@ -137,7 +137,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "approvedon_userid")
     protected AppUser approvedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "activatedon_date")
     protected Date activatedOnDate;
 
@@ -145,7 +145,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "activatedon_userid")
     protected AppUser activatedBy;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "closedon_date")
     protected Date closedOnDate;
 
@@ -203,7 +203,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
      * <code>lockinPeriodFrequency</code> and
      * <code>lockinPeriodFrequencyType</code> details are present.
      */
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "lockedin_until_date_derived")
     protected Date lockedInUntilDate;
 
@@ -231,7 +231,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     @Column(name = "on_hold_funds_derived", scale = 6, precision = 19)
     private BigDecimal onHoldFunds;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "start_interest_calculation_date")
     protected Date startInterestCalculationDate;
 

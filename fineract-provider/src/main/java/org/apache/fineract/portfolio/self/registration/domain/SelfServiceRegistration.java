@@ -57,7 +57,7 @@ public class SelfServiceRegistration extends AbstractPersistableCustom<Long> {
     private String password;
 
     @Column(name = "created_date", nullable = false)
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date createdDate;
 
     public SelfServiceRegistration(final Client client, String accountNumber, final String firstName, final String lastName,

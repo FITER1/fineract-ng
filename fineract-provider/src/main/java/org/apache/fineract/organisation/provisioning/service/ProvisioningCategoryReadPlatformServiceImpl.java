@@ -34,7 +34,7 @@ import java.util.Collection;
 public class ProvisioningCategoryReadPlatformServiceImpl implements ProvisioningCategoryReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-    private final ProvisioningCategoryRowMapper provisionCategoryRowMapper;
+    private final ProvisioningCategoryRowMapper provisionCategoryRowMapper = new ProvisioningCategoryRowMapper();
 
     @Override
     public Collection<ProvisioningCategoryData> retrieveAllProvisionCategories() {

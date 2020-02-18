@@ -50,11 +50,11 @@ public class ShareProduct extends AbstractAuditableCustom<AppUser, Long> {
     private String description;
 
     @Column(name = "start_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date startDate;
 
     @Column(name = "end_date")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date endDate;
 
     @Column(name = "external_id", length = 100, unique = true)

@@ -39,11 +39,11 @@ public class LoanOfficerAssignmentHistory extends AbstractAuditableCustom<AppUse
     @JoinColumn(name = "loan_officer_id")
     private Staff loanOfficer;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "start_date")
     private Date startDate;
 
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     @Column(name = "end_date")
     private Date endDate;
 

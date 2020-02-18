@@ -41,7 +41,7 @@ import java.util.Map;
 public class FinancialActivityAccountReadPlatformServiceImpl implements FinancialActivityAccountReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-    private final FinancialActivityAccountMapper financialActivityAccountMapper;
+    private final FinancialActivityAccountMapper financialActivityAccountMapper = new FinancialActivityAccountMapper();;
     private final AccountingDropdownReadPlatformService accountingDropdownReadPlatformService;
 
     @Override

@@ -32,7 +32,7 @@ import java.sql.SQLException;
 public class NamespaceReadPlatformServiceImpl implements NamespaceReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-    private final NamespaceMapper namespaceMapper;
+    private final NamespaceMapper namespaceMapper = new NamespaceMapper();
 
     private static final class NamespaceMapper implements RowMapper<NamespaceData> {
 

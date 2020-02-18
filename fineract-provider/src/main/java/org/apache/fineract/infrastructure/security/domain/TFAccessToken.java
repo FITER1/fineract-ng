@@ -47,11 +47,11 @@ public class TFAccessToken extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "appuser_id", nullable = false)
     private AppUser user;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "valid_from", nullable = false)
     private Date validFrom;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "valid_to", nullable = false)
     private Date validTo;
 

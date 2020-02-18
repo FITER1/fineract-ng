@@ -94,8 +94,8 @@ public class GuarantorReadPlatformServiceImpl implements GuarantorReadPlatformSe
 
     private static final class GuarantorMapper implements RowMapper<GuarantorData> {
 
-        private GuarantorTransactionMapper guarantorTransactionMapper = new GuarantorTransactionMapper();
-        private GuarantorFundingMapper guarantorFundingMapper = new GuarantorFundingMapper(guarantorTransactionMapper);
+        private final GuarantorTransactionMapper guarantorTransactionMapper = new GuarantorTransactionMapper();
+        private final GuarantorFundingMapper guarantorFundingMapper = new GuarantorFundingMapper();
 
         private final StringBuilder sqlBuilder = new StringBuilder(
                 " g.id as id, g.loan_id as loanId, g.client_reln_cv_id clientRelationshipTypeId, g.entity_id as entityId, g.type_enum guarantorType ,g.firstname as firstname, g.lastname as lastname, g.dob as dateOfBirth, g.address_line_1 as addressLine1, g.address_line_2 as addressLine2, g.city as city, g.state as state, g.country as country, g.zip as zip, g.house_phone_number as housePhoneNumber, g.mobile_number as mobilePhoneNumber, g.comment as comment, ")
@@ -180,10 +180,9 @@ public class GuarantorReadPlatformServiceImpl implements GuarantorReadPlatformSe
     private static final class GuarantorFundingMapper implements RowMapper<GuarantorFundingData> {
 
         private final String sql;
-        private final GuarantorTransactionMapper guarantorTransactionMapper;
+        private final GuarantorTransactionMapper guarantorTransactionMapper = new GuarantorTransactionMapper();
 
-        public GuarantorFundingMapper(final GuarantorTransactionMapper guarantorTransactionMapper) {
-            this.guarantorTransactionMapper = guarantorTransactionMapper;
+        public GuarantorFundingMapper() {
             StringBuilder sb = new StringBuilder(" gfd.id as gfdId,");
             sb.append(" gfd.amount as amount, gfd.amount_released_derived as amountReleased, ");
             sb.append(" gfd.amount_remaining_derived as amountRemaining, ");

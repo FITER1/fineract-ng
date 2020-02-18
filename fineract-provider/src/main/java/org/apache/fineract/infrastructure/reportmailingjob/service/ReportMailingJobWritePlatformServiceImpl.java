@@ -222,7 +222,7 @@ public class ReportMailingJobWritePlatformServiceImpl implements ReportMailingJo
     @Override
     @CronTarget(jobName = JobName.EXECUTE_REPORT_MAILING_JOBS)
     public void executeReportMailingJobs() throws JobExecutionException {
-        final Collection<ReportMailingJob> reportMailingJobCollection = this.reportMailingJobRepository.findByIsActiveTrueAndIsDeletedFalse();
+        final Collection<ReportMailingJob> reportMailingJobCollection = this.reportMailingJobRepository.findByActiveTrueAndDeletedFalse();
         
         for (ReportMailingJob reportMailingJob : reportMailingJobCollection) {
             // get the tenant's date as a DateTime object

@@ -36,7 +36,7 @@ import java.util.Collection;
 public class PasswordValidationPolicyReadPlatformServiceImpl implements PasswordValidationPolicyReadPlatformService {
 
     private final JdbcTemplate jdbcTemplate;
-    private final PasswordValidationPolicyMapper passwordValidationPolicyMapper;
+    private final PasswordValidationPolicyMapper passwordValidationPolicyMapper = new PasswordValidationPolicyMapper();
 
     @Override
     public Collection<PasswordValidationPolicyData> retrieveAll() {

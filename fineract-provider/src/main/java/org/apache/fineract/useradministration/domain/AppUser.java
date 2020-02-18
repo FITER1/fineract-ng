@@ -97,7 +97,7 @@ public class AppUser extends AbstractPersistableCustom<Long> implements Platform
     private Set<Role> roles = new HashSet<>();
 
     @Column(name = "last_time_password_updated")
-    @Temporal(TemporalType.DATE)
+    // @Temporal(TemporalType.DATE)
     private Date lastTimePasswordUpdated;
 
     @Column(name = "password_never_expires", nullable = false)

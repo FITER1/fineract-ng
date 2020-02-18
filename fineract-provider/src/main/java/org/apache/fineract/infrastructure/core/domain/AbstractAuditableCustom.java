@@ -67,7 +67,7 @@ public abstract class AbstractAuditableCustom<U, PK extends Serializable> extend
     private AppUser createdBy;
 
     @Column(name = "created_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date createdDate;
 
@@ -77,7 +77,7 @@ public abstract class AbstractAuditableCustom<U, PK extends Serializable> extend
     private AppUser lastModifiedBy;
 
     @Column(name = "lastmodified_date")
-    @Temporal(TemporalType.TIMESTAMP)
+    // @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     private Date lastModifiedDate;
 

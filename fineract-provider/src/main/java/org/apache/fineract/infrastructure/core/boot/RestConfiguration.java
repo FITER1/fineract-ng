@@ -16,20 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.fineract.portfolio.client.domain;
+package org.apache.fineract.infrastructure.core.boot;
 
-import org.apache.fineract.infrastructure.codes.domain.CodeValue;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-
-public interface ClientAddressRepository
-		extends JpaRepository<ClientAddress, Long>, JpaSpecificationExecutor<ClientAddress> {
-	ClientAddress findByClientId(String clientId);
-
-	// ClientAddress findByAddressId(long addressId);
-
-	ClientAddress findByClientIdAndAddressTypeAndActive(final long clientId, final CodeValue addressTypeId,
-														final boolean isActive);
-
-	ClientAddress findByClientIdAndAddressId(final long clientId, final long addressId);
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
+@Slf4j
+@Configuration
+public class RestConfiguration {
+    @Bean
+    public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
+        return restTemplateBuilder.build();
+    }
 }

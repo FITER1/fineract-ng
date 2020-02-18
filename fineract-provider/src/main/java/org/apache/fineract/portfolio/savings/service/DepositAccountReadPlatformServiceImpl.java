@@ -87,7 +87,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
     private final DepositAccountForMaturityMapper depositAccountForMaturityRowMapper = new DepositAccountForMaturityMapper();
     private final PaginationParametersDataValidator paginationParametersDataValidator;
     private final PaginationHelper<DepositAccountData> paginationHelper = new PaginationHelper<>();
-    private final SavingsAccountTransactionsMapper transactionsMapper;
+    private final SavingsAccountTransactionsMapper transactionsMapper = new SavingsAccountTransactionsMapper();
     private final ClientReadPlatformService clientReadPlatformService;
     private final GroupReadPlatformService groupReadPlatformService;
     private final DepositProductReadPlatformService depositProductReadPlatformService;
