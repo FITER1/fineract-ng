@@ -989,16 +989,28 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
                 final boolean fromTransferReversed = rs.getBoolean("fromTransferReversed");
                 final String fromTransferDescription = rs.getString("fromTransferDescription");
 
-                transfer = AccountTransferData.transferBasicDetails(fromTransferId, currency, fromTransferAmount, fromTransferDate,
-                        fromTransferDescription, fromTransferReversed);
+                transfer = AccountTransferData.builder()
+                    .id(fromTransferId)
+                    .currency(currency)
+                    .transferAmount(fromTransferAmount)
+                    .transferDate(fromTransferDate)
+                    .transferDescription(fromTransferDescription)
+                    .reversed(fromTransferReversed)
+                    .build();
             } else if (toTransferId != null) {
                 final LocalDate toTransferDate = JdbcSupport.getLocalDate(rs, "toTransferDate");
                 final BigDecimal toTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "toTransferAmount");
                 final boolean toTransferReversed = rs.getBoolean("toTransferReversed");
                 final String toTransferDescription = rs.getString("toTransferDescription");
 
-                transfer = AccountTransferData.transferBasicDetails(toTransferId, currency, toTransferAmount, toTransferDate,
-                        toTransferDescription, toTransferReversed);
+                transfer = AccountTransferData.builder()
+                    .id(toTransferId)
+                    .currency(currency)
+                    .transferAmount(toTransferAmount)
+                    .transferDate(toTransferDate)
+                    .transferDescription(toTransferDescription)
+                    .reversed(toTransferReversed)
+                    .build();
             }
             final boolean postInterestAsOn = false;
             final String submittedByUsername = rs.getString("submittedByUsername");
@@ -1433,10 +1445,18 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
             final boolean isRegularTransaction = false;
             final boolean isExceptionForBalanceCheck = false;
             final LocalDate transactionDate = JdbcSupport.getLocalDate(rs, "transactionDate");
-            return new AccountTransferDTO(transactionDate, transactionAmount, PortfolioAccountType.SAVINGS, PortfolioAccountType.SAVINGS,
-                    fromAccountId, toAccountId, "trasfer interest to savings", null, null, null, null, null, null, null,
-                    AccountTransferType.INTEREST_TRANSFER.getValue(), null, null, null, null, null, null, isRegularTransaction,
-                    isExceptionForBalanceCheck);
+            return AccountTransferDTO.builder()
+                .transactionDate(transactionDate)
+                .transactionAmount(transactionAmount)
+                .fromAccountType(PortfolioAccountType.SAVINGS)
+                .toAccountType(PortfolioAccountType.SAVINGS)
+                .fromAccountId(fromAccountId)
+                .toAccountId(toAccountId)
+                .description("trasfer interest to savings")
+                .transferType(AccountTransferType.INTEREST_TRANSFER.getValue())
+                .regularTransaction(isRegularTransaction)
+                .exceptionForBalanceCheck(isExceptionForBalanceCheck)
+                .build();
         }
 
     }

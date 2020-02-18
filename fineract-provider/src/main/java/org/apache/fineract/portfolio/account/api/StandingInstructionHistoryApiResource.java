@@ -78,8 +78,16 @@ public class StandingInstructionHistoryApiResource {
             endDateRange = toDateParam.getDate("toDate", dateFormat, locale);
         }
 
-        StandingInstructionDTO standingInstructionDTO = new StandingInstructionDTO(searchParameters, transferType, clientName, clientId,
-                fromAccount, fromAccountType, startDateRange, endDateRange);
+        StandingInstructionDTO standingInstructionDTO = StandingInstructionDTO.builder()
+            .searchParameters(searchParameters)
+            .transferType(transferType)
+            .clientName(clientName)
+            .clientId(clientId)
+            .fromAccount(fromAccount)
+            .fromAccountType(fromAccountType)
+            .startDateRange(startDateRange)
+            .endDateRange(endDateRange)
+            .build();
 
         final Page<StandingInstructionHistoryData> history = this.standingInstructionHistoryReadPlatformService
                 .retrieveAll(standingInstructionDTO);

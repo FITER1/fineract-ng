@@ -50,14 +50,14 @@ public class ReportMailingJob extends AbstractAuditableCustom<AppUser, Long> {
     @Column(name = "name", nullable = false)
     private String name;
     
-    @Column(name = "description", nullable = true)
+    @Column(name = "description")
     private String description;
     
     @Column(name = "start_datetime", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private DateTime startDateTime;
     
-    @Column(name = "recurrence", nullable = true)
+    @Column(name = "recurrence")
     private String recurrence;
     
     @Column(name = "email_recipients", nullable = false)
@@ -76,24 +76,24 @@ public class ReportMailingJob extends AbstractAuditableCustom<AppUser, Long> {
     @JoinColumn(name = "stretchy_report_id", nullable = false)
     private Report stretchyReport;
     
-    @Column(name = "stretchy_report_param_map", nullable = true)
+    @Column(name = "stretchy_report_param_map")
     private String stretchyReportParamMap;
     
-    @Column(name = "previous_run_datetime", nullable = true)
+    @Column(name = "previous_run_datetime")
     @Temporal(TemporalType.TIMESTAMP)
     private DateTime previousRunDateTime;
 
-    @Column(name = "next_run_datetime", nullable = true)
+    @Column(name = "next_run_datetime")
     @Temporal(TemporalType.TIMESTAMP)
     private DateTime nextRunDateTime;
     
-    @Column(name = "previous_run_status", nullable = true)
+    @Column(name = "previous_run_status")
     private String previousRunStatus;
     
-    @Column(name = "previous_run_error_log", nullable = true)
+    @Column(name = "previous_run_error_log")
     private String previousRunErrorLog;
     
-    @Column(name = "previous_run_error_message", nullable = true)
+    @Column(name = "previous_run_error_message")
     private String previousRunErrorMessage;
     
     @Column(name = "number_of_runs", nullable = false)

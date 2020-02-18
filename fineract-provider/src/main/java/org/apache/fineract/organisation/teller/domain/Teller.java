@@ -47,25 +47,25 @@ public class Teller extends AbstractPersistableCustom<Long> {
     private Office office;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "debit_account_id", nullable = true)
+    @JoinColumn(name = "debit_account_id")
     private GLAccount debitAccount;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "credit_account_id", nullable = true)
+    @JoinColumn(name = "credit_account_id")
     private GLAccount creditAccount;
 
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "description", nullable = true, length = 500)
+    @Column(name = "description", length = 500)
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "valid_from", nullable = true)
+    @Column(name = "valid_from")
     private Date startDate;
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "valid_to", nullable = true)
+    @Column(name = "valid_to")
     private Date endDate;
 
     @Column(name = "state", nullable = false)

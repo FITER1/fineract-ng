@@ -34,7 +34,7 @@ import java.util.Date;
 public class DepositAccountOnHoldTransaction extends AbstractPersistableCustom<Long> {
 
     @ManyToOne
-    @JoinColumn(name = "savings_account_id", nullable = true)
+    @JoinColumn(name = "savings_account_id")
     private SavingsAccount savingsAccount;
 
     @Column(name = "amount", scale = 6, precision = 19, nullable = false)

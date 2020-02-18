@@ -57,6 +57,6 @@ public class OfficeTransaction extends AbstractPersistableCustom<Long> {
     @Column(name = "transaction_amount", scale = 6, precision = 19, nullable = false)
     private BigDecimal transactionAmount;
 
-    @Column(name = "description", nullable = true, length = 100)
+    @Column(name = "description", length = 100)
     private String description;
 }

@@ -43,7 +43,7 @@ public class GLAccount extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "parent_id")
     private GLAccount parent;
 
-    @Column(name = "hierarchy", nullable = true, length = 50)
+    @Column(name = "hierarchy", length = 50)
     private String hierarchy;
 
     @Builder.Default
@@ -71,7 +71,7 @@ public class GLAccount extends AbstractPersistableCustom<Long> {
     @Column(name = "account_usage", nullable = false)
     private Integer usage;
 
-    @Column(name = "description", nullable = true, length = 500)
+    @Column(name = "description", length = 500)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)

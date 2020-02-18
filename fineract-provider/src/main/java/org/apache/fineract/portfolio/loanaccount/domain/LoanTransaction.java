@@ -55,7 +55,7 @@ public class LoanTransaction extends AbstractPersistableCustom<Long> {
     private Office office;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "payment_detail_id", nullable = true)
+    @JoinColumn(name = "payment_detail_id")
     private PaymentDetail paymentDetail;
 
     @Column(name = "transaction_type_enum", nullable = false)
@@ -72,28 +72,28 @@ public class LoanTransaction extends AbstractPersistableCustom<Long> {
     @Column(name = "amount", scale = 6, precision = 19, nullable = false)
     private BigDecimal amount;
 
-    @Column(name = "principal_portion_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "principal_portion_derived", scale = 6, precision = 19)
     private BigDecimal principalPortion;
 
-    @Column(name = "interest_portion_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "interest_portion_derived", scale = 6, precision = 19)
     private BigDecimal interestPortion;
 
-    @Column(name = "fee_charges_portion_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "fee_charges_portion_derived", scale = 6, precision = 19)
     private BigDecimal feeChargesPortion;
 
-    @Column(name = "penalty_charges_portion_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "penalty_charges_portion_derived", scale = 6, precision = 19)
     private BigDecimal penaltyChargesPortion;
 
-    @Column(name = "overpayment_portion_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "overpayment_portion_derived", scale = 6, precision = 19)
     private BigDecimal overPaymentPortion;
 
-    @Column(name = "unrecognized_income_portion", scale = 6, precision = 19, nullable = true)
+    @Column(name = "unrecognized_income_portion", scale = 6, precision = 19)
     private BigDecimal unrecognizedIncomePortion;
 
     @Column(name = "is_reversed", nullable = false)
     private boolean reversed;
 
-    @Column(name = "external_id", length = 100, nullable = true, unique = true)
+    @Column(name = "external_id", length = 100, unique = true)
     private String externalId;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -101,13 +101,13 @@ public class LoanTransaction extends AbstractPersistableCustom<Long> {
     private Date createdDate;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "appuser_id", nullable = true)
+    @JoinColumn(name = "appuser_id")
     private AppUser appUser;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loanTransaction", orphanRemoval = true, fetch=FetchType.EAGER)
     private Set<LoanChargePaidBy> loanChargesPaid = new HashSet<>();
 
-    @Column(name = "outstanding_loan_balance_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "outstanding_loan_balance_derived", scale = 6, precision = 19)
     private BigDecimal outstandingLoanBalance;
 
     @Column(name = "manually_adjusted_or_reversed", nullable = false)

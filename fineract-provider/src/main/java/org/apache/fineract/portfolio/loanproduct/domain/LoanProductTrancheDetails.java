@@ -32,10 +32,10 @@ public class LoanProductTrancheDetails {
     @Column(name = "allow_multiple_disbursals")
     private boolean multiDisburseLoan;
 
-    @Column(name = "max_disbursals", nullable = true)
+    @Column(name = "max_disbursals")
     private Integer maxTrancheCount;
 
-    @Column(name = "max_outstanding_loan_balance", scale = 6, precision = 19, nullable = true)
+    @Column(name = "max_outstanding_loan_balance", scale = 6, precision = 19)
     private BigDecimal outstandingLoanBalance;
 
     protected LoanProductTrancheDetails() {

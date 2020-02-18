@@ -100,9 +100,15 @@ public class AccountTransferDetailAssembler {
 
         final Integer transfertype = this.fromApiJsonHelper.extractIntegerNamed(transferTypeParamName, element, Locale.getDefault());
 
-        return AccountTransferDetails.savingsToSavingsTransfer(fromOffice, fromClient, fromSavingsAccount, toOffice, toClient,
-                toSavingsAccount, transfertype);
-
+        return AccountTransferDetails.builder()
+            .fromOffice(fromOffice)
+            .fromClient(fromClient)
+            .fromSavingsAccount(fromSavingsAccount)
+            .toOffice(toOffice)
+            .toClient(toClient)
+            .toSavingsAccount(toSavingsAccount)
+            .transferType(transfertype)
+            .build();
     }
 
     public AccountTransferDetails assembleSavingsToLoanTransfer(final JsonCommand command, final SavingsAccount fromSavingsAccount,
@@ -124,9 +130,15 @@ public class AccountTransferDetailAssembler {
 
         final Integer transfertype = this.fromApiJsonHelper.extractIntegerNamed(transferTypeParamName, element, Locale.getDefault());
 
-        return AccountTransferDetails.savingsToLoanTransfer(fromOffice, fromClient, fromSavingsAccount, toOffice, toClient, toLoanAccount,
-                transfertype);
-
+        return AccountTransferDetails.builder()
+            .fromOffice(fromOffice)
+            .fromClient(fromClient)
+            .fromSavingsAccount(fromSavingsAccount)
+            .toOffice(toOffice)
+            .toClient(toClient)
+            .toLoanAccount(toLoanAccount)
+            .transferType(transfertype)
+            .build();
     }
 
     public AccountTransferDetails assembleLoanToSavingsTransfer(final JsonCommand command, final Loan fromLoanAccount,
@@ -147,8 +159,15 @@ public class AccountTransferDetailAssembler {
         final Client toClient = this.clientRepository.findOneWithNotFoundDetection(toClientId);
         final Integer transfertype = this.fromApiJsonHelper.extractIntegerNamed(transferTypeParamName, element, Locale.getDefault());
 
-        return AccountTransferDetails.loanToSavingsTransfer(fromOffice, fromClient, fromLoanAccount, toOffice, toClient, toSavingsAccount,
-                transfertype);
+        return AccountTransferDetails.builder()
+            .fromOffice(fromOffice)
+            .fromClient(fromClient)
+            .fromLoanAccount(fromLoanAccount)
+            .toOffice(toOffice)
+            .toClient(toClient)
+            .toSavingsAccount(toSavingsAccount)
+            .transferType(transfertype)
+            .build();
     }
 
     public AccountTransferDetails assembleSavingsToLoanTransfer(final SavingsAccount fromSavingsAccount, final Loan toLoanAccount,
@@ -156,11 +175,17 @@ public class AccountTransferDetailAssembler {
         final Office fromOffice = fromSavingsAccount.office();
         final Client fromClient = fromSavingsAccount.getClient();
         final Office toOffice = toLoanAccount.getOffice();
-        final Client toClient = toLoanAccount.client();
+        final Client toClient = toLoanAccount.getClient();
 
-        return AccountTransferDetails.savingsToLoanTransfer(fromOffice, fromClient, fromSavingsAccount, toOffice, toClient, toLoanAccount,
-                transferType);
-
+        return AccountTransferDetails.builder()
+            .fromOffice(fromOffice)
+            .fromClient(fromClient)
+            .fromSavingsAccount(fromSavingsAccount)
+            .toOffice(toOffice)
+            .toClient(toClient)
+            .toLoanAccount(toLoanAccount)
+            .transferType(transferType)
+            .build();
     }
 
     public AccountTransferDetails assembleSavingsToSavingsTransfer(final SavingsAccount fromSavingsAccount,
@@ -170,28 +195,44 @@ public class AccountTransferDetailAssembler {
         final Office toOffice = toSavingsAccount.office();
         final Client toClient = toSavingsAccount.getClient();
 
-        return AccountTransferDetails.savingsToSavingsTransfer(fromOffice, fromClient, fromSavingsAccount, toOffice, toClient,
-                toSavingsAccount, transferType);
+        return AccountTransferDetails.builder()
+            .fromOffice(fromOffice)
+            .fromClient(fromClient)
+            .fromSavingsAccount(fromSavingsAccount)
+            .toOffice(toOffice)
+            .toClient(toClient)
+            .toSavingsAccount(toSavingsAccount)
+            .transferType(transferType)
+            .build();
     }
 
     public AccountTransferDetails assembleLoanToSavingsTransfer(final Loan fromLoanAccount, final SavingsAccount toSavingsAccount,
             Integer transferType) {
         final Office fromOffice = fromLoanAccount.getOffice();
-        final Client fromClient = fromLoanAccount.client();
+        final Client fromClient = fromLoanAccount.getClient();
         final Office toOffice = toSavingsAccount.office();
         final Client toClient = toSavingsAccount.getClient();
 
-        return AccountTransferDetails.loanToSavingsTransfer(fromOffice, fromClient, fromLoanAccount, toOffice, toClient, toSavingsAccount,
-                transferType);
+        return AccountTransferDetails.builder()
+            .fromOffice(fromOffice)
+            .fromClient(fromClient)
+            .fromLoanAccount(fromLoanAccount)
+            .toOffice(toOffice)
+            .toClient(toClient)
+            .toSavingsAccount(toSavingsAccount)
+            .transferType(transferType)
+            .build();
     }
 
     public AccountTransferDetails assembleLoanToLoanTransfer(Loan fromLoanAccount, Loan toLoanAccount, Integer transferType) {
-        final Office fromOffice = fromLoanAccount.getOffice();
-        final Client fromClient = fromLoanAccount.client();
-        final Office toOffice = toLoanAccount.getOffice();
-        final Client toClient = toLoanAccount.client();
-
-        return AccountTransferDetails.loanToLoanTransfer(fromOffice, fromClient, fromLoanAccount, toOffice, toClient, toLoanAccount,
-                transferType);
+        return AccountTransferDetails.builder()
+            .fromOffice(fromLoanAccount.getOffice())
+            .fromClient(fromLoanAccount.getClient())
+            .fromLoanAccount(fromLoanAccount)
+            .toOffice(toLoanAccount.getOffice())
+            .toClient(toLoanAccount.getClient())
+            .toLoanAccount(toLoanAccount)
+            .transferType(transferType)
+            .build();
     }
 }

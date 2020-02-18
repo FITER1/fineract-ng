@@ -90,14 +90,18 @@ public class GuarantorWritePlatformServiceJpaRepositoryIImpl implements Guaranto
             if (guarantorCommand.getSavingsId() != null) {
                 final SavingsAccount savingsAccount = this.savingsAccountAssembler.assembleFrom(guarantorCommand.getSavingsId());
                 validateGuarantorSavingsAccountActivationDateWithLoanSubmittedOnDate(loan,savingsAccount);
-                accountAssociations = AccountAssociations.associateSavingsAccount(loan, savingsAccount,
-                        AccountAssociationType.GUARANTOR_ACCOUNT_ASSOCIATION.getValue(), true);
+                accountAssociations = AccountAssociations.builder()
+                    .loanAccount(loan)
+                    .linkedSavingsAccount(savingsAccount)
+                    .associationType(AccountAssociationType.GUARANTOR_ACCOUNT_ASSOCIATION.getValue())
+                    .active(true)
+                    .build();
 
                 GuarantorFundingDetails fundingDetails = new GuarantorFundingDetails(accountAssociations,
                         GuarantorFundStatusType.ACTIVE.getValue(), guarantorCommand.getAmount());
                 guarantorFundingDetails.add(fundingDetails);
                 if (loan.isDisbursed() || loan.isApproved()
-                        && (loan.getGuaranteeAmount() != null || loan.loanProduct().isHoldGuaranteeFundsEnabled())) {
+                        && (loan.getGuaranteeAmount() != null || loan.getLoanProduct().isHoldGuaranteeFundsEnabled())) {
                     this.guarantorDomainService.assignGuarantor(fundingDetails, LocalDate.now());
                     loan.updateGuaranteeAmount(fundingDetails.getAmount());
                 }
@@ -127,7 +131,7 @@ public class GuarantorWritePlatformServiceJpaRepositoryIImpl implements Guaranto
                         }
 
                         defaultUserMessage = defaultUserMessage + " is already exist as a guarantor for this loan";
-                        final String action = loan.client() != null ? "client.guarantor" : "group.guarantor";
+                        final String action = loan.getClient() != null ? "client.guarantor" : "group.guarantor";
                         throw new DuplicateGuarantorException(action, "is.already.exist.same.loan", defaultUserMessage, entityId,
                                 loan.getId());
                     }
@@ -200,7 +204,7 @@ public class GuarantorWritePlatformServiceJpaRepositoryIImpl implements Guaranto
                             && !guarantorForUpdate.getId().equals(guarantor.getId())) {
                         String defaultUserMessage = this.clientRepositoryWrapper.findOneWithNotFoundDetection(entityId).getDisplayName();
                         defaultUserMessage = defaultUserMessage + " is already exist as a guarantor for this loan";
-                        final String action = loan.client() != null ? "client.guarantor" : "group.guarantor";
+                        final String action = loan.getClient() != null ? "client.guarantor" : "group.guarantor";
                         throw new DuplicateGuarantorException(action, "is.already.exist.same.loan", defaultUserMessage, entityId, loanId);
                     }
                 }

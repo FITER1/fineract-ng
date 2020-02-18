@@ -189,7 +189,11 @@ public class GuarantorsApiResource {
 
         this.context.authenticatedUser().validateHasReadPermission(this.resourceNameForPermission);
 
-        PortfolioAccountDTO portfolioAccountDTO = new PortfolioAccountDTO(PortfolioAccountType.SAVINGS.getValue(), clientId, null);
+        PortfolioAccountDTO portfolioAccountDTO = PortfolioAccountDTO.builder()
+            .accountTypeId(PortfolioAccountType.SAVINGS.getValue())
+            .clientId(clientId)
+            .excludeOverDraftAccounts(false)
+            .build();
         Collection<PortfolioAccountData> accountLinkingOptions = null;
         if (this.loanReadPlatformService.isGuaranteeRequired(loanId)) {
             accountLinkingOptions = this.portfolioAccountReadPlatformService.retrieveAllForLookup(portfolioAccountDTO);

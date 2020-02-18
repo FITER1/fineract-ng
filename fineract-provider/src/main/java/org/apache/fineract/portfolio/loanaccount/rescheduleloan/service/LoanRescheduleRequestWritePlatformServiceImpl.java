@@ -397,7 +397,7 @@ public class LoanRescheduleRequestWritePlatformServiceImpl implements LoanResche
             }
 
             loan.updateRescheduledByUser(appUser);
-            loan.updateRescheduledOnDate(new LocalDate());
+            loan.updateRescheduledOnDate(LocalDate.now());
 
             // update the status of the request
             loanRescheduleRequest.approve(appUser, approvedOnDate);

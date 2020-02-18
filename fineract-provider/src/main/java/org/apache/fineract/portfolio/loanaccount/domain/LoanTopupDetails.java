@@ -34,10 +34,10 @@ public class LoanTopupDetails  extends AbstractPersistableCustom<Long> {
         @Column(name = "closure_loan_id", nullable = false)
         private Long closureLoanId;
 
-        @Column(name = "account_transfer_details_id", nullable = true)
+        @Column(name = "account_transfer_details_id")
         private Long accountTransferDetailsId;
 
-        @Column(name = "topup_amount", nullable = true)
+        @Column(name = "topup_amount")
         private BigDecimal topupAmount;
 
         protected LoanTopupDetails(){};

@@ -58,12 +58,12 @@ public class ImportDocument extends AbstractPersistableCustom<Long>{
     @JoinColumn(name = "createdby_id")
     private AppUser createdBy;
 
-    @Column(name = "total_records", nullable = true)
+    @Column(name = "total_records")
     private Integer totalRecords;
 
-    @Column(name = "success_count", nullable = true)
+    @Column(name = "success_count")
     private Integer successCount;
 
-    @Column(name = "failure_count", nullable = true)
+    @Column(name = "failure_count")
     private Integer failureCount;
 }

@@ -48,7 +48,7 @@ public class EntityDatatableChecks extends AbstractPersistableCustom<Long> {
 	@Column(name = "system_defined")
 	private boolean systemDefined = false;
 
-	@Column(name = "product_id", nullable = true)
+	@Column(name = "product_id")
 	private Long productId;
 
 	public static EntityDatatableChecks fromJson(final JsonCommand command) {

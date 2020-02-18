@@ -61,7 +61,7 @@ public class SmsCampaign extends AbstractPersistableCustom<Long> {
     @Column(name = "campaign_trigger_type", nullable = false)
     private Integer triggerType; //defines direct, scheduled, transaction
     
-    @Column(name = "provider_id", nullable = true)//null for notifications
+    @Column(name = "provider_id")//null for notifications
     private Long providerId; // defined provider details
 
     @ManyToOne
@@ -77,49 +77,49 @@ public class SmsCampaign extends AbstractPersistableCustom<Long> {
     @Column(name = "message", nullable = false)
     private String message;
 
-    @Column(name = "closedon_date", nullable = true)
+    @Column(name = "closedon_date")
     @Temporal(TemporalType.DATE)
     private Date closureDate;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "closedon_userid", nullable = true)
+    @JoinColumn(name = "closedon_userid")
     private AppUser closedBy;
 
-    @Column(name = "submittedon_date", nullable = true)
+    @Column(name = "submittedon_date")
     @Temporal(TemporalType.DATE)
     private Date submittedOnDate;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "submittedon_userid", nullable = true)
+    @JoinColumn(name = "submittedon_userid")
     private AppUser submittedBy;
 
-    @Column(name = "approvedon_date", nullable = true)
+    @Column(name = "approvedon_date")
     @Temporal(TemporalType.DATE)
     private Date approvedOnDate;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "approvedon_userid", nullable = true)
+    @JoinColumn(name = "approvedon_userid")
     private AppUser approvedBy;
 
-    @Column(name = "recurrence", nullable = true)
+    @Column(name = "recurrence")
     private String recurrence;
 
-    @Column(name = "next_trigger_date", nullable = true)
+    @Column(name = "next_trigger_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date nextTriggerDate;
 
-    @Column(name = "last_trigger_date", nullable = true)
+    @Column(name = "last_trigger_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastTriggerDate;
 
-    @Column(name = "recurrence_start_date", nullable = true)
+    @Column(name = "recurrence_start_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date recurrenceStartDate;
 
-    @Column(name = "is_visible", nullable = true)
+    @Column(name = "is_visible")
     private boolean isVisible;
     
-    @Column(name = "is_notification", nullable = true)
+    @Column(name = "is_notification")
     private boolean isNotification;
 
     public static SmsCampaign instance(final AppUser submittedBy, final Report report, final JsonCommand command) {
@@ -139,7 +139,7 @@ public class SmsCampaign extends AbstractPersistableCustom<Long> {
         final String paramValue = command.jsonFragment(SmsCampaignValidator.paramValue);
 
         final String message = command.stringValueOfParameterNamed(SmsCampaignValidator.message);
-        LocalDate submittedOnDate = new LocalDate();
+        LocalDate submittedOnDate = LocalDate.now();
         if (command.hasParameter(SmsCampaignValidator.submittedOnDateParamName)) {
             submittedOnDate = command.localDateValueOfParameterNamed(SmsCampaignValidator.submittedOnDateParamName);
         }

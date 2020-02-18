@@ -34,7 +34,7 @@ public class GuarantorFundingTransaction extends AbstractPersistableCustom<Long>
     private GuarantorFundingDetails guarantorFundingDetails;
 
     @ManyToOne
-    @JoinColumn(name = "loan_transaction_id", nullable = true)
+    @JoinColumn(name = "loan_transaction_id")
     private LoanTransaction loanTransaction;
 
     @OneToOne

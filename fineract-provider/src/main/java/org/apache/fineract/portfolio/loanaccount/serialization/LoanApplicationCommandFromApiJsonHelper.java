@@ -1000,8 +1000,8 @@ public final class LoanApplicationCommandFromApiJsonHelper {
          * permissible range defined by the loan product
          **/
         if (loan.getFixedEmiAmount() != null) {
-            Integer minimumNoOfRepayments = loan.loanProduct().getMinNumberOfRepayments();
-            Integer maximumNoOfRepayments = loan.loanProduct().getMaxNumberOfRepayments();
+            Integer minimumNoOfRepayments = loan.getLoanProduct().getMinNumberOfRepayments();
+            Integer maximumNoOfRepayments = loan.getLoanProduct().getMaxNumberOfRepayments();
             Integer actualNumberOfRepayments = loan.getLoanRepaymentScheduleInstallmentsSize();
             // validate actual number of repayments is > minimum number of
             // repayments

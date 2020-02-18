@@ -36,19 +36,19 @@ import javax.persistence.*;
 public class AccountAssociations extends AbstractPersistableCustom<Long> {
 
     @ManyToOne
-    @JoinColumn(name = "loan_account_id", nullable = true)
+    @JoinColumn(name = "loan_account_id")
     private Loan loanAccount;
 
     @ManyToOne
-    @JoinColumn(name = "savings_account_id", nullable = true)
+    @JoinColumn(name = "savings_account_id")
     private SavingsAccount savingsAccount;
 
     @ManyToOne
-    @JoinColumn(name = "linked_loan_account_id", nullable = true)
+    @JoinColumn(name = "linked_loan_account_id")
     private Loan linkedLoanAccount;
 
     @ManyToOne
-    @JoinColumn(name = "linked_savings_account_id", nullable = true)
+    @JoinColumn(name = "linked_savings_account_id")
     private SavingsAccount linkedSavingsAccount;
 
     @Column(name = "association_type_enum", nullable = false)
@@ -57,24 +57,4 @@ public class AccountAssociations extends AbstractPersistableCustom<Long> {
     @Builder.Default
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
-
-    public static AccountAssociations associateSavingsAccount(final Loan loan, final SavingsAccount savingsAccount,
-            final Integer associationType, boolean isActive) {
-        return AccountAssociations.builder()
-            .loanAccount(loan)
-            .linkedSavingsAccount(savingsAccount)
-            .associationType(associationType)
-            .active(isActive)
-            .build();
-    }
-
-    public static AccountAssociations associateSavingsAccount(final SavingsAccount savingsAccount,
-            final SavingsAccount linkedSavingsAccount, final Integer associationType, boolean isActive) {
-        return AccountAssociations.builder()
-            .savingsAccount(savingsAccount)
-            .linkedSavingsAccount(linkedSavingsAccount)
-            .associationType(associationType)
-            .active(isActive)
-            .build();
-    }
 }

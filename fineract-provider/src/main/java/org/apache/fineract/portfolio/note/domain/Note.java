@@ -39,19 +39,19 @@ import java.util.Map;
 public class Note extends AbstractAuditableCustom<AppUser, Long> {
 
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = true)
+    @JoinColumn(name = "client_id")
     private Client client;
 
     @ManyToOne
-    @JoinColumn(name = "group_id", nullable = true)
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @ManyToOne
-    @JoinColumn(name = "loan_id", nullable = true)
+    @JoinColumn(name = "loan_id")
     private Loan loan;
 
     @ManyToOne
-    @JoinColumn(name = "loan_transaction_id", nullable = true)
+    @JoinColumn(name = "loan_transaction_id")
     private LoanTransaction loanTransaction;
 
     @Column(name = "note", length = 1000)
@@ -61,15 +61,15 @@ public class Note extends AbstractAuditableCustom<AppUser, Long> {
     private Integer noteTypeId;
 
     @ManyToOne
-    @JoinColumn(name = "savings_account_id", nullable = true)
+    @JoinColumn(name = "savings_account_id")
     private SavingsAccount savingsAccount;
 
     @ManyToOne
-    @JoinColumn(name = "savings_account_transaction_id", nullable = true)
+    @JoinColumn(name = "savings_account_transaction_id")
     private SavingsAccountTransaction savingsTransaction;
     
     @ManyToOne
-    @JoinColumn(name = "share_account_id", nullable = true)
+    @JoinColumn(name = "share_account_id")
     private ShareAccount shareAccount;
     
     
@@ -127,7 +127,7 @@ public class Note extends AbstractAuditableCustom<AppUser, Long> {
 
     private Note(final Loan loan, final String note) {
         this.loan = loan;
-        this.client = loan.client();
+        this.client = loan.getClient();
         this.note = note;
         this.noteTypeId = NoteType.LOAN.getValue();
     }
@@ -135,7 +135,7 @@ public class Note extends AbstractAuditableCustom<AppUser, Long> {
     private Note(final Loan loan, final LoanTransaction loanTransaction, final String note) {
         this.loan = loan;
         this.loanTransaction = loanTransaction;
-        this.client = loan.client();
+        this.client = loan.getClient();
         this.note = note;
         this.noteTypeId = NoteType.LOAN_TRANSACTION.getValue();
     }

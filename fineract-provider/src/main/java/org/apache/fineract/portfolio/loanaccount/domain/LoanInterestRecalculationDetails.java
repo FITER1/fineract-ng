@@ -59,26 +59,26 @@ public class LoanInterestRecalculationDetails extends AbstractPersistableCustom<
     @Column(name = "rest_frequency_interval", nullable = false)
     private Integer restInterval;
 
-    @Column(name = "rest_frequency_nth_day_enum", nullable = true)
+    @Column(name = "rest_frequency_nth_day_enum")
     private Integer restFrequencyNthDay;
 
-    @Column(name = "rest_frequency_weekday_enum", nullable = true)
+    @Column(name = "rest_frequency_weekday_enum")
     private Integer restFrequencyWeekday;
 
-    @Column(name = "rest_frequency_on_day", nullable = true)
+    @Column(name = "rest_frequency_on_day")
     private Integer restFrequencyOnDay;
 
-    @Column(name = "compounding_frequency_type_enum", nullable = true)
+    @Column(name = "compounding_frequency_type_enum")
     private Integer compoundingFrequencyType;
 
-    @Column(name = "compounding_frequency_interval", nullable = true)
+    @Column(name = "compounding_frequency_interval")
     private Integer compoundingInterval;
 
-    @Column(name = "compounding_frequency_nth_day_enum", nullable = true)
+    @Column(name = "compounding_frequency_nth_day_enum")
     private Integer compoundingFrequencyNthDay;
-    @Column(name = "compounding_frequency_weekday_enum", nullable = true)
+    @Column(name = "compounding_frequency_weekday_enum")
     private Integer compoundingFrequencyWeekday;
-    @Column(name = "compounding_frequency_on_day", nullable = true)
+    @Column(name = "compounding_frequency_on_day")
     private Integer compoundingFrequencyOnDay;
 
     @Column(name = "is_compounding_to_be_posted_as_transaction")

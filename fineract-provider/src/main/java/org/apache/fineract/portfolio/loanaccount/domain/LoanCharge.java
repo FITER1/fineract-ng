@@ -62,10 +62,10 @@ public class LoanCharge extends AbstractPersistableCustom<Long> {
     @Column(name = "charge_payment_mode_enum")
     private Integer chargePaymentMode;
 
-    @Column(name = "calculation_percentage", scale = 6, precision = 19, nullable = true)
+    @Column(name = "calculation_percentage", scale = 6, precision = 19)
     private BigDecimal percentage;
 
-    @Column(name = "calculation_on_amount", scale = 6, precision = 19, nullable = true)
+    @Column(name = "calculation_on_amount", scale = 6, precision = 19)
     private BigDecimal amountPercentageAppliedTo;
 
     @Column(name = "charge_amount_or_percentage", scale = 6, precision = 19, nullable = false)
@@ -74,13 +74,13 @@ public class LoanCharge extends AbstractPersistableCustom<Long> {
     @Column(name = "amount", scale = 6, precision = 19, nullable = false)
     private BigDecimal amount;
 
-    @Column(name = "amount_paid_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "amount_paid_derived", scale = 6, precision = 19)
     private BigDecimal amountPaid;
 
-    @Column(name = "amount_waived_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "amount_waived_derived", scale = 6, precision = 19)
     private BigDecimal amountWaived;
 
-    @Column(name = "amount_writtenoff_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "amount_writtenoff_derived", scale = 6, precision = 19)
     private BigDecimal amountWrittenOff;
 
     @Column(name = "amount_outstanding_derived", scale = 6, precision = 19, nullable = false)
@@ -95,10 +95,10 @@ public class LoanCharge extends AbstractPersistableCustom<Long> {
     @Column(name = "waived", nullable = false)
     private boolean waived = false;
 
-    @Column(name = "min_cap", scale = 6, precision = 19, nullable = true)
+    @Column(name = "min_cap", scale = 6, precision = 19)
     private BigDecimal minCap;
 
-    @Column(name = "max_cap", scale = 6, precision = 19, nullable = true)
+    @Column(name = "max_cap", scale = 6, precision = 19)
     private BigDecimal maxCap;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loancharge", orphanRemoval = true, fetch=FetchType.EAGER)

@@ -53,10 +53,10 @@ public class ShareAccountTransaction extends AbstractPersistableCustom<Long> {
     @Column(name = "charge_amount") 
     private BigDecimal chargeAmount ;
     
-    @Column(name = "status_enum", nullable = true)
+    @Column(name = "status_enum")
     private Integer status;
 
-    @Column(name = "type_enum", nullable = true) 
+    @Column(name = "type_enum") 
     private Integer type ;
     
     @Column(name = "is_active", nullable = false)

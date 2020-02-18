@@ -209,7 +209,10 @@ public class GuarantorReadPlatformServiceImpl implements GuarantorReadPlatformSe
                 final EnumOptionData status = GuarantorEnumerations.guarantorFundStatusType(statusEnum);
                 final Long savingsId = rs.getLong("savingsId");
                 final String savingsAccountNumber = rs.getString("accountNumber");
-                final PortfolioAccountData portfolioAccountData = PortfolioAccountData.lookup(savingsId, savingsAccountNumber);
+                final PortfolioAccountData portfolioAccountData = PortfolioAccountData.builder()
+                    .id(savingsId)
+                    .accountNo(savingsAccountNumber)
+                    .build();
                 List<GuarantorTransactionData> guarantorTransactions = new ArrayList<>();
                 if (this.guarantorTransactionMapper != null) {
                     GuarantorTransactionData guarantorTransactionData = this.guarantorTransactionMapper.mapRow(rs, rowNum);

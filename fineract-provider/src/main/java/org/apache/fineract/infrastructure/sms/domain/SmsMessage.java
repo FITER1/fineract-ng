@@ -46,43 +46,43 @@ import java.util.Map;
 @Table(name = "sms_messages_outbound")
 public class SmsMessage extends AbstractPersistableCustom<Long> {
 
-    @Column(name = "external_id", nullable = true)
+    @Column(name = "external_id")
     private String externalId;
 
     @ManyToOne
-    @JoinColumn(name = "group_id", nullable = true)
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = true)
+    @JoinColumn(name = "client_id")
     private Client client;
 
     @ManyToOne
-    @JoinColumn(name = "staff_id", nullable = true)
+    @JoinColumn(name = "staff_id")
     private Staff staff;
 
     @ManyToOne
-    @JoinColumn(name = "campaign_id", nullable = true)
+    @JoinColumn(name = "campaign_id")
     private SmsCampaign smsCampaign;
 
     @Column(name = "status_enum", nullable = false)
     private Integer statusType;
 
-    @Column(name = "mobile_no", nullable = true, length = 50)
+    @Column(name = "mobile_no", length = 50)
     private String mobileNo;
 
     @Column(name = "message", nullable = false)
     private String message;
 
-    @Column(name = "submittedon_date", nullable = true)
+    @Column(name = "submittedon_date")
     @Temporal(TemporalType.DATE)
     private Date submittedOnDate;
 
-    @Column(name = "delivered_on_date", nullable = true)
+    @Column(name = "delivered_on_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date deliveredOnDate; 
     
-    @Column(name = "is_notification", nullable = true)
+    @Column(name = "is_notification")
     private boolean notification;
 
     public Map<String, Object> update(final JsonCommand command) {

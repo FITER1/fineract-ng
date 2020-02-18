@@ -1293,16 +1293,28 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
                 final boolean fromTransferReversed = rs.getBoolean("fromTransferReversed");
                 final String fromTransferDescription = rs.getString("fromTransferDescription");
 
-                transfer = AccountTransferData.transferBasicDetails(fromTransferId, currencyData, fromTransferAmount, fromTransferDate,
-                        fromTransferDescription, fromTransferReversed);
+                transfer = AccountTransferData.builder()
+                    .id(fromTransferId)
+                    .currency(currencyData)
+                    .transferAmount(fromTransferAmount)
+                    .transferDate(fromTransferDate)
+                    .transferDescription(fromTransferDescription)
+                    .reversed(fromTransferReversed)
+                    .build();
             } else if (toTransferId != null) {
                 final LocalDate toTransferDate = JdbcSupport.getLocalDate(rs, "toTransferDate");
                 final BigDecimal toTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "toTransferAmount");
                 final boolean toTransferReversed = rs.getBoolean("toTransferReversed");
                 final String toTransferDescription = rs.getString("toTransferDescription");
 
-                transfer = AccountTransferData.transferBasicDetails(toTransferId, currencyData, toTransferAmount, toTransferDate,
-                        toTransferDescription, toTransferReversed);
+                transfer = AccountTransferData.builder()
+                    .id(toTransferId)
+                    .currency(currencyData)
+                    .transferAmount(toTransferAmount)
+                    .transferDate(toTransferDate)
+                    .transferDescription(toTransferDescription)
+                    .reversed(toTransferReversed)
+                    .build();
             }
             return new LoanTransactionData(id, officeId, officeName, transactionType, paymentDetailData, currencyData, date, totalAmount,
                     principalPortion, interestPortion, feeChargesPortion, penaltyChargesPortion, overPaymentPortion,
@@ -2021,7 +2033,7 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
             .nameCode(applicationCurrency.getNameCode())
             .build();
 
-        final LocalDate earliestUnpaidInstallmentDate = new LocalDate();
+        final LocalDate earliestUnpaidInstallmentDate = LocalDate.now();
 
         final LoanTransactionEnumData transactionType = LoanEnumerations.transactionType(LoanTransactionType.REFUND_FOR_ACTIVE_LOAN);
         final Collection<PaymentTypeData> paymentOptions = this.paymentTypeReadPlatformService.retrieveAllPaymentTypes();

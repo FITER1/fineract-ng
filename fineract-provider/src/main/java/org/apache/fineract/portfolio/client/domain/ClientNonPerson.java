@@ -49,18 +49,18 @@ public class ClientNonPerson extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "constitution_cv_id", nullable = false)
     private CodeValue constitution;
 	
-	@Column(name = "incorp_no", length = 50, nullable = true)
+	@Column(name = "incorp_no", length = 50)
 	private String incorpNumber;
 	
-	@Column(name = "incorp_validity_till", nullable = true)
+	@Column(name = "incorp_validity_till")
 	@Temporal(TemporalType.DATE)
 	private Date incorpValidityTill;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "main_business_line_cv_id", nullable = true)
+	@JoinColumn(name = "main_business_line_cv_id")
     private CodeValue mainBusinessLine;
 	
-	@Column(name = "remarks", length = 150, nullable = true)
+	@Column(name = "remarks", length = 150)
 	private String remarks;
 	
 

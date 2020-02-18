@@ -219,8 +219,20 @@ public class PortfolioAccountReadPlatformServiceImpl implements PortfolioAccount
             final CurrencyData currency = new CurrencyData(currencyCode, currencyName, currencyDigits, inMulitplesOf,
                     currencyDisplaySymbol, currencyNameCode);
 
-            return new PortfolioAccountData(id, accountNo, externalId, groupId, groupName, clientId, clientName, productId, productName,
-                    fieldOfficerId, fieldOfficerName, currency);
+            return PortfolioAccountData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .externalId(externalId)
+                .groupId(groupId)
+                .groupName(groupName)
+                .clientId(clientId)
+                .clientName(clientName)
+                .productId(productId)
+                .productName(productName)
+                .fieldOfficerId(fieldOfficerId)
+                .fieldOfficerName(fieldOfficerName)
+                .currency(currency)
+                .build();
         }
     }
 
@@ -283,8 +295,21 @@ public class PortfolioAccountReadPlatformServiceImpl implements PortfolioAccount
             final CurrencyData currency = new CurrencyData(currencyCode, currencyName, currencyDigits, inMulitplesOf,
                     currencyDisplaySymbol, currencyNameCode);
 
-            return new PortfolioAccountData(id, accountNo, externalId, groupId, groupName, clientId, clientName, productId, productName,
-                    fieldOfficerId, fieldOfficerName, currency, amtForTransfer);
+            return PortfolioAccountData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .externalId(externalId)
+                .groupId(groupId)
+                .groupName(groupName)
+                .clientId(clientId)
+                .clientName(clientName)
+                .productId(productId)
+                .productName(productName)
+                .fieldOfficerId(fieldOfficerId)
+                .fieldOfficerName(fieldOfficerName)
+                .currency(currency)
+                .amtForTransfer(amtForTransfer)
+                .build();
         }
     }
     
@@ -361,8 +386,21 @@ public class PortfolioAccountReadPlatformServiceImpl implements PortfolioAccount
             final CurrencyData currency = new CurrencyData(currencyCode, currencyName, currencyDigits, inMulitplesOf,
                     currencyDisplaySymbol, currencyNameCode);
 
-            return new PortfolioAccountData(id, accountNo, externalId, groupId, groupName, clientId, clientName, productId, productName,
-                    fieldOfficerId, fieldOfficerName, currency, amtForTransfer);
+            return PortfolioAccountData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .externalId(externalId)
+                .groupId(groupId)
+                .groupName(groupName)
+                .clientId(clientId)
+                .clientName(clientName)
+                .productId(productId)
+                .productName(productName)
+                .fieldOfficerId(fieldOfficerId)
+                .fieldOfficerName(fieldOfficerName)
+                .currency(currency)
+                .amtForTransfer(amtForTransfer)
+                .build();
         }
     }
     

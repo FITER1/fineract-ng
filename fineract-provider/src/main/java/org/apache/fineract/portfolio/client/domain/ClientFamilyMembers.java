@@ -78,7 +78,7 @@ public class ClientFamilyMembers extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "profession_cv_id")
     private CodeValue profession;
 
-    @Column(name = "date_of_birth", nullable = true)
+    @Column(name = "date_of_birth")
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 

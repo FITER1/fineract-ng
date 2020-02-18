@@ -74,16 +74,16 @@ public class Charge extends AbstractPersistableCustom<Long> {
     @Column(name = "charge_calculation_enum")
     private Integer chargeCalculation;
 
-    @Column(name = "charge_payment_mode_enum", nullable = true)
+    @Column(name = "charge_payment_mode_enum")
     private Integer chargePaymentMode;
 
-    @Column(name = "fee_on_day", nullable = true)
+    @Column(name = "fee_on_day")
     private Integer feeOnDay;
 
-    @Column(name = "fee_interval", nullable = true)
+    @Column(name = "fee_interval")
     private Integer feeInterval;
 
-    @Column(name = "fee_on_month", nullable = true)
+    @Column(name = "fee_on_month")
     private Integer feeOnMonth;
 
     @Column(name = "is_penalty", nullable = false)
@@ -95,13 +95,13 @@ public class Charge extends AbstractPersistableCustom<Long> {
     @Column(name = "is_deleted", nullable = false)
     private boolean deleted = false;
 
-    @Column(name = "min_cap", scale = 6, precision = 19, nullable = true)
+    @Column(name = "min_cap", scale = 6, precision = 19)
     private BigDecimal minCap;
 
-    @Column(name = "max_cap", scale = 6, precision = 19, nullable = true)
+    @Column(name = "max_cap", scale = 6, precision = 19)
     private BigDecimal maxCap;
 
-    @Column(name = "fee_frequency", nullable = true)
+    @Column(name = "fee_frequency")
     private Integer feeFrequency;
 
     @ManyToOne(fetch = FetchType.LAZY)

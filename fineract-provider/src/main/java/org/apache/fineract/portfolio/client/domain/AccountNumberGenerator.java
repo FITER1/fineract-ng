@@ -63,7 +63,7 @@ public class AccountNumberGenerator {
         Map<String, String> propertyMap = new HashMap<>();
         propertyMap.put(ID, loan.getId().toString());
         propertyMap.put(OFFICE_NAME, loan.getOffice().getName());
-        propertyMap.put(LOAN_PRODUCT_SHORT_NAME, loan.loanProduct().getShortName());
+        propertyMap.put(LOAN_PRODUCT_SHORT_NAME, loan.getLoanProduct().getShortName());
         return generateAccountNumber(propertyMap, accountNumberFormat);
     }
 

@@ -34,10 +34,10 @@ import static org.apache.fineract.portfolio.interestratechart.InterestRateChartS
 @Embeddable
 public class InterestRateChartSlabFields {
 
-    @Column(name = "description", nullable = true)
+    @Column(name = "description")
     private String description;
 
-    @Column(name = "period_type_enum", nullable = true)
+    @Column(name = "period_type_enum")
     private Integer periodType;
 
     @Column(name = "from_period")

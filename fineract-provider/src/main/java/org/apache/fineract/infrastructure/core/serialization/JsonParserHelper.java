@@ -298,7 +298,7 @@ public class JsonParserHelper {
                 final Integer month = dateArray.get(1).getAsInt();
                 final Integer day = dateArray.get(2).getAsInt();
 
-                value = new LocalDate().withYearOfEra(year).withMonthOfYear(month).withDayOfMonth(day);
+                value = LocalDate.now().withYearOfEra(year).withMonthOfYear(month).withDayOfMonth(day);
             }
 
         }

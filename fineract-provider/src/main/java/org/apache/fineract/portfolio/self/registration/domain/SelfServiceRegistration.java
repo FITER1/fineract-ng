@@ -41,13 +41,13 @@ public class SelfServiceRegistration extends AbstractPersistableCustom<Long> {
     @Column(name = "lastname", length = 100, nullable = false)
     private String lastName;
 
-    @Column(name = "mobile_number", length = 50, nullable = true)
+    @Column(name = "mobile_number", length = 50)
     private String mobileNumber;
 
     @Column(name = "email", length = 100, nullable = false)
     private String email;
 
-    @Column(name = "authentication_token", length = 100, nullable = true)
+    @Column(name = "authentication_token", length = 100)
     private String authenticationToken;
 
     @Column(name = "username", length = 100, nullable = false)

@@ -38,7 +38,7 @@ import javax.persistence.Table;
 @Table(name = "m_working_days")
 public class WorkingDays extends AbstractPersistableCustom<Long> {
 
-    @Column(name = "recurrence", length = 100, nullable = true)
+    @Column(name = "recurrence", length = 100)
     private String recurrence;
 
     @Column(name = "repayment_rescheduling_enum", nullable = false)

@@ -31,11 +31,11 @@ import java.util.Date;
 public class StaffAssignmentHistory extends AbstractAuditableCustom<AppUser, Long> {
 
     @ManyToOne
-    @JoinColumn(name = "centre_id", nullable = true)
+    @JoinColumn(name = "centre_id")
     private Group center;
 
     @ManyToOne
-    @JoinColumn(name = "staff_id", nullable = true)
+    @JoinColumn(name = "staff_id")
     private Staff staff;
 
     @Temporal(TemporalType.DATE)

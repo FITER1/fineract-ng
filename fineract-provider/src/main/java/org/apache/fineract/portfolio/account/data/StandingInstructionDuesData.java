@@ -18,26 +18,17 @@
  */
 package org.apache.fineract.portfolio.account.data;
 
+import lombok.*;
 import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class StandingInstructionDuesData {
-
-    private final LocalDate dueDate;
-    private final BigDecimal totalDueAmount;
-
-    public StandingInstructionDuesData(final LocalDate dueDate, final BigDecimal totalDueAmount) {
-        this.dueDate = dueDate;
-        this.totalDueAmount = totalDueAmount;
-    }
-
-    public LocalDate dueDate() {
-        return this.dueDate;
-    }
-
-    public BigDecimal totalDueAmount() {
-        return this.totalDueAmount;
-    }
-
+    private LocalDate dueDate;
+    private BigDecimal totalDueAmount;
 }

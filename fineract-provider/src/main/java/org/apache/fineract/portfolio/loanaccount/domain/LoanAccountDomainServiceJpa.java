@@ -331,7 +331,7 @@ public class LoanAccountDomainServiceJpa implements LoanAccountDomainService {
     }
 
     private void checkClientOrGroupActive(final Loan loan) {
-        final Client client = loan.client();
+        final Client client = loan.getClient();
         if (client != null) {
             if (client.isNotActive()) { throw new ClientNotActiveException(client.getId()); }
         }

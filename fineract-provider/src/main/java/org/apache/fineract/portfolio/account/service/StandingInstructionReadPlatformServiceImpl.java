@@ -132,18 +132,22 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
             fromAccount = this.portfolioAccountReadPlatformService.retrieveOne(fromAccountId, accountType);
 
             // override provided fromClient with client of account
-            mostRelevantFromClientId = fromAccount.clientId();
+            mostRelevantFromClientId = fromAccount.getClientId();
         }
 
         if (mostRelevantFromClientId != null) {
             fromClient = this.clientReadPlatformService.retrieveOne(mostRelevantFromClientId);
             mostRelevantFromOfficeId = fromClient.officeId();
-            long[] loanStatus = null;
+            Long[] loanStatus = null;
             if (mostRelevantFromAccountType == 1) {
-                loanStatus = new long[] { 300, 700 };
+                loanStatus = new Long[] { 300L, 700L };
             }
-            PortfolioAccountDTO portfolioAccountDTO = new PortfolioAccountDTO(mostRelevantFromAccountType, mostRelevantFromClientId,
-                    loanStatus);
+            PortfolioAccountDTO portfolioAccountDTO = PortfolioAccountDTO.builder()
+                .accountTypeId(mostRelevantFromAccountType)
+                .clientId(mostRelevantFromClientId)
+                .accountStatus(loanStatus)
+                .excludeOverDraftAccounts(false)
+                .build();
             fromAccountOptions = this.portfolioAccountReadPlatformService.retrieveAllForLookup(portfolioAccountDTO);
         }
 
@@ -162,8 +166,8 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
 
         if (toAccountId != null && fromAccount != null) {
             toAccount = this.portfolioAccountReadPlatformService.retrieveOne(toAccountId, mostRelevantToAccountType,
-                    fromAccount.currencyCode());
-            mostRelevantToClientId = toAccount.clientId();
+                    fromAccount.getCurrency().getCode());
+            mostRelevantToClientId = toAccount.getClientId();
         }
 
         if (mostRelevantToClientId != null) {
@@ -208,18 +212,43 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
                 recurrenceType(AccountTransferRecurrenceType.AS_PER_DUES));
         final Collection<EnumOptionData> recurrenceFrequencyOptions = this.dropdownReadPlatformService.retrievePeriodFrequencyTypeOptions();
 
-        return StandingInstructionData.template(fromOffice, fromClient, fromAccountTypeData, fromAccount, transferDate, toOffice, toClient,
-                toAccountTypeData, toAccount, fromOfficeOptions, fromClientOptions, fromAccountTypeOptions, fromAccountOptions,
-                toOfficeOptions, toClientOptions, toAccountTypeOptions, toAccountOptions, transferTypeOptions, statusOptions,
-                instructionTypeOptions, priorityOptions, recurrenceTypeOptions, recurrenceFrequencyOptions);
+        return StandingInstructionData.builder()
+            .fromOffice(fromOffice)
+            .fromClient(fromClient)
+            .fromAccountType(fromAccountTypeData)
+            .fromAccount(fromAccount)
+            .toOffice(toOffice)
+            .toClient(toClient)
+            .toAccountType(toAccountTypeData)
+            .toAccount(toAccount)
+            .fromOfficeOptions(fromOfficeOptions)
+            .fromClientOptions(fromClientOptions)
+            .fromAccountTypeOptions(fromAccountTypeOptions)
+            .fromAccountOptions(fromAccountOptions)
+            .toOfficeOptions(toOfficeOptions)
+            .toClientOptions(toClientOptions)
+            .toAccountTypeOptions(toAccountTypeOptions)
+            .toAccountOptions(toAccountOptions)
+            .transferTypeOptions(transferTypeOptions)
+            .statusOptions(statusOptions)
+            .instructionTypeOptions(instructionTypeOptions)
+            .priorityOptions(priorityOptions)
+            .recurrenceTypeOptions(recurrenceTypeOptions)
+            .recurrenceFrequencyOptions(recurrenceFrequencyOptions)
+            .build();
     }
 
     private Collection<PortfolioAccountData> retrieveToAccounts(final PortfolioAccountData excludeThisAccountFromOptions,
             final Integer toAccountType, final Long toClientId) {
 
-        final String currencyCode = excludeThisAccountFromOptions != null ? excludeThisAccountFromOptions.currencyCode() : null;
+        final String currencyCode = excludeThisAccountFromOptions != null ? excludeThisAccountFromOptions.getCurrency().getCode() : null;
 
-        PortfolioAccountDTO portfolioAccountDTO = new PortfolioAccountDTO(toAccountType, toClientId, currencyCode, null, null);
+        PortfolioAccountDTO portfolioAccountDTO = PortfolioAccountDTO.builder()
+            .accountTypeId(toAccountType)
+            .clientId(toClientId)
+            .currencyCode(currencyCode)
+            .build();
+
         Collection<PortfolioAccountData> accountOptions = this.portfolioAccountReadPlatformService
                 .retrieveAllForLookup(portfolioAccountDTO);
         if (!CollectionUtils.isEmpty(accountOptions)) {
@@ -237,52 +266,52 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
         final StringBuilder sqlBuilder = new StringBuilder(200);
         sqlBuilder.append("select SQL_CALC_FOUND_ROWS ");
         sqlBuilder.append(this.standingInstructionMapper.schema());
-        if (standingInstructionDTO.transferType() != null || standingInstructionDTO.clientId() != null
-                || standingInstructionDTO.clientName() != null) {
+        if (standingInstructionDTO.getTransferType() != null || standingInstructionDTO.getClientId() != null
+                || standingInstructionDTO.getClientName() != null) {
             sqlBuilder.append(" where ");
         }
         boolean addAndCaluse = false;
         List<Object> paramObj = new ArrayList<>();
-        if (standingInstructionDTO.transferType() != null) {
+        if (standingInstructionDTO.getTransferType() != null) {
             if (addAndCaluse) {
                 sqlBuilder.append(" and ");
             }
             sqlBuilder.append(" atd.transfer_type=? ");
-            paramObj.add(standingInstructionDTO.transferType());
+            paramObj.add(standingInstructionDTO.getTransferType());
             addAndCaluse = true;
         }
-        if (standingInstructionDTO.clientId() != null) {
+        if (standingInstructionDTO.getClientId() != null) {
             if (addAndCaluse) {
                 sqlBuilder.append(" and ");
             }
             sqlBuilder.append(" fromclient.id=? ");
-            paramObj.add(standingInstructionDTO.clientId());
+            paramObj.add(standingInstructionDTO.getClientId());
             addAndCaluse = true;
-        } else if (standingInstructionDTO.clientName() != null) {
+        } else if (standingInstructionDTO.getClientName() != null) {
             if (addAndCaluse) {
                 sqlBuilder.append(" and ");
             }
             sqlBuilder.append(" fromclient.display_name=? ");
-            paramObj.add(standingInstructionDTO.clientName());
+            paramObj.add(standingInstructionDTO.getClientName());
             addAndCaluse = true;
         }
 
-        if (standingInstructionDTO.fromAccountType() != null && standingInstructionDTO.fromAccount() != null) {
-            PortfolioAccountType accountType = PortfolioAccountType.fromInt(standingInstructionDTO.fromAccountType());
+        if (standingInstructionDTO.getFromAccountType() != null && standingInstructionDTO.getFromAccount() != null) {
+            PortfolioAccountType accountType = PortfolioAccountType.fromInt(standingInstructionDTO.getFromAccountType());
             if (addAndCaluse) {
                 sqlBuilder.append(" and ");
             }
             if (accountType.isSavingsAccount()) {
                 sqlBuilder.append(" fromsavacc.id=? ");
-                paramObj.add(standingInstructionDTO.fromAccount());
+                paramObj.add(standingInstructionDTO.getFromAccount());
             } else if (accountType.isLoanAccount()) {
                 sqlBuilder.append(" fromloanacc.id=? ");
-                paramObj.add(standingInstructionDTO.fromAccount());
+                paramObj.add(standingInstructionDTO.getFromAccount());
             }
             addAndCaluse = true;
         }
 
-        final SearchParameters searchParameters = standingInstructionDTO.searchParameters();
+        final SearchParameters searchParameters = standingInstructionDTO.getSearchParameters();
         if (searchParameters.isOrderByRequested()) {
             sqlBuilder.append(" order by ").append(searchParameters.getOrderBy());
             this.columnValidator.validateSqlInjection(sqlBuilder.toString(), searchParameters.getOrderBy());
@@ -465,12 +494,20 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
             PortfolioAccountData fromAccount = null;
             EnumOptionData fromAccountType = null;
             if (fromSavingsAccountId != null) {
-                fromAccount = new PortfolioAccountData(fromSavingsAccountId, fromSavingsAccountNo, null, null, null, null, null,
-                        fromProductId, fromProductName, null, null, null);
+                fromAccount = PortfolioAccountData.builder()
+                    .id(fromSavingsAccountId)
+                    .accountNo(fromSavingsAccountNo)
+                    .productId(fromProductId)
+                    .productName(fromProductName)
+                    .build();
                 fromAccountType = accountType(PortfolioAccountType.SAVINGS);
             } else if (fromLoanAccountId != null) {
-                fromAccount = new PortfolioAccountData(fromLoanAccountId, fromLoanAccountNo, null, null, null, null, null,
-                        fromLoanProductId, fromLoanProductName, null, null, null);
+                fromAccount = PortfolioAccountData.builder()
+                    .id(fromLoanAccountId)
+                    .accountNo(fromLoanAccountNo)
+                    .productId(fromLoanProductId)
+                    .productName(fromLoanProductName)
+                    .build();
                 fromAccountType = accountType(PortfolioAccountType.LOAN);
             }
 
@@ -486,18 +523,47 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
             final String toLoanProductName = rs.getString("toLoanProductName");
 
             if (toSavingsAccountId != null) {
-                toAccount = new PortfolioAccountData(toSavingsAccountId, toSavingsAccountNo, null, null, null, null, null, toProductId,
-                        toProductName, null, null, null);
+                toAccount = PortfolioAccountData.builder()
+                    .id(toSavingsAccountId)
+                    .accountNo(toSavingsAccountNo)
+                    .productId(toProductId)
+                    .productName(toProductName)
+                    .build();
                 toAccountType = accountType(PortfolioAccountType.SAVINGS);
             } else if (toLoanAccountId != null) {
-                toAccount = new PortfolioAccountData(toLoanAccountId, toLoanAccountNo, null, null, null, null, null, toLoanProductId,
-                        toLoanProductName, null, null, null);
+                toAccount = PortfolioAccountData.builder()
+                    .id(toLoanAccountId)
+                    .accountNo(toLoanAccountNo)
+                    .productId(toLoanProductId)
+                    .productName(toLoanProductName)
+                    .build();
                 toAccountType = accountType(PortfolioAccountType.LOAN);
             }
 
-            return StandingInstructionData.instance(id, accountDetailId, name, fromOffice, toOffice, fromClient, toClient, fromAccountType,
-                    fromAccount, toAccountType, toAccount, transferTypeEnum, priorityEnum, instructionTypeEnum, statusEnum, transferAmount,
-                    validFrom, validTill, recurrenceTypeEnum, recurrenceFrequencyEnum, recurrenceInterval, recurrenceOnMonthDay);
+            return StandingInstructionData.builder()
+                .id(id)
+                .accountDetailId(accountDetailId)
+                .name(name)
+                .fromOffice(fromOffice)
+                .toOffice(toOffice)
+                .fromClient(fromClient)
+                .toClient(toClient)
+                .fromAccountType(fromAccountType)
+                .fromAccount(fromAccount)
+                .toAccountType(toAccountType)
+                .toAccount(toAccount)
+                .transferType(transferTypeEnum)
+                .priority(priorityEnum)
+                .instructionType(instructionTypeEnum)
+                .status(statusEnum)
+                .amount(transferAmount)
+                .validFrom(validFrom)
+                .validTill(validTill)
+                .recurrenceType(recurrenceTypeEnum)
+                .recurrenceFrequency(recurrenceFrequencyEnum)
+                .recurrenceInterval(recurrenceInterval)
+                .recurrenceOnMonthDay(recurrenceOnMonthDay)
+                .build();
         }
     }
 
@@ -567,7 +633,10 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
             final BigDecimal totalOutstanding = principalOutstanding.add(interestOutstanding).add(feeChargesOutstanding)
                     .add(penaltyChargesOutstanding);
 
-            return new StandingInstructionDuesData(dueDate, totalOutstanding);
+            return StandingInstructionDuesData.builder()
+                .dueDate(dueDate)
+                .totalDueAmount(totalOutstanding)
+                .build();
         }
     }
 

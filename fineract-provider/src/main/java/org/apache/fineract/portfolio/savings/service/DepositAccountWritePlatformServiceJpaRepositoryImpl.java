@@ -151,11 +151,22 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
                     final SavingsAccount fromSavingsAccount = null;
                     boolean isRegularTransaction = false;
                     final boolean isExceptionForBalanceCheck = false;
-                    final AccountTransferDTO accountTransferDTO = new AccountTransferDTO(account.getActivationLocalDate(),
-                            amountForDeposit.getAmount(), PortfolioAccountType.SAVINGS, PortfolioAccountType.SAVINGS,
-                            portfolioAccountData.accountId(), account.getId(), "Account Transfer", locale, fmt, null, null, null, null,
-                            null, AccountTransferType.ACCOUNT_TRANSFER.getValue(), null, null, null, null, account, fromSavingsAccount,
-                            isRegularTransaction, isExceptionForBalanceCheck);
+                    final AccountTransferDTO accountTransferDTO = AccountTransferDTO.builder()
+                        .transactionDate(account.getActivationLocalDate())
+                        .transactionAmount(amountForDeposit.getAmount())
+                        .fromAccountType(PortfolioAccountType.SAVINGS)
+                        .toAccountType(PortfolioAccountType.SAVINGS)
+                        .fromAccountId(portfolioAccountData.getId())
+                        .toAccountId(account.getId())
+                        .description("Account Transfer")
+                        .locale(locale)
+                        .fmt(fmt)
+                        .transferType(AccountTransferType.ACCOUNT_TRANSFER.getValue())
+                        .toSavingsAccount(account)
+                        .fromSavingsAccount(fromSavingsAccount)
+                        .regularTransaction(isRegularTransaction)
+                        .exceptionForBalanceCheck(isExceptionForBalanceCheck)
+                        .build();
                     this.accountTransfersWritePlatformService.transferFunds(accountTransferDTO);
                 }
                 final boolean isInterestTransfer = false;
@@ -255,11 +266,22 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
                 } else {
                     final boolean isExceptionForBalanceCheck = false;
                     final SavingsAccount fromSavingsAccount = null;
-                    final AccountTransferDTO accountTransferDTO = new AccountTransferDTO(account.getActivationLocalDate(),
-                            amountForDeposit.getAmount(), PortfolioAccountType.SAVINGS, PortfolioAccountType.SAVINGS,
-                            portfolioAccountData.accountId(), account.getId(), "Account Transfer", locale, fmt, null, null, null, null,
-                            null, AccountTransferType.ACCOUNT_TRANSFER.getValue(), null, null, null, null, account, fromSavingsAccount,
-                            isRegularTransaction, isExceptionForBalanceCheck);
+                    final AccountTransferDTO accountTransferDTO = AccountTransferDTO.builder()
+                        .transactionDate(account.getActivationLocalDate())
+                        .transactionAmount(amountForDeposit.getAmount())
+                        .fromAccountType(PortfolioAccountType.SAVINGS)
+                        .toAccountType(PortfolioAccountType.SAVINGS)
+                        .fromAccountId(portfolioAccountData.getId())
+                        .toAccountId(account.getId())
+                        .description("Account Transfer")
+                        .locale(locale)
+                        .fmt(fmt)
+                        .transferType(AccountTransferType.ACCOUNT_TRANSFER.getValue())
+                        .toSavingsAccount(account)
+                        .fromSavingsAccount(fromSavingsAccount)
+                        .regularTransaction(isRegularTransaction)
+                        .exceptionForBalanceCheck(isExceptionForBalanceCheck)
+                        .build();
                     this.accountTransfersWritePlatformService.transferFunds(accountTransferDTO);
                 }
                 updateExistingTransactionsDetails(account, existingTransactionIds, existingReversedTransactionIds);

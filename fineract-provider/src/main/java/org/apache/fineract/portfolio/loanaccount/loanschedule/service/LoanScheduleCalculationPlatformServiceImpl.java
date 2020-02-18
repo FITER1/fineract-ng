@@ -124,7 +124,7 @@ public class LoanScheduleCalculationPlatformServiceImpl implements LoanScheduleC
         if (!loan.repaymentScheduleDetail().isInterestRecalculationEnabled() || loan.isNpa() || !loan.status().isActive()
                 || !loanRepaymentScheduleTransactionProcessor.isInterestFirstRepaymentScheduleTransactionProcessor()) { return; }
 
-        if (loan.loanProduct().isMultiDisburseLoan()) {
+        if (loan.getLoanProduct().isMultiDisburseLoan()) {
             BigDecimal disbursedAmount = loan.getDisbursedAmount();
             BigDecimal principalRepaid = loan.getLoanSummary().getTotalPrincipalRepaid();
             BigDecimal principalWrittenOff = loan.getLoanSummary().getTotalPrincipalWrittenOff();

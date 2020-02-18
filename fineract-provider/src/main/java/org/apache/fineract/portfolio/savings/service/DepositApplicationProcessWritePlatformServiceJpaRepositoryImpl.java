@@ -166,8 +166,12 @@ public class DepositApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
                         DepositAccountType.SAVINGS_DEPOSIT);
                 this.depositAccountDataValidator.validatelinkedSavingsAccount(savingsAccount, account);
                 boolean isActive = true;
-                final AccountAssociations accountAssociations = AccountAssociations.associateSavingsAccount(account, savingsAccount,
-                        AccountAssociationType.LINKED_ACCOUNT_ASSOCIATION.getValue(), isActive);
+                final AccountAssociations accountAssociations = AccountAssociations.builder()
+                    .linkedSavingsAccount(account)
+                    .savingsAccount(savingsAccount)
+                    .associationType(AccountAssociationType.LINKED_ACCOUNT_ASSOCIATION.getValue())
+                    .active(isActive)
+                    .build();
                 this.accountAssociationsRepository.save(accountAssociations);
             }
 
@@ -380,8 +384,12 @@ public class DepositApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
                     this.depositAccountDataValidator.validatelinkedSavingsAccount(savingsAccount, account);
                     if (accountAssociations == null) {
                         boolean isActive = true;
-                        accountAssociations = AccountAssociations.associateSavingsAccount(account, savingsAccount,
-                                AccountAssociationType.LINKED_ACCOUNT_ASSOCIATION.getValue(), isActive);
+                        accountAssociations = AccountAssociations.builder()
+                            .linkedSavingsAccount(account)
+                            .savingsAccount(savingsAccount)
+                            .associationType(AccountAssociationType.LINKED_ACCOUNT_ASSOCIATION.getValue())
+                            .active(isActive)
+                            .build();
                     } else {
                         accountAssociations.setLinkedSavingsAccount(savingsAccount);
                     }

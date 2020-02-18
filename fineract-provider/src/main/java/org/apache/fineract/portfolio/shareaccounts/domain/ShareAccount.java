@@ -38,11 +38,11 @@ import java.util.Set;
 public class ShareAccount extends AbstractPersistableCustom<Long> {
 
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = true)
+    @JoinColumn(name = "client_id")
     private Client client;
 
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = true)
+    @JoinColumn(name = "product_id")
     private ShareProduct shareProduct;
 
     @Column(name = "status_enum", nullable = false)
@@ -53,7 +53,7 @@ public class ShareAccount extends AbstractPersistableCustom<Long> {
     private Date submittedDate;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "submitted_userid", nullable = true)
+    @JoinColumn(name = "submitted_userid")
     protected AppUser submittedBy;
 
     @Temporal(TemporalType.DATE)
@@ -61,7 +61,7 @@ public class ShareAccount extends AbstractPersistableCustom<Long> {
     protected Date approvedDate;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "approved_userid", nullable = true)
+    @JoinColumn(name = "approved_userid")
     protected AppUser approvedBy;
 
     @Temporal(TemporalType.DATE)
@@ -69,15 +69,15 @@ public class ShareAccount extends AbstractPersistableCustom<Long> {
     protected Date rejectedDate;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "rejected_userid", nullable = true)
+    @JoinColumn(name = "rejected_userid")
     protected AppUser rejectedBy;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "activated_date", nullable = true)
+    @Column(name = "activated_date")
     protected Date activatedDate;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "activated_userid", nullable = true)
+    @JoinColumn(name = "activated_userid")
     protected AppUser activatedBy;
 
     @Temporal(TemporalType.DATE)
@@ -85,7 +85,7 @@ public class ShareAccount extends AbstractPersistableCustom<Long> {
     protected Date closedDate;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "closed_userid", nullable = true)
+    @JoinColumn(name = "closed_userid")
     protected AppUser closedBy;
 
     @Temporal(TemporalType.DATE)
@@ -93,7 +93,7 @@ public class ShareAccount extends AbstractPersistableCustom<Long> {
     protected Date modifiedDate;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "lastmodifiedby_id", nullable = true)
+    @JoinColumn(name = "lastmodifiedby_id")
     protected AppUser modifiedBy;
 
     @Column(name = "external_id")
@@ -115,7 +115,7 @@ public class ShareAccount extends AbstractPersistableCustom<Long> {
     private Boolean allowDividendCalculationForInactiveClients;
 
     @ManyToOne
-    @JoinColumn(name = "savings_account_id", nullable = true)
+    @JoinColumn(name = "savings_account_id")
     private SavingsAccount savingsAccount;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "shareAccount", orphanRemoval = true, fetch=FetchType.EAGER)
@@ -125,14 +125,14 @@ public class ShareAccount extends AbstractPersistableCustom<Long> {
     private Integer lockinPeriodFrequency;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "lockin_period_frequency_enum", nullable = true)
+    @Column(name = "lockin_period_frequency_enum")
     private PeriodFrequencyType lockinPeriodFrequencyType;
 
     @Column(name = "minimum_active_period_frequency")
     private Integer minimumActivePeriodFrequency;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "minimum_active_period_frequency_enum", nullable = true)
+    @Column(name = "minimum_active_period_frequency_enum")
     private PeriodFrequencyType minimumActivePeriodFrequencyType;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "shareAccount", orphanRemoval = true, fetch=FetchType.EAGER)

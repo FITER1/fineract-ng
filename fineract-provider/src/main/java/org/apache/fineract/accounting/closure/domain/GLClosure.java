@@ -52,7 +52,7 @@ public class GLClosure extends AbstractAuditableCustom<AppUser, Long> {
     @Temporal(TemporalType.DATE)
     private Date closingDate;
 
-    @Column(name = "comments", nullable = true, length = 500)
+    @Column(name = "comments", length = 500)
     private String comments;
 
     @Deprecated

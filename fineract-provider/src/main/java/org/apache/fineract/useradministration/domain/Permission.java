@@ -45,10 +45,10 @@ public class Permission extends AbstractPersistableCustom<Long> implements Seria
     @Column(name = "code", nullable = false, length = 100)
     private String code;
 
-    @Column(name = "entity_name", nullable = true, length = 100)
+    @Column(name = "entity_name", length = 100)
     private String entityName;
 
-    @Column(name = "action_name", nullable = true, length = 100)
+    @Column(name = "action_name", length = 100)
     private String actionName;
 
     @Column(name = "can_maker_checker", nullable = false)

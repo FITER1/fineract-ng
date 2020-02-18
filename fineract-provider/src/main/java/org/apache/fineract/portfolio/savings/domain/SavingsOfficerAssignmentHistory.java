@@ -36,7 +36,7 @@ public class SavingsOfficerAssignmentHistory extends AbstractAuditableCustom<App
     private SavingsAccount savingsAccount;
 
     @ManyToOne
-    @JoinColumn(name = "savings_officer_id", nullable = true)
+    @JoinColumn(name = "savings_officer_id")
     private Staff savingsOfficer;
 
     @Temporal(TemporalType.DATE)

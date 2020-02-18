@@ -51,7 +51,7 @@ public class Office extends AbstractPersistableCustom<Long> {
     @Column(name = "name", nullable = false, length = 100)
     private String name;
 
-    @Column(name = "hierarchy", nullable = true, length = 50)
+    @Column(name = "hierarchy", length = 50)
     private String hierarchy;
 
     @Column(name = "opening_date", nullable = false)

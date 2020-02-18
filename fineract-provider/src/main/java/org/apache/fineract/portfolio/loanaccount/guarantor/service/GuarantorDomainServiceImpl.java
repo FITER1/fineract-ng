@@ -80,7 +80,7 @@ public class GuarantorDomainServiceImpl implements GuarantorDomainService {
 
     @Override
     public void validateGuarantorBusinessRules(Loan loan) {
-        LoanProduct loanProduct = loan.loanProduct();
+        LoanProduct loanProduct = loan.getLoanProduct();
         BigDecimal principal = loan.getPrincpal().getAmount();
         if (loanProduct.isHoldGuaranteeFundsEnabled()) {
             LoanProductGuaranteeDetails guaranteeData = loanProduct.getLoanProductGuaranteeDetails();
@@ -226,11 +226,27 @@ public class GuarantorDomainServiceImpl implements GuarantorDomainService {
                             remainingAmount = remainingAmount.multiply(loan.getPrincpal().getAmount()).divide(loan.getGuaranteeAmount(),
                                     MoneyHelper.getRoundingMode());
                         }
-                        AccountTransferDTO accountTransferDTO = new AccountTransferDTO(transactionDate, remainingAmount, fromAccountType,
-                                toAccountType, fromAccountId, toAccountId, description, locale, fmt, paymentDetail, fromTransferType,
-                                toTransferType, chargeId, loanInstallmentNumber, transferType, accountTransferDetails, noteText,
-                                txnExternalId, loan, toSavingsAccount, fromSavingsAccount, isRegularTransaction,
-                                isExceptionForBalanceCheck);
+
+                        AccountTransferDTO accountTransferDTO = AccountTransferDTO.builder()
+                            .transactionDate(transactionDate)
+                            .transactionAmount(remainingAmount)
+                            .fromAccountType(fromAccountType)
+                            .toAccountType(toAccountType)
+                            .fromAccountId(fromAccountId)
+                            .toAccountId(toAccountId)
+                            .description(description)
+                            .locale(locale)
+                            .fmt(fmt)
+                            .paymentDetail(paymentDetail)
+                            .fromTransferType(fromTransferType)
+                            .toTransferType(toTransferType)
+                            .chargeId(chargeId)
+                            .loanInstallmentNumber(loanInstallmentNumber)
+                            .transferType(transferType)
+                            .fromSavingsAccount(fromSavingsAccount)
+                            .regularTransaction(isRegularTransaction)
+                            .exceptionForBalanceCheck(isExceptionForBalanceCheck)
+                            .build();
                         transferAmount(accountTransferDTO);
                     } finally {
                         releaseLoanIds.remove(loanId);
@@ -289,7 +305,7 @@ public class GuarantorDomainServiceImpl implements GuarantorDomainService {
      * 
      */
     private void holdGuarantorFunds(final Loan loan) {
-        if (loan.loanProduct().isHoldGuaranteeFundsEnabled()) {
+        if (loan.getLoanProduct().isHoldGuaranteeFundsEnabled()) {
             final List<Guarantor> existGuarantorList = this.guarantorRepository.findByLoan(loan);
             List<GuarantorFundingDetails> guarantorFundingDetailList = new ArrayList<>();
             List<DepositAccountOnHoldTransaction> onHoldTransactions = new ArrayList<>();

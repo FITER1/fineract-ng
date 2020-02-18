@@ -225,7 +225,7 @@ public class OfficeReadPlatformServiceImpl implements OfficeReadPlatformService 
         this.context.authenticatedUser();
 
         return OfficeData.builder()
-            .openingDate(new LocalDate())
+            .openingDate(LocalDate.now())
             .build();
     }
 
@@ -275,7 +275,7 @@ public class OfficeReadPlatformServiceImpl implements OfficeReadPlatformService 
         final Collection<CurrencyData> currencyOptions = this.currencyReadPlatformService.retrieveAllowedCurrencies();
 
         return OfficeTransactionData.builder()
-            .transactionDate(new LocalDate())
+            .transactionDate(LocalDate.now())
             .allowedOffices(parentLookups)
             .currencyOptions(currencyOptions)
             .build();

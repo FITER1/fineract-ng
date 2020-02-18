@@ -53,7 +53,7 @@ public class SelfBeneficiariesTPT extends AbstractPersistableCustom<Long> {
 	@Column(name = "account_type", nullable = false)
 	private Integer accountType;
 
-	@Column(name = "transfer_limit", nullable = true)
+	@Column(name = "transfer_limit")
 	private Long transferLimit;
 
 	@Column(name = "is_active", nullable = false)

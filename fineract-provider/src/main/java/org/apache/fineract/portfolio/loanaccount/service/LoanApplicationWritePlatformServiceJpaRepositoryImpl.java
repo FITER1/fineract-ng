@@ -323,8 +323,12 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
                 final SavingsAccount savingsAccount = this.savingsAccountAssembler.assembleFrom(savingsAccountId);
                 this.fromApiJsonDeserializer.validatelinkedSavingsAccount(savingsAccount, newLoanApplication);
                 boolean isActive = true;
-                final AccountAssociations accountAssociations = AccountAssociations.associateSavingsAccount(newLoanApplication,
-                        savingsAccount, AccountAssociationType.LINKED_ACCOUNT_ASSOCIATION.getValue(), isActive);
+                final AccountAssociations accountAssociations = AccountAssociations.builder()
+                    .loanAccount(newLoanApplication)
+                    .linkedSavingsAccount(savingsAccount)
+                    .associationType(AccountAssociationType.LINKED_ACCOUNT_ASSOCIATION.getValue())
+                    .active(isActive)
+                    .build();
                 this.accountAssociationsRepository.save(accountAssociations);
             }
 
@@ -363,7 +367,7 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
 public void checkForProductMixRestrictions(final Loan loan) {
 
         final List<Long> activeLoansLoanProductIds;
-        final Long productId = loan.loanProduct().getId();
+        final Long productId = loan.getLoanProduct().getId();
 
         if (loan.isGroupLoan()) {
             activeLoansLoanProductIds = this.loanRepositoryWrapper.findActiveLoansLoanProductIdsByGroup(loan.getGroupId(),
@@ -372,7 +376,7 @@ public void checkForProductMixRestrictions(final Loan loan) {
             activeLoansLoanProductIds = this.loanRepositoryWrapper.findActiveLoansLoanProductIdsByClient(loan.getClientId(),
                     LoanStatus.ACTIVE.getValue());
         }
-        checkForProductMixRestrictions(activeLoansLoanProductIds, productId, loan.loanProduct().productName());
+        checkForProductMixRestrictions(activeLoansLoanProductIds, productId, loan.getLoanProduct().productName());
     }
 
     private void checkForProductMixRestrictions(final List<Long> activeLoansLoanProductIds, final Long productId, final String productName) {
@@ -387,42 +391,42 @@ public void checkForProductMixRestrictions(final Loan loan) {
     }
 
     private void updateProductRelatedDetails(LoanProductRelatedDetail productRelatedDetail, Loan loan) {
-        final Boolean amortization = loan.loanProduct().getLoanProductConfigurableAttributes().getAmortizationBoolean();
-        final Boolean arrearsTolerance = loan.loanProduct().getLoanProductConfigurableAttributes().getArrearsToleranceBoolean();
-        final Boolean graceOnArrearsAging = loan.loanProduct().getLoanProductConfigurableAttributes().getGraceOnArrearsAgingBoolean();
-        final Boolean interestCalcPeriod = loan.loanProduct().getLoanProductConfigurableAttributes().getInterestCalcPeriodBoolean();
-        final Boolean interestMethod = loan.loanProduct().getLoanProductConfigurableAttributes().getInterestMethodBoolean();
-        final Boolean graceOnPrincipalAndInterestPayment = loan.loanProduct().getLoanProductConfigurableAttributes()
+        final Boolean amortization = loan.getLoanProduct().getLoanProductConfigurableAttributes().getAmortizationBoolean();
+        final Boolean arrearsTolerance = loan.getLoanProduct().getLoanProductConfigurableAttributes().getArrearsToleranceBoolean();
+        final Boolean graceOnArrearsAging = loan.getLoanProduct().getLoanProductConfigurableAttributes().getGraceOnArrearsAgingBoolean();
+        final Boolean interestCalcPeriod = loan.getLoanProduct().getLoanProductConfigurableAttributes().getInterestCalcPeriodBoolean();
+        final Boolean interestMethod = loan.getLoanProduct().getLoanProductConfigurableAttributes().getInterestMethodBoolean();
+        final Boolean graceOnPrincipalAndInterestPayment = loan.getLoanProduct().getLoanProductConfigurableAttributes()
                 .getGraceOnPrincipalAndInterestPaymentBoolean();
-        final Boolean repaymentEvery = loan.loanProduct().getLoanProductConfigurableAttributes().getRepaymentEveryBoolean();
-        final Boolean transactionProcessingStrategy = loan.loanProduct().getLoanProductConfigurableAttributes()
+        final Boolean repaymentEvery = loan.getLoanProduct().getLoanProductConfigurableAttributes().getRepaymentEveryBoolean();
+        final Boolean transactionProcessingStrategy = loan.getLoanProduct().getLoanProductConfigurableAttributes()
                 .getTransactionProcessingStrategyBoolean();
 
         if (!amortization) {
-            productRelatedDetail.setAmortizationMethod(loan.loanProduct().getLoanProductRelatedDetail().getAmortizationMethod());
+            productRelatedDetail.setAmortizationMethod(loan.getLoanProduct().getLoanProductRelatedDetail().getAmortizationMethod());
         }
         if (!arrearsTolerance) {
-            productRelatedDetail.setInArrearsTolerance(loan.loanProduct().getLoanProductRelatedDetail().getArrearsTolerance());
+            productRelatedDetail.setInArrearsTolerance(loan.getLoanProduct().getLoanProductRelatedDetail().getArrearsTolerance());
         }
         if (!graceOnArrearsAging) {
-            productRelatedDetail.setGraceOnArrearsAgeing(loan.loanProduct().getLoanProductRelatedDetail().getGraceOnArrearsAgeing());
+            productRelatedDetail.setGraceOnArrearsAgeing(loan.getLoanProduct().getLoanProductRelatedDetail().getGraceOnArrearsAgeing());
         }
         if (!interestCalcPeriod) {
-            productRelatedDetail.setInterestCalculationPeriodMethod(loan.loanProduct().getLoanProductRelatedDetail()
+            productRelatedDetail.setInterestCalculationPeriodMethod(loan.getLoanProduct().getLoanProductRelatedDetail()
                     .getInterestCalculationPeriodMethod());
         }
         if (!interestMethod) {
-            productRelatedDetail.setInterestMethod(loan.loanProduct().getLoanProductRelatedDetail().getInterestMethod());
+            productRelatedDetail.setInterestMethod(loan.getLoanProduct().getLoanProductRelatedDetail().getInterestMethod());
         }
         if (!graceOnPrincipalAndInterestPayment) {
-            productRelatedDetail.setGraceOnInterestPayment(loan.loanProduct().getLoanProductRelatedDetail().getGraceOnInterestPayment());
-            productRelatedDetail.setGraceOnPrincipalPayment(loan.loanProduct().getLoanProductRelatedDetail().getGraceOnPrincipalPayment());
+            productRelatedDetail.setGraceOnInterestPayment(loan.getLoanProduct().getLoanProductRelatedDetail().getGraceOnInterestPayment());
+            productRelatedDetail.setGraceOnPrincipalPayment(loan.getLoanProduct().getLoanProductRelatedDetail().getGraceOnPrincipalPayment());
         }
         if (!repaymentEvery) {
-            productRelatedDetail.setRepayEvery(loan.loanProduct().getLoanProductRelatedDetail().getRepayEvery());
+            productRelatedDetail.setRepayEvery(loan.getLoanProduct().getLoanProductRelatedDetail().getRepayEvery());
         }
         if (!transactionProcessingStrategy) {
-            loan.updateTransactionProcessingStrategy(loan.loanProduct().getRepaymentStrategy());
+            loan.updateTransactionProcessingStrategy(loan.getLoanProduct().getRepaymentStrategy());
         }
     }
 
@@ -512,13 +516,13 @@ public void checkForProductMixRestrictions(final Loan loan) {
 
             final String productIdParamName = "productId";
             LoanProduct newLoanProduct = null;
-            if (command.isChangeInLongParameterNamed(productIdParamName, existingLoanApplication.loanProduct().getId())) {
+            if (command.isChangeInLongParameterNamed(productIdParamName, existingLoanApplication.getLoanProduct().getId())) {
                 final Long productId = command.longValueOfParameterNamed(productIdParamName);
                 newLoanProduct = this.loanProductRepository.findById(productId)
                         .orElseThrow(() -> new LoanProductNotFoundException(productId));
             }
 
-            LoanProduct loanProductForValidations = newLoanProduct == null ? existingLoanApplication.loanProduct() : newLoanProduct;
+            LoanProduct loanProductForValidations = newLoanProduct == null ? existingLoanApplication.getLoanProduct() : newLoanProduct;
 
             this.fromApiJsonDeserializer.validateForModify(command.json(), loanProductForValidations, existingLoanApplication);
 
@@ -638,7 +642,7 @@ public void checkForProductMixRestrictions(final Loan loan) {
             validateSubmittedOnDate(existingLoanApplication);
 
             final LoanProductRelatedDetail productRelatedDetail = existingLoanApplication.repaymentScheduleDetail();
-            if (existingLoanApplication.loanProduct().getLoanProductConfigurableAttributes() != null) {
+            if (existingLoanApplication.getLoanProduct().getLoanProductConfigurableAttributes() != null) {
                 updateProductRelatedDetails(productRelatedDetail, existingLoanApplication);
             }
 
@@ -903,8 +907,12 @@ public void checkForProductMixRestrictions(final Loan loan) {
                     this.fromApiJsonDeserializer.validatelinkedSavingsAccount(savingsAccount, existingLoanApplication);
                     if (accountAssociations == null) {
                         boolean isActive = true;
-                        accountAssociations = AccountAssociations.associateSavingsAccount(existingLoanApplication, savingsAccount,
-                                AccountAssociationType.LINKED_ACCOUNT_ASSOCIATION.getValue(), isActive);
+                        accountAssociations = AccountAssociations.builder()
+                            .loanAccount(existingLoanApplication)
+                            .linkedSavingsAccount(savingsAccount)
+                            .associationType(AccountAssociationType.LINKED_ACCOUNT_ASSOCIATION.getValue())
+                            .active(isActive)
+                            .build();
                     } else {
                         accountAssociations.setLinkedSavingsAccount(savingsAccount);
                     }
@@ -1044,7 +1052,7 @@ public void checkForProductMixRestrictions(final Loan loan) {
         if (expectedDisbursementDate == null) {
             expectedDisbursementDate = loan.getExpectedDisbursedOnLocalDate();
         }
-        if (loan.loanProduct().isMultiDisburseLoan()) {
+        if (loan.getLoanProduct().isMultiDisburseLoan()) {
             this.validateMultiDisbursementData(command, expectedDisbursementDate);
         }
 
@@ -1262,8 +1270,8 @@ public void checkForProductMixRestrictions(final Loan loan) {
     }
 
     private void validateSubmittedOnDate(final Loan loan) {
-        final LocalDate startDate = loan.loanProduct().getStartDate();
-        final LocalDate closeDate = loan.loanProduct().getCloseDate();
+        final LocalDate startDate = loan.getLoanProduct().getStartDate();
+        final LocalDate closeDate = loan.getLoanProduct().getCloseDate();
         final LocalDate expectedFirstRepaymentOnDate = loan.getExpectedFirstRepaymentOnDate();
         final LocalDate submittedOnDate = loan.getSubmittedOnDate();
 
@@ -1288,7 +1296,7 @@ public void checkForProductMixRestrictions(final Loan loan) {
     }
 
     private void checkClientOrGroupActive(final Loan loan) {
-        final Client client = loan.client();
+        final Client client = loan.getClient();
         if (client != null) {
             if (client.isNotActive()) { throw new ClientNotActiveException(client.getId()); }
         }

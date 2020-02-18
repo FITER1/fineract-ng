@@ -65,74 +65,74 @@ public class StandingInstructionHistoryReadPlatformServiceImpl implements Standi
         final StringBuilder sqlBuilder = new StringBuilder(200);
         sqlBuilder.append("select SQL_CALC_FOUND_ROWS ");
         sqlBuilder.append(this.standingInstructionHistoryMapper.schema());
-        if (standingInstructionDTO.transferType() != null || standingInstructionDTO.clientId() != null
-                || standingInstructionDTO.clientName() != null
-                || (standingInstructionDTO.fromAccountType() != null && standingInstructionDTO.fromAccount() != null)
-                || standingInstructionDTO.startDateRange() != null || standingInstructionDTO.endDateRange() != null) {
+        if (standingInstructionDTO.getTransferType() != null || standingInstructionDTO.getClientId() != null
+                || standingInstructionDTO.getClientName() != null
+                || (standingInstructionDTO.getFromAccountType() != null && standingInstructionDTO.getFromAccount() != null)
+                || standingInstructionDTO.getStartDateRange() != null || standingInstructionDTO.getEndDateRange() != null) {
             sqlBuilder.append(" where ");
         }
         boolean addAndCaluse = false;
         List<Object> paramObj = new ArrayList<>();
-        if (standingInstructionDTO.transferType() != null) {
+        if (standingInstructionDTO.getTransferType() != null) {
             if (addAndCaluse) {
                 sqlBuilder.append(" and ");
             }
             sqlBuilder.append(" atd.transfer_type=? ");
-            paramObj.add(standingInstructionDTO.transferType());
+            paramObj.add(standingInstructionDTO.getTransferType());
             addAndCaluse = true;
         }
-        if (standingInstructionDTO.clientId() != null) {
+        if (standingInstructionDTO.getClientId() != null) {
             if (addAndCaluse) {
                 sqlBuilder.append(" and ");
             }
             sqlBuilder.append(" fromclient.id=? ");
-            paramObj.add(standingInstructionDTO.clientId());
+            paramObj.add(standingInstructionDTO.getClientId());
             addAndCaluse = true;
-        } else if (standingInstructionDTO.clientName() != null) {
+        } else if (standingInstructionDTO.getClientName() != null) {
             if (addAndCaluse) {
                 sqlBuilder.append(" and ");
             }
             sqlBuilder.append(" fromclient.display_name=? ");
-            paramObj.add(standingInstructionDTO.clientName());
+            paramObj.add(standingInstructionDTO.getClientName());
             addAndCaluse = true;
         }
 
-        if (standingInstructionDTO.fromAccountType() != null && standingInstructionDTO.fromAccount() != null) {
-            PortfolioAccountType accountType = PortfolioAccountType.fromInt(standingInstructionDTO.fromAccountType());
+        if (standingInstructionDTO.getFromAccountType() != null && standingInstructionDTO.getFromAccount() != null) {
+            PortfolioAccountType accountType = PortfolioAccountType.fromInt(standingInstructionDTO.getFromAccountType());
             if (addAndCaluse) {
                 sqlBuilder.append(" and ");
             }
             if (accountType.isSavingsAccount()) {
                 sqlBuilder.append(" fromsavacc.id=? ");
-                paramObj.add(standingInstructionDTO.fromAccount());
+                paramObj.add(standingInstructionDTO.getFromAccount());
             } else if (accountType.isLoanAccount()) {
                 sqlBuilder.append(" fromloanacc.id=? ");
-                paramObj.add(standingInstructionDTO.fromAccount());
+                paramObj.add(standingInstructionDTO.getFromAccount());
             }
             addAndCaluse = true;
         }
 
-        if (standingInstructionDTO.startDateRange() != null) {
+        if (standingInstructionDTO.getStartDateRange() != null) {
             if (addAndCaluse) {
                 sqlBuilder.append(" and ");
             }
             final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             sqlBuilder.append(" atsih.execution_time >= ? ");
-            paramObj.add(df.format(standingInstructionDTO.startDateRange()));
+            paramObj.add(df.format(standingInstructionDTO.getStartDateRange()));
             addAndCaluse = true;
         }
         
-        if (standingInstructionDTO.endDateRange() != null) {
+        if (standingInstructionDTO.getEndDateRange() != null) {
             if (addAndCaluse) {
                 sqlBuilder.append(" and ");
             }
             final DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             sqlBuilder.append(" atsih.execution_time < ? ");
-            paramObj.add(df.format(standingInstructionDTO.endDateRange()));
+            paramObj.add(df.format(standingInstructionDTO.getEndDateRange()));
             addAndCaluse = true;
         }
 
-        final SearchParameters searchParameters = standingInstructionDTO.searchParameters();
+        final SearchParameters searchParameters = standingInstructionDTO.getSearchParameters();
         if (searchParameters.isOrderByRequested()) {
             sqlBuilder.append(" order by ").append(searchParameters.getOrderBy());
             this.columnValidator.validateSqlInjection(sqlBuilder.toString(), searchParameters.getOrderBy());
@@ -243,12 +243,20 @@ public class StandingInstructionHistoryReadPlatformServiceImpl implements Standi
             PortfolioAccountData fromAccount = null;
             EnumOptionData fromAccountType = null;
             if (fromSavingsAccountId != null) {
-                fromAccount = new PortfolioAccountData(fromSavingsAccountId, fromSavingsAccountNo, null, null, null, null, null,
-                        fromProductId, fromProductName, null, null, null);
+                fromAccount = PortfolioAccountData.builder()
+                    .id(fromSavingsAccountId)
+                    .accountNo(fromSavingsAccountNo)
+                    .productId(fromProductId)
+                    .productName(fromProductName)
+                    .build();
                 fromAccountType = accountType(PortfolioAccountType.SAVINGS);
             } else if (fromLoanAccountId != null) {
-                fromAccount = new PortfolioAccountData(fromLoanAccountId, fromLoanAccountNo, null, null, null, null, null,
-                        fromLoanProductId, fromLoanProductName, null, null, null);
+                fromAccount = PortfolioAccountData.builder()
+                    .id(fromLoanAccountId)
+                    .accountNo(fromLoanAccountNo)
+                    .productId(fromLoanProductId)
+                    .productName(fromLoanProductName)
+                    .build();
                 fromAccountType = accountType(PortfolioAccountType.LOAN);
             }
 
@@ -264,17 +272,39 @@ public class StandingInstructionHistoryReadPlatformServiceImpl implements Standi
             final String toLoanProductName = rs.getString("toLoanProductName");
 
             if (toSavingsAccountId != null) {
-                toAccount = new PortfolioAccountData(toSavingsAccountId, toSavingsAccountNo, null, null, null, null, null, toProductId,
-                        toProductName, null, null, null);
+                toAccount = PortfolioAccountData.builder()
+                    .id(toSavingsAccountId)
+                    .accountNo(toSavingsAccountNo)
+                    .productId(toProductId)
+                    .productName(toProductName)
+                    .build();
                 toAccountType = accountType(PortfolioAccountType.SAVINGS);
             } else if (toLoanAccountId != null) {
-                toAccount = new PortfolioAccountData(toLoanAccountId, toLoanAccountNo, null, null, null, null, null, toLoanProductId,
-                        toLoanProductName, null, null, null);
+                toAccount = PortfolioAccountData.builder()
+                    .id(toLoanAccountId)
+                    .accountNo(toLoanAccountNo)
+                    .productId(toLoanProductId)
+                    .productName(toLoanProductName)
+                    .build();
                 toAccountType = accountType(PortfolioAccountType.LOAN);
             }
 
-            return new StandingInstructionHistoryData(id, name, fromOffice, fromClient, fromAccountType, fromAccount, toAccountType,
-                    toAccount, toOffice, toClient, transferAmount, status, executionTime, errorLog);
+            return StandingInstructionHistoryData.builder()
+                .standingInstructionId(id)
+                .name(name)
+                .fromOffice(fromOffice)
+                .fromClient(fromClient)
+                .fromAccountType(fromAccountType)
+                .fromAccount(fromAccount)
+                .fromAccountType(toAccountType)
+                .toAccount(toAccount)
+                .toOffice(toOffice)
+                .toClient(toClient)
+                .amount(transferAmount)
+                .errorLog(status)
+                .executionTime(executionTime)
+                .errorLog(errorLog)
+                .build();
         }
     }
 

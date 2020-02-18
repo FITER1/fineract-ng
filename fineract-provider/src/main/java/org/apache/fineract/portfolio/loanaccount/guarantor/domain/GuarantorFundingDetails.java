@@ -46,13 +46,13 @@ public class GuarantorFundingDetails extends AbstractPersistableCustom<Long> {
     @Column(name = "amount", scale = 6, precision = 19, nullable = false)
     private BigDecimal amount;
 
-    @Column(name = "amount_released_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "amount_released_derived", scale = 6, precision = 19)
     private BigDecimal amountReleased;
 
-    @Column(name = "amount_remaining_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "amount_remaining_derived", scale = 6, precision = 19)
     private BigDecimal amountRemaining;
 
-    @Column(name = "amount_transfered_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "amount_transfered_derived", scale = 6, precision = 19)
     private BigDecimal amountTransfered;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "guarantorFundingDetails", orphanRemoval = true, fetch=FetchType.EAGER)

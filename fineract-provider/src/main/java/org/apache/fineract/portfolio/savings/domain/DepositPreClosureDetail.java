@@ -43,10 +43,10 @@ public class DepositPreClosureDetail {
     @Column(name = "pre_closure_penal_applicable")
     private boolean preClosurePenalApplicable;
 
-    @Column(name = "pre_closure_penal_interest", scale = 6, precision = 19, nullable = true)
+    @Column(name = "pre_closure_penal_interest", scale = 6, precision = 19)
     private BigDecimal preClosurePenalInterest;
 
-    @Column(name = "pre_closure_penal_interest_on_enum", nullable = true)
+    @Column(name = "pre_closure_penal_interest_on_enum")
     private Integer preClosurePenalInterestOnType;
 
     public static DepositPreClosureDetail createFrom(final boolean preClosurePenalApplicable, final BigDecimal preClosurePenalInterest,

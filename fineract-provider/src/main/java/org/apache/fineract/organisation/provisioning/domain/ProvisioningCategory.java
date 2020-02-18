@@ -42,6 +42,6 @@ public class ProvisioningCategory extends AbstractPersistableCustom<Long> {
     @Column(name = "category_name", nullable = false, unique = true)
     private String categoryName;
 
-    @Column(name = "description", nullable = true)
+    @Column(name = "description")
     private String categoryDescription;
 }

@@ -77,15 +77,15 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     @Column(name = "account_no", length = 20, unique = true, nullable = false)
     protected String accountNumber;
 
-    @Column(name = "external_id", nullable = true)
+    @Column(name = "external_id")
     protected String externalId;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "client_id", nullable = true)
+    @JoinColumn(name = "client_id")
     protected Client client;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "group_id", nullable = true)
+    @JoinColumn(name = "group_id")
     protected Group group;
 
     @ManyToOne
@@ -93,7 +93,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     protected SavingsProduct product;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "field_officer_id", nullable = true)
+    @JoinColumn(name = "field_officer_id")
     protected Staff savingsOfficer;
 
     @Column(name = "status_enum", nullable = false)
@@ -106,11 +106,11 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     protected Integer accountType;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "submittedon_date", nullable = true)
+    @Column(name = "submittedon_date")
     protected Date submittedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "submittedon_userid", nullable = true)
+    @JoinColumn(name = "submittedon_userid")
     protected AppUser submittedBy;
 
     @Temporal(TemporalType.DATE)
@@ -118,7 +118,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     protected Date rejectedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "rejectedon_userid", nullable = true)
+    @JoinColumn(name = "rejectedon_userid")
     protected AppUser rejectedBy;
 
     @Temporal(TemporalType.DATE)
@@ -126,7 +126,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     protected Date withdrawnOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "withdrawnon_userid", nullable = true)
+    @JoinColumn(name = "withdrawnon_userid")
     protected AppUser withdrawnBy;
 
     @Temporal(TemporalType.DATE)
@@ -134,15 +134,15 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     protected Date approvedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "approvedon_userid", nullable = true)
+    @JoinColumn(name = "approvedon_userid")
     protected AppUser approvedBy;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "activatedon_date", nullable = true)
+    @Column(name = "activatedon_date")
     protected Date activatedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "activatedon_userid", nullable = true)
+    @JoinColumn(name = "activatedon_userid")
     protected AppUser activatedBy;
 
     @Temporal(TemporalType.DATE)
@@ -150,7 +150,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     protected Date closedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "closedon_userid", nullable = true)
+    @JoinColumn(name = "closedon_userid")
     protected AppUser closedBy;
 
     @Embedded
@@ -189,13 +189,13 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     @Column(name = "interest_calculation_days_in_year_type_enum", nullable = false)
     protected Integer interestCalculationDaysInYearType;
 
-    @Column(name = "min_required_opening_balance", scale = 6, precision = 19, nullable = true)
+    @Column(name = "min_required_opening_balance", scale = 6, precision = 19)
     protected BigDecimal minRequiredOpeningBalance;
 
-    @Column(name = "lockin_period_frequency", nullable = true)
+    @Column(name = "lockin_period_frequency")
     protected Integer lockinPeriodFrequency;
 
-    @Column(name = "lockin_period_frequency_enum", nullable = true)
+    @Column(name = "lockin_period_frequency_enum")
     protected Integer lockinPeriodFrequencyType;
 
     /**
@@ -204,31 +204,31 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
      * <code>lockinPeriodFrequencyType</code> details are present.
      */
     @Temporal(TemporalType.DATE)
-    @Column(name = "lockedin_until_date_derived", nullable = true)
+    @Column(name = "lockedin_until_date_derived")
     protected Date lockedInUntilDate;
 
-    @Column(name = "withdrawal_fee_for_transfer", nullable = true)
+    @Column(name = "withdrawal_fee_for_transfer")
     protected boolean withdrawalFeeApplicableForTransfer;
 
     @Column(name = "allow_overdraft")
     private boolean allowOverdraft;
 
-    @Column(name = "overdraft_limit", scale = 6, precision = 19, nullable = true)
+    @Column(name = "overdraft_limit", scale = 6, precision = 19)
     private BigDecimal overdraftLimit;
 
-    @Column(name = "nominal_annual_interest_rate_overdraft", scale = 6, precision = 19, nullable = true)
+    @Column(name = "nominal_annual_interest_rate_overdraft", scale = 6, precision = 19)
     protected BigDecimal nominalAnnualInterestRateOverdraft;
 
-    @Column(name = "min_overdraft_for_interest_calculation", scale = 6, precision = 19, nullable = true)
+    @Column(name = "min_overdraft_for_interest_calculation", scale = 6, precision = 19)
     private BigDecimal minOverdraftForInterestCalculation;
 
     @Column(name = "enforce_min_required_balance")
     private boolean enforceMinRequiredBalance;
 
-    @Column(name = "min_required_balance", scale = 6, precision = 19, nullable = true)
+    @Column(name = "min_required_balance", scale = 6, precision = 19)
     private BigDecimal minRequiredBalance;
 
-    @Column(name = "on_hold_funds_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "on_hold_funds_derived", scale = 6, precision = 19)
     private BigDecimal onHoldFunds;
 
     @Temporal(TemporalType.DATE)
@@ -258,7 +258,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     @Column(name = "deposit_type_enum", insertable = false, updatable = false)
     private Integer depositType;
 
-    @Column(name = "min_balance_for_interest_calculation", scale = 6, precision = 19, nullable = true)
+    @Column(name = "min_balance_for_interest_calculation", scale = 6, precision = 19)
     private BigDecimal minBalanceForInterestCalculation;
 
     @Column(name = "withhold_tax", nullable = false)
@@ -268,7 +268,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "tax_group_id")
     private TaxGroup taxGroup;
 
-    @Column(name = "total_savings_amount_on_hold", scale = 6, precision = 19, nullable = true)
+    @Column(name = "total_savings_amount_on_hold", scale = 6, precision = 19)
     private BigDecimal savingsOnHoldAmount;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "account", orphanRemoval = true, fetch=FetchType.LAZY)

@@ -78,31 +78,31 @@ public class EmailCampaign extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "stretchy_report_id", nullable = false)
     private Report stretchyReport;
 
-    @Column(name = "stretchy_report_param_map", nullable = true)
+    @Column(name = "stretchy_report_param_map")
     private String stretchyReportParamMap;
 
-    @Column(name = "closedon_date", nullable = true)
+    @Column(name = "closedon_date")
     @Temporal(TemporalType.DATE)
     private Date closureDate;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "closedon_userid", nullable = true)
+    @JoinColumn(name = "closedon_userid")
     private AppUser closedBy;
 
-    @Column(name = "submittedon_date", nullable = true)
+    @Column(name = "submittedon_date")
     @Temporal(TemporalType.DATE)
     private Date submittedOnDate;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "submittedon_userid", nullable = true)
+    @JoinColumn(name = "submittedon_userid")
     private AppUser submittedBy;
 
-    @Column(name = "approvedon_date", nullable = true)
+    @Column(name = "approvedon_date")
     @Temporal(TemporalType.DATE)
     private Date approvedOnDate;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "approvedon_userid", nullable = true)
+    @JoinColumn(name = "approvedon_userid")
     private AppUser approvedBy;
 
     @Column(name = "recurrence", nullable = false)
@@ -123,13 +123,13 @@ public class EmailCampaign extends AbstractPersistableCustom<Long> {
     @Column(name="is_visible",nullable = true)
     private boolean isVisible;
 
-    @Column(name = "previous_run_status", nullable = true)
+    @Column(name = "previous_run_status")
     private String previousRunStatus;
 
-    @Column(name = "previous_run_error_log", nullable = true)
+    @Column(name = "previous_run_error_log")
     private String previousRunErrorLog;
 
-    @Column(name = "previous_run_error_message", nullable = true)
+    @Column(name = "previous_run_error_message")
     private String previousRunErrorMessage;
 
     public static EmailCampaign instance(final AppUser submittedBy, final Report businessRuleId, final Report stretchyReport, final JsonCommand command){
@@ -137,7 +137,7 @@ public class EmailCampaign extends AbstractPersistableCustom<Long> {
         final Integer emailAttachmentFileFormatId = command.integerValueOfParameterNamed(ScheduledEmailConstants.EMAIL_ATTACHMENT_FILE_FORMAT_ID_PARAM_NAME);
         final Long  campaignType = command.longValueOfParameterNamed(EmailCampaignValidator.campaignType);
 
-        LocalDate submittedOnDate = new LocalDate();
+        LocalDate submittedOnDate = LocalDate.now();
         if (command.hasParameter(EmailCampaignValidator.submittedOnDateParamName)) {
             submittedOnDate = command.localDateValueOfParameterNamed(EmailCampaignValidator.submittedOnDateParamName);
         }

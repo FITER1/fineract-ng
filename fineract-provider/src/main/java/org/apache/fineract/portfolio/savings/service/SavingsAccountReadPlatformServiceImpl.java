@@ -837,8 +837,14 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
                 final boolean fromTransferReversed = rs.getBoolean("fromTransferReversed");
                 final String fromTransferDescription = rs.getString("fromTransferDescription");
 
-                transfer = AccountTransferData.transferBasicDetails(fromTransferId, currency, fromTransferAmount, fromTransferDate,
-                        fromTransferDescription, fromTransferReversed);
+                transfer = AccountTransferData.builder()
+                    .id(fromTransferId)
+                    .currency(currency)
+                    .transferAmount(fromTransferAmount)
+                    .transferDate(fromTransferDate)
+                    .transferDescription(fromTransferDescription)
+                    .reversed(fromTransferReversed)
+                    .build();
             } else if (toTransferId != null) {
                 final LocalDate toTransferDate = JdbcSupport.getLocalDate(rs, "toTransferDate");
                 final BigDecimal toTransferAmount = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "toTransferAmount");
@@ -847,8 +853,14 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
 
                 
 
-                transfer = AccountTransferData.transferBasicDetails(toTransferId, currency, toTransferAmount, toTransferDate,
-                        toTransferDescription, toTransferReversed);
+                transfer = AccountTransferData.builder()
+                    .id(toTransferId)
+                    .currency(currency)
+                    .transferAmount(toTransferAmount)
+                    .transferDate(toTransferDate)
+                    .transferDescription(toTransferDescription)
+                    .reversed(toTransferReversed)
+                    .build();
             }
             final String submittedByUsername = rs.getString("submittedByUsername");
             final String note = rs.getString("transactionNote") ;

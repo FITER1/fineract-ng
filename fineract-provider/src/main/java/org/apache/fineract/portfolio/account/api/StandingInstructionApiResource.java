@@ -152,8 +152,16 @@ public class StandingInstructionApiResource {
 
         final Date startDateRange = null;
         final Date endDateRange = null;
-        StandingInstructionDTO standingInstructionDTO = new StandingInstructionDTO(searchParameters, transferType, clientName, clientId,
-                fromAccount, fromAccountType, startDateRange, endDateRange);
+        StandingInstructionDTO standingInstructionDTO = StandingInstructionDTO.builder()
+            .searchParameters(searchParameters)
+            .transferType(transferType)
+            .clientName(clientName)
+            .clientId(clientId)
+            .fromAccount(fromAccount)
+            .fromAccountType(fromAccountType)
+            .startDateRange(startDateRange)
+            .endDateRange(endDateRange)
+            .build();
 
         final Page<StandingInstructionData> transfers = this.standingInstructionReadPlatformService.retrieveAll(standingInstructionDTO);
 
@@ -185,16 +193,92 @@ public class StandingInstructionApiResource {
             }
             if (associationParameters.contains("transactions")) {
                 transfers = this.accountTransfersReadPlatformService.retrieveByStandingInstruction(standingInstructionId, searchParameters);
-                standingInstructionData = StandingInstructionData.withTransferData(standingInstructionData, transfers);
+                standingInstructionData = StandingInstructionData.builder()
+                    .id(standingInstructionData.getId())
+                    .accountDetailId(standingInstructionData.getAccountDetailId())
+                    .name(standingInstructionData.getName())
+                    .fromOffice(standingInstructionData.getFromOffice())
+                    .fromClient(standingInstructionData.getFromClient())
+                    .fromAccountType(standingInstructionData.getFromAccountType())
+                    .fromAccount(standingInstructionData.getFromAccount())
+                    .toOffice(standingInstructionData.getToOffice())
+                    .toClient(standingInstructionData.getToClient())
+                    .toAccountType(standingInstructionData.getToAccountType())
+                    .toAccount(standingInstructionData.getToAccount())
+                    .transferType(standingInstructionData.getTransferType())
+                    .priority(standingInstructionData.getPriority())
+                    .instructionType(standingInstructionData.getInstructionType())
+                    .status(standingInstructionData.getStatus())
+                    .amount(standingInstructionData.getAmount())
+                    .validFrom(standingInstructionData.getValidFrom())
+                    .validTill(standingInstructionData.getValidTill())
+                    .recurrenceType(standingInstructionData.getRecurrenceType())
+                    .recurrenceFrequency(standingInstructionData.getRecurrenceFrequency())
+                    .recurrenceInterval(standingInstructionData.getRecurrenceInterval())
+                    .recurrenceOnMonthDay(standingInstructionData.getRecurrenceOnMonthDay())
+                    .fromOfficeOptions(standingInstructionData.getFromOfficeOptions())
+                    .fromClientOptions(standingInstructionData.getFromClientOptions())
+                    .fromAccountTypeOptions(standingInstructionData.getFromAccountTypeOptions())
+                    .fromAccountOptions(standingInstructionData.getFromAccountOptions())
+                    .toOfficeOptions(standingInstructionData.getToOfficeOptions())
+                    .toClientOptions(standingInstructionData.getToClientOptions())
+                    .toAccountTypeOptions(standingInstructionData.getToAccountTypeOptions())
+                    .toAccountOptions(standingInstructionData.getToAccountOptions())
+                    .transferTypeOptions(standingInstructionData.getTransferTypeOptions())
+                    .statusOptions(standingInstructionData.getStatusOptions())
+                    .instructionTypeOptions(standingInstructionData.getInstructionTypeOptions())
+                    .priorityOptions(standingInstructionData.getPriorityOptions())
+                    .recurrenceTypeOptions(standingInstructionData.getRecurrenceTypeOptions())
+                    .recurrenceFrequencyOptions(standingInstructionData.getRecurrenceFrequencyOptions())
+                    .transactions(transfers)
+                    .build();
             }
             if (associationParameters.contains("template")) {
                 final StandingInstructionData templateData = this.standingInstructionReadPlatformService.retrieveTemplate(
-                        standingInstructionData.fromClient().officeId(), standingInstructionData.fromClient().id(), standingInstructionData
-                                .fromAccount().accountId(), standingInstructionData.fromAccountType().getValue(), standingInstructionData
-                                .toClient().officeId(), standingInstructionData.toClient().id(), standingInstructionData.toAccount()
-                                .accountId(), standingInstructionData.toAccountType().getValue(), standingInstructionData.transferType()
+                        standingInstructionData.getFromClient().officeId(), standingInstructionData.getFromClient().id(), standingInstructionData
+                                .getFromAccount().getId(), standingInstructionData.fromAccountType().getValue(), standingInstructionData
+                                .getToClient().officeId(), standingInstructionData.getToClient().id(), standingInstructionData.getToAccount()
+                                .getId(), standingInstructionData.toAccountType().getValue(), standingInstructionData.transferType()
                                 .getValue());
-                standingInstructionData = StandingInstructionData.withTemplateData(standingInstructionData, templateData);
+                standingInstructionData = StandingInstructionData.builder()
+                    .id(standingInstructionData.getId())
+                    .accountDetailId(standingInstructionData.getAccountDetailId())
+                    .name(standingInstructionData.getName())
+                    .fromOffice(standingInstructionData.getFromOffice())
+                    .fromClient(standingInstructionData.getFromClient())
+                    .fromAccountType(standingInstructionData.getFromAccountType())
+                    .fromAccount(standingInstructionData.getFromAccount())
+                    .toOffice(standingInstructionData.getToOffice())
+                    .toClient(standingInstructionData.getToClient())
+                    .toAccountType(standingInstructionData.getToAccountType())
+                    .toAccount(standingInstructionData.getToAccount())
+                    .transferType(standingInstructionData.getTransferType())
+                    .priority(standingInstructionData.getPriority())
+                    .instructionType(standingInstructionData.getInstructionType())
+                    .status(standingInstructionData.getStatus())
+                    .amount(standingInstructionData.getAmount())
+                    .validFrom(standingInstructionData.getValidFrom())
+                    .validTill(standingInstructionData.getValidTill())
+                    .recurrenceType(standingInstructionData.getRecurrenceType())
+                    .recurrenceFrequency(standingInstructionData.getRecurrenceFrequency())
+                    .recurrenceInterval(standingInstructionData.getRecurrenceInterval())
+                    .recurrenceOnMonthDay(standingInstructionData.getRecurrenceOnMonthDay())
+                    .transactions(standingInstructionData.getTransactions())
+                    .fromOfficeOptions(templateData.getFromOfficeOptions())
+                    .fromClientOptions(templateData.getFromClientOptions())
+                    .fromAccountTypeOptions(templateData.getFromAccountTypeOptions())
+                    .fromAccountOptions(templateData.getFromAccountOptions())
+                    .toOfficeOptions(templateData.getToOfficeOptions())
+                    .toClientOptions(templateData.getToClientOptions())
+                    .toAccountTypeOptions(templateData.getToAccountTypeOptions())
+                    .toAccountOptions(templateData.getToAccountOptions())
+                    .transferTypeOptions(templateData.getTransferTypeOptions())
+                    .statusOptions(templateData.getStatusOptions())
+                    .instructionTypeOptions(templateData.getInstructionTypeOptions())
+                    .priorityOptions(templateData.getPriorityOptions())
+                    .recurrenceTypeOptions(templateData.getRecurrenceTypeOptions())
+                    .recurrenceFrequencyOptions(templateData.getRecurrenceFrequencyOptions())
+                    .build();
             }
         }
 

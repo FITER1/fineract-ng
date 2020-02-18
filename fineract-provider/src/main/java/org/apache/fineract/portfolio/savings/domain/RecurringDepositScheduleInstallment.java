@@ -40,23 +40,23 @@ public class RecurringDepositScheduleInstallment extends AbstractAuditableCustom
     private Integer installmentNumber;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "fromdate", nullable = true)
+    @Column(name = "fromdate")
     private Date fromDate;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "duedate", nullable = false)
     private Date dueDate;
 
-    @Column(name = "deposit_amount", scale = 6, precision = 19, nullable = true)
+    @Column(name = "deposit_amount", scale = 6, precision = 19)
     private BigDecimal depositAmount;
 
-    @Column(name = "deposit_amount_completed_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "deposit_amount_completed_derived", scale = 6, precision = 19)
     private BigDecimal depositAmountCompleted;
 
-    @Column(name = "total_paid_in_advance_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "total_paid_in_advance_derived", scale = 6, precision = 19)
     private BigDecimal totalPaidInAdvance;
 
-    @Column(name = "total_paid_late_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "total_paid_late_derived", scale = 6, precision = 19)
     private BigDecimal totalPaidLate;
 
     @Column(name = "completed_derived", nullable = false)

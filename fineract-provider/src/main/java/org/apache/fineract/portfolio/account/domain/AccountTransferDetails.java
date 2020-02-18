@@ -48,7 +48,7 @@ public class AccountTransferDetails extends AbstractPersistableCustom<Long> {
     private Client fromClient;
 
     @ManyToOne
-    @JoinColumn(name = "from_savings_account_id", nullable = true)
+    @JoinColumn(name = "from_savings_account_id")
     private SavingsAccount fromSavingsAccount;
 
     @ManyToOne
@@ -60,15 +60,15 @@ public class AccountTransferDetails extends AbstractPersistableCustom<Long> {
     private Client toClient;
 
     @ManyToOne
-    @JoinColumn(name = "to_savings_account_id", nullable = true)
+    @JoinColumn(name = "to_savings_account_id")
     private SavingsAccount toSavingsAccount;
 
     @ManyToOne
-    @JoinColumn(name = "to_loan_account_id", nullable = true)
+    @JoinColumn(name = "to_loan_account_id")
     private Loan toLoanAccount;
 
     @ManyToOne
-    @JoinColumn(name = "from_loan_account_id", nullable = true)
+    @JoinColumn(name = "from_loan_account_id")
     private Loan fromLoanAccount;
 
     @Column(name = "transfer_type")
@@ -80,70 +80,4 @@ public class AccountTransferDetails extends AbstractPersistableCustom<Long> {
 
     @OneToOne(mappedBy = "accountTransferDetails", cascade = CascadeType.ALL, optional = true, orphanRemoval = true, fetch = FetchType.EAGER)
     private AccountTransferStandingInstruction accountTransferStandingInstruction;
-
-    public static AccountTransferDetails savingsToSavingsTransfer(final Office fromOffice, final Client fromClient,
-            final SavingsAccount fromSavingsAccount, final Office toOffice, final Client toClient, final SavingsAccount toSavingsAccount,
-            Integer transferType) {
-
-        return AccountTransferDetails.builder()
-            .fromOffice(fromOffice)
-            .fromClient(fromClient)
-            .fromSavingsAccount(fromSavingsAccount)
-            .toOffice(toOffice)
-            .toClient(toClient)
-            .toSavingsAccount(toSavingsAccount)
-            .transferType(transferType)
-            .build();
-    }
-
-    public static AccountTransferDetails savingsToLoanTransfer(final Office fromOffice, final Client fromClient,
-            final SavingsAccount fromSavingsAccount, final Office toOffice, final Client toClient, final Loan toLoanAccount,
-            Integer transferType) {
-
-        return AccountTransferDetails.builder()
-            .fromOffice(fromOffice)
-            .fromClient(fromClient)
-            .fromSavingsAccount(fromSavingsAccount)
-            .toOffice(toOffice)
-            .toClient(toClient)
-            .toLoanAccount(toLoanAccount)
-            .transferType(transferType)
-            .build();
-    }
-
-    public static AccountTransferDetails loanToSavingsTransfer(final Office fromOffice, final Client fromClient,
-                                                               final Loan fromLoanAccount, final Office toOffice, final Client toClient, final SavingsAccount toSavingsAccount,
-                                                               Integer transferType) {
-        return AccountTransferDetails.builder()
-            .fromOffice(fromOffice)
-            .fromClient(fromClient)
-            .fromLoanAccount(fromLoanAccount)
-            .toOffice(toOffice)
-            .toClient(toClient)
-            .toSavingsAccount(toSavingsAccount)
-            .transferType(transferType)
-            .build();
-    }
-
-    public static AccountTransferDetails loanToLoanTransfer(Office fromOffice, Client fromClient, Loan fromLoanAccount, Office toOffice, Client toClient,
-                                                            Loan toLoanAccount, Integer transferType) {
-
-        return AccountTransferDetails.builder()
-            .fromOffice(fromOffice)
-            .fromClient(fromClient)
-            .fromLoanAccount(fromLoanAccount)
-            .toOffice(toOffice)
-            .toClient(toClient)
-            .toLoanAccount(toLoanAccount)
-            .transferType(transferType)
-            .build();
-    }
-
-    public void addAccountTransferTransaction(AccountTransferTransaction accountTransferTransaction) {
-        this.accountTransferTransactions.add(accountTransferTransaction);
-    }
-
-    public AccountTransferType transferType() {
-        return AccountTransferType.fromInt(this.transferType);
-    }
 }

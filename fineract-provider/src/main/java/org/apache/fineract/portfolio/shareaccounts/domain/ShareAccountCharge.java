@@ -49,22 +49,22 @@ public class ShareAccountCharge extends AbstractPersistableCustom<Long> {
     @Column(name = "charge_calculation_enum")
     private Integer chargeCalculation;
 
-    @Column(name = "calculation_percentage", scale = 6, precision = 19, nullable = true)
+    @Column(name = "calculation_percentage", scale = 6, precision = 19)
     private BigDecimal percentage;
 
-    @Column(name = "calculation_on_amount", scale = 6, precision = 19, nullable = true)
+    @Column(name = "calculation_on_amount", scale = 6, precision = 19)
     private BigDecimal amountPercentageAppliedTo;
 
     @Column(name = "amount", scale = 6, precision = 19, nullable = false)
     private BigDecimal amount;
 
-    @Column(name = "amount_paid_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "amount_paid_derived", scale = 6, precision = 19)
     private BigDecimal amountPaid;
 
-    @Column(name = "amount_waived_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "amount_waived_derived", scale = 6, precision = 19)
     private BigDecimal amountWaived;
 
-    @Column(name = "amount_writtenoff_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "amount_writtenoff_derived", scale = 6, precision = 19)
     private BigDecimal amountWrittenOff;
 
     @Column(name = "amount_outstanding_derived", scale = 6, precision = 19, nullable = false)

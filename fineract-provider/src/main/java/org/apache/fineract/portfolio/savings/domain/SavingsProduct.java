@@ -91,13 +91,13 @@ public class SavingsProduct extends AbstractPersistableCustom<Long> {
     @Column(name = "interest_calculation_days_in_year_type_enum", nullable = false)
     protected Integer interestCalculationDaysInYearType;
 
-    @Column(name = "min_required_opening_balance", scale = 6, precision = 19, nullable = true)
+    @Column(name = "min_required_opening_balance", scale = 6, precision = 19)
     protected BigDecimal minRequiredOpeningBalance;
 
-    @Column(name = "lockin_period_frequency", nullable = true)
+    @Column(name = "lockin_period_frequency")
     protected Integer lockinPeriodFrequency;
 
-    @Column(name = "lockin_period_frequency_enum", nullable = true)
+    @Column(name = "lockin_period_frequency_enum")
     protected Integer lockinPeriodFrequencyType;
 
     /**
@@ -116,22 +116,22 @@ public class SavingsProduct extends AbstractPersistableCustom<Long> {
     @Column(name = "allow_overdraft")
     private boolean allowOverdraft;
 
-    @Column(name = "overdraft_limit", scale = 6, precision = 19, nullable = true)
+    @Column(name = "overdraft_limit", scale = 6, precision = 19)
     private BigDecimal overdraftLimit;
 
-    @Column(name = "nominal_annual_interest_rate_overdraft", scale = 6, precision = 19, nullable = true)
+    @Column(name = "nominal_annual_interest_rate_overdraft", scale = 6, precision = 19)
     private BigDecimal nominalAnnualInterestRateOverdraft;
 
-    @Column(name = "min_overdraft_for_interest_calculation", scale = 6, precision = 19, nullable = true)
+    @Column(name = "min_overdraft_for_interest_calculation", scale = 6, precision = 19)
     private BigDecimal minOverdraftForInterestCalculation;
 
     @Column(name = "enforce_min_required_balance")
     private boolean enforceMinRequiredBalance;
 
-    @Column(name = "min_required_balance", scale = 6, precision = 19, nullable = true)
+    @Column(name = "min_required_balance", scale = 6, precision = 19)
     private BigDecimal minRequiredBalance;
 
-    @Column(name = "min_balance_for_interest_calculation", scale = 6, precision = 19, nullable = true)
+    @Column(name = "min_balance_for_interest_calculation", scale = 6, precision = 19)
     private BigDecimal minBalanceForInterestCalculation;
 
     @Column(name = "withhold_tax", nullable = false)

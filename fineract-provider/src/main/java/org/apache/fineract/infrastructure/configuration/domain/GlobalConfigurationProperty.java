@@ -48,13 +48,13 @@ public class GlobalConfigurationProperty extends AbstractPersistableCustom<Long>
     @Column(name = "enabled", nullable = false)
     private boolean enabled;
 
-    @Column(name = "value", nullable = true)
+    @Column(name = "value")
     private Long value;
     
-    @Column(name = "date_value", nullable = true)
+    @Column(name = "date_value")
     private Date dateValue;
 
-    @Column(name = "description", nullable = true)
+    @Column(name = "description")
     private String description;
 
     @Column(name = "is_trap_door", nullable = false)

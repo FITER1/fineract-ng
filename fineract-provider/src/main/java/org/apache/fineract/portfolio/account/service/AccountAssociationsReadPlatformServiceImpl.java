@@ -26,8 +26,6 @@ import org.apache.fineract.portfolio.account.data.PortfolioAccountData;
 import org.apache.fineract.portfolio.account.domain.AccountAssociationType;
 import org.apache.fineract.portfolio.loanaccount.domain.LoanStatus;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -55,7 +53,7 @@ public class AccountAssociationsReadPlatformServiceImpl implements AccountAssoci
             final AccountAssociationsData accountAssociationsData = this.jdbcTemplate.queryForObject(sql, mapper, loanId,
                     AccountAssociationType.LINKED_ACCOUNT_ASSOCIATION.getValue());
             if (accountAssociationsData != null) {
-                linkedAccount = accountAssociationsData.linkedAccount();
+                linkedAccount = accountAssociationsData.getLinkedAccount();
             }
         } catch (final EmptyResultDataAccessException e) {
             log.debug("Linking account is not configured");
@@ -84,7 +82,7 @@ public class AccountAssociationsReadPlatformServiceImpl implements AccountAssoci
             final AccountAssociationsData accountAssociationsData = this.jdbcTemplate.queryForObject(sql, mapper, savingsId,
                     AccountAssociationType.LINKED_ACCOUNT_ASSOCIATION.getValue());
             if (accountAssociationsData != null) {
-                linkedAccount = accountAssociationsData.linkedAccount();
+                linkedAccount = accountAssociationsData.getLinkedAccount();
             }
         } catch (final EmptyResultDataAccessException e) {
             log.debug("Linking account is not configured");
@@ -162,7 +160,10 @@ public class AccountAssociationsReadPlatformServiceImpl implements AccountAssoci
             // final String savingsAccountNo = rs.getString("savingsAccountNo");
             final Long loanAccountId = JdbcSupport.getLong(rs, "loanAccountId");
             final String loanAccountNo = rs.getString("loanAccountNo");
-            final PortfolioAccountData account = PortfolioAccountData.lookup(loanAccountId, loanAccountNo);
+            final PortfolioAccountData account = PortfolioAccountData.builder()
+                .id(loanAccountId)
+                .accountNo(loanAccountNo)
+                .build();
             /*
              * if (savingsAccountId != null) { account =
              * PortfolioAccountData.lookup(savingsAccountId, savingsAccountNo);
@@ -175,7 +176,10 @@ public class AccountAssociationsReadPlatformServiceImpl implements AccountAssoci
             // "linkLoanAccountId");
             // final String linkLoanAccountNo =
             // rs.getString("linkLoanAccountNo");
-            final PortfolioAccountData linkedAccount = PortfolioAccountData.lookup(linkSavingsAccountId, linkSavingsAccountNo);
+            final PortfolioAccountData linkedAccount = PortfolioAccountData.builder()
+                .id(linkSavingsAccountId)
+                .accountNo(linkSavingsAccountNo)
+                .build();
             /*
              * if (linkSavingsAccountId != null) { linkedAccount =
              * PortfolioAccountData.lookup(linkSavingsAccountId,
@@ -184,7 +188,11 @@ public class AccountAssociationsReadPlatformServiceImpl implements AccountAssoci
              * linkLoanAccountNo); }
              */
 
-            return new AccountAssociationsData(id, account, linkedAccount);
+            return AccountAssociationsData.builder()
+                .id(id)
+                .account(account)
+                .linkedAccount(linkedAccount)
+                .build();
         }
 
     }

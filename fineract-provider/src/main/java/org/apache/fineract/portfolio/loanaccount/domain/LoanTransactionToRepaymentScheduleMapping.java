@@ -33,16 +33,16 @@ public class LoanTransactionToRepaymentScheduleMapping extends AbstractPersistab
     @JoinColumn(name = "loan_repayment_schedule_id", nullable = false)
     private LoanRepaymentScheduleInstallment installment;
 
-    @Column(name = "principal_portion_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "principal_portion_derived", scale = 6, precision = 19)
     private BigDecimal principalPortion;
 
-    @Column(name = "interest_portion_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "interest_portion_derived", scale = 6, precision = 19)
     private BigDecimal interestPortion;
 
-    @Column(name = "fee_charges_portion_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "fee_charges_portion_derived", scale = 6, precision = 19)
     private BigDecimal feeChargesPortion;
 
-    @Column(name = "penalty_charges_portion_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "penalty_charges_portion_derived", scale = 6, precision = 19)
     private BigDecimal penaltyChargesPortion;
 
     @Column(name = "amount", scale = 6, precision = 19)

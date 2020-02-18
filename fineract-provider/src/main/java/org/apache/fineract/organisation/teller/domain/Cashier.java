@@ -52,7 +52,7 @@ public class Cashier extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "teller_id", nullable = false)
     private Teller teller;
 
-    @Column(name = "description", nullable = true, length = 500)
+    @Column(name = "description", length = 500)
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -63,12 +63,12 @@ public class Cashier extends AbstractPersistableCustom<Long> {
     @Column(name = "end_date", nullable = false)
     private Date endDate;
 
-    @Column(name = "full_day", nullable = true)
+    @Column(name = "full_day")
     private Boolean fullDay;
 
-    @Column(name = "start_time", nullable = true, length = 10)
+    @Column(name = "start_time", length = 10)
     private String startTime;
 
-    @Column(name = "end_time", nullable = true, length = 10)
+    @Column(name = "end_time", length = 10)
     private String endTime;
 }

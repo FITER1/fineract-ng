@@ -1938,7 +1938,7 @@ public class ClientSavingsIntegrationTest extends BaseIntegrationTest {
         savingsList.add(savingsId);
 
         final DateTimeFormatter formatter = DateTimeFormat.forPattern("dd MMMM yyyy");
-        LocalDate transactionDate = new LocalDate();
+        LocalDate transactionDate = LocalDate.now();
         for(int i=0; i< 4; i++){
         	String TRANSACTION_DATE = formatter.print(transactionDate);
             Integer depositTransactionId = (Integer) this.savingsAccountHelper.depositToSavingsAccount(savingsList.get(i), DEPOSIT_AMOUNT,
@@ -1976,7 +1976,7 @@ public class ClientSavingsIntegrationTest extends BaseIntegrationTest {
         balance -= chargeAmt;
         assertEquals("Verifying account Balance", balance, summary.get("accountBalance"));
 
-    	String TRANSACTION_DATE = formatter.print(new LocalDate());
+    	String TRANSACTION_DATE = formatter.print(LocalDate.now());
         Integer depositTransactionId = (Integer) this.savingsAccountHelper.depositToSavingsAccount(savingsList.get(1), DEPOSIT_AMOUNT,
                 TRANSACTION_DATE, CommonConstants.RESPONSE_RESOURCE_ID);
         savingsStatusHashMap = SavingsStatusChecker.getStatusOfSavings(this.requestSpec, this.responseSpec, savingsList.get(1));
@@ -1995,7 +1995,7 @@ public class ClientSavingsIntegrationTest extends BaseIntegrationTest {
         balance -= chargeAmt;
         assertEquals("Verifying account Balance", balance, summary.get("accountBalance"));
         
-        TRANSACTION_DATE = formatter.print(new LocalDate());
+        TRANSACTION_DATE = formatter.print(LocalDate.now());
         depositTransactionId = (Integer) this.savingsAccountHelper.depositToSavingsAccount(savingsList.get(2), DEPOSIT_AMOUNT,
                 TRANSACTION_DATE, CommonConstants.RESPONSE_RESOURCE_ID);
         savingsStatusHashMap = SavingsStatusChecker.getStatusOfSavings(this.requestSpec, this.responseSpec, savingsList.get(2));

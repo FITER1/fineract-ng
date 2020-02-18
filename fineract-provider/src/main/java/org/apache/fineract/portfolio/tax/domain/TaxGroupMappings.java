@@ -41,7 +41,7 @@ public class TaxGroupMappings extends AbstractAuditableCustom<AppUser, Long> {
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
-    @Column(name = "end_date", nullable = true)
+    @Column(name = "end_date")
     @Temporal(TemporalType.DATE)
     private Date endDate;
 

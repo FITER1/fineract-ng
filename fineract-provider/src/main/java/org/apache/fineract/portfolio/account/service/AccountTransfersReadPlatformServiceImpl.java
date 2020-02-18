@@ -133,20 +133,23 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
 					fromAccountId, accountType);
 
 			// override provided fromClient with client of account
-			mostRelevantFromClientId = fromAccount.clientId();
+			mostRelevantFromClientId = fromAccount.getClientId();
 		}
 
 		if (mostRelevantFromClientId != null) {
 			fromClient = this.clientReadPlatformService
 					.retrieveOne(mostRelevantFromClientId);
 			mostRelevantFromOfficeId = fromClient.officeId();
-			long[] loanStatus = null;
+			Long[] loanStatus = null;
 			if (mostRelevantFromAccountType == 1) {
-				loanStatus = new long[] { 300, 700 };
+				loanStatus = new Long[] { 300L, 700L };
 			}
-			PortfolioAccountDTO portfolioAccountDTO = new PortfolioAccountDTO(
-					mostRelevantFromAccountType, mostRelevantFromClientId,
-					loanStatus);
+			PortfolioAccountDTO portfolioAccountDTO = PortfolioAccountDTO.builder()
+				.accountTypeId(mostRelevantFromAccountType)
+				.clientId(mostRelevantFromClientId)
+				.accountStatus(loanStatus)
+				.excludeOverDraftAccounts(false)
+				.build();
 			fromAccountOptions = this.portfolioAccountReadPlatformService
 					.retrieveAllForLookup(portfolioAccountDTO);
 		}
@@ -170,8 +173,8 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
 		if (toAccountId != null && fromAccount != null) {
 			toAccount = this.portfolioAccountReadPlatformService.retrieveOne(
 					toAccountId, mostRelevantToAccountType,
-					fromAccount.currencyCode());
-			mostRelevantToClientId = toAccount.clientId();
+					fromAccount.getCurrency().getCode());
+			mostRelevantToClientId = toAccount.getClientId();
 		}
 
 		if (mostRelevantToClientId != null) {
@@ -202,12 +205,26 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
 			}
 		}
 
-		return AccountTransferData.template(fromOffice, fromClient,
-				fromAccountTypeData, fromAccount, transferDate, toOffice,
-				toClient, toAccountTypeData, toAccount, fromOfficeOptions,
-				fromClientOptions, fromAccountTypeOptions, fromAccountOptions,
-				toOfficeOptions, toClientOptions, toAccountTypeOptions,
-				toAccountOptions);
+		return AccountTransferData.builder()
+			.fromOffice(fromOffice)
+			.fromClient(fromClient)
+			.fromAccountType(fromAccountTypeData)
+			.currency(fromAccount.getCurrency())
+			.transferAmount(fromAccount.getAmtForTransfer())
+			.transferDate(transferDate)
+			.toOffice(toOffice)
+			.toClient(toClient)
+			.toAccountType(toAccountTypeData)
+			.toAccount(toAccount)
+			.fromOfficeOptions(fromOfficeOptions)
+			.fromClientOptions(fromClientOptions)
+			.fromAccountTypeOptions(fromAccountTypeOptions)
+			.fromAccountOptions(fromAccountOptions)
+			.toOfficeOptions(toOfficeOptions)
+			.toClientOptions(toClientOptions)
+			.toAccountTypeOptions(toAccountTypeOptions)
+			.toAccountOptions(toAccountOptions)
+			.build();
 	}
 
 	private Collection<PortfolioAccountData> retrieveToAccounts(
@@ -215,10 +232,13 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
 			final Integer toAccountType, final Long toClientId) {
 
 		final String currencyCode = excludeThisAccountFromOptions != null ? excludeThisAccountFromOptions
-				.currencyCode() : null;
+				.getCurrency().getCode() : null;
 
-		PortfolioAccountDTO portfolioAccountDTO = new PortfolioAccountDTO(
-				toAccountType, toClientId, currencyCode, null, null);
+		PortfolioAccountDTO portfolioAccountDTO = PortfolioAccountDTO.builder()
+			.accountTypeId(toAccountType)
+			.clientId(toClientId)
+			.currencyCode(currencyCode)
+			.build();
 		Collection<PortfolioAccountData> accountOptions = this.portfolioAccountReadPlatformService
 				.retrieveAllForLookup(portfolioAccountDTO);
 		if (!CollectionUtils.isEmpty(accountOptions)) {
@@ -431,13 +451,17 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
 			PortfolioAccountData fromAccount = null;
 			EnumOptionData fromAccountType = null;
 			if (fromSavingsAccountId != null) {
-				fromAccount = PortfolioAccountData.lookup(fromSavingsAccountId,
-						fromSavingsAccountNo);
+				fromAccount = PortfolioAccountData.builder()
+					.id(fromSavingsAccountId)
+					.accountNo(fromSavingsAccountNo)
+					.build();
 				fromAccountType = AccountTransferEnumerations
 						.accountType(PortfolioAccountType.SAVINGS);
 			} else if (fromLoanAccountId != null) {
-				fromAccount = PortfolioAccountData.lookup(fromLoanAccountId,
-						fromLoanAccountNo);
+				fromAccount = PortfolioAccountData.builder()
+					.id(fromLoanAccountId)
+					.accountNo(fromLoanAccountNo)
+					.build();
 				fromAccountType = AccountTransferEnumerations
 						.accountType(PortfolioAccountType.LOAN);
 			}
@@ -453,21 +477,37 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
 			final String toLoanAccountNo = rs.getString("toLoanAccountNo");
 
 			if (toSavingsAccountId != null) {
-				toAccount = PortfolioAccountData.lookup(toSavingsAccountId,
-						toSavingsAccountNo);
+				toAccount = PortfolioAccountData.builder()
+					.id(toSavingsAccountId)
+					.accountNo(toSavingsAccountNo)
+					.build();
 				toAccountType = AccountTransferEnumerations
 						.accountType(PortfolioAccountType.SAVINGS);
 			} else if (toLoanAccountId != null) {
-				toAccount = PortfolioAccountData.lookup(toLoanAccountId,
-						toLoanAccountNo);
+				toAccount = PortfolioAccountData.builder()
+					.id(toLoanAccountId)
+					.accountNo(toLoanAccountNo)
+					.build();
 				toAccountType = AccountTransferEnumerations
 						.accountType(PortfolioAccountType.LOAN);
 			}
 
-			return AccountTransferData.instance(id, reversed, transferDate,
-					currency, transferAmount, transferDescription, fromOffice,
-					toOffice, fromClient, toClient, fromAccountType,
-					fromAccount, toAccountType, toAccount);
+			return AccountTransferData.builder()
+				.id(id)
+				.reversed(reversed)
+				.transferDate(transferDate)
+				.currency(currency)
+				.transferAmount(transferAmount)
+				.transferDescription(transferDescription)
+				.fromOffice(fromOffice)
+				.toOffice(toOffice)
+				.fromClient(fromClient)
+				.toClient(toClient)
+				.fromAccountType(fromAccountType)
+				.fromAccount(fromAccount)
+				.toAccountType(toAccountType)
+				.toAccount(toAccount)
+				.build();
 		}
 	}
 
@@ -591,20 +631,23 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
 					.retrieveOneByPaidInAdvance(fromAccountId, accountType);
 
 			// override provided fromClient with client of account
-			mostRelevantFromClientId = fromAccount.clientId();
+			mostRelevantFromClientId = fromAccount.getClientId();
 		}
 
 		if (mostRelevantFromClientId != null) {
 			fromClient = this.clientReadPlatformService
 					.retrieveOne(mostRelevantFromClientId);
 			mostRelevantFromOfficeId = fromClient.officeId();
-			long[] loanStatus = null;
+			Long[] loanStatus = null;
 			if (mostRelevantFromAccountType == 1) {
-				loanStatus = new long[] { 300, 700 };
+				loanStatus = new Long[] { 300L, 700L };
 			}
-			PortfolioAccountDTO portfolioAccountDTO = new PortfolioAccountDTO(
-					mostRelevantFromAccountType, mostRelevantFromClientId,
-					loanStatus);
+			PortfolioAccountDTO portfolioAccountDTO = PortfolioAccountDTO.builder()
+				.accountTypeId(mostRelevantFromAccountType)
+				.clientId(mostRelevantFromClientId)
+				.accountStatus(loanStatus)
+				.excludeOverDraftAccounts(false)
+				.build();
 			fromAccountOptions = this.portfolioAccountReadPlatformService
 					.retrieveAllForLookup(portfolioAccountDTO);
 		}
@@ -628,8 +671,8 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
 		if (toAccountId != null && fromAccount != null) {
 			toAccount = this.portfolioAccountReadPlatformService.retrieveOne(
 					toAccountId, mostRelevantToAccountType,
-					fromAccount.currencyCode());
-			mostRelevantToClientId = toAccount.clientId();
+					fromAccount.getCurrency().getCode());
+			mostRelevantToClientId = toAccount.getClientId();
 		}
 
 		if (mostRelevantToClientId != null) {
@@ -660,12 +703,26 @@ public class AccountTransfersReadPlatformServiceImpl implements AccountTransfers
 			}
 		}
 
-		return AccountTransferData.template(fromOffice, fromClient,
-				fromAccountTypeData, fromAccount, transferDate, toOffice,
-				toClient, toAccountTypeData, toAccount, fromOfficeOptions,
-				fromClientOptions, fromAccountTypeOptions, fromAccountOptions,
-				toOfficeOptions, toClientOptions, toAccountTypeOptions,
-				toAccountOptions);
+		return AccountTransferData.builder()
+			.fromOffice(fromOffice)
+			.fromClient(fromClient)
+			.fromAccountType(fromAccountTypeData)
+			.currency(fromAccount.getCurrency())
+			.transferAmount(fromAccount.getAmtForTransfer())
+			.transferDate(transferDate)
+			.toOffice(toOffice)
+			.toClient(toClient)
+			.toAccountType(toAccountTypeData)
+			.toAccount(toAccount)
+			.fromOfficeOptions(fromOfficeOptions)
+			.fromClientOptions(fromClientOptions)
+			.fromAccountTypeOptions(fromAccountTypeOptions)
+			.fromAccountOptions(fromAccountOptions)
+			.toOfficeOptions(toOfficeOptions)
+			.toClientOptions(toClientOptions)
+			.toAccountTypeOptions(toAccountTypeOptions)
+			.toAccountOptions(toAccountOptions)
+			.build();
 	}
 
 	@Override

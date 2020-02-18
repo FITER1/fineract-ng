@@ -71,7 +71,7 @@ public class DateUtils {
 
     public static LocalDate getLocalDateOfTenant() {
 
-        LocalDate today = new LocalDate();
+        LocalDate today = LocalDate.now();
 
         final DateTimeZone zone = getDateTimeZoneOfTenant();
         if (zone != null) {

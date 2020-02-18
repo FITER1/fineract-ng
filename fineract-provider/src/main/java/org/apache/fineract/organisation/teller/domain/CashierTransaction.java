@@ -60,19 +60,19 @@ public class CashierTransaction extends AbstractPersistableCustom<Long> {
     @Column(name = "txn_amount", scale = 6, precision = 19, nullable = false)
     private BigDecimal txnAmount;
     
-    @Column(name = "txn_note", nullable = true)
+    @Column(name = "txn_note")
     private String txnNote;
     
-    @Column(name = "entity_type", nullable = true)
+    @Column(name = "entity_type")
     private String entityType;
     
-    @Column(name = "entity_id", nullable = true)
+    @Column(name = "entity_id")
     private Long entityId;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "created_date", nullable = false)
     private Date createdDate;
     
-    @Column(name = "currency_code", nullable = true)
+    @Column(name = "currency_code")
     private String currencyCode;
 }

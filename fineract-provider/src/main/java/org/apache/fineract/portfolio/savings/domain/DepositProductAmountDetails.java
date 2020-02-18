@@ -33,10 +33,10 @@ import java.util.Map;
 @Embeddable
 public class DepositProductAmountDetails {
 
-    @Column(name = "min_deposit_amount", scale = 6, precision = 19, nullable = true)
+    @Column(name = "min_deposit_amount", scale = 6, precision = 19)
     private BigDecimal minDepositAmount;
 
-    @Column(name = "max_deposit_amount", scale = 6, precision = 19, nullable = true)
+    @Column(name = "max_deposit_amount", scale = 6, precision = 19)
     private BigDecimal maxDepositAmount;
 
     @Column(name = "deposit_amount", scale = 6, precision = 19, nullable = false)

@@ -40,20 +40,20 @@ public class ProductToGLAccountMapping extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "gl_account_id")
     private GLAccount glAccount;
 
-    @Column(name = "product_id", nullable = true)
+    @Column(name = "product_id")
     private Long productId;
 
     @ManyToOne
-    @JoinColumn(name = "payment_type", nullable = true)
+    @JoinColumn(name = "payment_type")
     private PaymentType paymentType;
 
     @ManyToOne
-    @JoinColumn(name = "charge_id", nullable = true)
+    @JoinColumn(name = "charge_id")
     private Charge charge;
 
-    @Column(name = "product_type", nullable = true)
+    @Column(name = "product_type")
     private int productType;
 
-    @Column(name = "financial_account_type", nullable = true)
+    @Column(name = "financial_account_type")
     private int financialAccountType;
 }

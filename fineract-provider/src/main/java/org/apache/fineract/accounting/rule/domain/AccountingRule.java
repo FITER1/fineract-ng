@@ -43,18 +43,18 @@ public class AccountingRule extends AbstractPersistableCustom<Long> {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "office_id", nullable = true)
+    @JoinColumn(name = "office_id")
     private Office office;
 
     @ManyToOne
-    @JoinColumn(name = "debit_account_id", nullable = true)
+    @JoinColumn(name = "debit_account_id")
     private GLAccount accountToDebit;
 
     @ManyToOne
-    @JoinColumn(name = "credit_account_id", nullable = true)
+    @JoinColumn(name = "credit_account_id")
     private GLAccount accountToCredit;
 
-    @Column(name = "description", nullable = true, length = 500)
+    @Column(name = "description", length = 500)
     private String description;
 
     @Column(name = "system_defined", nullable = false)

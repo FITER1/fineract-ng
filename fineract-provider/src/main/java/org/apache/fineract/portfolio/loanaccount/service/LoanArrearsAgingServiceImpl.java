@@ -475,7 +475,7 @@ public class LoanArrearsAgingServiceImpl implements LoanArrearsAgingService, Bus
             loan = loanCharge.getLoan();
         }
         if (loan != null && loan.isOpen() && loan.repaymentScheduleDetail().isInterestRecalculationEnabled()
-                && loan.loanProduct().isArrearsBasedOnOriginalSchedule()) {
+                && loan.getLoanProduct().isArrearsBasedOnOriginalSchedule()) {
             updateLoanArrearsAgeingDetailsWithOriginalSchedule(loan);
         } else {
             updateLoanArrearsAgeingDetails(loan);

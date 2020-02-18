@@ -39,7 +39,7 @@ import static org.apache.fineract.portfolio.account.api.StandingInstructionApiCo
 public class AccountTransferStandingInstruction extends AbstractPersistableCustom<Long> {
 
     @ManyToOne
-    @JoinColumn(name = "account_transfer_details_id", nullable = true)
+    @JoinColumn(name = "account_transfer_details_id")
     private AccountTransferDetails accountTransferDetails;
 
     @Column(name = "name")
@@ -54,7 +54,7 @@ public class AccountTransferStandingInstruction extends AbstractPersistableCusto
     @Column(name = "status")
     private Integer status;
 
-    @Column(name = "amount", scale = 6, precision = 19, nullable = true)
+    @Column(name = "amount", scale = 6, precision = 19)
     private BigDecimal amount;
 
     @Temporal(TemporalType.DATE)
@@ -249,10 +249,10 @@ public class AccountTransferStandingInstruction extends AbstractPersistableCusto
         }
 
         String errorCode = null;
-        if (this.accountTransferDetails.transferType().isAccountTransfer()
+        if (AccountTransferType.fromInt(this.accountTransferDetails.getTransferType()).isAccountTransfer()
                 && (this.accountTransferDetails.getFromSavingsAccount() == null || this.accountTransferDetails.getToSavingsAccount() == null)) {
             errorCode = "not.account.transfer";
-        } else if (this.accountTransferDetails.transferType().isLoanRepayment()
+        } else if (AccountTransferType.fromInt(this.accountTransferDetails.getTransferType()).isLoanRepayment()
                 && (this.accountTransferDetails.getFromSavingsAccount() == null || this.accountTransferDetails.getToLoanAccount() == null)) {
             errorCode = "not.loan.repayment";
         }

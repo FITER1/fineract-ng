@@ -32,28 +32,28 @@ public class LoanProductConfigurableAttributes extends AbstractPersistableCustom
     @JoinColumn(name = "loan_product_id", nullable = false)
     private LoanProduct loanProduct;
 
-    @Column(name = "amortization_method_enum", nullable = true)
+    @Column(name = "amortization_method_enum")
     private Boolean amortizationType;
 
-    @Column(name = "interest_method_enum", nullable = true)
+    @Column(name = "interest_method_enum")
     private Boolean interestType;
 
-    @Column(name = "loan_transaction_strategy_id", nullable = true)
+    @Column(name = "loan_transaction_strategy_id")
     private Boolean transactionProcessingStrategyId;
 
-    @Column(name = "interest_calculated_in_period_enum", nullable = true)
+    @Column(name = "interest_calculated_in_period_enum")
     private Boolean interestCalculationPeriodType;
 
-    @Column(name = "arrearstolerance_amount", nullable = true)
+    @Column(name = "arrearstolerance_amount")
     private Boolean inArrearsTolerance;
 
-    @Column(name = "repay_every", nullable = true)
+    @Column(name = "repay_every")
     private Boolean repaymentEvery;
 
-    @Column(name = "moratorium", nullable = true)
+    @Column(name = "moratorium")
     private Boolean graceOnPrincipalAndInterestPayment;
 
-    @Column(name = "grace_on_arrears_ageing", nullable = true)
+    @Column(name = "grace_on_arrears_ageing")
     private Boolean graceOnArrearsAgeing;
 
 	private static final String[] supportedloanConfigurableAttributes = {LoanProductConstants.amortizationTypeParamName,

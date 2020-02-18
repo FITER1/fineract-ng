@@ -56,6 +56,6 @@ public class OrganisationCurrency extends AbstractPersistableCustom<Long> {
     @Column(name = "internationalized_name_code", nullable = false, length = 50)
     private String nameCode;
 
-    @Column(name = "display_symbol", nullable = true, length = 10)
+    @Column(name = "display_symbol", length = 10)
     private String displaySymbol;
 }

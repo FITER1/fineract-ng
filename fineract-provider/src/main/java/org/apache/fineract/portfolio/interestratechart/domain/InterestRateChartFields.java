@@ -39,7 +39,7 @@ public class InterestRateChartFields {
     @Column(name = "name", length = 100, unique = false, nullable = false)
     private String name;
 
-    @Column(name = "description", nullable = true)
+    @Column(name = "description")
     private String description;
 
     @Temporal(TemporalType.DATE)
@@ -47,7 +47,7 @@ public class InterestRateChartFields {
     private Date fromDate;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "end_date", nullable = true)
+    @Column(name = "end_date")
     private Date endDate;
 
     @Column(name = "is_primary_grouping_by_amount", nullable = false)

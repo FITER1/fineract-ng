@@ -164,7 +164,7 @@ public class SmsCampaignDomainServiceImpl implements SmsCampaignDomainService {
 						Group group = this.groupRepository.findById(loan.getGroupId()).orElse(null);
 						groupClients.addAll(group.getClientMembers());
 					} else {
-						groupClients.add(loan.client());
+						groupClients.add(loan.getClient());
 					}
 					HashMap<String, String> campaignParams = new ObjectMapper().readValue(smsCampaign.getParamValue(),
 							new TypeReference<HashMap<String, String>>() {

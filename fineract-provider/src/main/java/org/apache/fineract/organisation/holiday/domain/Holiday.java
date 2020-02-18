@@ -51,7 +51,7 @@ public class Holiday extends AbstractPersistableCustom<Long> {
     @Temporal(TemporalType.DATE)
     private Date toDate;
 
-    @Column(name = "repayments_rescheduled_to", nullable = true)
+    @Column(name = "repayments_rescheduled_to")
     @Temporal(TemporalType.DATE)
     private Date repaymentsRescheduledTo;
     

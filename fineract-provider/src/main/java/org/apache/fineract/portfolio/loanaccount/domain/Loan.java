@@ -112,11 +112,11 @@ public class Loan extends AbstractPersistableCustom<Long> {
     private String externalId;
 
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = true)
+    @JoinColumn(name = "client_id")
     private Client client;
 
     @ManyToOne
-    @JoinColumn(name = "group_id", nullable = true)
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @Column(name = "loan_type_enum", nullable = false)
@@ -127,19 +127,19 @@ public class Loan extends AbstractPersistableCustom<Long> {
     private LoanProduct loanProduct;
 
     @ManyToOne(optional = true, fetch=FetchType.EAGER)
-    @JoinColumn(name = "fund_id", nullable = true)
+    @JoinColumn(name = "fund_id")
     private Fund fund;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "loan_officer_id", nullable = true)
+    @JoinColumn(name = "loan_officer_id")
     private Staff loanOfficer;
 
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "loanpurpose_cv_id", nullable = true)
+    @JoinColumn(name = "loanpurpose_cv_id")
     private CodeValue loanPurpose;
 
     @ManyToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name = "loan_transaction_strategy_id", nullable = true)
+    @JoinColumn(name = "loan_transaction_strategy_id")
     private LoanTransactionProcessingStrategy transactionProcessingStrategy;
 
     @Embedded
@@ -154,7 +154,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @Column(name = "loan_status_id", nullable = false)
     private Integer loanStatus;
 
-    @Column(name = "sync_disbursement_with_meeting", nullable = true)
+    @Column(name = "sync_disbursement_with_meeting")
     private Boolean syncDisbursementWithMeeting;
 
     // loan application states
@@ -163,7 +163,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     private Date submittedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "submittedon_userid", nullable = true)
+    @JoinColumn(name = "submittedon_userid")
     private AppUser submittedBy;
 
     @Temporal(TemporalType.DATE)
@@ -171,7 +171,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     private Date rejectedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "rejectedon_userid", nullable = true)
+    @JoinColumn(name = "rejectedon_userid")
     private AppUser rejectedBy;
 
     @Temporal(TemporalType.DATE)
@@ -179,7 +179,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     private Date withdrawnOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "withdrawnon_userid", nullable = true)
+    @JoinColumn(name = "withdrawnon_userid")
     private AppUser withdrawnBy;
 
     @Temporal(TemporalType.DATE)
@@ -187,7 +187,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     private Date approvedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "approvedon_userid", nullable = true)
+    @JoinColumn(name = "approvedon_userid")
     private AppUser approvedBy;
 
     @Temporal(TemporalType.DATE)
@@ -199,7 +199,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     private Date actualDisbursementDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "disbursedon_userid", nullable = true)
+    @JoinColumn(name = "disbursedon_userid")
     private AppUser disbursedBy;
 
     @Temporal(TemporalType.DATE)
@@ -207,7 +207,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     private Date closedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "closedon_userid", nullable = true)
+    @JoinColumn(name = "closedon_userid")
     private AppUser closedBy;
 
     @Temporal(TemporalType.DATE)
@@ -219,7 +219,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     private Date rescheduledOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "rescheduledon_userid", nullable = true)
+    @JoinColumn(name = "rescheduledon_userid")
     private AppUser rescheduledByUser;
 
     @Temporal(TemporalType.DATE)
@@ -286,10 +286,10 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @Column(name = "approved_principal", scale = 6, precision = 19, nullable = false)
     private BigDecimal approvedPrincipal;
 
-    @Column(name = "fixed_emi_amount", scale = 6, precision = 19, nullable = true)
+    @Column(name = "fixed_emi_amount", scale = 6, precision = 19)
     private BigDecimal fixedEmiAmount;
 
-    @Column(name = "max_outstanding_loan_balance", scale = 6, precision = 19, nullable = true)
+    @Column(name = "max_outstanding_loan_balance", scale = 6, precision = 19)
     private BigDecimal maxOutstandingLoanBalance;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loan", orphanRemoval = true, fetch=FetchType.LAZY)
@@ -313,27 +313,27 @@ public class Loan extends AbstractPersistableCustom<Long> {
     @Column(name = "accrued_till")
     private Date accruedTill;
 
-    @Column(name = "create_standing_instruction_at_disbursement", nullable = true)
+    @Column(name = "create_standing_instruction_at_disbursement")
     private Boolean createStandingInstructionAtDisbursement;
 
-    @Column(name = "guarantee_amount_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "guarantee_amount_derived", scale = 6, precision = 19)
     private BigDecimal guaranteeAmountDerived;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "interest_recalcualated_on")
     private Date interestRecalculatedOn;
 
-    @Column(name = "is_floating_interest_rate", nullable = true)
+    @Column(name = "is_floating_interest_rate")
     private Boolean isFloatingInterestRate;
 
-    @Column(name = "interest_rate_differential", scale = 6, precision = 19, nullable = true)
+    @Column(name = "interest_rate_differential", scale = 6, precision = 19)
     private BigDecimal interestRateDifferential;
     
     @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name = "writeoff_reason_cv_id", nullable = true)
+    @JoinColumn(name = "writeoff_reason_cv_id")
     private CodeValue writeOffReason;
 
-    @Column(name = "loan_sub_status_id", nullable = true)
+    @Column(name = "loan_sub_status_id")
     private Integer loanSubStatus;
 
     @Column(name = "is_topup", nullable = false)
@@ -999,14 +999,6 @@ public class Loan extends AbstractPersistableCustom<Long> {
         doPostLoanTransactionChecks(waiveLoanChargeTransaction.getTransactionDate(), loanLifecycleStateMachine);
 
         return waiveLoanChargeTransaction;
-    }
-
-    public Client client() {
-        return this.client;
-    }
-
-    public LoanProduct loanProduct() {
-        return this.loanProduct;
     }
 
     public LoanProductRelatedDetail repaymentScheduleDetail() {
@@ -2400,7 +2392,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
                     disbursementDetails.updatePrincipal(principalDisbursed);
                 }
             }
-            if (this.loanProduct().isMultiDisburseLoan()) {
+            if (this.getLoanProduct().isMultiDisburseLoan()) {
                 Collection<LoanDisbursementDetails> loanDisburseDetails = this.getDisbursementDetails();
                 BigDecimal setPrincipalAmount = BigDecimal.ZERO;
                 BigDecimal totalAmount = BigDecimal.ZERO;
@@ -2419,7 +2411,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
             } else {
                 this.loanRepaymentScheduleDetail.setPrincipal(this.loanRepaymentScheduleDetail.getPrincipal().minus(diff).getAmount());
             }
-            if (!(this.loanProduct().isMultiDisburseLoan()) && diff.compareTo(BigDecimal.ZERO) == -1) {
+            if (!(this.getLoanProduct().isMultiDisburseLoan()) && diff.compareTo(BigDecimal.ZERO) == -1) {
                 final String errorMsg = "Loan can't be disbursed,disburse amount is exceeding approved amount ";
                 throw new LoanDisbursalException(errorMsg, "disburse.amount.must.be.less.than.approved.amount", principalDisbursed,
                         this.loanRepaymentScheduleDetail.getPrincipal().getAmount());
@@ -3306,7 +3298,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     }
 
     public LocalDate possibleNextRepaymentDate() {
-        LocalDate earliestUnpaidInstallmentDate = new LocalDate();
+        LocalDate earliestUnpaidInstallmentDate = LocalDate.now();
         List<LoanRepaymentScheduleInstallment> installments = getRepaymentScheduleInstallments() ;
         for (final LoanRepaymentScheduleInstallment installment : installments) {
             if (installment.isNotFullyPaidOff()) {
@@ -3347,7 +3339,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
 
         final Money totalInterestOutstanding = getTotalInterestOutstandingOnLoan();
         Money possibleInterestToWaive = totalInterestOutstanding.copy();
-        LocalDate transactionDate = new LocalDate();
+        LocalDate transactionDate = LocalDate.now();
 
         if (totalInterestOutstanding.isGreaterThanZero()) {
             // find earliest known instance of overdue interest and default to
@@ -3356,7 +3348,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
             for (final LoanRepaymentScheduleInstallment scheduledRepayment : installments) {
 
                 final Money outstandingForPeriod = scheduledRepayment.getInterestOutstanding(loanCurrency());
-                if (scheduledRepayment.isOverdueOn(new LocalDate()) && scheduledRepayment.isNotFullyPaidOff()
+                if (scheduledRepayment.isOverdueOn(LocalDate.now()) && scheduledRepayment.isNotFullyPaidOff()
                         && outstandingForPeriod.isGreaterThanZero()) {
                     transactionDate = scheduledRepayment.getDueDate();
                     possibleInterestToWaive = outstandingForPeriod;
@@ -3943,7 +3935,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
         for (final LoanRepaymentScheduleInstallment scheduledRepayment : installments) {
 
             final Money interestOutstandingForPeriod = scheduledRepayment.getInterestOutstanding(loanCurrency());
-            if (scheduledRepayment.isOverdueOn(new LocalDate())) {
+            if (scheduledRepayment.isOverdueOn(LocalDate.now())) {
                 cumulativeInterestOverdue = cumulativeInterestOverdue.plus(interestOutstandingForPeriod);
             }
         }
@@ -4617,7 +4609,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
     }
 
     private void validateActivityNotBeforeLastTransactionDate(final LoanEvent event, final LocalDate activityDate) {
-        if (!(this.repaymentScheduleDetail().isInterestRecalculationEnabled() || this.loanProduct().isHoldGuaranteeFundsEnabled())) { return; }
+        if (!(this.repaymentScheduleDetail().isInterestRecalculationEnabled() || this.getLoanProduct().isHoldGuaranteeFundsEnabled())) { return; }
         LocalDate lastTransactionDate = getLastUserTransactionDate();
         if (lastTransactionDate.isAfter(activityDate)) {
             String errorMessage = null;
@@ -5565,7 +5557,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
             final CalendarInstance restCalendarInstance, CalendarInstance compoundingCalendarInstance, final Calendar loanCalendar,
             final FloatingRateDTO floatingRateDTO, final boolean isSkipRepaymentonmonthFirst, final Integer numberofdays, 
             final HolidayDetailDTO holidayDetailDTO) {
-        LoanProduct loanProduct = loanProduct();
+        LoanProduct loanProduct = getLoanProduct();
         // LoanProductRelatedDetail loanProductRelatedDetail =
         // getLoanRepaymentScheduleDetail();
         final MonetaryCurrency currency = this.loanRepaymentScheduleDetail.getCurrency();
@@ -5846,7 +5838,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
 
     public LocalDate possibleNextRefundDate() {
 
-        final LocalDate now = new LocalDate();
+        final LocalDate now = LocalDate.now();
 
         LocalDate lastTransactionDate = null;
         for (final LoanTransaction transaction : this.loanTransactions) {
@@ -6018,7 +6010,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
      */
     public LocalDate getNextPossibleRepaymentDateForRescheduling() {
         List<LoanDisbursementDetails> loanDisbursementDetails = this.disbursementDetails;
-        LocalDate nextRepaymentDate = new LocalDate();
+        LocalDate nextRepaymentDate = LocalDate.now();
         for (LoanDisbursementDetails loanDisbursementDetail : loanDisbursementDetails) {
             if (loanDisbursementDetail.actualDisbursementDate() == null) {
                 List<LoanRepaymentScheduleInstallment> installments = getRepaymentScheduleInstallments() ;
@@ -6058,20 +6050,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
         return amount;
     }
     
-    public void updateWriteOffReason(CodeValue writeOffReason) {
-        this.writeOffReason = writeOffReason;
-    }
-
-
-    public Group getGroup() {
-        return group;
-    }
-
-    public LoanProduct getLoanProduct() {
-        return loanProduct;
-    }
-        
-    public LoanRepaymentScheduleInstallment fetchLoanForeclosureDetail(final LocalDate closureDate) {        
+    public LoanRepaymentScheduleInstallment fetchLoanForeclosureDetail(final LocalDate closureDate) {
         Money[] receivables = retriveIncomeOutstandingTillDate(closureDate);
         Money totalPrincipal = (Money.of(getCurrency(), this.getSummary().getTotalPrincipalOutstanding()));
         totalPrincipal = totalPrincipal.minus(receivables[3]);

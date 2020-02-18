@@ -49,11 +49,11 @@ public class FineractEntityToEntityMapping extends AbstractPersistableCustom<Lon
     @Column(name = "to_id")
     private Long toId;
 
-    @Column(name = "start_date", nullable = true)
+    @Column(name = "start_date")
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
-    @Column(name = "end_date", nullable = true)
+    @Column(name = "end_date")
     @Temporal(TemporalType.DATE)
     private Date endDate;
 

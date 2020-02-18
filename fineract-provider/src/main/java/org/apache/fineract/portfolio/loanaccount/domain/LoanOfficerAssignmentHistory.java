@@ -36,7 +36,7 @@ public class LoanOfficerAssignmentHistory extends AbstractAuditableCustom<AppUse
     private Loan loan;
 
     @ManyToOne
-    @JoinColumn(name = "loan_officer_id", nullable = true)
+    @JoinColumn(name = "loan_officer_id")
     private Staff loanOfficer;
 
     @Temporal(TemporalType.DATE)

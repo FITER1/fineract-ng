@@ -91,7 +91,7 @@ public class BulkLoansApiResource {
         final BulkTransferLoanOfficerData loanReassignmentData = BulkTransferLoanOfficerData.builder()
             .officeId(officeId)
             .fromLoanOfficerId(loanOfficerId)
-            .assignmentDate(new LocalDate())
+            .assignmentDate(LocalDate.now())
             .officeOptions(offices)
             .loanOfficerOptions(loanOfficers)
             .accountSummaryCollection(staffAccountSummaryCollectionData)

@@ -60,11 +60,11 @@ import java.util.*;
 public class LoanProduct extends AbstractPersistableCustom<Long> {
 
     @ManyToOne
-    @JoinColumn(name = "fund_id", nullable = true)
+    @JoinColumn(name = "fund_id")
     private Fund fund;
 
     @ManyToOne
-    @JoinColumn(name = "loan_transaction_strategy_id", nullable = true)
+    @JoinColumn(name = "loan_transaction_strategy_id")
     private LoanTransactionProcessingStrategy transactionProcessingStrategy;
 
     @Column(name = "name", nullable = false, unique = true)
@@ -99,24 +99,24 @@ public class LoanProduct extends AbstractPersistableCustom<Long> {
     @Embedded
     private LoanProductTrancheDetails loanProducTrancheDetails;
 
-    @Column(name = "start_date", nullable = true)
+    @Column(name = "start_date")
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
-    @Column(name = "close_date", nullable = true)
+    @Column(name = "close_date")
     @Temporal(TemporalType.DATE)
     private Date closeDate;
 
-    @Column(name = "external_id", length = 100, nullable = true, unique = true)
+    @Column(name = "external_id", length = 100, unique = true)
     private String externalId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loanProduct", orphanRemoval = true, fetch=FetchType.EAGER)
     private Set<LoanProductBorrowerCycleVariations> borrowerCycleVariations = new HashSet<>();
 
-    @Column(name = "overdue_days_for_npa", nullable = true)
+    @Column(name = "overdue_days_for_npa")
     private Integer overdueDaysForNPA;
 
-    @Column(name = "min_days_between_disbursal_and_first_repayment", nullable = true)
+    @Column(name = "min_days_between_disbursal_and_first_repayment")
     private Integer minimumDaysBetweenDisbursalAndFirstRepayment;
 
     @OneToOne(cascade = CascadeType.ALL, mappedBy = "loanProduct", optional = true, orphanRemoval = true, fetch=FetchType.EAGER)
@@ -140,7 +140,7 @@ public class LoanProduct extends AbstractPersistableCustom<Long> {
     @Column(name = "can_define_fixed_emi_amount")
     private boolean canDefineInstallmentAmount;
 
-    @Column(name = "instalment_amount_in_multiples_of", nullable = true)
+    @Column(name = "instalment_amount_in_multiples_of")
     private Integer installmentAmountInMultiplesOf;
 
     @Column(name = "is_linked_to_floating_interest_rates", nullable = false)

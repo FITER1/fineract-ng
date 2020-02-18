@@ -60,11 +60,11 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private Office office;
 
     @ManyToOne
-    @JoinColumn(name = "transfer_to_office_id", nullable = true)
+    @JoinColumn(name = "transfer_to_office_id")
     private Office transferToOffice;
 
     @OneToOne(optional = true)
-    @JoinColumn(name = "image_id", nullable = true)
+    @JoinColumn(name = "image_id")
     private Image image;
 
     /**
@@ -74,33 +74,33 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private Integer status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "sub_status", nullable = true)
+    @JoinColumn(name = "sub_status")
     private CodeValue subStatus;
     
-    @Column(name = "activation_date", nullable = true)
+    @Column(name = "activation_date")
     @Temporal(TemporalType.DATE)
     private Date activationDate;
 
-    @Column(name = "office_joining_date", nullable = true)
+    @Column(name = "office_joining_date")
     @Temporal(TemporalType.DATE)
     private Date officeJoiningDate;
 
-    @Column(name = "firstname", length = 50, nullable = true)
+    @Column(name = "firstname", length = 50)
     private String firstname;
 
-    @Column(name = "middlename", length = 50, nullable = true)
+    @Column(name = "middlename", length = 50)
     private String middlename;
 
-    @Column(name = "lastname", length = 50, nullable = true)
+    @Column(name = "lastname", length = 50)
     private String lastname;
 
-    @Column(name = "fullname", length = 100, nullable = true)
+    @Column(name = "fullname", length = 100)
     private String fullname;
 
     @Column(name = "display_name", length = 100, nullable = false)
     private String displayName;
 
-    @Column(name = "mobile_no", length = 50, nullable = true, unique = true)
+    @Column(name = "mobile_no", length = 50, unique = true)
     private String mobileNo;
 	
 	@Column(name = "email_address", length = 50, unique = true)
@@ -109,15 +109,15 @@ public final class Client extends AbstractPersistableCustom<Long> {
 	@Column(name = "is_staff", nullable = false)
     private boolean staffFlag;
 
-    @Column(name = "external_id", length = 100, nullable = true, unique = true)
+    @Column(name = "external_id", length = 100, unique = true)
     private String externalId;
 
-    @Column(name = "date_of_birth", nullable = true)
+    @Column(name = "date_of_birth")
     @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "gender_cv_id", nullable = true)
+    @JoinColumn(name = "gender_cv_id")
     private CodeValue gender;
 
     @ManyToOne
@@ -132,95 +132,95 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private boolean accountNumberRequiresAutoGeneration = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "closure_reason_cv_id", nullable = true)
+    @JoinColumn(name = "closure_reason_cv_id")
     private CodeValue closureReason;
 
-    @Column(name = "closedon_date", nullable = true)
+    @Column(name = "closedon_date")
     @Temporal(TemporalType.DATE)
     private Date closureDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reject_reason_cv_id", nullable = true)
+    @JoinColumn(name = "reject_reason_cv_id")
     private CodeValue rejectionReason;
 
-    @Column(name = "rejectedon_date", nullable = true)
+    @Column(name = "rejectedon_date")
     @Temporal(TemporalType.DATE)
     private Date rejectionDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "rejectedon_userid", nullable = true)
+    @JoinColumn(name = "rejectedon_userid")
     private AppUser rejectedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "withdraw_reason_cv_id", nullable = true)
+    @JoinColumn(name = "withdraw_reason_cv_id")
     private CodeValue withdrawalReason;
 
-    @Column(name = "withdrawn_on_date", nullable = true)
+    @Column(name = "withdrawn_on_date")
     @Temporal(TemporalType.DATE)
     private Date withdrawalDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "withdraw_on_userid", nullable = true)
+    @JoinColumn(name = "withdraw_on_userid")
     private AppUser withdrawnBy;
 
-    @Column(name = "reactivated_on_date", nullable = true)
+    @Column(name = "reactivated_on_date")
     @Temporal(TemporalType.DATE)
     private Date reactivateDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "reactivated_on_userid", nullable = true)
+    @JoinColumn(name = "reactivated_on_userid")
     private AppUser reactivatedBy;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "closedon_userid", nullable = true)
+    @JoinColumn(name = "closedon_userid")
     private AppUser closedBy;
 
-    @Column(name = "submittedon_date", nullable = true)
+    @Column(name = "submittedon_date")
     @Temporal(TemporalType.DATE)
     private Date submittedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "submittedon_userid", nullable = true)
+    @JoinColumn(name = "submittedon_userid")
     private AppUser submittedBy;
 
-    @Column(name = "updated_on", nullable = true)
+    @Column(name = "updated_on")
     @Temporal(TemporalType.DATE)
     private Date updatedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "updated_by", nullable = true)
+    @JoinColumn(name = "updated_by")
     private AppUser updatedBy;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "activatedon_userid", nullable = true)
+    @JoinColumn(name = "activatedon_userid")
     private AppUser activatedBy;
 
-    @Column(name = "default_savings_product", nullable = true)
+    @Column(name = "default_savings_product")
     private Long savingsProductId;
     
-    @Column(name = "default_savings_account", nullable = true)
+    @Column(name = "default_savings_account")
     private Long savingsAccountId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_type_cv_id", nullable = true)
+    @JoinColumn(name = "client_type_cv_id")
     private CodeValue clientType;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "client_classification_cv_id", nullable = true)
+    @JoinColumn(name = "client_classification_cv_id")
     private CodeValue clientClassification;
     
-    @Column(name = "legal_form_enum", nullable = true)
+    @Column(name = "legal_form_enum")
     private Integer legalForm;
 
-    @Column(name = "reopened_on_date", nullable = true)
+    @Column(name = "reopened_on_date")
     @Temporal(TemporalType.DATE)
     private Date reopenedDate;
 
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
-    @JoinColumn(name = "reopened_by_userid", nullable = true)
+    @JoinColumn(name = "reopened_by_userid")
     private AppUser reopenedBy;
     
-    @Column(name = "proposed_transfer_date", nullable = true)
+    @Column(name = "proposed_transfer_date")
  	@Temporal(TemporalType.DATE)
  	private Date proposedTransferDate;
 
@@ -256,7 +256,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
             officeJoiningDate = activationDate;
         }
 
-        LocalDate submittedOnDate = new LocalDate();
+        LocalDate submittedOnDate = LocalDate.now();
         if (active && submittedOnDate.isAfter(activationDate)) {
             submittedOnDate = activationDate;
         }

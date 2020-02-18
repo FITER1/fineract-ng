@@ -45,7 +45,7 @@ public class TwoFactorConfiguration extends AbstractPersistableCustom<Long> {
     @Column(name = "name", nullable = false, length = 32)
     private String name;
 
-    @Column(name = "value", nullable = true, length = 1024)
+    @Column(name = "value", length = 1024)
     private String value;
 
     public Boolean getBooleanValue() {

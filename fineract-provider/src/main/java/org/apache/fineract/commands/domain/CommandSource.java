@@ -38,10 +38,10 @@ import java.util.Date;
 @Table(name = "m_portfolio_command_source")
 public class CommandSource extends AbstractPersistableCustom<Long> {
 
-    @Column(name = "action_name", nullable = true, length = 100)
+    @Column(name = "action_name", length = 100)
     private String actionName;
 
-    @Column(name = "entity_name", nullable = true, length = 100)
+    @Column(name = "entity_name", length = 100)
     private String entityName;
 
     @Column(name = "office_id")
@@ -80,10 +80,10 @@ public class CommandSource extends AbstractPersistableCustom<Long> {
     private Date madeOnDate;
 
     @ManyToOne
-    @JoinColumn(name = "checker_id", nullable = true)
+    @JoinColumn(name = "checker_id")
     private AppUser checker;
 
-    @Column(name = "checked_on_date", nullable = true)
+    @Column(name = "checked_on_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date checkedOnDate;
 

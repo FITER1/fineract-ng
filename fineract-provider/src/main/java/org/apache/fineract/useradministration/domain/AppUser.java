@@ -89,7 +89,7 @@ public class AppUser extends AbstractPersistableCustom<Long> implements Platform
     private Office office;
 
     @ManyToOne
-    @JoinColumn(name = "staff_id", nullable = true)
+    @JoinColumn(name = "staff_id")
     private Staff staff;
 
     @ManyToMany(fetch = FetchType.EAGER)

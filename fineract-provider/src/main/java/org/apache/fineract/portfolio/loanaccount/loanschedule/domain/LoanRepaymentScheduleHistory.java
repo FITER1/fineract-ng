@@ -43,23 +43,23 @@ public class LoanRepaymentScheduleHistory extends AbstractPersistableCustom<Long
     private Integer installmentNumber;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "fromdate", nullable = true)
+    @Column(name = "fromdate")
     private Date fromDate;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "duedate", nullable = false)
     private Date dueDate;
 
-    @Column(name = "principal_amount", scale = 6, precision = 19, nullable = true)
+    @Column(name = "principal_amount", scale = 6, precision = 19)
     private BigDecimal principal;
 
-    @Column(name = "interest_amount", scale = 6, precision = 19, nullable = true)
+    @Column(name = "interest_amount", scale = 6, precision = 19)
     private BigDecimal interestCharged;
 
-    @Column(name = "fee_charges_amount", scale = 6, precision = 19, nullable = true)
+    @Column(name = "fee_charges_amount", scale = 6, precision = 19)
     private BigDecimal feeChargesCharged;
 
-    @Column(name = "penalty_charges_amount", scale = 6, precision = 19, nullable = true)
+    @Column(name = "penalty_charges_amount", scale = 6, precision = 19)
     private BigDecimal penaltyCharges;
 
     @Temporal(TemporalType.DATE)

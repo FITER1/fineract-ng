@@ -49,7 +49,7 @@ public class TrialBalance extends AbstractPersistableCustom<Long> {
     @Temporal(TemporalType.DATE)
     private Date entryDate;
 
-    @Column(name = "created_date", nullable = true)
+    @Column(name = "created_date")
     @Temporal(TemporalType.DATE)
     private Date transactionDate;
 

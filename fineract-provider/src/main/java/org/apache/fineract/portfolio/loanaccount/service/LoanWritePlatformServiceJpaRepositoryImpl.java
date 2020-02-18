@@ -187,7 +187,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         final LocalDate actualDisbursementDate = command.localDateValueOfParameterNamed("actualDisbursementDate");
         
         // validate ActualDisbursement Date Against Expected Disbursement Date
-        LoanProduct loanProduct = loan.loanProduct();
+        LoanProduct loanProduct = loan.getLoanProduct();
         if(loanProduct.syncExpectedWithDisbursementDate()){
         	syncExpectedDateWithActualDisbursementDate(loan, actualDisbursementDate);
         }
@@ -335,11 +335,27 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
             final SavingsAccount fromSavingsAccount = null;
             final boolean isRegularTransaction = true;
             final boolean isExceptionForBalanceCheck = false;
-            final AccountTransferDTO accountTransferDTO = new AccountTransferDTO(actualDisbursementDate, entrySet.getValue(),
-                    PortfolioAccountType.SAVINGS, PortfolioAccountType.LOAN, savingAccountData.accountId(), loanId, "Loan Charge Payment",
-                    locale, fmt, null, null, LoanTransactionType.REPAYMENT_AT_DISBURSEMENT.getValue(), entrySet.getKey(), null,
-                    AccountTransferType.CHARGE_PAYMENT.getValue(), null, null, null, null, null, fromSavingsAccount, isRegularTransaction,
-                    isExceptionForBalanceCheck);
+
+            final AccountTransferDTO accountTransferDTO = AccountTransferDTO.builder()
+                .transactionDate(actualDisbursementDate)
+                .transactionAmount(entrySet.getValue())
+                .fromAccountType(PortfolioAccountType.SAVINGS)
+                .toAccountType(PortfolioAccountType.LOAN)
+                .fromAccountId(savingAccountData.getId())
+                .toAccountId(loanId)
+                .description("Loan Charge Payment")
+                .locale(locale)
+                .fmt(fmt)
+                .paymentDetail(null)
+                .fromTransferType(null)
+                .toTransferType(LoanTransactionType.REPAYMENT_AT_DISBURSEMENT.getValue())
+                .chargeId(entrySet.getKey())
+                .loanInstallmentNumber(null)
+                .transferType(AccountTransferType.CHARGE_PAYMENT.getValue())
+                .fromSavingsAccount(fromSavingsAccount)
+                .regularTransaction(isRegularTransaction)
+                .exceptionForBalanceCheck(isExceptionForBalanceCheck)
+                .build();
             this.accountTransfersWritePlatformService.transferFunds(accountTransferDTO);
         }
         
@@ -394,10 +410,17 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 final Integer instructionType = StandingInstructionType.DUES.getValue();
                 final Integer status = StandingInstructionStatus.ACTIVE.getValue();
                 final Integer recurrenceType = AccountTransferRecurrenceType.AS_PER_DUES.getValue();
-                final LocalDate validFrom = new LocalDate();
+                final LocalDate validFrom = LocalDate.now();
 
-                AccountTransferDetails accountTransferDetails = AccountTransferDetails.savingsToLoanTransfer(fromOffice, fromClient,
-                        linkedSavingsAccount, toOffice, toClient, loan, transferType);
+                AccountTransferDetails accountTransferDetails = AccountTransferDetails.builder()
+                    .fromOffice(fromOffice)
+                    .fromClient(fromClient)
+                    .fromSavingsAccount(linkedSavingsAccount)
+                    .toOffice(toOffice)
+                    .toClient(toClient)
+                    .toLoanAccount(loan)
+                    .transferType(transferType)
+                    .build();
 
                 AccountTransferStandingInstruction accountTransferStandingInstruction = AccountTransferStandingInstruction.create(
                         accountTransferDetails, name, priority, instructionType, status, null, validFrom, null, recurrenceType, null, null,
@@ -492,7 +515,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
             final LocalDate actualDisbursementDate = command.localDateValueOfParameterNamed("actualDisbursementDate");
             
             // validate ActualDisbursement Date Against Expected Disbursement Date
-            LoanProduct loanProduct = loan.loanProduct();
+            LoanProduct loanProduct = loan.getLoanProduct();
             if(loanProduct.syncExpectedWithDisbursementDate()){
             	syncExpectedDateWithActualDisbursementDate(loan, actualDisbursementDate);
             }
@@ -579,11 +602,23 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 final SavingsAccount fromSavingsAccount = null;
                 final boolean isRegularTransaction = true;
                 final boolean isExceptionForBalanceCheck = false;
-                final AccountTransferDTO accountTransferDTO = new AccountTransferDTO(actualDisbursementDate, entrySet.getValue(),
-                        PortfolioAccountType.SAVINGS, PortfolioAccountType.LOAN, savingAccountData.accountId(), loan.getId(),
-                        "Loan Charge Payment", locale, fmt, null, null, LoanTransactionType.REPAYMENT_AT_DISBURSEMENT.getValue(),
-                        entrySet.getKey(), null, AccountTransferType.CHARGE_PAYMENT.getValue(), null, null, null, null, null,
-                        fromSavingsAccount, isRegularTransaction, isExceptionForBalanceCheck);
+                final AccountTransferDTO accountTransferDTO = AccountTransferDTO.builder()
+                    .transactionDate(actualDisbursementDate)
+                    .transactionAmount(entrySet.getValue())
+                    .fromAccountType(PortfolioAccountType.SAVINGS)
+                    .toAccountType(PortfolioAccountType.LOAN)
+                    .fromAccountId(savingAccountData.getId())
+                    .toAccountId(loan.getId())
+                    .description("Loan Charge Payment")
+                    .locale(locale)
+                    .fmt(fmt)
+                    .toTransferType(LoanTransactionType.REPAYMENT_AT_DISBURSEMENT.getValue())
+                    .chargeId(entrySet.getKey())
+                    .transferType(AccountTransferType.CHARGE_PAYMENT.getValue())
+                    .fromSavingsAccount(fromSavingsAccount)
+                    .regularTransaction(isRegularTransaction)
+                    .exceptionForBalanceCheck(isExceptionForBalanceCheck)
+                    .build();
                 this.accountTransfersWritePlatformService.transferFunds(accountTransferDTO);
             }
             updateRecurringCalendarDatesForInterestRecalculation(loan);
@@ -993,7 +1028,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         	Long writeoffReasonId = command.longValueOfParameterNamed("writeoffReasonId");
         	CodeValue writeoffReason = this.codeValueRepository.findOneByCodeNameAndIdWithNotFoundDetection(LoanApiConstants.WRITEOFFREASONS, writeoffReasonId);
         	changes.put("writeoffReasonId", writeoffReasonId);
-        	loan.updateWriteOffReason(writeoffReason);
+        	loan.setWriteOffReason(writeoffReason);
         }    
         
         checkClientOrGroupActive(loan);
@@ -1590,11 +1625,24 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         final SavingsAccount fromSavingsAccount = null;
         final boolean isRegularTransaction = true;
         final boolean isExceptionForBalanceCheck = false;
-        final AccountTransferDTO accountTransferDTO = new AccountTransferDTO(transactionDate, amount, PortfolioAccountType.SAVINGS,
-                PortfolioAccountType.LOAN, portfolioAccountData.accountId(), loanId, "Loan Charge Payment", locale, fmt, null, null,
-                LoanTransactionType.CHARGE_PAYMENT.getValue(), loanChargeId, loanInstallmentNumber,
-                AccountTransferType.CHARGE_PAYMENT.getValue(), null, null, null, null, null, fromSavingsAccount, isRegularTransaction,
-                isExceptionForBalanceCheck);
+        final AccountTransferDTO accountTransferDTO = AccountTransferDTO.builder()
+            .transactionDate(transactionDate)
+            .transactionAmount(amount)
+            .fromAccountType(PortfolioAccountType.SAVINGS)
+            .toAccountType(PortfolioAccountType.LOAN)
+            .fromAccountId(portfolioAccountData.getId())
+            .toAccountId(loanId)
+            .description("Loan Charge Payment")
+            .locale(locale)
+            .fmt(fmt)
+            .toTransferType(LoanTransactionType.CHARGE_PAYMENT.getValue())
+            .chargeId(loanChargeId)
+            .loanInstallmentNumber(loanInstallmentNumber)
+            .transferType(AccountTransferType.CHARGE_PAYMENT.getValue())
+            .fromSavingsAccount(fromSavingsAccount)
+            .regularTransaction(isRegularTransaction)
+            .exceptionForBalanceCheck(isExceptionForBalanceCheck)
+            .build();
         this.accountTransfersWritePlatformService.transferFunds(accountTransferDTO);
         return CommandProcessingResult.builder() //
                 .commandId(command.commandId()) //
@@ -1603,7 +1651,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 .clientId(loan.getClientId()) //
                 .groupId(loan.getGroupId()) //
                 .loanId(loanId) //
-                .savingsId(portfolioAccountData.accountId()).build();
+                .savingsId(portfolioAccountData.getId()).build();
     }
 
     public void disburseLoanToLoan(final Loan loan, final JsonCommand command, final BigDecimal amount) {
@@ -1613,10 +1661,21 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
         final Locale locale = command.extractLocale();
         final DateTimeFormatter fmt = DateTimeFormat.forPattern(command.dateFormat()).withLocale(locale);
-        final AccountTransferDTO accountTransferDTO = new AccountTransferDTO(transactionDate, amount,
-                PortfolioAccountType.LOAN, PortfolioAccountType.LOAN, loan.getId(), loan.getTopupLoanDetails().getLoanIdToClose(),
-                "Loan Topup", locale, fmt, LoanTransactionType.DISBURSEMENT.getValue(), LoanTransactionType.REPAYMENT.getValue(),
-                txnExternalId, loan, null);
+        final AccountTransferDTO accountTransferDTO = AccountTransferDTO.builder()
+            .transactionDate(transactionDate)
+            .transactionAmount(amount)
+            .fromAccountType(PortfolioAccountType.LOAN)
+            .toAccountType(PortfolioAccountType.LOAN)
+            .fromAccountId(loan.getId())
+            .toAccountId(loan.getTopupLoanDetails().getLoanIdToClose())
+            .description("Loan Topup")
+            .locale(locale)
+            .fmt(fmt)
+            .fromTransferType(LoanTransactionType.DISBURSEMENT.getValue())
+            .toTransferType(LoanTransactionType.REPAYMENT.getValue())
+            .txnExternalId(txnExternalId)
+            .loan(loan)
+            .build();
         AccountTransferDetails accountTransferDetails = this.accountTransfersWritePlatformService.repayLoanWithTopup(accountTransferDTO);
         loan.getTopupLoanDetails().setAccountTransferDetails(accountTransferDetails.getId());
         loan.getTopupLoanDetails().setTopupAmount(amount);
@@ -1638,11 +1697,31 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         final SavingsAccount fromSavingsAccount = null;
         final boolean isExceptionForBalanceCheck = false;
         final boolean isRegularTransaction = true;
-        final AccountTransferDTO accountTransferDTO = new AccountTransferDTO(transactionDate, amount.getAmount(),
-                PortfolioAccountType.LOAN, PortfolioAccountType.SAVINGS, loan.getId(), portfolioAccountData.accountId(),
-                "Loan Disbursement", locale, fmt, paymentDetail, LoanTransactionType.DISBURSEMENT.getValue(), null, null, null,
-                AccountTransferType.ACCOUNT_TRANSFER.getValue(), null, null, txnExternalId, loan, null, fromSavingsAccount,
-                isRegularTransaction, isExceptionForBalanceCheck);
+        final AccountTransferDTO accountTransferDTO = AccountTransferDTO.builder()
+            .transactionDate(transactionDate)
+            .transactionAmount(amount.getAmount())
+            .fromAccountType(PortfolioAccountType.LOAN)
+            .toAccountType(PortfolioAccountType.SAVINGS)
+            .fromAccountId(loan.getId())
+            .toAccountId(portfolioAccountData.getId())
+            .description("Loan Disbursement")
+            .locale(locale)
+            .fmt(fmt)
+            .paymentDetail(paymentDetail)
+            .fromTransferType(LoanTransactionType.DISBURSEMENT.getValue())
+            .toTransferType(null)
+            .chargeId(null)
+            .loanInstallmentNumber(null)
+            .transferType(AccountTransferType.ACCOUNT_TRANSFER.getValue())
+            .accountTransferDetails(null)
+            .noteText(null)
+            .txnExternalId(txnExternalId)
+            .loan(loan)
+            .toSavingsAccount(null)
+            .fromSavingsAccount(fromSavingsAccount)
+            .regularTransaction(isRegularTransaction)
+            .exceptionForBalanceCheck(isExceptionForBalanceCheck)
+            .build();
         this.accountTransfersWritePlatformService.transferFunds(accountTransferDTO);
 
     }
@@ -1668,12 +1747,22 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                             }
                             final SavingsAccount fromSavingsAccount = null;
                             final boolean isExceptionForBalanceCheck = false;
-                            final AccountTransferDTO accountTransferDTO = new AccountTransferDTO(new LocalDate(),
-                                    installmentChargeData.getAmountOutstanding(), PortfolioAccountType.SAVINGS, PortfolioAccountType.LOAN,
-                                    portfolioAccountData.accountId(), chargeData.getLoanId(), "Loan Charge Payment", null, null, null,
-                                    null, LoanTransactionType.CHARGE_PAYMENT.getValue(), chargeData.getId(),
-                                    installmentChargeData.getInstallmentNumber(), AccountTransferType.CHARGE_PAYMENT.getValue(), null,
-                                    null, null, null, null, fromSavingsAccount, isRegularTransaction, isExceptionForBalanceCheck);
+                            final AccountTransferDTO accountTransferDTO = AccountTransferDTO.builder()
+                                .transactionDate(LocalDate.now())
+                                .transactionAmount(installmentChargeData.getAmountOutstanding())
+                                .fromAccountType(PortfolioAccountType.SAVINGS)
+                                .toAccountType(PortfolioAccountType.LOAN)
+                                .fromAccountId(portfolioAccountData.getId())
+                                .toAccountId(chargeData.getLoanId())
+                                .description("Loan Charge Payment")
+                                .toTransferType(LoanTransactionType.CHARGE_PAYMENT.getValue())
+                                .chargeId(chargeData.getId())
+                                .loanInstallmentNumber(installmentChargeData.getInstallmentNumber())
+                                .transferType(AccountTransferType.CHARGE_PAYMENT.getValue())
+                                .fromSavingsAccount(fromSavingsAccount)
+                                .regularTransaction(isRegularTransaction)
+                                .exceptionForBalanceCheck(isExceptionForBalanceCheck)
+                                .build();
                             transferFeeCharge(sb, accountTransferDTO);
                         }
                     }
@@ -1682,12 +1771,21 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                             .retriveLoanLinkedAssociation(chargeData.getLoanId());
                     final SavingsAccount fromSavingsAccount = null;
                     final boolean isExceptionForBalanceCheck = false;
-                    final AccountTransferDTO accountTransferDTO = new AccountTransferDTO(new LocalDate(),
-                            chargeData.getAmountOutstanding(), PortfolioAccountType.SAVINGS, PortfolioAccountType.LOAN,
-                            portfolioAccountData.accountId(), chargeData.getLoanId(), "Loan Charge Payment", null, null, null, null,
-                            LoanTransactionType.CHARGE_PAYMENT.getValue(), chargeData.getId(), null,
-                            AccountTransferType.CHARGE_PAYMENT.getValue(), null, null, null, null, null, fromSavingsAccount,
-                            isRegularTransaction, isExceptionForBalanceCheck);
+                    final AccountTransferDTO accountTransferDTO = AccountTransferDTO.builder()
+                        .transactionDate(LocalDate.now())
+                        .transactionAmount(chargeData.getAmountOutstanding())
+                        .fromAccountType(PortfolioAccountType.SAVINGS)
+                        .toAccountType(PortfolioAccountType.LOAN)
+                        .fromAccountId(portfolioAccountData.getId())
+                        .toAccountId(chargeData.getLoanId())
+                        .description("Loan Charge Payment")
+                        .toTransferType(LoanTransactionType.CHARGE_PAYMENT.getValue())
+                        .chargeId(chargeData.getId())
+                        .transferType(AccountTransferType.CHARGE_PAYMENT.getValue())
+                        .fromSavingsAccount(fromSavingsAccount)
+                        .regularTransaction(isRegularTransaction)
+                        .exceptionForBalanceCheck(isExceptionForBalanceCheck)
+                        .build();
                     transferFeeCharge(sb, accountTransferDTO);
                 }
             }
@@ -2018,7 +2116,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
     private void removeLoanCycle(final Loan loan) {
         final List<Loan> loansToUpdate;
         if (loan.isGroupLoan()) {
-            if (loan.loanProduct().isIncludeInBorrowerCycle()) {
+            if (loan.getLoanProduct().isIncludeInBorrowerCycle()) {
                 loansToUpdate = this.loanRepositoryWrapper.getGroupLoansToUpdateLoanCounter(loan.getCurrentLoanCounter(), loan.getGroupId(),
                         AccountType.GROUP.getValue());
             } else {
@@ -2027,7 +2125,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
             }
 
         } else {
-            if (loan.loanProduct().isIncludeInBorrowerCycle()) {
+            if (loan.getLoanProduct().isIncludeInBorrowerCycle()) {
                 loansToUpdate = this.loanRepositoryWrapper
                         .getClientOrJLGLoansToUpdateLoanCounter(loan.getCurrentLoanCounter(), loan.getClientId());
             } else {
@@ -2074,7 +2172,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
     private Integer getNewGroupLoanProductCounter(final Loan loan) {
 
-        Integer maxLoanProductLoanCounter = this.loanRepositoryWrapper.getMaxGroupLoanProductCounter(loan.loanProduct().getId(),
+        Integer maxLoanProductLoanCounter = this.loanRepositoryWrapper.getMaxGroupLoanProductCounter(loan.getLoanProduct().getId(),
                 loan.getGroupId(), AccountType.GROUP.getValue());
         if (maxLoanProductLoanCounter == null) {
             maxLoanProductLoanCounter = 1;
@@ -2087,11 +2185,11 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
     private void updateLoanCounter(final Loan loan, final List<Loan> loansToUpdateForLoanCounter, Integer newLoanCounter,
             Integer newLoanProductCounter) {
 
-        final boolean includeInBorrowerCycle = loan.loanProduct().isIncludeInBorrowerCycle();
+        final boolean includeInBorrowerCycle = loan.getLoanProduct().isIncludeInBorrowerCycle();
         for (final Loan loanToUpdate : loansToUpdateForLoanCounter) {
             // Update client loan counter if loan product includeInBorrowerCycle
             // is true
-            if (loanToUpdate.loanProduct().isIncludeInBorrowerCycle()) {
+            if (loanToUpdate.getLoanProduct().isIncludeInBorrowerCycle()) {
                 Integer currentLoanCounter = loanToUpdate.getCurrentLoanCounter() == null ? 1 : loanToUpdate.getCurrentLoanCounter();
                 if (newLoanCounter > currentLoanCounter) {
                     newLoanCounter = currentLoanCounter;
@@ -2099,7 +2197,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                 loanToUpdate.updateClientLoanCounter(++currentLoanCounter);
             }
 
-            if (loanToUpdate.loanProduct().getId().equals(loan.loanProduct().getId())) {
+            if (loanToUpdate.getLoanProduct().getId().equals(loan.getLoanProduct().getId())) {
                 Integer loanProductLoanCounter = loanToUpdate.getLoanProductLoanCounter();
                 if (newLoanProductCounter > loanProductLoanCounter) {
                     newLoanProductCounter = loanProductLoanCounter;
@@ -2130,7 +2228,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
     private Integer getNewClientOrJLGLoanProductCounter(final Loan loan) {
 
-        Integer maxLoanProductLoanCounter = this.loanRepositoryWrapper.getMaxClientOrJLGLoanProductCounter(loan.loanProduct().getId(),
+        Integer maxLoanProductLoanCounter = this.loanRepositoryWrapper.getMaxClientOrJLGLoanProductCounter(loan.getLoanProduct().getId(),
                 loan.getClientId());
         if (maxLoanProductLoanCounter == null) {
             maxLoanProductLoanCounter = 1;
@@ -2146,13 +2244,13 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         final Integer currentLoanProductCounter = loan.getLoanProductLoanCounter();
 
         for (final Loan loanToUpdate : loansToUpdate) {
-            if (loan.loanProduct().isIncludeInBorrowerCycle()) {
+            if (loan.getLoanProduct().isIncludeInBorrowerCycle()) {
                 Integer runningLoancounter = loanToUpdate.getCurrentLoanCounter();
                 if (runningLoancounter > currentLoancounter) {
                     loanToUpdate.updateClientLoanCounter(--runningLoancounter);
                 }
             }
-            if (loan.loanProduct().getId().equals(loanToUpdate.loanProduct().getId())) {
+            if (loan.getLoanProduct().getId().equals(loanToUpdate.getLoanProduct().getId())) {
                 Integer runningLoanProductCounter = loanToUpdate.getLoanProductLoanCounter();
                 if (runningLoanProductCounter > currentLoanProductCounter) {
                     loanToUpdate.updateLoanProductLoanCounter(--runningLoanProductCounter);
@@ -2207,7 +2305,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
 
 
     private void checkClientOrGroupActive(final Loan loan) {
-        final Client client = loan.client();
+        final Client client = loan.getClient();
         if (client != null) {
             if (client.isNotActive()) { throw new ClientNotActiveException(client.getId()); }
         }
@@ -2469,7 +2567,7 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         checkClientOrGroupActive(loan);
         final Map<String, Object> actualChanges = new LinkedHashMap<>();
         LocalDate expectedDisbursementDate = loan.getExpectedDisbursedOnLocalDate();
-        if (!loan.loanProduct().isMultiDisburseLoan()) {
+        if (!loan.getLoanProduct().isMultiDisburseLoan()) {
             final String errorMessage = "loan.product.does.not.support.multiple.disbursals";
             throw new LoanMultiDisbursementException(errorMessage);
         }
@@ -2489,9 +2587,9 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
             throw new MultiDisbursementDataRequiredException(LoanApiConstants.disbursementDataParameterName, errorMessage);
         }
 
-        if (loan.getDisbursementDetails().size() > loan.loanProduct().maxTrancheCount()) {
-            final String errorMessage = "Number of tranche shouldn't be greter than " + loan.loanProduct().maxTrancheCount();
-            throw new ExceedingTrancheCountException(LoanApiConstants.disbursementDataParameterName, errorMessage, loan.loanProduct()
+        if (loan.getDisbursementDetails().size() > loan.getLoanProduct().maxTrancheCount()) {
+            final String errorMessage = "Number of tranche shouldn't be greter than " + loan.getLoanProduct().maxTrancheCount();
+            throw new ExceedingTrancheCountException(LoanApiConstants.disbursementDataParameterName, errorMessage, loan.getLoanProduct()
                     .maxTrancheCount(), loan.getDisbursementDetails().size());
         }
         LoanDisbursementDetails updateDetails = null;
@@ -2631,11 +2729,24 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
         final SavingsAccount fromSavingsAccount = null;
         final boolean isRegularTransaction = true;
         final boolean isExceptionForBalanceCheck = false;
-        final AccountTransferDTO accountTransferDTO = new AccountTransferDTO(transactionDate, amount, PortfolioAccountType.SAVINGS,
-                PortfolioAccountType.LOAN, portfolioAccountData.accountId(), loanId, "Loan Charge Payment", locale, fmt, null, null,
-                LoanTransactionType.CHARGE_PAYMENT.getValue(), loanChargeId, loanInstallmentNumber,
-                AccountTransferType.CHARGE_PAYMENT.getValue(), null, null, null, null, null, fromSavingsAccount, isRegularTransaction,
-                isExceptionForBalanceCheck);
+        final AccountTransferDTO accountTransferDTO = AccountTransferDTO.builder()
+            .transactionDate(transactionDate)
+            .transactionAmount(amount)
+            .fromAccountType(PortfolioAccountType.SAVINGS)
+            .toAccountType(PortfolioAccountType.LOAN)
+            .fromAccountId(portfolioAccountData.getId())
+            .toAccountId(loanId)
+            .description("Loan Charge Payment")
+            .locale(locale)
+            .fmt(fmt)
+            .toTransferType(LoanTransactionType.CHARGE_PAYMENT.getValue())
+            .chargeId(loanChargeId)
+            .loanInstallmentNumber(loanInstallmentNumber)
+            .transferType(AccountTransferType.CHARGE_PAYMENT.getValue())
+            .fromSavingsAccount(fromSavingsAccount)
+            .regularTransaction(isRegularTransaction)
+            .exceptionForBalanceCheck(isExceptionForBalanceCheck)
+            .build();
         this.accountTransfersWritePlatformService.transferFunds(accountTransferDTO);
 
         return transaction;

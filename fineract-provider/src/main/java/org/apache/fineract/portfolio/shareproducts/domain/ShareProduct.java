@@ -57,7 +57,7 @@ public class ShareProduct extends AbstractAuditableCustom<AppUser, Long> {
     @Temporal(TemporalType.DATE)
     private Date endDate;
 
-    @Column(name = "external_id", length = 100, nullable = true, unique = true)
+    @Column(name = "external_id", length = 100, unique = true)
     private String externalId;
 
     @Embedded
@@ -69,7 +69,7 @@ public class ShareProduct extends AbstractAuditableCustom<AppUser, Long> {
     @Column(name = "issued_shares", nullable = false)
     private Long totalSharesIssued;
 
-    @Column(name = "totalsubscribed_shares", nullable = true)
+    @Column(name = "totalsubscribed_shares")
     private Long totalSubscribedShares;
     
     @Column(name = "unit_price", nullable = false)
@@ -102,14 +102,14 @@ public class ShareProduct extends AbstractAuditableCustom<AppUser, Long> {
     private Integer lockinPeriod;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "lockin_period_frequency_enum", nullable = true)
+    @Column(name = "lockin_period_frequency_enum")
     private PeriodFrequencyType lockPeriodType;
 
     @Column(name = "minimum_active_period_frequency")
     private Integer minimumActivePeriod;
 
     @Enumerated(EnumType.ORDINAL)
-    @Column(name = "minimum_active_period_frequency_enum", nullable = true)
+    @Column(name = "minimum_active_period_frequency_enum")
     private PeriodFrequencyType minimumActivePeriodType;
 
     @Column(name = "accounting_type", nullable = false)

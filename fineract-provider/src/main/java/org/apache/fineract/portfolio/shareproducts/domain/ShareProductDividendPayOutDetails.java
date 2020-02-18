@@ -33,7 +33,7 @@ import java.util.List;
 @Table(name = "m_share_product_dividend_pay_out")
 public class ShareProductDividendPayOutDetails extends AbstractAuditableCustom<AppUser, Long> {
 
-    @Column(name = "product_id", nullable = true)
+    @Column(name = "product_id")
     private Long shareProductId;
 
     @Column(name = "amount", scale = 6, precision = 19)

@@ -461,7 +461,7 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
         // final boolean clientPendingApprovalAllowed =
         // this.configurationDomainService.isClientPendingApprovalAllowedEnabled();
 
-        return CenterData.template(officeIdDefaulted, accountNo, new LocalDate(), officeOptions, staffOptions, groupMembersOptions,
+        return CenterData.template(officeIdDefaulted, accountNo, LocalDate.now(), officeOptions, staffOptions, groupMembersOptions,
                 totalCollected, totalOverdue, totaldue, installmentDue);
     }
 

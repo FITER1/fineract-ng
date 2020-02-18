@@ -63,7 +63,7 @@ public class Hook extends AbstractAuditableCustom<AppUser, Long> {
     private HookTemplate template;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "ugd_template_id", referencedColumnName = "id", nullable = true)
+    @JoinColumn(name = "ugd_template_id", referencedColumnName = "id")
     private Template ugdTemplate;
 
     public static Hook fromJson(final JsonCommand command, final HookTemplate template, final Set<HookConfiguration> config,

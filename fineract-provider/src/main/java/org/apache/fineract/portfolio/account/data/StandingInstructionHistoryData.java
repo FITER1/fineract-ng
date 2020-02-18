@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.portfolio.account.data;
 
+import lombok.*;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.organisation.office.data.OfficeData;
 import org.apache.fineract.portfolio.client.data.ClientData;
@@ -25,42 +26,24 @@ import org.joda.time.LocalDate;
 
 import java.math.BigDecimal;
 
-@SuppressWarnings("unused")
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class StandingInstructionHistoryData {
-
-    private final Long standingInstructionId;
-    private final String name;
-    private final OfficeData fromOffice;
-    private final ClientData fromClient;
-    private final EnumOptionData fromAccountType;
-    private final PortfolioAccountData fromAccount;
-    private final EnumOptionData toAccountType;
-    private final PortfolioAccountData toAccount;
-    private final OfficeData toOffice;
-    private final ClientData toClient;
-    private final BigDecimal amount;
-    private final String status;
-    private final LocalDate executionTime;
-    private final String errorLog;
-
-    public StandingInstructionHistoryData(final Long standingInstructionId, final String name, final OfficeData fromOffice,
-            final ClientData fromClient, final EnumOptionData fromAccountType, final PortfolioAccountData fromAccount,
-            final EnumOptionData toAccountType, final PortfolioAccountData toAccount, final OfficeData toOffice, final ClientData toClient,
-            final BigDecimal amount, final String status, final LocalDate executionTime, final String errorLog) {
-        this.standingInstructionId = standingInstructionId;
-        this.name = name;
-        this.fromOffice = fromOffice;
-        this.fromClient = fromClient;
-        this.fromAccountType = fromAccountType;
-        this.toAccountType = toAccountType;
-        this.fromAccount = fromAccount;
-        this.toAccount = toAccount;
-        this.toOffice = toOffice;
-        this.toClient = toClient;
-        this.amount = amount;
-        this.errorLog = errorLog;
-        this.status = status;
-        this.executionTime = executionTime;
-    }
-
+    private Long standingInstructionId;
+    private String name;
+    private OfficeData fromOffice;
+    private ClientData fromClient;
+    private EnumOptionData fromAccountType;
+    private PortfolioAccountData fromAccount;
+    private EnumOptionData toAccountType;
+    private PortfolioAccountData toAccount;
+    private OfficeData toOffice;
+    private ClientData toClient;
+    private BigDecimal amount;
+    private String status;
+    private LocalDate executionTime;
+    private String errorLog;
 }

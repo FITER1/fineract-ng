@@ -312,9 +312,14 @@ public class LoansApiResource {
         if (currencyData != null) {
             currencyCode = currencyData.getCode();
         }
-        final long[] accountStatus = { SavingsAccountStatusType.ACTIVE.getValue() };
-        final PortfolioAccountDTO portfolioAccountDTO = new PortfolioAccountDTO(PortfolioAccountType.SAVINGS.getValue(), clientId, currencyCode,
-                accountStatus, DepositAccountType.SAVINGS_DEPOSIT.getValue());
+        final Long[] accountStatus = { SavingsAccountStatusType.ACTIVE.getValue().longValue() };
+        final PortfolioAccountDTO portfolioAccountDTO = PortfolioAccountDTO.builder()
+            .accountTypeId(PortfolioAccountType.SAVINGS.getValue())
+            .clientId(clientId)
+            .currencyCode(currencyCode)
+            .accountStatus(accountStatus)
+            .depositType(DepositAccountType.SAVINGS_DEPOSIT.getValue())
+            .build();
         if (groupId != null) {
             portfolioAccountDTO.setGroupId(groupId);
         }
@@ -532,9 +537,14 @@ public class LoansApiResource {
             if (currencyData != null) {
                 currencyCode = currencyData.getCode();
             }
-            final long[] accountStatus = { SavingsAccountStatusType.ACTIVE.getValue() };
-            PortfolioAccountDTO portfolioAccountDTO = new PortfolioAccountDTO(PortfolioAccountType.SAVINGS.getValue(),
-                    loanBasicDetails.clientId(), currencyCode, accountStatus, DepositAccountType.SAVINGS_DEPOSIT.getValue());
+            final Long[] accountStatus = { SavingsAccountStatusType.ACTIVE.getValue().longValue() };
+            PortfolioAccountDTO portfolioAccountDTO = PortfolioAccountDTO.builder()
+                .accountTypeId(PortfolioAccountType.SAVINGS.getValue())
+                .clientId(loanBasicDetails.clientId())
+                .currencyCode(currencyCode)
+                .accountStatus(accountStatus)
+                .depositType(DepositAccountType.SAVINGS_DEPOSIT.getValue())
+                .build();
             accountLinkingOptions = this.portfolioAccountReadPlatformService.retrieveAllForLookup(portfolioAccountDTO);
 
             if (!associationParameters.contains("linkedAccount")) {

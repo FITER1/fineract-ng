@@ -55,7 +55,7 @@ public class Staff extends AbstractPersistableCustom<Long> {
     @Column(name = "mobile_no", length = 50, nullable = false, unique = true)
     private String mobileNo;
 
-    @Column(name = "external_id", length = 100, nullable = true, unique = true)
+    @Column(name = "external_id", length = 100, unique = true)
     private String externalId;
 
 	@Column(name = "email_address", length = 50, unique = true)
@@ -68,22 +68,22 @@ public class Staff extends AbstractPersistableCustom<Long> {
     @Column(name = "is_loan_officer", nullable = false)
     private boolean loanOfficer;
 
-    @Column(name = "organisational_role_enum", nullable = true)
+    @Column(name = "organisational_role_enum")
     private Integer organisationalRoleType;
 
     @Column(name = "is_active", nullable = false)
     private boolean active;
 
-    @Column(name = "joining_date", nullable = true)
+    @Column(name = "joining_date")
     @Temporal(TemporalType.DATE)
     private Date joiningDate;
 
     @ManyToOne
-    @JoinColumn(name = "organisational_role_parent_staff_id", nullable = true)
+    @JoinColumn(name = "organisational_role_parent_staff_id")
     private Staff organisationalRoleParentStaff;
 
     @OneToOne(optional = true)
-    @JoinColumn(name = "image_id", nullable = true)
+    @JoinColumn(name = "image_id")
     private Image image;
 
     public boolean identifiedBy(final Staff staff) {

@@ -743,7 +743,7 @@ public class LoanScheduleAssembler {
             baseDataValidator.reset().failWithCodeNoParameterAddedToErrorCode("variable.schedule.modify.date.can.not.be.due.date",
                     overlappings);
         }
-        LoanProductVariableInstallmentConfig installmentConfig = loan.loanProduct().loanProductVariableInstallmentConfig();
+        LoanProductVariableInstallmentConfig installmentConfig = loan.getLoanProduct().loanProductVariableInstallmentConfig();
         final CalendarInstance loanCalendarInstance = calendarInstanceRepository.findCalendarInstaneByEntityId(loan.getId(),
                 CalendarEntityType.LOANS.getValue());
         Calendar loanCalendar = null;
@@ -873,7 +873,7 @@ public class LoanScheduleAssembler {
 
     private void extractLoanTermVariations(final Loan loan, final String json, final List<LoanTermVariations> loanTermVariations) {
         final JsonElement element = this.fromApiJsonHelper.parse(json);
-        if (loan.loanProduct().allowVariabeInstallments()) {
+        if (loan.getLoanProduct().allowVariabeInstallments()) {
             if (element.isJsonObject() && this.fromApiJsonHelper.parameterExists(LoanApiConstants.exceptionParamName, element)) {
                 final JsonObject topLevelJsonElement = element.getAsJsonObject();
                 final String dateFormat = this.fromApiJsonHelper.extractDateFormatParameter(topLevelJsonElement);

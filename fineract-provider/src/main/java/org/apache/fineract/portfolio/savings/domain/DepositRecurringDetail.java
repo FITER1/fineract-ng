@@ -35,13 +35,13 @@ import static org.apache.fineract.portfolio.savings.DepositsApiConstants.*;
 @Embeddable
 public class DepositRecurringDetail {
 
-    @Column(name = "is_mandatory", nullable = true)
+    @Column(name = "is_mandatory")
     private boolean isMandatoryDeposit;
 
-    @Column(name = "allow_withdrawal", nullable = true)
+    @Column(name = "allow_withdrawal")
     private boolean allowWithdrawal;
 
-    @Column(name = "adjust_advance_towards_future_payments", nullable = true)
+    @Column(name = "adjust_advance_towards_future_payments")
     private boolean adjustAdvanceTowardsFuturePayments;
 
     protected DepositRecurringDetail() {

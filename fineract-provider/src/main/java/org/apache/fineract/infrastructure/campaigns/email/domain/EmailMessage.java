@@ -43,19 +43,19 @@ import java.util.Map;
 public class EmailMessage extends AbstractPersistableCustom<Long> {
 
     @ManyToOne
-    @JoinColumn(name = "group_id", nullable = true)
+    @JoinColumn(name = "group_id")
     private Group group;
 
     @ManyToOne
-    @JoinColumn(name = "client_id", nullable = true)
+    @JoinColumn(name = "client_id")
     private Client client;
 
     @ManyToOne
-    @JoinColumn(name = "staff_id", nullable = true)
+    @JoinColumn(name = "staff_id")
     private Staff staff;
 
     @ManyToOne
-    @JoinColumn(name = "email_campaign_id", nullable = true)
+    @JoinColumn(name = "email_campaign_id")
     private EmailCampaign emailCampaign;
 
     @Column(name = "status_enum", nullable = false)
@@ -70,10 +70,10 @@ public class EmailMessage extends AbstractPersistableCustom<Long> {
     @Column(name = "message", nullable = false)
     private String message;
 
-    @Column(name = "campaign_name", nullable = true)
+    @Column(name = "campaign_name")
     private String campaignName;
 
-    @Column(name = "submittedon_date", nullable = true)
+    @Column(name = "submittedon_date")
     @Temporal(TemporalType.DATE)
     private Date submittedOnDate;
 

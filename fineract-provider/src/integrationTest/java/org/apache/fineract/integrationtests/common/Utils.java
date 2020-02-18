@@ -142,7 +142,7 @@ public class Utils {
     }
 
     public static LocalDate getLocalDateOfTenant() {
-        LocalDate today = new LocalDate();
+        LocalDate today = LocalDate.now();
         final DateTimeZone zone = DateTimeZone.forID(TENANT_TIME_ZONE);
         if (zone != null) {
             today = new LocalDate(zone);

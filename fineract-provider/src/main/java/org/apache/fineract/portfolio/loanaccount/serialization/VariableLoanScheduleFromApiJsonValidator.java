@@ -72,7 +72,7 @@ public class VariableLoanScheduleFromApiJsonValidator {
         }
 
         final JsonElement element = this.fromApiJsonHelper.parse(json);
-        if (loan.loanProduct().allowVariabeInstallments()) {
+        if (loan.getLoanProduct().allowVariabeInstallments()) {
             if (element.isJsonObject() && this.fromApiJsonHelper.parameterExists(LoanApiConstants.exceptionParamName, element)) {
                 final JsonObject topLevelJsonElement = element.getAsJsonObject();
                 final String dateFormat = this.fromApiJsonHelper.extractDateFormatParameter(topLevelJsonElement);

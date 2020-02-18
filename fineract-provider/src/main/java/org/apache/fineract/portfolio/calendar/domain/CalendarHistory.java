@@ -42,21 +42,21 @@ public class CalendarHistory extends AbstractPersistableCustom<Long> {
     @Column(name = "title", length = 50, nullable = false)
     private String title;
 
-    @Column(name = "description", length = 100, nullable = true)
+    @Column(name = "description", length = 100)
     private String description;
 
-    @Column(name = "location", length = 100, nullable = true)
+    @Column(name = "location", length = 100)
     private String location;
 
     @Column(name = "start_date", nullable = false)
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
-    @Column(name = "end_date", nullable = true)
+    @Column(name = "end_date")
     @Temporal(TemporalType.DATE)
     private Date endDate;
 
-    @Column(name = "duration", nullable = true)
+    @Column(name = "duration")
     private Integer duration;
 
     @Column(name = "calendar_type_enum", nullable = false)
@@ -65,16 +65,16 @@ public class CalendarHistory extends AbstractPersistableCustom<Long> {
     @Column(name = "repeating", nullable = false)
     private boolean repeating = false;
 
-    @Column(name = "recurrence", length = 100, nullable = true)
+    @Column(name = "recurrence", length = 100)
     private String recurrence;
 
-    @Column(name = "remind_by_enum", nullable = true)
+    @Column(name = "remind_by_enum")
     private Integer remindById;
 
-    @Column(name = "first_reminder", nullable = true)
+    @Column(name = "first_reminder")
     private Integer firstReminder;
 
-    @Column(name = "second_reminder", nullable = true)
+    @Column(name = "second_reminder")
     private Integer secondReminder;
 
     public CalendarHistory(Calendar calendar, Date startDate) {

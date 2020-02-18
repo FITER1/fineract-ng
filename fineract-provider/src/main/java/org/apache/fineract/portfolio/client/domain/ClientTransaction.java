@@ -54,7 +54,7 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
     private Office office;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "payment_detail_id", nullable = true)
+    @JoinColumn(name = "payment_detail_id")
     private PaymentDetail paymentDetail;
 
     @Column(name = "currency_code", length = 3)
@@ -73,7 +73,7 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
     @Column(name = "is_reversed", nullable = false)
     private boolean reversed;
 
-    @Column(name = "external_id", length = 100, nullable = true, unique = true)
+    @Column(name = "external_id", length = 100, unique = true)
     private String externalId;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -81,7 +81,7 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
     private Date createdDate;
 
     @ManyToOne
-    @JoinColumn(name = "appuser_id", nullable = true)
+    @JoinColumn(name = "appuser_id")
     private AppUser appUser;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientTransaction", orphanRemoval = true, fetch=FetchType.EAGER)

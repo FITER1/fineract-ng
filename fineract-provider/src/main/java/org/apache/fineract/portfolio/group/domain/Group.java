@@ -54,12 +54,12 @@ public final class Group extends AbstractPersistableCustom<Long> {
     @Column(name = "status_enum", nullable = false)
     private Integer status;
 
-    @Column(name = "activation_date", nullable = true)
+    @Column(name = "activation_date")
     @Temporal(TemporalType.DATE)
     private Date activationDate;
 
     @ManyToOne(optional = true)
-    @JoinColumn(name = "activatedon_userid", nullable = true)
+    @JoinColumn(name = "activatedon_userid")
     private AppUser activatedBy;
 
     @ManyToOne
@@ -67,7 +67,7 @@ public final class Group extends AbstractPersistableCustom<Long> {
     private Office office;
 
     @ManyToOne
-    @JoinColumn(name = "staff_id", nullable = true)
+    @JoinColumn(name = "staff_id")
     private Staff staff;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -94,23 +94,23 @@ public final class Group extends AbstractPersistableCustom<Long> {
     private Set<Client> clientMembers = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "closure_reason_cv_id", nullable = true)
+    @JoinColumn(name = "closure_reason_cv_id")
     private CodeValue closureReason;
 
-    @Column(name = "closedon_date", nullable = true)
+    @Column(name = "closedon_date")
     @Temporal(TemporalType.DATE)
     private Date closureDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "closedon_userid", nullable = true)
+    @JoinColumn(name = "closedon_userid")
     private AppUser closedBy;
 
-    @Column(name = "submittedon_date", nullable = true)
+    @Column(name = "submittedon_date")
     @Temporal(TemporalType.DATE)
     private Date submittedOnDate;
 
     @ManyToOne(optional = true, fetch=FetchType.LAZY)
-    @JoinColumn(name = "submittedon_userid", nullable = true)
+    @JoinColumn(name = "submittedon_userid")
     private AppUser submittedBy;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "center", orphanRemoval = true)

@@ -56,7 +56,7 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom<L
     private Office office;
 
     @ManyToOne(cascade = CascadeType.ALL, optional = true)
-    @JoinColumn(name = "payment_detail_id", nullable = true)
+    @JoinColumn(name = "payment_detail_id")
     private PaymentDetail paymentDetail;
 
     @Column(name = "transaction_type_enum", nullable = false)
@@ -72,23 +72,23 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom<L
     @Column(name = "is_reversed", nullable = false)
     private boolean reversed;
 
-    @Column(name = "running_balance_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "running_balance_derived", scale = 6, precision = 19)
     private BigDecimal runningBalance;
 
-    @Column(name = "cumulative_balance_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "cumulative_balance_derived", scale = 6, precision = 19)
     private BigDecimal cumulativeBalance;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "balance_end_date_derived", nullable = true)
+    @Column(name = "balance_end_date_derived")
     private Date balanceEndDate;
 
-    @Column(name = "balance_number_of_days_derived", nullable = true)
+    @Column(name = "balance_number_of_days_derived")
     private Integer balanceNumberOfDays;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "savingsAccountTransaction", orphanRemoval = true, fetch=FetchType.EAGER)
     private Set<SavingsAccountChargePaidBy> savingsAccountChargesPaid = new HashSet<>();
 
-    @Column(name = "overdraft_amount_derived", scale = 6, precision = 19, nullable = true)
+    @Column(name = "overdraft_amount_derived", scale = 6, precision = 19)
     private BigDecimal overdraftAmount;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -96,10 +96,10 @@ public final class SavingsAccountTransaction extends AbstractPersistableCustom<L
     private Date createdDate;
 
 	@ManyToOne
-    @JoinColumn(name = "appuser_id", nullable = true)
+    @JoinColumn(name = "appuser_id")
     private AppUser appUser;
     
-    @Column(name = "is_manual", length = 1, nullable = true)
+    @Column(name = "is_manual", length = 1)
     private boolean isManualTransaction;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch=FetchType.EAGER)

@@ -41,16 +41,16 @@ import static org.apache.fineract.portfolio.savings.DepositsApiConstants.mandato
 @Table(name = "m_deposit_account_recurring_detail")
 public class DepositAccountRecurringDetail extends AbstractPersistableCustom<Long> {
 
-    @Column(name = "mandatory_recommended_deposit_amount", scale = 6, precision = 19, nullable = true)
+    @Column(name = "mandatory_recommended_deposit_amount", scale = 6, precision = 19)
     private BigDecimal mandatoryRecommendedDepositAmount;
 
-    @Column(name = "total_overdue_amount", scale = 6, precision = 19, nullable = true)
+    @Column(name = "total_overdue_amount", scale = 6, precision = 19)
     private BigDecimal totalOverdueAmount;
 
     @Column(name = "is_calendar_inherited", nullable = false)
     private boolean isCalendarInherited;
 
-    @Column(name = "no_of_overdue_installments", nullable = true)
+    @Column(name = "no_of_overdue_installments")
     private Integer noOfOverdueInstallments;
 
     @Embedded

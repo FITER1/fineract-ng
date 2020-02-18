@@ -172,36 +172,36 @@ public class StandingInstructionWritePlatformServiceImpl implements StandingInst
             boolean isDueForTransfer = false;
             AccountTransferRecurrenceType recurrenceType = data.recurrenceType();
             StandingInstructionType instructionType = data.instructionType();
-            LocalDate transactionDate = new LocalDate();
+            LocalDate transactionDate = LocalDate.now();
             if (recurrenceType.isPeriodicRecurrence()) {
                 final ScheduledDateGenerator scheduledDateGenerator = new DefaultScheduledDateGenerator();
                 PeriodFrequencyType frequencyType = data.recurrenceFrequency();
-                LocalDate startDate = data.validFrom();
+                LocalDate startDate = data.getValidFrom();
                 if (frequencyType.isMonthly()) {
                     startDate = startDate.withDayOfMonth(data.recurrenceOnDay());
-                    if (startDate.isBefore(data.validFrom())) {
+                    if (startDate.isBefore(data.getValidFrom())) {
                         startDate = startDate.plusMonths(1);
                     }
                 } else if (frequencyType.isYearly()) {
                     startDate = startDate.withDayOfMonth(data.recurrenceOnDay()).withMonthOfYear(data.recurrenceOnMonth());
-                    if (startDate.isBefore(data.validFrom())) {
+                    if (startDate.isBefore(data.getValidFrom())) {
                         startDate = startDate.plusYears(1);
                     }
                 }
-                isDueForTransfer = scheduledDateGenerator.isDateFallsInSchedule(frequencyType, data.recurrenceInterval(), startDate,
+                isDueForTransfer = scheduledDateGenerator.isDateFallsInSchedule(frequencyType, data.getRecurrenceInterval(), startDate,
                         transactionDate);
 
             }
-            BigDecimal transactionAmount = data.amount();
+            BigDecimal transactionAmount = data.getAmount();
             if (data.toAccountType().isLoanAccount()
                     && (recurrenceType.isDuesRecurrence() || (isDueForTransfer && instructionType.isDuesAmoutTransfer()))) {
                 StandingInstructionDuesData standingInstructionDuesData = this.standingInstructionReadPlatformService
-                        .retriveLoanDuesData(data.toAccount().accountId());
+                        .retriveLoanDuesData(data.getToAccount().getId());
                 if (data.instructionType().isDuesAmoutTransfer()) {
-                    transactionAmount = standingInstructionDuesData.totalDueAmount();
+                    transactionAmount = standingInstructionDuesData.getTotalDueAmount();
                 }
                 if (recurrenceType.isDuesRecurrence()) {
-                    isDueForTransfer = new LocalDate().equals(standingInstructionDuesData.dueDate());
+                    isDueForTransfer = LocalDate.now().equals(standingInstructionDuesData.getDueDate());
                 }
             }
 
@@ -209,11 +209,23 @@ public class StandingInstructionWritePlatformServiceImpl implements StandingInst
                 final SavingsAccount fromSavingsAccount = null;
                 final boolean isRegularTransaction = true;
                 final boolean isExceptionForBalanceCheck = false;
-                AccountTransferDTO accountTransferDTO = new AccountTransferDTO(transactionDate, transactionAmount, data.fromAccountType(),
-                        data.toAccountType(), data.fromAccount().accountId(), data.toAccount().accountId(), data.name()
-                                + " Standing instruction trasfer ", null, null, null, null, data.toTransferType(), null, null, data
-                                .transferType().getValue(), null, null, null, null, null, fromSavingsAccount,
-                        isRegularTransaction, isExceptionForBalanceCheck);
+                AccountTransferDTO accountTransferDTO = AccountTransferDTO.builder()
+                    .transactionDate(transactionDate)
+                    .transactionAmount(transactionAmount)
+                    .fromAccountType(data.fromAccountType())
+                    .toAccountType(data.toAccountType())
+                    .fromAccountId(data.getFromAccount().getId())
+                    .toAccountId(data.getToAccount().getId())
+                    .description(data.getName() + " Standing instruction transfer")
+                    // skip 4
+                    .toTransferType(data.toTransferType())
+                    // skip 2
+                    .transferType(data.transferType().getValue())
+                    // skip 5
+                    .fromSavingsAccount(fromSavingsAccount)
+                    .regularTransaction(isRegularTransaction)
+                    .exceptionForBalanceCheck(isExceptionForBalanceCheck)
+                    .build();
                 final boolean transferCompleted = transferAmount(sb, accountTransferDTO, data.getId());
 
                 if(transferCompleted){

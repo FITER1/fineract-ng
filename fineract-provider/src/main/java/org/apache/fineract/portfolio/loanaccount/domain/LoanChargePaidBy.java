@@ -38,7 +38,7 @@ public class LoanChargePaidBy extends AbstractPersistableCustom<Long> {
     @Column(name = "amount", scale = 6, precision = 19, nullable = false)
     private BigDecimal amount;
 
-    @Column(name = "installment_number", nullable = true)
+    @Column(name = "installment_number")
     private Integer installmentNumber;
 
     protected LoanChargePaidBy() {
