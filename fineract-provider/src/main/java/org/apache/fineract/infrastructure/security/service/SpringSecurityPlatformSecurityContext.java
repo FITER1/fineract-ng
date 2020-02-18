@@ -78,6 +78,8 @@ public class SpringSecurityPlatformSecurityContext implements PlatformSecurityCo
             }
         }
 
+        currentUser = getAppUser(currentUser);
+
         if (currentUser == null) { throw new UnAuthenticatedUserException(); }
 
         if (this.doesPasswordHasToBeRenewed(currentUser)) { throw new ResetPasswordException(currentUser.getId()); }
@@ -94,14 +96,9 @@ public class SpringSecurityPlatformSecurityContext implements PlatformSecurityCo
             final Authentication auth = context.getAuthentication();
             if (auth != null) {
                 currentUser = (AppUser) auth.getPrincipal();
-
-                // TODO: @Aleks this is a workaround to avoid detached entity exceptions
-                if(currentUser!=null) {
-                    currentUser = appUserRepository.findById(currentUser.getId()).orElse(null);
-                }
             }
         }
-
+        currentUser = getAppUser(currentUser);
         if (currentUser == null) { return null; }
 
         if (this.doesPasswordHasToBeRenewed(currentUser)) { throw new ResetPasswordException(currentUser.getId()); }
@@ -120,6 +117,7 @@ public class SpringSecurityPlatformSecurityContext implements PlatformSecurityCo
                 currentUser = (AppUser) auth.getPrincipal();
             }
         }
+        currentUser = getAppUser(currentUser);
 
         if (currentUser == null) { throw new UnAuthenticatedUserException(); }
 
@@ -128,6 +126,15 @@ public class SpringSecurityPlatformSecurityContext implements PlatformSecurityCo
 
         return currentUser;
 
+    }
+
+    @Override
+    public AppUser getAppUser(AppUser currentUser) {
+        // TODO: @Aleks this is a workaround to avoid detached entity exceptions
+        if (currentUser != null || currentUser.getId() == null) {
+            currentUser = appUserRepository.findAppUserByName(currentUser.getUsername());
+        }
+        return currentUser;
     }
 
     @Override
