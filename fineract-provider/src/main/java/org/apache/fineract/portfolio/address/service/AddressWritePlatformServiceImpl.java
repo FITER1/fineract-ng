@@ -30,6 +30,9 @@ import org.apache.fineract.portfolio.address.domain.Address;
 import org.apache.fineract.portfolio.address.domain.AddressRepository;
 import org.apache.fineract.portfolio.address.serialization.AddressCommandFromApiJsonDeserializer;
 import org.apache.fineract.portfolio.client.domain.*;
+import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -68,7 +71,7 @@ public class AddressWritePlatformServiceImpl implements AddressWritePlatformServ
 
 		final CodeValue addressTypeIdObj = this.codeValueRepository.getOne(addressTypeId);
 
-		final Address add = Address.fromJson(command, stateIdobj, countryIdObj);
+		final Address add = fromJson(command, stateIdobj, countryIdObj);
 		this.addressRepository.save(add);
 		final Long addressid = add.getId();
 		final Address addobj = this.addressRepository.getOne(addressid);
@@ -115,7 +118,7 @@ public class AddressWritePlatformServiceImpl implements AddressWritePlatformServ
 				final long addressTypeId = jsonObject.get("addressTypeId").getAsLong();
 				final CodeValue addressTypeIdObj = this.codeValueRepository.getOne(addressTypeId);
 
-				final Address add = Address.fromJsonObject(jsonObject, stateIdobj, countryIdObj);
+				final Address add = fromJsonObject(jsonObject, stateIdobj, countryIdObj);
 				this.addressRepository.save(add);
 				final Long addressid = add.getId();
 				final Address addobj = this.addressRepository.getOne(addressid);
@@ -265,5 +268,131 @@ public class AddressWritePlatformServiceImpl implements AddressWritePlatformServ
 
 		return CommandProcessingResult.builder().commandId(command.commandId())
 				.resourceId(clientAddressObj.getId()).build();
+	}
+
+
+	private Address fromJsonObject(final JsonObject jsonObject, final CodeValue stateProvince, final CodeValue country) {
+		String street = "";
+		String addressLine1 = "";
+		String addressLine2 = "";
+		String addressLine3 = "";
+		String townVillage = "";
+		String city = "";
+		String countyDistrict = "";
+		String postalCode = "";
+		BigDecimal latitude = BigDecimal.ZERO;
+		BigDecimal longitude = BigDecimal.ZERO;
+		String createdBy = "";
+		String updatedBy = "";
+		LocalDate updatedOnDate = null;
+		LocalDate createdOnDate = null;
+
+		if (jsonObject.has("street")) {
+			street = jsonObject.get("street").getAsString();
+		}
+
+		if (jsonObject.has("addressLine1")) {
+			addressLine1 = jsonObject.get("addressLine1").getAsString();
+		}
+		if (jsonObject.has("addressLine2")) {
+
+			addressLine2 = jsonObject.get("addressLine2").getAsString();
+		}
+		if (jsonObject.has("addressLine3")) {
+			addressLine3 = jsonObject.get("addressLine3").getAsString();
+		}
+		if (jsonObject.has("townVillage")) {
+			townVillage = jsonObject.get("townVillage").getAsString();
+		}
+		if (jsonObject.has("city")) {
+			city = jsonObject.get("city").getAsString();
+		}
+		if (jsonObject.has("countyDistrict")) {
+			countyDistrict = jsonObject.get("countyDistrict").getAsString();
+		}
+		if (jsonObject.has("postalCode")) {
+			postalCode = jsonObject.get("postalCode").getAsString();
+		}
+		if (jsonObject.has("latitude")) {
+
+			latitude = jsonObject.get("latitude").getAsBigDecimal();
+		}
+		if (jsonObject.has("longitude")) {
+			longitude = jsonObject.get("longitude").getAsBigDecimal();
+		}
+
+		if (jsonObject.has("createdBy")) {
+			createdBy = jsonObject.get("createdBy").getAsString();
+		}
+		if (jsonObject.has("createdOn")) {
+			String createdOn = jsonObject.get("createdOn").getAsString();
+			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+			createdOnDate = LocalDate.parse(createdOn, formatter);
+
+		}
+		if (jsonObject.has("updatedBy")) {
+			updatedBy = jsonObject.get("updatedBy").getAsString();
+		}
+		if (jsonObject.has("updatedOn")) {
+			String updatedOn = jsonObject.get("updatedOn").getAsString();
+			DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+			updatedOnDate = LocalDate.parse(updatedOn, formatter);
+		}
+
+		return Address.builder()
+			.street(street)
+			.addressLine1(addressLine1)
+			.addressLine2(addressLine2)
+			.addressLine3(addressLine3)
+			.townVillage(townVillage)
+			.city(city)
+			.countyDistrict(countyDistrict)
+			.stateProvince(stateProvince)
+			.country(country)
+			.postalCode(postalCode)
+			.latitude(latitude)
+			.longitude(longitude)
+			.createdBy(createdBy)
+			.createdOn(createdOnDate==null ? null : createdOnDate.toDate())
+			.updatedBy(updatedBy)
+			.updatedOn(updatedOnDate==null ? null : updatedOnDate.toDate())
+			.build();
+	}
+
+	private Address fromJson(final JsonCommand command, final CodeValue stateProvince, final CodeValue country) {
+
+		final String street = command.stringValueOfParameterNamed("street");
+		final String addressLine1 = command.stringValueOfParameterNamed("addressLine1");
+		final String addressLine2 = command.stringValueOfParameterNamed("addressLine2");
+		final String addressLine3 = command.stringValueOfParameterNamed("addressLine3");
+		final String townVillage = command.stringValueOfParameterNamed("townVillage");
+		final String city = command.stringValueOfParameterNamed("city");
+		final String countyDistrict = command.stringValueOfParameterNamed("countyDistrict");
+		final String postalCode = command.stringValueOfParameterNamed("postalCode");
+		final BigDecimal latitude = command.bigDecimalValueOfParameterNamed("latitude");
+		final BigDecimal longitude = command.bigDecimalValueOfParameterNamed("longitude");
+		final String createdBy = command.stringValueOfParameterNamed("createdBy");
+		final LocalDate createdOn = command.localDateValueOfParameterNamed("createdOn");
+		final String updatedBy = command.stringValueOfParameterNamed("updatedBy");
+		final LocalDate updatedOn = command.localDateValueOfParameterNamed("updatedOn");
+
+		return Address.builder()
+			.street(street)
+			.addressLine1(addressLine1)
+			.addressLine2(addressLine2)
+			.addressLine3(addressLine3)
+			.townVillage(townVillage)
+			.city(city)
+			.countyDistrict(countyDistrict)
+			.stateProvince(stateProvince)
+			.country(country)
+			.postalCode(postalCode)
+			.latitude(latitude)
+			.longitude(longitude)
+			.createdBy(createdBy)
+			.createdOn(createdOn==null ? null : createdOn.toDate())
+			.updatedBy(updatedBy)
+			.updatedOn(updatedOn==null ? null : updatedOn.toDate())
+			.build();
 	}
 }

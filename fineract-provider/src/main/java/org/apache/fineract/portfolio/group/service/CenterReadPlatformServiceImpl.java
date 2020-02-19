@@ -278,9 +278,20 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
             final BigDecimal installmentDue = JdbcSupport.getBigDecimalDefaultToZeroIfNull(rs, "installmentDue");
             Integer monthOnDay = CalendarUtils.getMonthOnDay(recurrence);
 
-            CalendarData calendarData = CalendarData.instance(calendarId, calendarInstanceId, entityId, entityType, title, description,
-                    location, startDate, endDate, null, null, false, recurrence, null, null, null, null, null, null, null, null, null,
-                    null, null, null, null, null, meetingTime, monthOnDay);
+            CalendarData calendarData = CalendarData.builder()
+                .id(calendarId)
+                .calendarInstanceId(calendarInstanceId)
+                .entityId(entityId)
+                .entityType(entityType)
+                .title(title)
+                .description(description)
+                .location(location)
+                .startDate(startDate)
+                .endDate(endDate)
+                .recurrence(recurrence)
+                .meetingTime(meetingTime)
+                .repeatsOnDayOfMonth(monthOnDay)
+                .build();
 
             return CenterData.instance(id, accountNo, name, externalId, status, activationDate, officeId, null, staffId, staffName,
                     hierarchy, null, calendarData, totalCollected, totalOverdue, totaldue, installmentDue);

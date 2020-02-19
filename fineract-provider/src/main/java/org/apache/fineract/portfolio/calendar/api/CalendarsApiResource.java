@@ -87,7 +87,46 @@ public class CalendarsApiResource {
         final Collection<LocalDate> recurringDates = this.readPlatformService.generateRecurringDates(calendarData, withHistory, tillDate);
         final Collection<LocalDate> nextTenRecurringDates = this.readPlatformService.generateNextTenRecurringDates(calendarData);
         final LocalDate recentEligibleMeetingDate = null;
-        calendarData = CalendarData.withRecurringDates(calendarData, recurringDates, nextTenRecurringDates, recentEligibleMeetingDate);
+        calendarData = CalendarData.builder()
+            .id(calendarData.getId())
+            .calendarInstanceId(calendarData.getCalendarInstanceId())
+            .entityId(calendarData.getEntityId())
+            .entityType(calendarData.getEntityType())
+            .title(calendarData.getTitle())
+            .description(calendarData.getDescription())
+            .location(calendarData.getLocation())
+            .startDate(calendarData.getStartDate())
+            .endDate(calendarData.getEndDate())
+            .duration(calendarData.getDuration())
+            .type(calendarData.getType())
+            .repeating(calendarData.isRepeating())
+            .recurrence(calendarData.getRecurrence())
+            .frequency(calendarData.getFrequency())
+            .interval(calendarData.getInterval())
+            .repeatsOnDay(calendarData.getRepeatsOnDay())
+            .repeatsOnNthDayOfMonth(calendarData.getRepeatsOnNthDayOfMonth())
+            .remindBy(calendarData.getRemindBy())
+            .firstReminder(calendarData.getFirstReminder())
+            .secondReminder(calendarData.getSecondReminder())
+            .humanReadable(calendarData.getHumanReadable())
+            .createdDate(calendarData.getCreatedDate())
+            .lastUpdatedDate(calendarData.getLastUpdatedDate())
+            .createdByUserId(calendarData.getCreatedByUserId())
+            .createdByUsername(calendarData.getCreatedByUsername())
+            .lastUpdatedByUserId(calendarData.getLastUpdatedByUserId())
+            .lastUpdatedByUsername(calendarData.getLastUpdatedByUsername())
+            .repeatsOnDayOfMonth(calendarData.getRepeatsOnDayOfMonth())
+            .entityTypeOptions(calendarData.getEntityTypeOptions())
+            .calendarTypeOptions(calendarData.getCalendarTypeOptions())
+            .remindByOptions(calendarData.getRemindByOptions())
+            .frequencyOptions(calendarData.getFrequencyOptions())
+            .repeatsOnDayOptions(calendarData.getRepeatsOnDayOptions())
+            .meetingTime(calendarData.getMeetingTime())
+            .frequencyNthDayTypeOptions(calendarData.getFrequencyNthDayTypeOptions())
+            .recurringDates(recurringDates)
+            .nextTenRecurringDates(nextTenRecurringDates)
+            .recentEligibleMeetingDate(recentEligibleMeetingDate)
+            .build();
 
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
         if (settings.isTemplate()) {
@@ -204,8 +243,46 @@ public class CalendarsApiResource {
         final List<EnumOptionData> frequencyOptions = this.dropdownReadPlatformService.retrieveCalendarFrequencyTypeOptions();
         final List<EnumOptionData> repeatsOnDayOptions = this.dropdownReadPlatformService.retrieveCalendarWeekDaysTypeOptions();
         final List<EnumOptionData> frequencyNthDayTypeOptions = this.dropdownReadPlatformService.retrieveCalendarFrequencyNthDayTypeOptions();
-        return CalendarData.withTemplateOptions(calendarData, entityTypeOptions, calendarTypeOptions, remindByOptions, frequencyOptions,
-                repeatsOnDayOptions, frequencyNthDayTypeOptions);
+        return CalendarData.builder()
+            .id(calendarData.getId())
+            .calendarInstanceId(calendarData.getCalendarInstanceId())
+            .entityId(calendarData.getEntityId())
+            .entityType(calendarData.getEntityType())
+            .title(calendarData.getTitle())
+            .description(calendarData.getDescription())
+            .location(calendarData.getLocation())
+            .startDate(calendarData.getStartDate())
+            .endDate(calendarData.getEndDate())
+            .duration(calendarData.getDuration())
+            .type(calendarData.getType())
+            .repeating(calendarData.isRepeating())
+            .recurrence(calendarData.getRecurrence())
+            .frequency(calendarData.getFrequency())
+            .interval(calendarData.getInterval())
+            .repeatsOnDay(calendarData.getRepeatsOnDay())
+            .repeatsOnNthDayOfMonth(calendarData.getRepeatsOnNthDayOfMonth())
+            .remindBy(calendarData.getRemindBy())
+            .firstReminder(calendarData.getFirstReminder())
+            .secondReminder(calendarData.getSecondReminder())
+            .recurringDates(calendarData.getRecurringDates())
+            .nextTenRecurringDates(calendarData.getNextTenRecurringDates())
+            .humanReadable(calendarData.getHumanReadable())
+            .recentEligibleMeetingDate(calendarData.getRecentEligibleMeetingDate())
+            .createdDate(calendarData.getCreatedDate())
+            .lastUpdatedDate(calendarData.getLastUpdatedDate())
+            .createdByUserId(calendarData.getCreatedByUserId())
+            .createdByUsername(calendarData.getCreatedByUsername())
+            .lastUpdatedByUserId(calendarData.getLastUpdatedByUserId())
+            .lastUpdatedByUsername(calendarData.getLastUpdatedByUsername())
+            .repeatsOnDayOfMonth(calendarData.getRepeatsOnDayOfMonth())
+            .meetingTime(calendarData.getMeetingTime())
+            .entityTypeOptions(entityTypeOptions)
+            .calendarTypeOptions(calendarTypeOptions)
+            .remindByOptions(remindByOptions)
+            .frequencyOptions(frequencyOptions)
+            .repeatsOnDayOptions(repeatsOnDayOptions)
+            .frequencyNthDayTypeOptions(frequencyNthDayTypeOptions)
+            .build();
     }
 
     private CommandWrapper getResourceDetails(final CalendarEntityType type, final Long entityId) {

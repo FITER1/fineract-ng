@@ -416,16 +416,24 @@ public class LoanScheduleAssembler {
     private CalendarInstance createInterestRecalculationCalendarInstance(final LocalDate calendarStartDate, final Integer frequency,
             CalendarFrequencyType calendarFrequencyType, final Integer recalculationFrequencyNthDay, final Integer repeatsOnDay) {
         final String title = "loan_recalculation_detail";
-        final Calendar calendar = Calendar.createRepeatingCalendar(title, calendarStartDate, CalendarType.COLLECTION.getValue(),
-                calendarFrequencyType, frequency, repeatsOnDay, recalculationFrequencyNthDay);
+        final Calendar calendar = Calendar.builder()
+            .title(title)
+            .startDate(calendarStartDate.toDate())
+            .typeId(CalendarType.COLLECTION.getValue())
+            .recurrence(Calendar.toRecurrence(calendarFrequencyType, frequency, repeatsOnDay, recalculationFrequencyNthDay))
+            .build();
         return new CalendarInstance(calendar, null, CalendarEntityType.LOAN_RECALCULATION_REST_DETAIL.getValue());
     }
 
     private Calendar createLoanCalendar(final LocalDate calendarStartDate, final Integer frequency,
             CalendarFrequencyType calendarFrequencyType, final Integer repeatsOnDay, final Integer repeatsOnNthDayOfMonth) {
         final String title = "loan_schedule";
-        final Calendar calendar = Calendar.createRepeatingCalendar(title, calendarStartDate, CalendarType.COLLECTION.getValue(),
-                calendarFrequencyType, frequency, repeatsOnDay, repeatsOnNthDayOfMonth);
+        final Calendar calendar = Calendar.builder()
+            .title(title)
+            .startDate(calendarStartDate.toDate())
+            .typeId(CalendarType.COLLECTION.getValue())
+            .recurrence(Calendar.toRecurrence(calendarFrequencyType, frequency, repeatsOnDay, repeatsOnNthDayOfMonth))
+            .build();
         return calendar;
     }
 

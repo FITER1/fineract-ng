@@ -90,10 +90,30 @@ public class GroupImportHandler implements ImportHandler {
         if(meetingStartDate==null)
             return null;
         else {
-            if(repeatsOnDay==null)
-                return CalendarData.importInstanceNoRepeatsOnDay(meetingStartDate, isRepeating, frequencyEnum, interval, row.getRowNum(),locale,dateFormat);
-            else
-                return CalendarData.importInstanceWithRepeatsOnDay(meetingStartDate, isRepeating, frequencyEnum, interval, repeatsOnDayEnum, row.getRowNum(),locale,dateFormat);
+            if(repeatsOnDay==null) {
+                return CalendarData.builder()
+                    .startDate(meetingStartDate)
+                    .repeating(isRepeating)
+                    .frequency(frequencyEnum)
+                    .interval(interval)
+                    .rowIndex(row.getRowNum())
+                    .locale(locale)
+                    .dateFormat(dateFormat)
+                    .build();
+            } else {
+                return CalendarData.builder()
+                    .startDate(meetingStartDate)
+                    .repeating(isRepeating)
+                    .frequency(frequencyEnum)
+                    .interval(interval)
+                    .repeatsOnDay(repeatsOnDayEnum)
+                    .rowIndex(row.getRowNum())
+                    .locale(locale)
+                    .dateFormat(dateFormat)
+                    .description("")
+                    .typeId("1")
+                    .build();
+            }
         }
     }
     private GroupGeneralData readGroup(Row row,String locale,String dateFormat) {

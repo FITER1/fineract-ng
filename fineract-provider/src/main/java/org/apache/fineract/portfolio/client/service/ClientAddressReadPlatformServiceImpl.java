@@ -43,15 +43,20 @@ public class ClientAddressReadPlatformServiceImpl implements ClientAddressReadPl
 		}
 
 		@Override
-		public ClientAddressData mapRow(final ResultSet rs, @SuppressWarnings("unused") final int rowNum)
-				throws SQLException {
-			final long clientAddressId = rs.getLong("clientAddressId");
-			final long client_id = rs.getLong("client_id");
-			final long address_id = rs.getLong("address_id");
-			final long address_type_id = rs.getLong("address_type_id");
-			final boolean is_active = rs.getBoolean("is_active");
+		public ClientAddressData mapRow(final ResultSet rs, @SuppressWarnings("unused") final int rowNum) throws SQLException {
+			final Long clientAddressId = rs.getLong("clientAddressId");
+			final Long clientId = rs.getLong("client_id");
+			final Long addressId = rs.getLong("address_id");
+			final Long addressTypeId = rs.getLong("address_type_id");
+			final boolean isActive = rs.getBoolean("is_active");
 
-			return ClientAddressData.instance(clientAddressId, client_id, address_id, address_type_id, is_active);
+			return ClientAddressData.builder()
+				.clientAddressId(clientAddressId)
+				.clientId(clientId)
+				.addressId(addressId)
+				.addressTypeId(addressTypeId)
+				.active(isActive)
+				.build();
 
 		}
 	}

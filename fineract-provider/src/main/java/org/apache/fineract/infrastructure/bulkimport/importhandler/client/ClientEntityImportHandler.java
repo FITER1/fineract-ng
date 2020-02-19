@@ -163,8 +163,18 @@ public class ClientEntityImportHandler implements ImportHandler {
                 if (countryAr[1] != null)
                     countryId = Long.parseLong(countryAr[1]);
             }
-            addressDataObj = new AddressData(addressTypeId, street, addressLine1, addressLine2, addressLine3,
-                    city, postalCode, isActiveAddress, stateProvinceId, countryId);
+            addressDataObj = AddressData.builder()
+                .addressTypeId(addressTypeId)
+                .street(street)
+                .addressLine1(addressLine1)
+                .addressLine2(addressLine2)
+                .addressLine3(addressLine3)
+                .city(city)
+                .postalCode(postalCode)
+                .active(isActiveAddress)
+                .stateProvinceId(stateProvinceId)
+                .countryId(countryId)
+                .build();
             addressList = new ArrayList<AddressData>(Arrays.asList(addressDataObj));
         }
         return ClientData.importClientEntityInstance(legalFormId,row.getRowNum(),name,officeId,clientTypeId,clientClassicationId,

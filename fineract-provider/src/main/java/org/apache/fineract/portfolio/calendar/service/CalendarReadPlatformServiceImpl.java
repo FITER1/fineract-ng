@@ -104,10 +104,37 @@ public class CalendarReadPlatformServiceImpl implements CalendarReadPlatformServ
             final String lastUpdatedByUserName = rs.getString("updatingUserName");
             final LocalTime meetingTime = JdbcSupport.getLocalTime(rs,"meetingTime");
 
-            return CalendarData.instance(id, calendarInstanceId, entityId, entityType, title, description, location, startDate, endDate,
-                    duration, type, repeating, recurrence, frequency, interval, repeatsOnDay, repeatsOnNthDayOfMonth, remindBy, firstReminder, secondReminder,
-                    humanReadable, createdDate, lastUpdatedDate, createdByUserId, createdByUserName, lastUpdatedByUserId,
-                    lastUpdatedByUserName,meetingTime, monthOnDay);
+            return CalendarData.builder()
+                .id(id)
+                .calendarInstanceId(calendarInstanceId)
+                .entityId(entityId)
+                .entityType(entityType)
+                .title(title)
+                .description(description)
+                .location(location)
+                .startDate(startDate)
+                .endDate(endDate)
+                .duration(duration)
+                .type(type)
+                .repeating(repeating)
+                .recurrence(recurrence)
+                .frequency(frequency)
+                .interval(interval)
+                .repeatsOnDay(repeatsOnDay)
+                .repeatsOnNthDayOfMonth(repeatsOnNthDayOfMonth)
+                .remindBy(remindBy)
+                .firstReminder(firstReminder)
+                .secondReminder(secondReminder)
+                .humanReadable(humanReadable)
+                .createdDate(createdDate)
+                .lastUpdatedDate(lastUpdatedDate)
+                .createdByUserId(createdByUserId)
+                .createdByUsername(createdByUserName)
+                .lastUpdatedByUserId(lastUpdatedByUserId)
+                .lastUpdatedByUsername(lastUpdatedByUserName)
+                .meetingTime(meetingTime)
+                .repeatsOnDayOfMonth(monthOnDay)
+                .build();
         }
     }
 
@@ -196,7 +223,7 @@ public class CalendarReadPlatformServiceImpl implements CalendarReadPlatformServ
 
     @Override
     public CalendarData retrieveNewCalendarDetails() {
-        return CalendarData.sensibleDefaultsForNewCalendarCreation();
+        return new CalendarData();
     }
 
     @Override
@@ -365,8 +392,46 @@ public class CalendarReadPlatformServiceImpl implements CalendarReadPlatformServ
             final Collection<LocalDate> recurringDates = this.generateRecurringDates(calendarData, withHistory, tillDate);
             final Collection<LocalDate> nextTenRecurringDates = this.generateNextTenRecurringDates(calendarData);
             final LocalDate recentEligibleMeetingDate = null;
-            final CalendarData updatedCalendarData = CalendarData.withRecurringDates(calendarData, recurringDates, nextTenRecurringDates,
-                    recentEligibleMeetingDate);
+            final CalendarData updatedCalendarData = CalendarData.builder()
+                .id(calendarData.getId())
+                .calendarInstanceId(calendarData.getCalendarInstanceId())
+                .entityId(calendarData.getEntityId())
+                .entityType(calendarData.getEntityType())
+                .title(calendarData.getTitle())
+                .description(calendarData.getDescription())
+                .location(calendarData.getLocation())
+                .startDate(calendarData.getStartDate())
+                .endDate(calendarData.getEndDate())
+                .duration(calendarData.getDuration())
+                .type(calendarData.getType())
+                .repeating(calendarData.isRepeating())
+                .recurrence(calendarData.getRecurrence())
+                .frequency(calendarData.getFrequency())
+                .interval(calendarData.getInterval())
+                .repeatsOnDay(calendarData.getRepeatsOnDay())
+                .repeatsOnNthDayOfMonth(calendarData.getRepeatsOnNthDayOfMonth())
+                .remindBy(calendarData.getRemindBy())
+                .firstReminder(calendarData.getFirstReminder())
+                .secondReminder(calendarData.getSecondReminder())
+                .humanReadable(calendarData.getHumanReadable())
+                .createdDate(calendarData.getCreatedDate())
+                .lastUpdatedDate(calendarData.getLastUpdatedDate())
+                .createdByUserId(calendarData.getCreatedByUserId())
+                .createdByUsername(calendarData.getCreatedByUsername())
+                .lastUpdatedByUserId(calendarData.getLastUpdatedByUserId())
+                .lastUpdatedByUsername(calendarData.getLastUpdatedByUsername())
+                .repeatsOnDayOfMonth(calendarData.getRepeatsOnDayOfMonth())
+                .entityTypeOptions(calendarData.getEntityTypeOptions())
+                .calendarTypeOptions(calendarData.getCalendarTypeOptions())
+                .remindByOptions(calendarData.getRemindByOptions())
+                .frequencyOptions(calendarData.getFrequencyOptions())
+                .repeatsOnDayOptions(calendarData.getRepeatsOnDayOptions())
+                .meetingTime(calendarData.getMeetingTime())
+                .frequencyNthDayTypeOptions(calendarData.getFrequencyNthDayTypeOptions())
+                .recurringDates(recurringDates)
+                .nextTenRecurringDates(nextTenRecurringDates)
+                .recentEligibleMeetingDate(recentEligibleMeetingDate)
+                .build();
             recuCalendarsData.add(updatedCalendarData);
         }
 
@@ -497,10 +562,37 @@ public class CalendarReadPlatformServiceImpl implements CalendarReadPlatformServ
             final LocalTime meetingTime = null;
             Integer monthOnDay = CalendarUtils.getMonthOnDay(recurrence);
 
-            return CalendarData.instance(id, calendarInstanceId, entityId, entityType, title, description, location, startDate, endDate,
-                    duration, type, repeating, recurrence, frequency, interval, repeatsOnDay, repeatsOnNthDayOfMonth, remindBy,
-                    firstReminder, secondReminder, humanReadable, createdDate, lastUpdatedDate, createdByUserId, createdByUserName,
-                    lastUpdatedByUserId, lastUpdatedByUserName, meetingTime, monthOnDay);
+            return CalendarData.builder()
+                .id(id)
+                .calendarInstanceId(calendarInstanceId)
+                .entityId(entityId)
+                .entityType(entityType)
+                .title(title)
+                .description(description)
+                .location(location)
+                .startDate(startDate)
+                .endDate(endDate)
+                .duration(duration)
+                .type(type)
+                .repeating(repeating)
+                .recurrence(recurrence)
+                .frequency(frequency)
+                .interval(interval)
+                .repeatsOnDay(repeatsOnDay)
+                .repeatsOnNthDayOfMonth(repeatsOnNthDayOfMonth)
+                .remindBy(remindBy)
+                .firstReminder(firstReminder)
+                .secondReminder(secondReminder)
+                .humanReadable(humanReadable)
+                .createdDate(createdDate)
+                .lastUpdatedDate(lastUpdatedDate)
+                .createdByUserId(createdByUserId)
+                .createdByUsername(createdByUserName)
+                .lastUpdatedByUserId(lastUpdatedByUserId)
+                .lastUpdatedByUsername(lastUpdatedByUserName)
+                .meetingTime(meetingTime)
+                .repeatsOnDayOfMonth(monthOnDay)
+                .build();
         }
     }
     

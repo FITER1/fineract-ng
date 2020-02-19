@@ -240,8 +240,8 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
         } else if (depositAccountType.isRecurringDeposit()) {
             CalendarData calendar = this.calendarReadPlatformService.retrieveCollctionCalendarByEntity(accountId,
                     CalendarEntityType.SAVINGS.getValue());
-            final Integer frequency = calendar.interval() == -1 ? 1 : calendar.interval();
-            final CalendarFrequencyType calendarFrequencyType = CalendarFrequencyType.fromInt(calendar.frequencyType().getId().intValue());
+            final Integer frequency = calendar.getInterval() == -1 ? 1 : calendar.getInterval();
+            final CalendarFrequencyType calendarFrequencyType = CalendarFrequencyType.fromInt(calendar.getFrequency().getId().intValue());
             final PeriodFrequencyType periodFrequencyType = CalendarFrequencyType.from(calendarFrequencyType);
             final EnumOptionData frequencyType = CommonEnumerations.termFrequencyType(periodFrequencyType, "recurring.deposit.frequency.");
             depositAccount = RecurringDepositAccountData.withInterestChartAndRecurringDetails((RecurringDepositAccountData) depositAccount,

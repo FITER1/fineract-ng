@@ -308,8 +308,12 @@ public class LoanApplicationWritePlatformServiceJpaRepositoryImpl implements Loa
                     final Integer repeatsOnDay = loanApplicationTerms.getWeekDayType().getValue();
                     final Integer repeatsOnNthDayOfMonth = loanApplicationTerms.getNthDay();
                     final Integer calendarEntityType = CalendarEntityType.LOANS.getValue();
-                    final Calendar loanCalendar = Calendar.createRepeatingCalendar(title, calendarStartDate,
-                            CalendarType.COLLECTION.getValue(), calendarFrequencyType, frequency, repeatsOnDay, repeatsOnNthDayOfMonth);
+                    final Calendar loanCalendar = Calendar.builder()
+                        .title(title)
+                        .startDate(calendarStartDate.toDate())
+                        .typeId(CalendarType.COLLECTION.getValue())
+                        .recurrence(Calendar.toRecurrence(calendarFrequencyType, frequency, repeatsOnDay, repeatsOnNthDayOfMonth))
+                        .build();
                     this.calendarRepository.save(loanCalendar);
                     final CalendarInstance calendarInstance = new CalendarInstance(loanCalendar, newLoanApplication.getId(),
                             calendarEntityType);
@@ -497,8 +501,12 @@ public void checkForProductMixRestrictions(final Loan loan) {
             break;
         }
          
-        final Calendar calendar = Calendar.createRepeatingCalendar(title, calendarStartDate, CalendarType.COLLECTION.getValue(),
-                calendarFrequencyType, frequency, updatedRepeatsOnDay, recalculationFrequencyNthDay);
+        final Calendar calendar = Calendar.builder()
+            .title(title)
+            .startDate(calendarStartDate.toDate())
+            .typeId(CalendarType.COLLECTION.getValue())
+            .recurrence(Calendar.toRecurrence(calendarFrequencyType, frequency, repeatsOnDay, recalculationFrequencyNthDay))
+            .build();
         final CalendarInstance calendarInstance = new CalendarInstance(calendar, loan.loanInterestRecalculationDetails().getId(),
                 calendarEntityType.getValue());
         this.calendarInstanceRepository.save(calendarInstance);
@@ -846,9 +854,13 @@ public void checkForProductMixRestrictions(final Loan loan) {
                                 final Integer interval = command.integerValueOfParameterNamed("repaymentEvery");
                                 LocalDate startDate = command.localDateValueOfParameterNamed("repaymentsStartingFromDate");
                                 if (startDate == null) startDate = command.localDateValueOfParameterNamed("expectedDisbursementDate");
-                                final Calendar newCalendar = Calendar.createRepeatingCalendar(title, startDate, typeId,
-                                        repaymentFrequencyType, interval, (Integer) changes.get("repaymentFrequencyDayOfWeekType"),
-                                        (Integer) changes.get("repaymentFrequencyNthDayType"));
+
+                                final Calendar newCalendar = Calendar.builder()
+                                    .title(title)
+                                    .startDate(startDate.toDate())
+                                    .typeId(typeId)
+                                    .recurrence(Calendar.toRecurrence(repaymentFrequencyType, interval, (Integer) changes.get("repaymentFrequencyDayOfWeekType"), (Integer) changes.get("repaymentFrequencyNthDayType")))
+                                    .build();
                                 if (ciList != null && !ciList.isEmpty()) {
                                     final CalendarInstance calendarInstance = ciList.get(0);
                                     final boolean isCalendarAssociatedWithEntity = this.calendarReadPlatformService.isCalendarAssociatedWithEntity(

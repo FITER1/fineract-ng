@@ -198,7 +198,7 @@ public class GroupsApiResource {
         Collection<GroupRoleData> groupRoles = null;
         GroupRoleData selectedRole = null;
         Collection<CalendarData> calendars = null;
-        CalendarData collectionMeetingCalendar = null;
+        CalendarData calendarData = null;
 
         if (!associationParameters.isEmpty()) {
             if (associationParameters.contains("all")) {
@@ -233,30 +233,68 @@ public class GroupsApiResource {
             }
             if (associationParameters.contains("collectionMeetingCalendar")) {
                 if (group.isChildGroup()) {
-                    collectionMeetingCalendar = this.calendarReadPlatformService.retrieveCollctionCalendarByEntity(group.getParentId(),
+                    calendarData = this.calendarReadPlatformService.retrieveCollctionCalendarByEntity(group.getParentId(),
                             CalendarEntityType.CENTERS.getValue());
                 } else {
-                    collectionMeetingCalendar = this.calendarReadPlatformService.retrieveCollctionCalendarByEntity(groupId,
+                    calendarData = this.calendarReadPlatformService.retrieveCollctionCalendarByEntity(groupId,
                             CalendarEntityType.GROUPS.getValue());
                 }
-                if (collectionMeetingCalendar != null) {
+                if (calendarData != null) {
                     final boolean withHistory = true;
                     final LocalDate tillDate = null;
                     final Collection<LocalDate> recurringDates = this.calendarReadPlatformService.generateRecurringDates(
-                            collectionMeetingCalendar, withHistory, tillDate);
+                            calendarData, withHistory, tillDate);
                     final Collection<LocalDate> nextTenRecurringDates = this.calendarReadPlatformService
-                            .generateNextTenRecurringDates(collectionMeetingCalendar);
-                    final MeetingData lastMeeting = this.meetingReadPlatformService.retrieveLastMeeting(collectionMeetingCalendar
+                            .generateNextTenRecurringDates(calendarData);
+                    final MeetingData lastMeeting = this.meetingReadPlatformService.retrieveLastMeeting(calendarData
                             .getCalendarInstanceId());
                     final LocalDate recentEligibleMeetingDate = this.calendarReadPlatformService
-                            .generateNextEligibleMeetingDateForCollection(collectionMeetingCalendar, lastMeeting);
-                    collectionMeetingCalendar = CalendarData.withRecurringDates(collectionMeetingCalendar, recurringDates,
-                            nextTenRecurringDates, recentEligibleMeetingDate);
+                            .generateNextEligibleMeetingDateForCollection(calendarData, lastMeeting);
+                    calendarData = CalendarData.builder()
+                        .id(calendarData.getId())
+                        .calendarInstanceId(calendarData.getCalendarInstanceId())
+                        .entityId(calendarData.getEntityId())
+                        .entityType(calendarData.getEntityType())
+                        .title(calendarData.getTitle())
+                        .description(calendarData.getDescription())
+                        .location(calendarData.getLocation())
+                        .startDate(calendarData.getStartDate())
+                        .endDate(calendarData.getEndDate())
+                        .duration(calendarData.getDuration())
+                        .type(calendarData.getType())
+                        .repeating(calendarData.isRepeating())
+                        .recurrence(calendarData.getRecurrence())
+                        .frequency(calendarData.getFrequency())
+                        .interval(calendarData.getInterval())
+                        .repeatsOnDay(calendarData.getRepeatsOnDay())
+                        .repeatsOnNthDayOfMonth(calendarData.getRepeatsOnNthDayOfMonth())
+                        .remindBy(calendarData.getRemindBy())
+                        .firstReminder(calendarData.getFirstReminder())
+                        .secondReminder(calendarData.getSecondReminder())
+                        .humanReadable(calendarData.getHumanReadable())
+                        .createdDate(calendarData.getCreatedDate())
+                        .lastUpdatedDate(calendarData.getLastUpdatedDate())
+                        .createdByUserId(calendarData.getCreatedByUserId())
+                        .createdByUsername(calendarData.getCreatedByUsername())
+                        .lastUpdatedByUserId(calendarData.getLastUpdatedByUserId())
+                        .lastUpdatedByUsername(calendarData.getLastUpdatedByUsername())
+                        .repeatsOnDayOfMonth(calendarData.getRepeatsOnDayOfMonth())
+                        .entityTypeOptions(calendarData.getEntityTypeOptions())
+                        .calendarTypeOptions(calendarData.getCalendarTypeOptions())
+                        .remindByOptions(calendarData.getRemindByOptions())
+                        .frequencyOptions(calendarData.getFrequencyOptions())
+                        .repeatsOnDayOptions(calendarData.getRepeatsOnDayOptions())
+                        .meetingTime(calendarData.getMeetingTime())
+                        .frequencyNthDayTypeOptions(calendarData.getFrequencyNthDayTypeOptions())
+                        .recurringDates(recurringDates)
+                        .nextTenRecurringDates(nextTenRecurringDates)
+                        .recentEligibleMeetingDate(recentEligibleMeetingDate)
+                        .build();
                 }
             }
 
             group = GroupGeneralData.withAssocations(group, membersOfGroup, activeClientMembers,
-                    groupRoles, calendars, collectionMeetingCalendar);
+                    groupRoles, calendars, calendarData);
         }
 
         if (roleId != null) {

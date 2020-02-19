@@ -22,6 +22,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -33,12 +34,9 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "m_field_configuration")
 public class FieldConfiguration extends AbstractPersistableCustom<Long> {
-
 	private String entity;
-
 	private String table;
-
 	private String field;
-
-	private boolean is_enabled;
+	@Column(name = "is_enabled")
+	private boolean enabled;
 }

@@ -109,7 +109,46 @@ public class MeetingsApiResource {
             final Collection<LocalDate> nextTenRecurringDates = this.calendarReadPlatformService
                     .generateNextTenRecurringDates(calendarData);
             final LocalDate recentEligibleMeetingDate = null;
-            calendarData = CalendarData.withRecurringDates(calendarData, recurringDates, nextTenRecurringDates, recentEligibleMeetingDate);
+            calendarData = CalendarData.builder()
+                .id(calendarData.getId())
+                .calendarInstanceId(calendarData.getCalendarInstanceId())
+                .entityId(calendarData.getEntityId())
+                .entityType(calendarData.getEntityType())
+                .title(calendarData.getTitle())
+                .description(calendarData.getDescription())
+                .location(calendarData.getLocation())
+                .startDate(calendarData.getStartDate())
+                .endDate(calendarData.getEndDate())
+                .duration(calendarData.getDuration())
+                .type(calendarData.getType())
+                .repeating(calendarData.isRepeating())
+                .recurrence(calendarData.getRecurrence())
+                .frequency(calendarData.getFrequency())
+                .interval(calendarData.getInterval())
+                .repeatsOnDay(calendarData.getRepeatsOnDay())
+                .repeatsOnNthDayOfMonth(calendarData.getRepeatsOnNthDayOfMonth())
+                .remindBy(calendarData.getRemindBy())
+                .firstReminder(calendarData.getFirstReminder())
+                .secondReminder(calendarData.getSecondReminder())
+                .humanReadable(calendarData.getHumanReadable())
+                .createdDate(calendarData.getCreatedDate())
+                .lastUpdatedDate(calendarData.getLastUpdatedDate())
+                .createdByUserId(calendarData.getCreatedByUserId())
+                .createdByUsername(calendarData.getCreatedByUsername())
+                .lastUpdatedByUserId(calendarData.getLastUpdatedByUserId())
+                .lastUpdatedByUsername(calendarData.getLastUpdatedByUsername())
+                .repeatsOnDayOfMonth(calendarData.getRepeatsOnDayOfMonth())
+                .entityTypeOptions(calendarData.getEntityTypeOptions())
+                .calendarTypeOptions(calendarData.getCalendarTypeOptions())
+                .remindByOptions(calendarData.getRemindByOptions())
+                .frequencyOptions(calendarData.getFrequencyOptions())
+                .repeatsOnDayOptions(calendarData.getRepeatsOnDayOptions())
+                .meetingTime(calendarData.getMeetingTime())
+                .frequencyNthDayTypeOptions(calendarData.getFrequencyNthDayTypeOptions())
+                .recurringDates(recurringDates)
+                .nextTenRecurringDates(nextTenRecurringDates)
+                .recentEligibleMeetingDate(recentEligibleMeetingDate)
+                .build();
         }
 
         final MeetingData meetingData = MeetingData.template(clients, calendarData,

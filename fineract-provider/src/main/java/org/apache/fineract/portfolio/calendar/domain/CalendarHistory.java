@@ -18,7 +18,10 @@
  */
 package org.apache.fineract.portfolio.calendar.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.joda.time.LocalDate;
@@ -77,23 +80,6 @@ public class CalendarHistory extends AbstractPersistableCustom<Long> {
     @Column(name = "second_reminder")
     private Integer secondReminder;
 
-    public CalendarHistory(Calendar calendar, Date startDate) {
-        this.calendar = calendar;
-        this.title = calendar.getTitle();
-        this.description = calendar.getDescription();
-        this.location = calendar.getLocation();
-        this.startDate = startDate;
-        this.endDate = calendar.getStartDate();// Calendar start date become end
-                                               // date for history data.
-        this.duration = calendar.getDuration();
-        this.typeId = calendar.getTypeId();
-        this.repeating = calendar.isRepeating();
-        this.recurrence = calendar.getRecurrence();
-        this.remindById = calendar.getRemindById();
-        this.firstReminder = calendar.getFirstReminder();
-        this.secondReminder = calendar.getSecondReminder();
-    }
-
     public LocalDate getStartDateLocalDate() {
         LocalDate startDateLocalDate = null;
         if (this.startDate != null) {
@@ -110,6 +96,13 @@ public class CalendarHistory extends AbstractPersistableCustom<Long> {
         return endDateLocalDate;
     }
 
+    public boolean isBetweenStartAndEndDate(final LocalDate compareDate) {
+        if (isStartDateBeforeOrEqual(compareDate)) {
+            return getEndDateLocalDate() == null || isEndDateAfterOrEqual(compareDate);
+        }
+        return false;
+    }
+
     private boolean isEndDateAfterOrEqual(final LocalDate compareDate) {
         if (this.endDate != null && compareDate != null) {
             return getEndDateLocalDate().isAfter(compareDate) || getEndDateLocalDate().isEqual(compareDate);
@@ -120,13 +113,6 @@ public class CalendarHistory extends AbstractPersistableCustom<Long> {
     private boolean isStartDateBeforeOrEqual(final LocalDate compareDate) {
         if (this.startDate != null && compareDate != null) {
             return getStartDateLocalDate().isBefore(compareDate) || getStartDateLocalDate().equals(compareDate);
-        }
-        return false;
-    }
-
-    boolean isBetweenStartAndEndDate(final LocalDate compareDate) {
-        if (isStartDateBeforeOrEqual(compareDate)) {
-            return getEndDateLocalDate() == null || isEndDateAfterOrEqual(compareDate);
         }
         return false;
     }

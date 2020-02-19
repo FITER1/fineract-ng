@@ -75,10 +75,10 @@ public class AddressCommandFromApiJsonDeserializer {
 		// validate the json fields from the configuration data fields
 
 		for (final FieldConfigurationData data : configurationData) {
-			madatoryFieldsMap.put(data.getField(), data.isIs_mandatory());
-			enabledFieldsMap.put(data.getField(), data.isIs_enabled());
-			regexFieldsMap.put(data.getField(), data.getValidation_regex());
-			if (data.isIs_enabled()) {
+			madatoryFieldsMap.put(data.getField(), data.isMandatory());
+			enabledFieldsMap.put(data.getField(), data.isEnabled());
+			regexFieldsMap.put(data.getField(), data.getValidationRegex());
+			if (data.isEnabled()) {
 				enabledFieldList.add(data.getField());
 			}
 		}

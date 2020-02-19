@@ -66,6 +66,7 @@ import org.apache.fineract.portfolio.accountdetails.domain.AccountType;
 import org.apache.fineract.portfolio.calendar.domain.Calendar;
 import org.apache.fineract.portfolio.calendar.domain.*;
 import org.apache.fineract.portfolio.calendar.exception.CalendarParameterUpdateNotSupportedException;
+import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
 import org.apache.fineract.portfolio.charge.domain.Charge;
 import org.apache.fineract.portfolio.charge.domain.ChargePaymentMode;
 import org.apache.fineract.portfolio.charge.domain.ChargeRepositoryWrapper;
@@ -441,7 +442,13 @@ public class LoanWritePlatformServiceJpaRepositoryImpl implements LoanWritePlatf
                             CalendarEntityType.LOAN_RECALCULATION_REST_DETAIL.getValue(), CalendarType.COLLECTION.getValue());
 
             Calendar calendarForInterestRecalculation = calendarInstanceForInterestRecalculation.getCalendar();
-            calendarForInterestRecalculation.updateStartAndEndDate(loan.getDisbursementDate(), loan.getMaturityDate());
+            calendarForInterestRecalculation.toBuilder()
+                .recurrence(Calendar.toRecurrence(CalendarUtils.getFrequency(calendarForInterestRecalculation.getRecurrence()),
+                    CalendarUtils.getInterval(calendarForInterestRecalculation.getRecurrence()), loan.getDisbursementDate().getDayOfWeek(),
+                    null))
+                .startDate(loan.getDisbursementDate().toDate())
+                .endDate(loan.getMaturityDate().toDate())
+                .build();
             this.calendarRepository.save(calendarForInterestRecalculation);
         }
 

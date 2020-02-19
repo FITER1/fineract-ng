@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.portfolio.charge.data;
 
+import lombok.*;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
@@ -35,48 +36,45 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Immutable data object for charge data.
- */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class ChargeData implements Comparable<ChargeData>, Serializable {
-
-    private final Long id;
-    private final String name;
-    private final boolean active;
-    private final boolean penalty;
-    private final CurrencyData currency;
-    private final BigDecimal amount;
-    private final EnumOptionData chargeTimeType;
-    private final EnumOptionData chargeAppliesTo;
-    private final EnumOptionData chargeCalculationType;
-    private final EnumOptionData chargePaymentMode;
-    private final MonthDay feeOnMonthDay;
-    private final Integer feeInterval;
-    private final BigDecimal minCap;
-    private final BigDecimal maxCap;
-    private final EnumOptionData feeFrequency;
-    private final GLAccountData incomeOrLiabilityAccount;
-    private final TaxGroupData taxGroup;
-
-    private final Collection<CurrencyData> currencyOptions;
-    private final List<EnumOptionData> chargeCalculationTypeOptions;//
-    private final List<EnumOptionData> chargeAppliesToOptions;//
-    private final List<EnumOptionData> chargeTimeTypeOptions;//
-    private final List<EnumOptionData> chargePaymetModeOptions;//
-
-    private final List<EnumOptionData> loanChargeCalculationTypeOptions;
-    private final List<EnumOptionData> loanChargeTimeTypeOptions;
-    private final List<EnumOptionData> savingsChargeCalculationTypeOptions;
-    private final List<EnumOptionData> savingsChargeTimeTypeOptions;
-    private final List<EnumOptionData> clientChargeCalculationTypeOptions;
-    private final List<EnumOptionData> clientChargeTimeTypeOptions;
-    private final List<EnumOptionData> shareChargeCalculationTypeOptions;
-    private final List<EnumOptionData> shareChargeTimeTypeOptions;
-
-    private final List<EnumOptionData> feeFrequencyOptions;
-
-    private final Map<String, List<GLAccountData>> incomeOrLiabilityAccountOptions;
-    private final Collection<TaxGroupData> taxGroupOptions;
+    private Long id;
+    private String name;
+    private boolean active;
+    private boolean penalty;
+    private CurrencyData currency;
+    private BigDecimal amount;
+    private EnumOptionData chargeTimeType;
+    private EnumOptionData chargeAppliesTo;
+    private EnumOptionData chargeCalculationType;
+    private EnumOptionData chargePaymentMode;
+    private MonthDay feeOnMonthDay;
+    private Integer feeInterval;
+    private BigDecimal minCap;
+    private BigDecimal maxCap;
+    private EnumOptionData feeFrequency;
+    private GLAccountData incomeOrLiabilityAccount;
+    private TaxGroupData taxGroup;
+    private Collection<CurrencyData> currencyOptions;
+    private List<EnumOptionData> chargeCalculationTypeOptions;//
+    private List<EnumOptionData> chargeAppliesToOptions;//
+    private List<EnumOptionData> chargeTimeTypeOptions;//
+    private List<EnumOptionData> chargePaymetModeOptions;//
+    private List<EnumOptionData> loanChargeCalculationTypeOptions;
+    private List<EnumOptionData> loanChargeTimeTypeOptions;
+    private List<EnumOptionData> savingsChargeCalculationTypeOptions;
+    private List<EnumOptionData> savingsChargeTimeTypeOptions;
+    private List<EnumOptionData> clientChargeCalculationTypeOptions;
+    private List<EnumOptionData> clientChargeTimeTypeOptions;
+    private List<EnumOptionData> shareChargeCalculationTypeOptions;
+    private List<EnumOptionData> shareChargeTimeTypeOptions;
+    private List<EnumOptionData> feeFrequencyOptions;
+    private Map<String, List<GLAccountData>> incomeOrLiabilityAccountOptions;
+    private Collection<TaxGroupData> taxGroupOptions;
 
     public static ChargeData template(final Collection<CurrencyData> currencyOptions,
             final List<EnumOptionData> chargeCalculationTypeOptions, final List<EnumOptionData> chargeAppliesToOptions,
@@ -229,17 +227,6 @@ public class ChargeData implements Comparable<ChargeData>, Serializable {
     }
 
     @Override
-    public boolean equals(final Object obj) {
-        final ChargeData chargeData = (ChargeData) obj;
-        return this.id.equals(chargeData.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return this.id.hashCode();
-    }
-
-    @Override
     public int compareTo(final ChargeData obj) {
         if (obj == null) { return -1; }
 
@@ -297,27 +284,11 @@ public class ChargeData implements Comparable<ChargeData>, Serializable {
                 amountPercentageAppliedTo, chargeOptions, isActive, chargeAmountOrPercentage);
     }
 
-    public boolean isPenalty() {
-        return this.penalty;
-    }
-
     public boolean isOverdueInstallmentCharge() {
         boolean isOverdueInstallmentCharge = false;
         if (this.chargeTimeType != null) {
             isOverdueInstallmentCharge = ChargeTimeType.fromInt(this.chargeTimeType.getId().intValue()).isOverdueInstallment();
         }
         return isOverdueInstallmentCharge;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public CurrencyData getCurrency() {
-        return currency;
     }
 }

@@ -62,40 +62,55 @@ public class AddressReadPlatformServiceImpl implements AddressReadPlatformServic
 
 			final String street = rs.getString("street");
 
-			final String address_line_1 = rs.getString("address_line_1");
+			final String addressLine1 = rs.getString("address_line_1");
 
-			final String address_line_2 = rs.getString("address_line_2");
+			final String addressLine2 = rs.getString("address_line_2");
 
-			final String address_line_3 = rs.getString("address_line_3");
+			final String addressLine3 = rs.getString("address_line_3");
 
-			final String town_village = rs.getString("town_village");
+			final String townVillage = rs.getString("town_village");
 
 			final String city = rs.getString("city");
 
-			final String county_district = rs.getString("county_district");
+			final String countyDistrict = rs.getString("county_district");
 
-			final long state_province_id = rs.getLong("state_province_id");
+			final long stateProvinceId = rs.getLong("state_province_id");
 
-			final long country_id = rs.getLong("country_id");
+			final long countryId = rs.getLong("country_id");
 
-			final String postal_code = rs.getString("postal_code");
+			final String postalCode = rs.getString("postal_code");
 
 			final BigDecimal latitude = rs.getBigDecimal("latitude");
 
 			final BigDecimal longitude = rs.getBigDecimal("longitude");
 
-			final String created_by = rs.getString("created_by");
+			final String createdBy = rs.getString("created_by");
 
-			final Date created_on = rs.getDate("created_on");
+			final Date createdOn = rs.getDate("created_on");
 
-			final String updated_by = rs.getString("updated_by");
+			final String updatedBy = rs.getString("updated_by");
 
-			final Date updated_on = rs.getDate("updated_on");
+			final Date updatedOn = rs.getDate("updated_on");
 
-			return AddressData.instance1(addressId, street, address_line_1, address_line_2, address_line_3,
-					town_village, city, county_district, state_province_id, country_id, postal_code, latitude,
-					longitude, created_by, created_on, updated_by, updated_on);
-
+			return AddressData.builder()
+				.addressId(addressId)
+				.street(street)
+				.addressLine1(addressLine1)
+				.addressLine2(addressLine2)
+				.addressLine3(addressLine3)
+				.townVillage(townVillage)
+				.city(city)
+				.countyDistrict(countyDistrict)
+				.stateProvinceId(stateProvinceId)
+				.countryId(countryId)
+				.postalCode(postalCode)
+				.latitude(latitude)
+				.longitude(longitude)
+				.createdBy(createdBy)
+				.createdOn(createdOn)
+				.updatedBy(updatedBy)
+				.updatedOn(updatedOn)
+				.build();
 		}
 	}
 
@@ -120,53 +135,73 @@ public class AddressReadPlatformServiceImpl implements AddressReadPlatformServic
 			final String addressType = rs.getString("addressType");
 			final long addressId = rs.getLong("id");
 
-			final long client_id = rs.getLong("client_id");
+			final long clientId = rs.getLong("client_id");
 
 			final String street = rs.getString("street");
 
-			final long address_type_id = rs.getLong("addresstyp");
+			final long addressTypeId = rs.getLong("addresstyp");
 
-			final boolean is_active = rs.getBoolean("is_active");
+			final boolean isActive = rs.getBoolean("is_active");
 
-			final String address_line_1 = rs.getString("address_line_1");
+			final String addressLine1 = rs.getString("address_line_1");
 
-			final String address_line_2 = rs.getString("address_line_2");
+			final String addressLine2 = rs.getString("address_line_2");
 
-			final String address_line_3 = rs.getString("address_line_3");
+			final String addressLine3 = rs.getString("address_line_3");
 
-			final String town_village = rs.getString("town_village");
+			final String townVillage = rs.getString("town_village");
 
 			final String city = rs.getString("city");
 
-			final String county_district = rs.getString("county_district");
+			final String countyDistrict = rs.getString("county_district");
 
-			final long state_province_id = rs.getLong("state_province_id");
+			final long stateProvinceId = rs.getLong("state_province_id");
 
-			final long country_id = rs.getLong("country_id");
+			final long countryId = rs.getLong("country_id");
 
-			final String country_name = rs.getString("country_name");
+			final String countryName = rs.getString("country_name");
 
-			final String state_name = rs.getString("state_name");
+			final String stateName = rs.getString("state_name");
 
-			final String postal_code = rs.getString("postal_code");
+			final String postalCode = rs.getString("postal_code");
 
 			final BigDecimal latitude = rs.getBigDecimal("latitude");
 
 			final BigDecimal longitude = rs.getBigDecimal("longitude");
 
-			final String created_by = rs.getString("created_by");
+			final String createdBy = rs.getString("created_by");
 
-			final Date created_on = rs.getDate("created_on");
+			final Date createdOn = rs.getDate("created_on");
 
-			final String updated_by = rs.getString("updated_by");
+			final String updatedBy = rs.getString("updated_by");
 
-			final Date updated_on = rs.getDate("updated_on");
+			final Date updatedOn = rs.getDate("updated_on");
 
-			return AddressData.instance(addressType, client_id, addressId, address_type_id, is_active, street,
-					address_line_1, address_line_2, address_line_3, town_village, city, county_district,
-					state_province_id, country_id, state_name, country_name, postal_code, latitude, longitude,
-					created_by, created_on, updated_by, updated_on);
-
+			return AddressData.builder()
+				.addressType(addressType)
+				.clientId(clientId)
+				.addressId(addressId)
+				.addressTypeId(addressTypeId)
+				.active(isActive)
+				.street(street)
+				.addressLine1(addressLine1)
+				.addressLine2(addressLine2)
+				.addressLine3(addressLine3)
+				.townVillage(townVillage)
+				.city(city)
+				.countyDistrict(countyDistrict)
+				.stateProvinceId(stateProvinceId)
+				.countryId(countryId)
+				.stateName(stateName)
+				.countryName(countryName)
+				.postalCode(postalCode)
+				.latitude(latitude)
+				.longitude(longitude)
+				.createdBy(createdBy)
+				.createdOn(createdOn)
+				.updatedBy(updatedBy)
+				.updatedOn(updatedOn)
+				.build();
 		}
 	}
 
@@ -228,11 +263,15 @@ public class AddressReadPlatformServiceImpl implements AddressReadPlatformServic
 		final List<CodeValueData> countryoptions = new ArrayList<>(
 				this.readService.retrieveCodeValuesByCode("COUNTRY"));
 
-		final List<CodeValueData> StateOptions = new ArrayList<>(this.readService.retrieveCodeValuesByCode("STATE"));
+		final List<CodeValueData> stateOptions = new ArrayList<>(this.readService.retrieveCodeValuesByCode("STATE"));
 
 		final List<CodeValueData> addressTypeOptions = new ArrayList<>(
 				this.readService.retrieveCodeValuesByCode("ADDRESS_TYPE"));
 
-		return AddressData.template(countryoptions, StateOptions, addressTypeOptions);
+		return AddressData.builder()
+			.countryIdOptions(countryoptions)
+			.stateProvinceIdOptions(stateOptions)
+			.addressTypeIdOptions(addressTypeOptions)
+			.build();
 	}
 }

@@ -309,9 +309,13 @@ public class DepositApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
 
             final Integer repeatsOnDay = calendarStartDate.getDayOfWeek();
             final String title = "recurring_savings_" + account.getId();
-            
-            final Calendar calendar = Calendar.createRepeatingCalendar(title, calendarStartDate, CalendarType.COLLECTION.getValue(),
-                    CalendarFrequencyType.from(periodFrequencyType), frequency, repeatsOnDay, null);
+
+            final Calendar calendar = Calendar.builder()
+                .title(title)
+                .startDate(calendarStartDate.toDate())
+                .typeId(CalendarType.COLLECTION.getValue())
+                .recurrence(Calendar.toRecurrence(CalendarFrequencyType.from(periodFrequencyType), frequency, repeatsOnDay, null))
+                .build();
             calendarInstance = new CalendarInstance(calendar, account.getId(), CalendarEntityType.SAVINGS.getValue());
         }
         if (calendarInstance == null) {
@@ -464,7 +468,7 @@ public class DepositApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
                 CalendarInstance calendarInstance = this.calendarInstanceRepository.findByEntityIdAndEntityTypeIdAndCalendarTypeId(
                         accountId, CalendarEntityType.SAVINGS.getValue(), CalendarType.COLLECTION.getValue());
                 Calendar calendar = calendarInstance.getCalendar();
-                calendar.updateRepeatingCalendar(calendarStartDate, CalendarFrequencyType.from(periodFrequencyType), frequency,
+                updateRepeatingCalendar(calendar, calendarStartDate, CalendarFrequencyType.from(periodFrequencyType), frequency,
                         repeatsOnDay, null);
                 this.calendarInstanceRepository.save(calendarInstance);
             }
@@ -486,6 +490,25 @@ public class DepositApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
         	handleDataIntegrityIssues(command, throwable, dve);
         	return CommandProcessingResult.builder().resourceId(-1L).build();
         }
+    }
+
+    private Map<String, Object> updateRepeatingCalendar(final Calendar calendar, final LocalDate calendarStartDate, final CalendarFrequencyType frequencyType,
+                                                       final Integer interval, final Integer repeatsOnDay, final Integer repeatsOnNthDay) {
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(9);
+
+        if (calendarStartDate != null & calendar.getStartDate() != null) {
+            if (!calendarStartDate.equals(calendar.getStartDateLocalDate())) {
+                actualChanges.put("startDate", calendarStartDate);
+                calendar.setStartDate(calendarStartDate.toDate());
+            }
+        }
+
+        final String newRecurrence = Calendar.toRecurrence(frequencyType, interval, repeatsOnDay, repeatsOnNthDay);
+        if (!StringUtils.isBlank(calendar.getRecurrence()) && !newRecurrence.equalsIgnoreCase(calendar.getRecurrence())) {
+            actualChanges.put("recurrence", newRecurrence);
+            calendar.setRecurrence(newRecurrence);
+        }
+        return actualChanges;
     }
 
     private void updateFDAndRDCommonChanges(final Map<String, Object> changes, final JsonCommand command, final SavingsAccount account) {

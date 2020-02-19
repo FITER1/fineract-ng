@@ -347,8 +347,12 @@ public class DepositAccountDomainServiceJpa implements DepositAccountDomainServi
             Calendar parentCalendar = parentCalendarInstance.getCalendar();
             final String recurrence = parentCalendar.getRecurrence();
             final String title = "recurring_savings_" + reinvestedDeposit.getId();
-            final Calendar calendar = Calendar.createRepeatingCalendar(title, calendarStartDate, CalendarType.COLLECTION.getValue(),
-                    recurrence);
+            final Calendar calendar = Calendar.builder()
+                .title(title)
+                .startDate(calendarStartDate.toDate())
+                .typeId(CalendarType.COLLECTION.getValue())
+                .recurrence(recurrence)
+                .build();
             calendarInstance = new CalendarInstance(calendar, reinvestedDeposit.getId(), CalendarEntityType.SAVINGS.getValue());
         }
         if (calendarInstance == null) {
