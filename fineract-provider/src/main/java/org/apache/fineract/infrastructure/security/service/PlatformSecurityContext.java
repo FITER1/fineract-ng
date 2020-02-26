@@ -43,6 +43,4 @@ public interface PlatformSecurityContext {
     boolean doesPasswordHasToBeRenewed(AppUser currentUser);
 
     AppUser authenticatedUser(CommandWrapper commandWrapper);
-
-    AppUser getAppUser(AppUser appUser);
 }
