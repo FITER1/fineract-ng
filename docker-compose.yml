@@ -38,6 +38,7 @@ services:
       #- MYSQL_DATABASE=mifostenant-default
     ports:
       - "3306:3306"
+    command: mysqld --sql_mode=""
   activemq:
     image: rmohr/activemq:5.15.9-alpine
     logging:
