@@ -44,10 +44,13 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import java.io.InputStream;
 
-@Path("{entity}/{entityId}/images")
+// TODO: @aleks doesn't pass model validation
+//       should be: @Path("entities/{entityType}/{entityId}/images")
+//       was      : @Path("{entityType}/{entityId}/images")
+@Path("entities/{entity}/{entityId}/images")
 @Component
 @Scope("singleton")
-@Api(value = "DomainName//api//v1//{entity}//{entityId}//images", description = "")
+@Api(value = "DomainName//api//v1//entities//{entity}//{entityId}//images", description = "")
 public class ImagesApiResource {
 
     private final PlatformSecurityContext context;

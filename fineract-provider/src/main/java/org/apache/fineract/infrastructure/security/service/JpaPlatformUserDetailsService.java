@@ -6,9 +6,9 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License. You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.security.domain.PlatformUser;
 import org.apache.fineract.infrastructure.security.domain.PlatformUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,7 +38,7 @@ public class JpaPlatformUserDetailsService implements PlatformUserDetailsService
     private PlatformUserRepository platformUserRepository;
 
     @Override
-    @Cacheable(value = "usersByUsername")
+    @CachePut(value = "usersByUsername")
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException, DataAccessException {
 
         // Retrieve active users only
@@ -47,7 +47,9 @@ public class JpaPlatformUserDetailsService implements PlatformUserDetailsService
 
         final PlatformUser appUser = this.platformUserRepository.findByUsernameAndDeletedAndEnabled(username, deleted, enabled);
 
-        if (appUser == null) { throw new UsernameNotFoundException(username + ": not found"); }
+        if (appUser == null) {
+            throw new UsernameNotFoundException(username + ": not found");
+        }
 
         return appUser;
     }

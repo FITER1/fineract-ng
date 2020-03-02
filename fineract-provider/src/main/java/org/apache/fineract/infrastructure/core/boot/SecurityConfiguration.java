@@ -79,6 +79,5 @@ public class SecurityConfiguration extends GlobalMethodSecurityConfiguration {
         decisionVoters.add(new SelfServiceUserAccessVote());
 
         return new AffirmativeBased(decisionVoters);
-        // return new UnanimousBased(decisionVoters);
     }
 }

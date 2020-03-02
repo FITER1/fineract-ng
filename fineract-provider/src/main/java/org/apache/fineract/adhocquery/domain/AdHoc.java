@@ -60,8 +60,10 @@ public class AdHoc extends AbstractAuditableCustom<AppUser, Long> {
     @Column(name = "report_run_every")
     private Long reportRunEvery;
 
-	@Column(name = "IsActive", nullable = false)
+	@Column(name = "isactive", nullable = false)
     private boolean isActive = false;
+
+	public AdHoc() {}
    	
     private AdHoc(final String name, final String query,final String tableName,final String tableFields ,final String email, final Long reportRunFrequency, final Long reportRunEvery, final boolean isActive) {
         this.name = StringUtils.defaultIfEmpty(name, null);

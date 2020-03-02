@@ -45,8 +45,14 @@ public class SurveyMapper {
         return surveyData;
     }
 
-    public static Survey map(final SurveyData surveyData, Survey survey) {        
-        survey.setComponents(SurveyMapper.mapComponentDatas(surveyData.getComponentDatas(), survey));
+    public static Survey map(final SurveyData surveyData, Survey survey) {
+        if (survey.getComponents() != null) {
+            survey.getComponents().clear();
+            ;
+            survey.getComponents().addAll(SurveyMapper.mapComponentDatas(surveyData.getComponentDatas(), survey));
+        } else {
+            survey.setComponents(SurveyMapper.mapComponentDatas(surveyData.getComponentDatas(), survey));
+        }
         survey.setQuestions(SurveyMapper.mapQuestionDatas(surveyData.getQuestionDatas(), survey));
         survey.setKey(surveyData.getKey());
         survey.setName(surveyData.getName());
