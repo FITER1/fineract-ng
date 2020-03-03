@@ -3,7 +3,7 @@ name: Fineract develop Build
 on:
   push:
     branches:
-      - develop
+      - ibanera
 
 jobs:
   build:
