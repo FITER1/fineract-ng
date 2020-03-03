@@ -26,7 +26,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build with Gradle
-        run: ./gradlew clean build docker dockerTag dockerTagsPush -x test
+        run: ./gradlew clean build docker dockerPush -x test
         env:
           GPR_USERNAME: ${{ secrets.GPR_USERNAME }}
           GPR_PASSWORD: ${{ secrets.GPR_PASSWORD }}
