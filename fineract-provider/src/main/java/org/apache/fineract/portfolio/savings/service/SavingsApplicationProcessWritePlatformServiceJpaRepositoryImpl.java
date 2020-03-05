@@ -33,6 +33,7 @@ import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumb
 import org.apache.fineract.infrastructure.accountnumberformat.domain.AccountNumberFormatRepositoryWrapper;
 import org.apache.fineract.infrastructure.accountnumberformat.domain.EntityAccountType;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuilder;
@@ -97,21 +98,22 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
     private final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository;
     private final BusinessEventNotifierService businessEventNotifierService;
     private final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService;
+    private final FineractProperties fineractProperties;
 	
     @Autowired
     public SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
-            final SavingsAccountRepositoryWrapper savingAccountRepository, final SavingsAccountAssembler savingAccountAssembler,
-            final SavingsAccountDataValidator savingsAccountDataValidator, final AccountNumberGenerator accountNumberGenerator,
-            final ClientRepositoryWrapper clientRepository, final GroupRepository groupRepository,
-            final SavingsProductRepository savingsProductRepository, final NoteRepository noteRepository,
-            final StaffRepositoryWrapper staffRepository,
-            final SavingsAccountApplicationTransitionApiJsonValidator savingsAccountApplicationTransitionApiJsonValidator,
-            final SavingsAccountChargeAssembler savingsAccountChargeAssembler, final CommandProcessingService commandProcessingService,
-            final SavingsAccountDomainService savingsAccountDomainService,
-            final SavingsAccountWritePlatformService savingsAccountWritePlatformService,
-            final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository,
-            final BusinessEventNotifierService businessEventNotifierService,
-            final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService) {
+                                                                          final SavingsAccountRepositoryWrapper savingAccountRepository, final SavingsAccountAssembler savingAccountAssembler,
+                                                                          final SavingsAccountDataValidator savingsAccountDataValidator, final AccountNumberGenerator accountNumberGenerator,
+                                                                          final ClientRepositoryWrapper clientRepository, final GroupRepository groupRepository,
+                                                                          final SavingsProductRepository savingsProductRepository, final NoteRepository noteRepository,
+                                                                          final StaffRepositoryWrapper staffRepository,
+                                                                          final SavingsAccountApplicationTransitionApiJsonValidator savingsAccountApplicationTransitionApiJsonValidator,
+                                                                          final SavingsAccountChargeAssembler savingsAccountChargeAssembler, final CommandProcessingService commandProcessingService,
+                                                                          final SavingsAccountDomainService savingsAccountDomainService,
+                                                                          final SavingsAccountWritePlatformService savingsAccountWritePlatformService,
+                                                                          final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository,
+                                                                          final BusinessEventNotifierService businessEventNotifierService,
+                                                                          final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService, FineractProperties fineractProperties) {
         this.context = context;
         this.savingAccountRepository = savingAccountRepository;
         this.savingAccountAssembler = savingAccountAssembler;
@@ -130,6 +132,7 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
         this.savingsAccountWritePlatformService = savingsAccountWritePlatformService;
         this.businessEventNotifierService = businessEventNotifierService ;
         this.entityDatatableChecksWritePlatformService = entityDatatableChecksWritePlatformService;
+        this.fineractProperties = fineractProperties;
     }
 
     /*
@@ -206,9 +209,30 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
         if (account.isAccountNumberRequiresAutoGeneration()) {
             final AccountNumberFormat accountNumberFormat = this.accountNumberFormatRepository.findByAccountType(EntityAccountType.SAVINGS);
             account.updateAccountNo(this.accountNumberGenerator.generate(account, accountNumberFormat));
-
+            this.generateIban(account);
             this.savingAccountRepository.save(account);
         }
+    }
+
+    /**
+     * IBAN generated using the formula: ISO_CODE + CHECK_DIGIT + BANK_CODE + ACCOUNT_NO where ACCOUNT_NO is 11 digits (up it or trim it to 11)
+     * @param account
+     */
+    private void generateIban(SavingsAccount account) {
+        String accountNumber = account.getAccountNumber();
+        StringBuilder iban = new StringBuilder();
+        iban.append(this.fineractProperties.getIsoCode());
+        iban.append(accountNumber.substring(accountNumber.length() - 2)); //Check digit = last two digits of account number
+        iban.append(this.fineractProperties.getBankCode());
+        if (accountNumber.length() <= 11) {
+            while (accountNumber.length() < 11) {
+                accountNumber = "0" + accountNumber;
+            }
+        } else {
+            accountNumber = accountNumber.substring(accountNumber.length() - 11);
+        }
+        iban.append(accountNumber);
+        account.setIban(iban.toString());
     }
 
     @Transactional

@@ -136,6 +136,9 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     @Column(name = "account_no", length = 20, unique = true, nullable = false)
     protected String accountNumber;
 
+    @Column(name = "iban", length = 20, unique = true, nullable = false)
+    protected String iban;
+
     @Column(name = "external_id", nullable = true)
     protected String externalId;
 
@@ -394,7 +397,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
         } else {
             this.accountNumber = accountNo;
         }
-
+        this.iban = new RandomPasswordGenerator(19).generate();
         this.currency = product.currency();
         this.externalId = externalId;
         this.status = status.getValue();
@@ -3144,4 +3147,11 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
     		return allowOverdraft;
     }
 
+    public String getIban() {
+        return iban;
+    }
+
+    public void setIban(String iban) {
+        this.iban = iban;
+    }
 }

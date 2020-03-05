@@ -38,6 +38,10 @@ public class FineractProperties {
 
     private String timezoneId;
 
+    private String isoCode;
+
+    private String bankCode;
+
     private FineractPropertiesConnection connection;
 
     @Builder

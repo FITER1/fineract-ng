@@ -68,6 +68,8 @@ services:
       - FINERACT_SSL_KEYSTORE_ALIAS=
       - FINERACT_TENANT_ID=default
       - FINERACT_TIMEZONE_ID=Europe/Belgrade
+      - FINERACT_ISO_CODE=LT
+      - FINERACT_BANK_CODE=32200
       # NOTE: careful! special characters like "$" have to be escaped "$$"; you have to provide your password Bcrypt encoded
       - FINERACT_APP_USER_PASSWORD=$$2a$$10$$djoMbaRGGRgqN9c/Z0.17eojfxLqcF8eMSHgpM/tGCewIQHA4Du66
       - FINERACT_CONNECTION_REMOVE_ABANDONED=true
