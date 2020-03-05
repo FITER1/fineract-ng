@@ -26,7 +26,18 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build with Gradle
-        run: ./gradlew clean build docker dockerTag dockerTagsPush -x test
+        run: ./gradlew clean build docker dockerPush -x test
         env:
           GPR_USERNAME: ${{ secrets.GPR_USERNAME }}
           GPR_PASSWORD: ${{ secrets.GPR_PASSWORD }}
+          
+      - name: Deploy to sandbox
+        run: |
+          echo "$IBANERA_SSH_KEY" > key.pem
+          chmod 400 key.pem
+          
+          echo "Restart docker container...!!!"
+          ssh -i key.pem -o StrictHostKeyChecking=no $IBANERA_URL 'sudo ~/scripts/deploy-fineract.sh'
+        env:
+          IBANERA_SSH_KEY: ${{secrets.IBANERA_SSH_KEY}}
+          IBANERA_URL: ${{secrets.IBANERA_URL}}
