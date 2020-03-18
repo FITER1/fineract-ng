@@ -404,7 +404,6 @@ public class SavingsAccountsApiResource {
     @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     public String createCard(@PathParam("accountId") @ApiParam(value = "accountId") final Long accountId,
-                             @QueryParam("command") @ApiParam(value = "command") final String commandParam,
                              @ApiParam(hidden = true) final String apiRequestBodyAsJson) {
 
         String jsonApiRequest = apiRequestBodyAsJson;
@@ -423,7 +422,6 @@ public class SavingsAccountsApiResource {
     @Produces({ MediaType.APPLICATION_JSON })
     public String createCard(@PathParam("accountId") @ApiParam(value = "accountId") final Long accountId,
                              @PathParam("cardId") @ApiParam(value = "cardId") final Long cardId,
-                             @QueryParam("command") @ApiParam(value = "command") final String commandParam,
                              @ApiParam(hidden = true) final String apiRequestBodyAsJson) {
 
         String jsonApiRequest = apiRequestBodyAsJson;
