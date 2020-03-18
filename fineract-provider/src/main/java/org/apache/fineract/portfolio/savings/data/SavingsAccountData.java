@@ -542,6 +542,7 @@ public class SavingsAccountData {
                 account.lastActiveTransactionDate, account.isDormancyTrackingActive, account.daysToInactive, 
                 account.daysToDormancy, account.daysToEscheat, account.savingsAmountOnHold);
         savingsAccountData.iban = account.iban;
+        savingsAccountData.savingsAccountCardData = account.savingsAccountCardData;
         return savingsAccountData;
     }
 
@@ -569,6 +570,7 @@ public class SavingsAccountData {
                 account.minOverdraftForInterestCalculation, account.withHoldTax, account.taxGroup, account.lastActiveTransactionDate, 
                 account.isDormancyTrackingActive, account.daysToInactive, account.daysToDormancy, account.daysToEscheat, account.savingsAmountOnHold);
         savingsAccountData.iban = account.iban;
+        savingsAccountData.savingsAccountCardData = account.savingsAccountCardData;
         return savingsAccountData;
     }
 

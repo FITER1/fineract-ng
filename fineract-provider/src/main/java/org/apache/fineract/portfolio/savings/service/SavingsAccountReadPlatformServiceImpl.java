@@ -46,8 +46,10 @@ import org.apache.fineract.portfolio.paymentdetail.data.PaymentDetailData;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 import org.apache.fineract.portfolio.savings.*;
 import org.apache.fineract.portfolio.savings.data.*;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccount;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountCard;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountCardRepository;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccountRepository;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountSubStatusEnum;
 import org.apache.fineract.portfolio.savings.exception.SavingsAccountNotFoundException;
@@ -86,6 +88,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
     private final ChargeReadPlatformService chargeReadPlatformService;
 	private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
 	private final SavingsAccountCardRepository savingsAccountCardRepository;
+	private final SavingsAccountRepository savingsAccountRepository;
 
     // mappers
     private final SavingsAccountTransactionTemplateMapper transactionTemplateMapper;
@@ -105,7 +108,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
                                                  final SavingsProductReadPlatformService savingProductReadPlatformService,
                                                  final StaffReadPlatformService staffReadPlatformService, final SavingsDropdownReadPlatformService dropdownReadPlatformService,
                                                  final ChargeReadPlatformService chargeReadPlatformService,
-                                                 SavingsAccountCardRepository savingsAccountCardRepository, final EntityDatatableChecksReadService entityDatatableChecksReadService, final ColumnValidator columnValidator) {
+                                                 SavingsAccountCardRepository savingsAccountCardRepository, SavingsAccountRepository savingsAccountRepository, final EntityDatatableChecksReadService entityDatatableChecksReadService, final ColumnValidator columnValidator) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientReadPlatformService = clientReadPlatformService;
@@ -114,6 +117,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
         this.staffReadPlatformService = staffReadPlatformService;
         this.dropdownReadPlatformService = dropdownReadPlatformService;
         this.savingsAccountCardRepository = savingsAccountCardRepository;
+        this.savingsAccountRepository = savingsAccountRepository;
         this.transactionTemplateMapper = new SavingsAccountTransactionTemplateMapper();
         this.transactionsMapper = new SavingsAccountTransactionsMapper();
         this.savingAccountMapper = new SavingAccountMapper();
@@ -215,9 +219,9 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
 
         try {
             final String sql = "select " + this.savingAccountMapper.schema() + " where sa.id = ?";
-
             SavingsAccountData savingsAccountData = this.jdbcTemplate.queryForObject(sql, this.savingAccountMapper, new Object[] { accountId });
-            SavingsAccountCard card = this.savingsAccountCardRepository.findSavingsAccountCardBySavingsAccount(accountId);
+            SavingsAccount savingsAccount = this.savingsAccountRepository.findById(accountId).orElse(null);
+            SavingsAccountCard card = this.savingsAccountCardRepository.findSavingsAccountCardBySavingsAccount(savingsAccount);
             savingsAccountData.setSavingsAccountCardData(new SavingsAccountCardData(card));
             return savingsAccountData;
         } catch (final EmptyResultDataAccessException e) {
