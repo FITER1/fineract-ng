@@ -171,4 +171,4 @@ documents that we cannot accept huge "code dump" Pull Requests, with some relate
 
 More Information
 ============
-More details of the project can be found at <https://cwiki.apache.org/confluence/display/FINERACT>.
+More details of the project can be found at <https://cwiki.apache.org/confluence/display/FINERACT>. 
