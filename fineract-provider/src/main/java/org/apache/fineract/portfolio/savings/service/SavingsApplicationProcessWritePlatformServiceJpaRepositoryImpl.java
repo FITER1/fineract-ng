@@ -19,11 +19,21 @@
 package org.apache.fineract.portfolio.savings.service;
 
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.SAVINGS_ACCOUNT_RESOURCE_NAME;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.applicationFlowIdParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.applicationIdParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.applicationStatusParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.cardNumberParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.cardTypeParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.cardholderNameParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.expiryDateParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.savingsAccountIdParamName;
+import static org.apache.fineract.portfolio.savings.SavingsApiConstants.submittedOnDateParamName;
 
 import java.util.*;
 
 import javax.persistence.PersistenceException;
 
+import com.google.gson.JsonElement;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
@@ -40,6 +50,7 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuild
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.infrastructure.dataqueries.data.EntityTables;
 import org.apache.fineract.infrastructure.dataqueries.data.StatusEnum;
@@ -63,11 +74,13 @@ import org.apache.fineract.portfolio.group.exception.GroupNotFoundException;
 import org.apache.fineract.portfolio.note.domain.Note;
 import org.apache.fineract.portfolio.note.domain.NoteRepository;
 import org.apache.fineract.portfolio.savings.SavingsApiConstants;
+import org.apache.fineract.portfolio.savings.data.SavingsAccountCardDataValidator;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountDataDTO;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountDataValidator;
 import org.apache.fineract.portfolio.savings.domain.*;
 import org.apache.fineract.portfolio.savings.exception.SavingsProductNotFoundException;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,9 +96,11 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
     private final PlatformSecurityContext context;
     private final SavingsAccountRepositoryWrapper savingAccountRepository;
     private final SavingsAccountAssembler savingAccountAssembler;
+    private final SavingsAccountCardDataValidator savingsAccountCardDataValidator;
     private final SavingsAccountDataValidator savingsAccountDataValidator;
     private final AccountNumberGenerator accountNumberGenerator;
     private final ClientRepositoryWrapper clientRepository;
+    private final SavingsAccountCardRepository savingsAccountCardRepository;
     private final GroupRepository groupRepository;
     private final SavingsProductRepository savingsProductRepository;
     private final NoteRepository noteRepository;
@@ -99,12 +114,13 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
     private final BusinessEventNotifierService businessEventNotifierService;
     private final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService;
     private final FineractProperties fineractProperties;
+    private final FromJsonHelper fromApiJsonHelper;
 	
     @Autowired
     public SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl(final PlatformSecurityContext context,
                                                                           final SavingsAccountRepositoryWrapper savingAccountRepository, final SavingsAccountAssembler savingAccountAssembler,
-                                                                          final SavingsAccountDataValidator savingsAccountDataValidator, final AccountNumberGenerator accountNumberGenerator,
-                                                                          final ClientRepositoryWrapper clientRepository, final GroupRepository groupRepository,
+                                                                          SavingsAccountCardDataValidator savingsAccountCardDataValidator, final SavingsAccountDataValidator savingsAccountDataValidator, final AccountNumberGenerator accountNumberGenerator,
+                                                                          final ClientRepositoryWrapper clientRepository, SavingsAccountCardRepository savingsAccountCardRepository, final GroupRepository groupRepository,
                                                                           final SavingsProductRepository savingsProductRepository, final NoteRepository noteRepository,
                                                                           final StaffRepositoryWrapper staffRepository,
                                                                           final SavingsAccountApplicationTransitionApiJsonValidator savingsAccountApplicationTransitionApiJsonValidator,
@@ -113,13 +129,15 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
                                                                           final SavingsAccountWritePlatformService savingsAccountWritePlatformService,
                                                                           final AccountNumberFormatRepositoryWrapper accountNumberFormatRepository,
                                                                           final BusinessEventNotifierService businessEventNotifierService,
-                                                                          final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService, FineractProperties fineractProperties) {
+                                                                          final EntityDatatableChecksWritePlatformService entityDatatableChecksWritePlatformService, FineractProperties fineractProperties, FromJsonHelper fromApiJsonHelper) {
         this.context = context;
         this.savingAccountRepository = savingAccountRepository;
         this.savingAccountAssembler = savingAccountAssembler;
+        this.savingsAccountCardDataValidator = savingsAccountCardDataValidator;
         this.accountNumberGenerator = accountNumberGenerator;
         this.savingsAccountDataValidator = savingsAccountDataValidator;
         this.clientRepository = clientRepository;
+        this.savingsAccountCardRepository = savingsAccountCardRepository;
         this.groupRepository = groupRepository;
         this.savingsProductRepository = savingsProductRepository;
         this.noteRepository = noteRepository;
@@ -133,6 +151,7 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
         this.businessEventNotifierService = businessEventNotifierService ;
         this.entityDatatableChecksWritePlatformService = entityDatatableChecksWritePlatformService;
         this.fineractProperties = fineractProperties;
+        this.fromApiJsonHelper = fromApiJsonHelper;
     }
 
     /*
@@ -558,8 +577,86 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
                 .setRollbackTransaction(rollbackTransaction)//
                 .build();
     }
-    
-    
+
+    @Override
+    public CommandProcessingResult createSavingsAccountCard(Long savingsId, JsonCommand command) {
+        try {
+            this.savingsAccountCardDataValidator.validate(command.json());
+
+            SavingsAccountCard savingsAccountCard = new SavingsAccountCard();
+            JsonElement element = this.fromApiJsonHelper.parse(command.json());
+            savingsAccountCard.setSavingsAccount(this.savingAccountRepository.findOneWithNotFoundDetection(savingsId));
+            Long applicationFlowId = this.fromApiJsonHelper.extractLongNamed(applicationFlowIdParamName, element);
+            savingsAccountCard.setApplicationFlowId(applicationFlowId);
+            setSavingsAccountCard(savingsAccountCard, element);
+            savingsAccountCard.setDateCreated(new Date());
+            this.savingsAccountCardRepository.save(savingsAccountCard);
+            return new CommandProcessingResultBuilder()
+                    .withCommandId(command.commandId())
+                    .withEntityId(savingsAccountCard.getId())
+                    .withSavingsId(savingsAccountCard.getSavingsAccount().getId())
+                    .build();
+        } catch (final DataAccessException dve) {
+            handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
+            return CommandProcessingResult.empty();
+        } catch (final PersistenceException dve) {
+            Throwable throwable = ExceptionUtils.getRootCause(dve.getCause());
+            handleDataIntegrityIssues(command, throwable, dve);
+            return CommandProcessingResult.empty();
+        }
+    }
+
+    @Override
+    public CommandProcessingResult updateSavingsAccountCard(Long savingsAccountCardId, JsonCommand command) {
+        try {
+            this.savingsAccountCardDataValidator.validate(command.json());
+
+            SavingsAccountCard savingsAccountCard = this.savingsAccountCardRepository.getOne(savingsAccountCardId);
+            JsonElement element = this.fromApiJsonHelper.parse(command.json());
+            setSavingsAccountCard(savingsAccountCard, element);
+            savingsAccountCard.setLastUpdated(new Date());
+            this.savingsAccountCardRepository.save(savingsAccountCard);
+            return new CommandProcessingResultBuilder()
+                    .withCommandId(command.commandId())
+                    .withEntityId(savingsAccountCard.getId())
+                    .withSavingsId(savingsAccountCard.getSavingsAccount().getId())
+                    .build();
+        } catch (final DataAccessException dve) {
+            handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
+            return CommandProcessingResult.empty();
+        } catch (final PersistenceException dve) {
+            Throwable throwable = ExceptionUtils.getRootCause(dve.getCause());
+            handleDataIntegrityIssues(command, throwable, dve);
+            return CommandProcessingResult.empty();
+        }
+    }
+
+    private void setSavingsAccountCard(SavingsAccountCard savingsAccountCard, JsonElement element) {
+        String applicationStatus = this.fromApiJsonHelper.extractStringNamed(applicationStatusParamName, element);
+        savingsAccountCard.setApplicationStatus(applicationStatus);
+        String applicationId = this.fromApiJsonHelper.extractStringNamed(applicationIdParamName, element);
+        if (StringUtils.isNotBlank(applicationId)) {
+            savingsAccountCard.setApplicationId(applicationId);
+        }
+        String cardNumber = this.fromApiJsonHelper.extractStringNamed(cardNumberParamName, element);
+        if (StringUtils.isNotBlank(cardNumber)) {
+            savingsAccountCard.setCardNumber(cardNumber);
+        }
+        String cardholderName = this.fromApiJsonHelper.extractStringNamed(cardholderNameParamName, element);
+        if (StringUtils.isNotBlank(cardholderName)) {
+            savingsAccountCard.setCardholderName(cardholderName);
+        }
+        String cardType = this.fromApiJsonHelper.extractStringNamed(cardTypeParamName, element);
+        if (StringUtils.isNotBlank(cardType)) {
+            savingsAccountCard.setCardType(cardType);
+        }
+        LocalDate expiryDate = this.fromApiJsonHelper.extractLocalDateNamed(expiryDateParamName, element);
+        if (expiryDate != null) {
+            savingsAccountCard.setExpiryDate(expiryDate.toDate());
+        }
+    }
+
+
     private Map<BUSINESS_ENTITY, Object> constructEntityMap(final BUSINESS_ENTITY entityEvent, Object entity) {
         Map<BUSINESS_ENTITY, Object> map = new HashMap<>(1);
         map.put(entityEvent, entity);

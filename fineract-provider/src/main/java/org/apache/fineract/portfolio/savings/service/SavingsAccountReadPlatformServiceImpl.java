@@ -46,6 +46,8 @@ import org.apache.fineract.portfolio.paymentdetail.data.PaymentDetailData;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 import org.apache.fineract.portfolio.savings.*;
 import org.apache.fineract.portfolio.savings.data.*;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccountCard;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccountCardRepository;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountSubStatusEnum;
 import org.apache.fineract.portfolio.savings.exception.SavingsAccountNotFoundException;
@@ -83,6 +85,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
     private final SavingsDropdownReadPlatformService dropdownReadPlatformService;
     private final ChargeReadPlatformService chargeReadPlatformService;
 	private final DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
+	private final SavingsAccountCardRepository savingsAccountCardRepository;
 
     // mappers
     private final SavingsAccountTransactionTemplateMapper transactionTemplateMapper;
@@ -98,11 +101,11 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
 
     @Autowired
     public SavingsAccountReadPlatformServiceImpl(final PlatformSecurityContext context, final DataSource dataSource,
-            final ClientReadPlatformService clientReadPlatformService, final GroupReadPlatformService groupReadPlatformService,
-            final SavingsProductReadPlatformService savingProductReadPlatformService,
-            final StaffReadPlatformService staffReadPlatformService, final SavingsDropdownReadPlatformService dropdownReadPlatformService,
-            final ChargeReadPlatformService chargeReadPlatformService,
-            final EntityDatatableChecksReadService entityDatatableChecksReadService, final ColumnValidator columnValidator) {
+                                                 final ClientReadPlatformService clientReadPlatformService, final GroupReadPlatformService groupReadPlatformService,
+                                                 final SavingsProductReadPlatformService savingProductReadPlatformService,
+                                                 final StaffReadPlatformService staffReadPlatformService, final SavingsDropdownReadPlatformService dropdownReadPlatformService,
+                                                 final ChargeReadPlatformService chargeReadPlatformService,
+                                                 SavingsAccountCardRepository savingsAccountCardRepository, final EntityDatatableChecksReadService entityDatatableChecksReadService, final ColumnValidator columnValidator) {
         this.context = context;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
         this.clientReadPlatformService = clientReadPlatformService;
@@ -110,6 +113,7 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
         this.savingsProductReadPlatformService = savingProductReadPlatformService;
         this.staffReadPlatformService = staffReadPlatformService;
         this.dropdownReadPlatformService = dropdownReadPlatformService;
+        this.savingsAccountCardRepository = savingsAccountCardRepository;
         this.transactionTemplateMapper = new SavingsAccountTransactionTemplateMapper();
         this.transactionsMapper = new SavingsAccountTransactionsMapper();
         this.savingAccountMapper = new SavingAccountMapper();
@@ -212,7 +216,10 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
         try {
             final String sql = "select " + this.savingAccountMapper.schema() + " where sa.id = ?";
 
-            return this.jdbcTemplate.queryForObject(sql, this.savingAccountMapper, new Object[] { accountId });
+            SavingsAccountData savingsAccountData = this.jdbcTemplate.queryForObject(sql, this.savingAccountMapper, new Object[] { accountId });
+            SavingsAccountCard card = this.savingsAccountCardRepository.findSavingsAccountCardBySavingsAccount(accountId);
+            savingsAccountData.setSavingsAccountCardData(new SavingsAccountCardData(card));
+            return savingsAccountData;
         } catch (final EmptyResultDataAccessException e) {
             throw new SavingsAccountNotFoundException(accountId);
         }
@@ -269,17 +276,11 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             sqlBuilder.append("sa.min_required_opening_balance as minRequiredOpeningBalance, ");
             sqlBuilder.append("sa.lockin_period_frequency as lockinPeriodFrequency,");
             sqlBuilder.append("sa.lockin_period_frequency_enum as lockinPeriodFrequencyType, ");
-            // sqlBuilder.append("sa.withdrawal_fee_amount as withdrawalFeeAmount,");
-            // sqlBuilder.append("sa.withdrawal_fee_type_enum as withdrawalFeeTypeEnum, ");
             sqlBuilder.append("sa.withdrawal_fee_for_transfer as withdrawalFeeForTransfers, ");
             sqlBuilder.append("sa.allow_overdraft as allowOverdraft, ");
             sqlBuilder.append("sa.overdraft_limit as overdraftLimit, ");
             sqlBuilder.append("sa.nominal_annual_interest_rate_overdraft as nominalAnnualInterestRateOverdraft, ");
             sqlBuilder.append("sa.min_overdraft_for_interest_calculation as minOverdraftForInterestCalculation, ");
-            // sqlBuilder.append("sa.annual_fee_amount as annualFeeAmount,");
-            // sqlBuilder.append("sa.annual_fee_on_month as annualFeeOnMonth, ");
-            // sqlBuilder.append("sa.annual_fee_on_day as annualFeeOnDay, ");
-            // sqlBuilder.append("sa.annual_fee_next_due_date as annualFeeNextDueDate, ");
             sqlBuilder.append("sa.total_deposits_derived as totalDeposits, ");
             sqlBuilder.append("sa.total_withdrawals_derived as totalWithdrawals, ");
             sqlBuilder.append("sa.total_withdrawal_fees_derived as totalWithdrawalFees, ");

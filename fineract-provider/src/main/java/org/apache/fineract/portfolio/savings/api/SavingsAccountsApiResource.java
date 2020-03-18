@@ -29,6 +29,7 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -397,4 +398,42 @@ public class SavingsAccountsApiResource {
                 fileDetail,locale,dateFormat);
         return this.toApiJsonSerializer.serialize(importDocumentId);
     }
+
+    @POST
+    @Path("{accountId}/card")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public String createCard(@PathParam("accountId") @ApiParam(value = "accountId") final Long accountId,
+                             @QueryParam("command") @ApiParam(value = "command") final String commandParam,
+                             @ApiParam(hidden = true) final String apiRequestBodyAsJson) {
+
+        String jsonApiRequest = apiRequestBodyAsJson;
+        if (StringUtils.isBlank(jsonApiRequest)) {
+            jsonApiRequest = "{}";
+        }
+        final CommandWrapperBuilder builder = new CommandWrapperBuilder().withJson(jsonApiRequest);
+        final CommandWrapper commandRequest = builder.createSavingsAccountCard(accountId).build();
+        CommandProcessingResult result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);
+        return this.toApiJsonSerializer.serialize(result);
+    }
+
+    @PUT
+    @Path("{accountId}/card/{cardId}")
+    @Consumes({ MediaType.APPLICATION_JSON })
+    @Produces({ MediaType.APPLICATION_JSON })
+    public String createCard(@PathParam("accountId") @ApiParam(value = "accountId") final Long accountId,
+                             @PathParam("cardId") @ApiParam(value = "cardId") final Long cardId,
+                             @QueryParam("command") @ApiParam(value = "command") final String commandParam,
+                             @ApiParam(hidden = true) final String apiRequestBodyAsJson) {
+
+        String jsonApiRequest = apiRequestBodyAsJson;
+        if (StringUtils.isBlank(jsonApiRequest)) {
+            jsonApiRequest = "{}";
+        }
+        final CommandWrapperBuilder builder = new CommandWrapperBuilder().withJson(jsonApiRequest);
+        final CommandWrapper commandRequest = builder.updateSavingsAccountCard(accountId, cardId).build();
+        CommandProcessingResult result = this.commandsSourceWritePlatformService.logCommandSource(commandRequest);
+        return this.toApiJsonSerializer.serialize(result);
+    }
+
 }

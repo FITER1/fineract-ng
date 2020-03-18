@@ -1196,6 +1196,24 @@ public class CommandWrapperBuilder {
         return this;
     }
 
+    public CommandWrapperBuilder createSavingsAccountCard(final Long accountId) {
+        this.actionName = "CREATE";
+        this.entityName = "SAVINGSACCOUNTCARD";
+        this.entityId = accountId;
+        this.savingsId = accountId;
+        this.href = "/savingsaccounts/" + accountId + "card";
+        return this;
+    }
+
+    public CommandWrapperBuilder updateSavingsAccountCard(Long savingsId, Long cardId) {
+        this.actionName = "UPDATE";
+        this.entityName = "SAVINGSACCOUNTCARD";
+        this.entityId = cardId;
+        this.savingsId = savingsId;
+        this.href = "/savingsaccounts/" + savingsId + "card/" + cardId;
+        return this;
+    }
+
     public CommandWrapperBuilder createAccountTransfer() {
         this.actionName = "CREATE";
         this.entityName = "ACCOUNTTRANSFER";

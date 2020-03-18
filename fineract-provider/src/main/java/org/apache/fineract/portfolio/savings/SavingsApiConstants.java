@@ -30,6 +30,7 @@ public class    SavingsApiConstants {
 
     public static final String SAVINGS_PRODUCT_RESOURCE_NAME = "savingsproduct";
     public static final String SAVINGS_ACCOUNT_RESOURCE_NAME = "savingsaccount";
+    public static final String SAVINGS_ACCOUNT_CARD_RESOURCE_NAME = "savingsaccountcard";
     public static final String SAVINGS_ACCOUNT_TRANSACTION_RESOURCE_NAME = "savingsaccount.transaction";
     public static final String SAVINGS_ACCOUNT_CHARGE_RESOURCE_NAME = "savingsaccountcharge";
 
@@ -187,4 +188,14 @@ public class    SavingsApiConstants {
     public static final String datatables = "datatables";
     
     public static final String ERROR_MSG_SAVINGS_ACCOUNT_NOT_ACTIVE = "not.in.active.state";
+
+    //Savings Account Card
+    public static final String savingsAccountIdParamName = "savingsAccountId";
+    public static final String applicationIdParamName = "applicationId";
+    public static final String applicationFlowIdParamName = "applicationFlowId";
+    public static final String applicationStatusParamName = "applicationStatus";
+    public static final String cardNumberParamName = "cardNumber";
+    public static final String cardholderNameParamName = "cardholderName";
+    public static final String cardTypeParamName = "cardType";
+    public static final String expiryDateParamName = "expiryDate";
 }

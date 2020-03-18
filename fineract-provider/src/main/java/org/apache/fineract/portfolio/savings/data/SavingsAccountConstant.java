@@ -73,4 +73,8 @@ public class SavingsAccountConstant extends SavingsApiConstants {
 	protected static final Set<String> SAVINGS_ACCOUNT_CHARGES_PAY_CHARGE_REQUEST_DATA_PARAMETERS = new HashSet<>(
 			Arrays.asList(amountParamName, dueAsOfDateParamName, dateFormatParamName, localeParamName));
 
+	protected static final Set<String> SAVINGS_ACCOUNT_CARD_SUPPORTED_PARAMETERS = new HashSet<>(
+			Arrays.asList(localeParamName, dateFormatParamName, savingsAccountIdParamName, applicationIdParamName, applicationFlowIdParamName, applicationStatusParamName,
+					cardNumberParamName, cardholderNameParamName, cardTypeParamName, expiryDateParamName));
+
 }
