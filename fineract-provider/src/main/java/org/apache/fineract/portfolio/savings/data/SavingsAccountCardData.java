@@ -29,6 +29,7 @@ import org.joda.time.LocalDate;
 public class SavingsAccountCardData {
 
     public SavingsAccountCardData(SavingsAccountCard card) {
+        this.id = card.getId();
         this.applicationId = card.getApplicationId();
         this.applicationFlowId = card.getApplicationFlowId();
         this.applicationStatus = card.getApplicationStatus();
@@ -43,6 +44,7 @@ public class SavingsAccountCardData {
             this.lastUpdated = LocalDate.fromDateFields(card.getLastUpdated());
         }
     }
+    private Long id;
     private String applicationId;
     private Long applicationFlowId;
     private String applicationStatus;
