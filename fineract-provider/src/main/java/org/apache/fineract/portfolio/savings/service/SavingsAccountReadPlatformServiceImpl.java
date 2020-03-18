@@ -222,7 +222,9 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
             SavingsAccountData savingsAccountData = this.jdbcTemplate.queryForObject(sql, this.savingAccountMapper, new Object[] { accountId });
             SavingsAccount savingsAccount = this.savingsAccountRepository.findById(accountId).orElse(null);
             SavingsAccountCard card = this.savingsAccountCardRepository.findSavingsAccountCardBySavingsAccount(savingsAccount);
-            savingsAccountData.setSavingsAccountCardData(new SavingsAccountCardData(card));
+            if (card != null) {
+                savingsAccountData.setSavingsAccountCardData(new SavingsAccountCardData(card));
+            }
             return savingsAccountData;
         } catch (final EmptyResultDataAccessException e) {
             throw new SavingsAccountNotFoundException(accountId);
