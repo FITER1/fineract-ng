@@ -50,7 +50,8 @@ public enum JobName {
 	SEND_MESSAGES_TO_EMAIL_GATEWAY("Send messages to Email gateway"),
     UPDATE_EMAIL_OUTBOUND_WITH_CAMPAIGN_MESSAGE("Update Email Outbound with campaign message"),
     EXECUTE_EMAIL("Execute Email"),
-    UPDATE_TRAIL_BALANCE_DETAILS("Update Trial Balance Details");
+    UPDATE_TRAIL_BALANCE_DETAILS("Update Trial Balance Details"),
+    SEND_BATCH_CARD_ISSUANCE_REQUEST("Send batch card issuance request");
 
     private final String name;
 

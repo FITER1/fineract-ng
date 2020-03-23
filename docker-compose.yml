@@ -104,6 +104,7 @@ services:
       - FINERACT_CORS_ALLOWED_METHODS=*
       - FINERACT_CORS_ALLOWED_ORIGINS=*
       - FINERACT_BASE_URL=/fineract-provider/api/v1
+      - FINERACT_CARD_ISSUE_URL=http://localhost:8080/v1/cards/issue
     networks:
       - fineract
     depends_on:

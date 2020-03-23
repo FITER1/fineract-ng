@@ -21,8 +21,12 @@ package org.apache.fineract.portfolio.savings.domain;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.List;
+
 public interface SavingsAccountCardRepository extends JpaRepository<SavingsAccountCard, Long>,
         JpaSpecificationExecutor<SavingsAccountCard> {
 
     SavingsAccountCard findSavingsAccountCardBySavingsAccount(SavingsAccount savingsAccount);
+
+    List<SavingsAccountCard> findSavingsAccountCardByApplicationStatusEquals(String status);
 }

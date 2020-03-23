@@ -42,6 +42,8 @@ public class FineractProperties {
 
     private String bankCode;
 
+    private String cardIssuanceUrl;
+
     private FineractPropertiesConnection connection;
 
     @Builder

@@ -21,6 +21,9 @@ package org.apache.fineract.portfolio.savings.service;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.portfolio.savings.data.SavingsAccountDataDTO;
+import org.apache.http.conn.HttpHostConnectException;
+
+import java.io.IOException;
 
 public interface SavingsApplicationProcessWritePlatformService {
 
@@ -43,4 +46,6 @@ public interface SavingsApplicationProcessWritePlatformService {
     CommandProcessingResult createSavingsAccountCard(Long savingsId, JsonCommand command);
 
     CommandProcessingResult updateSavingsAccountCard(Long savingsId, JsonCommand command);
+
+    void sendBatchCardIssuanceRequest() throws HttpHostConnectException, IOException;
 }

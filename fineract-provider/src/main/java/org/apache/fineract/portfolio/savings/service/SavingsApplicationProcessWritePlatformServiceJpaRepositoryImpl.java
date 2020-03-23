@@ -29,6 +29,9 @@ import static org.apache.fineract.portfolio.savings.SavingsApiConstants.expiryDa
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.savingsAccountIdParamName;
 import static org.apache.fineract.portfolio.savings.SavingsApiConstants.submittedOnDateParamName;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.*;
 
 import javax.persistence.PersistenceException;
@@ -50,11 +53,15 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResultBuild
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
+import org.apache.fineract.infrastructure.core.exception.PlatformInternalServerException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.core.service.DateUtils;
+import org.apache.fineract.infrastructure.core.service.PlatformEmailSendException;
 import org.apache.fineract.infrastructure.dataqueries.data.EntityTables;
 import org.apache.fineract.infrastructure.dataqueries.data.StatusEnum;
 import org.apache.fineract.infrastructure.dataqueries.service.EntityDatatableChecksWritePlatformService;
+import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
+import org.apache.fineract.infrastructure.jobs.service.JobName;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.organisation.staff.domain.Staff;
@@ -80,6 +87,13 @@ import org.apache.fineract.portfolio.savings.data.SavingsAccountDataValidator;
 import org.apache.fineract.portfolio.savings.domain.*;
 import org.apache.fineract.portfolio.savings.exception.SavingsProductNotFoundException;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -628,6 +642,33 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
             Throwable throwable = ExceptionUtils.getRootCause(dve.getCause());
             handleDataIntegrityIssues(command, throwable, dve);
             return CommandProcessingResult.empty();
+        }
+    }
+
+    @Override
+    @CronTarget(jobName = JobName.SEND_BATCH_CARD_ISSUANCE_REQUEST)
+    public void sendBatchCardIssuanceRequest() throws HttpHostConnectException, IOException {
+        List<SavingsAccountCard> savingsAccountCards = this.savingsAccountCardRepository.findSavingsAccountCardByApplicationStatusEquals("pending");
+        if (savingsAccountCards != null && !savingsAccountCards.isEmpty()) {
+            StringBuilder payload = new StringBuilder("{ \"savingsIds\": [");
+            savingsAccountCards.forEach(card -> payload.append(card.getSavingsAccount().getId()).append(","));
+            payload.deleteCharAt(payload.lastIndexOf(","));
+            payload.append("]}");
+
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpPost post = new HttpPost(this.fineractProperties.getCardIssuanceUrl());
+            StringEntity input = new StringEntity(payload.toString(), ContentType.APPLICATION_JSON);
+            post.addHeader("accept", ContentType.APPLICATION_JSON.getMimeType());
+            post.addHeader("content-type", ContentType.APPLICATION_JSON.getMimeType());
+            post.setEntity(input);
+            HttpResponse response = client.execute(post);
+            int status = response.getStatusLine().getStatusCode();
+            if (status < 200 || status >= 300) {
+                BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+                String line = rd.readLine();
+                String error = response.getStatusLine().getReasonPhrase() + ": " + line;
+                throw new PlatformApiDataValidationException(error, error, null);
+            }
         }
     }
 
