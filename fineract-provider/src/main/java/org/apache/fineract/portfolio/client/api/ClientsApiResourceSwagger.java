@@ -212,7 +212,7 @@ final class ClientsApiResourceSwagger {
         @ApiModelProperty(example = "27")
         public Integer id;
         @ApiModelProperty(example = "000000027")
-        public Long accountNo;
+        public String accountNo;
         public GetClientsClientIdStatus status;
         @ApiModelProperty(example = "true")
         public Boolean active;
@@ -387,7 +387,7 @@ final class ClientsApiResourceSwagger {
             @ApiModelProperty(example = "1")
             public Integer id;
             @ApiModelProperty(example = "000000001")
-            public Long accountNo;
+            public String accountNo;
             @ApiModelProperty(example = "456")
             public Integer externalId;
             @ApiModelProperty(example = "1")
@@ -449,7 +449,7 @@ final class ClientsApiResourceSwagger {
             @ApiModelProperty(example = "7")
             public Integer id;
             @ApiModelProperty(example = "000000007")
-            public Long accountNo;
+            public String accountNo;
             @ApiModelProperty(example = "2")
             public Integer productId;
             @ApiModelProperty(example = "Other product")
