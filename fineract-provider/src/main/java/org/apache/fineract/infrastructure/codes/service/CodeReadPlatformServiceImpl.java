@@ -63,7 +63,6 @@ public class CodeReadPlatformServiceImpl implements CodeReadPlatformService {
     }
 
     @Override
-    @Cacheable(value = "codes", key = "@fineractProperties.getTenantId().concat('CD')")
     public Collection<CodeData> retrieveAllCodes() {
         this.context.authenticatedUser();
 
