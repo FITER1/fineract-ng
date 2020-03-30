@@ -55,12 +55,12 @@ public interface WebHookService {
 		   @Body JsonObject result);
 
 	@FormUrlEncoded
-	@POST("./")
-	Call<Map<String, Object>> sendFormRequest(@Header(ENTITY_HEADER) String entityHeader,
-			@Header(ACTION_HEADER) String actionHeader,
-			@Header(TENANT_HEADER) String tenantHeader,
-			@Header(ENDPOINT_HEADER) String endpointHeader,
-			@FieldMap Map<String, String> params);
+	@POST("/")
+	void sendFormRequest(@Header(ENTITY_HEADER) String entityHeader,
+						 @Header(ACTION_HEADER) String actionHeader,
+						 @Header(TENANT_HEADER) String tenantHeader,
+						 @Header(ENDPOINT_HEADER) String endpointHeader,
+						 @FieldMap Map<String, String> params, Callback<Response> callBack);
 
 	// TODO: @aleks not sure yet if these have to be adapted
 	// Template - SMS Bridge
