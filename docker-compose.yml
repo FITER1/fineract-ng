@@ -105,6 +105,11 @@ services:
       - FINERACT_CORS_ALLOWED_ORIGINS=*
       - FINERACT_BASE_URL=/fineract-provider/api/v1
       - FINERACT_CARD_ISSUE_URL=http://localhost:8080/v1/cards/issue
+      - FINERACT_WEBHOOK_USER=mifos
+      - FINERACT_WEBHOOK_PASSWORD=password
+      - FINERACT_URL_LOCAL=https://localhost:8443/fineract-provider/api/v1/
+      - FINERACT_URL_SANDBOX=https://ibanera.fiter.io/fineract-provider/api/v1/
+      - FINERACT_URL_PRODUCTION=https://localhost:8443/fineract-provider/api/v1/
     networks:
       - fineract
     depends_on:
