@@ -109,6 +109,7 @@ public class TemplateMergeService {
                 }
                 try {
                     String clientDocument = null;
+                    String codeDocument = null;
 
                     if (entry.getKey().equals("client")) {
                         String identifierUrl = this.scopes.get("BASE_URI") + "clients/" + this.scopes.get("clientId") + "/identifiers";
@@ -117,14 +118,27 @@ public class TemplateMergeService {
                         JSONArray jsonArray = new JSONArray(response);
                         for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject identity = jsonArray.getJSONObject(i);
+                            JSONObject identityType = identity.getJSONObject("documentType");
 
                             if (identity.getString("status").equals("clientIdentifierStatusType.active")) {
                                 clientDocument = identity.toString();
+                                final String codeIdentifierUrl = this.scopes.get("BASE_URI") + "codes/34/codevalues";
+                                final String codeResponse = getStringFromUrl(codeIdentifierUrl);
+
+                                JSONArray codeJsonArray = new JSONArray(codeResponse);
+                                for (int ii = 0; ii < codeJsonArray.length(); ii++) {
+                                    JSONObject codeIdentity = codeJsonArray.getJSONObject(ii);
+
+                                    if (codeIdentity.getString("name").equals(identityType.getString("name"))) {
+                                        codeDocument = codeIdentity.toString();
+                                    }
+                                }
                             }
                         }
 
                     }
 
+                    clientDocument += ", \"documentCodeValue\": " + codeDocument;
                     this.scopes.put(entry.getKey(), getMapFromUrl(url, clientDocument));
                 } catch (final IOException e) {
                     logger.error("getCompiledMapFromMappers() failed", e);
