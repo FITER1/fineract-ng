@@ -124,6 +124,9 @@ dependencies {
     // testCompile "com.avides.springboot.testcontainer:springboot-testcontainer-activemq"
     // testCompile "com.avides.springboot.testcontainer:springboot-testcontainer-mysql"
 
+    compile group: 'org.json', name: 'json', version: '20190722'
+
+
     integrationTestImplementation "junit:junit"
     integrationTestImplementation "com.jayway.restassured:rest-assured"
     integrationTestImplementation "com.google.code.gson:gson"

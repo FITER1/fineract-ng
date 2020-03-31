@@ -35,6 +35,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Iterator;
+import java.util.*;
+import java.io.*;
 
 import org.apache.fineract.infrastructure.core.service.ThreadLocalContextUtil;
 import org.apache.fineract.template.domain.Template;
@@ -51,7 +54,8 @@ import com.github.mustachejava.MustacheFactory;
 
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.*;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 @Service
 public class TemplateMergeService {
@@ -104,7 +108,24 @@ public class TemplateMergeService {
                     url = this.scopes.get("BASE_URI") + url;
                 }
                 try {
-                    this.scopes.put(entry.getKey(), getMapFromUrl(url));
+                    String clientDocument = null;
+
+                    if (entry.getKey().equals("client")) {
+                        String identifierUrl = this.scopes.get("BASE_URI") + "clients/" + this.scopes.get("clientId") + "/identifiers";
+                        final String response = getStringFromUrl(identifierUrl);
+
+                        JSONArray jsonArray = new JSONArray(response);
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject identity = jsonArray.getJSONObject(i);
+
+                            if (identity.getString("status").equals("clientIdentifierStatusType.active")) {
+                                clientDocument = identity.toString();
+                            }
+                        }
+
+                    }
+
+                    this.scopes.put(entry.getKey(), getMapFromUrl(url, clientDocument));
                 } catch (final IOException e) {
                     logger.error("getCompiledMapFromMappers() failed", e);
                 }
@@ -114,10 +135,16 @@ public class TemplateMergeService {
     }
 
     @SuppressWarnings("unchecked")
-    private Map<String, Object> getMapFromUrl(final String url) throws MalformedURLException, IOException {
+    private Map<String, Object> getMapFromUrl(final String url, final String document) throws MalformedURLException, IOException {
         final HttpURLConnection connection = getConnection(url);
 
-        final String response = getStringFromInputStream(connection.getInputStream());
+        String response = getStringFromInputStream(connection.getInputStream());
+
+        if (document != null) {
+            response = response.substring(0, response.length() - 1);
+            response = response + ", \"document\": " + document + "}";
+        }
+
         HashMap<String, Object> result = new HashMap<>();
         if (connection.getContentType().equals("text/plain")) {
             result.put("src", response);
@@ -125,6 +152,12 @@ public class TemplateMergeService {
             result = new ObjectMapper().readValue(response, HashMap.class);
         }
         return result;
+    }
+
+    @SuppressWarnings("unchecked")
+    private String getStringFromUrl(final String url) throws MalformedURLException, IOException {
+        final HttpURLConnection connection = getConnection(url);
+        return getStringFromInputStream(connection.getInputStream());
     }
 
     private HttpURLConnection getConnection(final String url) {
