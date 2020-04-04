@@ -18,10 +18,10 @@ jobs:
         with:
           java-version: 12
 
-      - uses: actions/delete-package-versions@v1
-        with:
-          package-name: 'fineract'
-          num-old-versions-to-delete: 9
+#      - uses: actions/delete-package-versions@v1
+#        with:
+#          package-name: 'fineract'
+#          num-old-versions-to-delete: 1
 
       - name: Login to Github Packages Docker
         uses: azure/docker-login@v1
