@@ -88,7 +88,11 @@ dependencies {
     implementation "org.glassfish.jersey.media:jersey-media-sse"
     implementation "org.glassfish.jersey.media:jersey-media-jaxb"
     implementation "org.glassfish.jersey.ext:jersey-spring5"
-    implementation "org.ow2.asm:asm-all"
+    implementation "org.ow2.asm:asm-util"
+    implementation "org.ow2.asm:asm-tree"
+    implementation "org.ow2.asm:asm-analysis"
+    implementation "org.ow2.asm:asm-commons"
+    implementation "org.ow2.asm:asm"
     implementation "org.springframework.security.oauth:spring-security-oauth2"
     // TODO: use Hibernate for now, but needs to be migrated to Eclipse Link before merging back to upstream
     // implementation "org.apache.openjpa:openjpa"
@@ -155,14 +159,10 @@ tasks.distZip.enabled = false
 def distributionsCopySpec = copySpec {
     into("fineract") {
         from "${buildDir}/${libsDirName}"
-        exclude { FileTreeElement details ->
-            details.file.name.endsWith(".original") || details.file.name.endsWith("-sources.jar")
+        include { FileTreeElement details ->
+            details.file.name.endsWith("-application.jar")
         }
     }
-}
-
-bootJar {
-    archiveFileName = "fineract-provider.jar"
 }
 
 task fatJarTar(type: Tar, dependsOn: "bootJar") { with distributionsCopySpec }
@@ -172,4 +172,12 @@ docker {
     tag "build", "docker.pkg.github.com/fiter1/fineract-ng/fineract:${project.version}"
     dependsOn fatJarTar
     files tasks.fatJarTar.outputs
+}
+
+jar {
+    enabled = true
+}
+
+bootJar {
+    classifier = "application"
 }

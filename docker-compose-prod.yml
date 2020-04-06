@@ -93,7 +93,7 @@ services:
       - ../data/logs:/opt/fineract/logs
     depends_on:
       - mysql
-    command: sh -c "java -Xmx1024m -Djava.security.egd=file:/dev/./urandom -Duser.timezone=UTC -Djava.net.preferIPv4Stack=true --illegal-access=permit --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED --add-exports=java.base/sun.nio.ch=ALL-UNNAMED -jar fineract-provider.jar --spring.profiles.active=default,basicauth"
+    command: sh -c "java -Xmx1024m -Djava.security.egd=file:/dev/./urandom -Duser.timezone=UTC -Djava.net.preferIPv4Stack=true --illegal-access=permit --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED --add-exports=java.base/sun.nio.ch=ALL-UNNAMED -jar fineract-provider*.jar --spring.profiles.active=default,basicauth"
   nginx:
     image: nginx:1.17.3
     restart: on-failure
