@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.portfolio.savings.data;
 
+import lombok.*;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.charge.data.ChargeData;
@@ -28,55 +29,34 @@ import org.joda.time.MonthDay;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-/**
- * Immutable data object for Savings Account charge data.
- */
-@SuppressWarnings("unused")
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class SavingsAccountChargeData {
-
-    private final Long id;
-
-    private final Long chargeId;
-
-    private final Long accountId;
-
-    private final String name;
-
-    private final EnumOptionData chargeTimeType;
-
-    private final LocalDate dueDate;
-
-    private final MonthDay feeOnMonthDay;
-
-    private final Integer feeInterval;
-
-    private final EnumOptionData chargeCalculationType;
-
-    private final BigDecimal percentage;
-
-    private final BigDecimal amountPercentageAppliedTo;
-
-    private final CurrencyData currency;
-
-    private final BigDecimal amount;
-
-    private final BigDecimal amountPaid;
-
-    private final BigDecimal amountWaived;
-
-    private final BigDecimal amountWrittenOff;
-
-    private final BigDecimal amountOutstanding;
-
-    private final BigDecimal amountOrPercentage;
-
-    private final boolean penalty;
-
-    private final Boolean isActive;
-
-    private final LocalDate inactivationDate;
-
-    private final Collection<ChargeData> chargeOptions;
+    private Long id;
+    private Long chargeId;
+    private Long accountId;
+    private String name;
+    private EnumOptionData chargeTimeType;
+    private LocalDate dueDate;
+    private MonthDay feeOnMonthDay;
+    private Integer feeInterval;
+    private EnumOptionData chargeCalculationType;
+    private BigDecimal percentage;
+    private BigDecimal amountPercentageAppliedTo;
+    private CurrencyData currency;
+    private BigDecimal amount;
+    private BigDecimal amountPaid;
+    private BigDecimal amountWaived;
+    private BigDecimal amountWrittenOff;
+    private BigDecimal amountOutstanding;
+    private BigDecimal amountOrPercentage;
+    private boolean penalty;
+    private Boolean isActive;
+    private LocalDate inactivationDate;
+    private Collection<ChargeData> chargeOptions;
 
     public SavingsAccountChargeData(Long chargeId,  BigDecimal amount,LocalDate dueDate) {
         this.chargeId = chargeId;

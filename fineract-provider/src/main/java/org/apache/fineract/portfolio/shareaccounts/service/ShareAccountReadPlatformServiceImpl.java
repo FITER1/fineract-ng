@@ -210,7 +210,23 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
     public Collection<ShareAccountChargeData> convertChargesToShareAccountCharges(Collection<ChargeData> productCharges) {
         final Collection<ShareAccountChargeData> savingsCharges = new ArrayList<>();
         for (final ChargeData chargeData : productCharges) {
-            final ShareAccountChargeData savingsCharge = chargeData.toShareAccountChargeData();
+            final ShareAccountChargeData savingsCharge = ShareAccountChargeData.builder()
+                .id(chargeData.getId())
+                .name(chargeData.getName())
+                .currency(chargeData.getCurrency())
+                .amount(chargeData.getAmount())
+                .chargeTimeType(chargeData.getChargeTimeType())
+                .chargeCalculationType(chargeData.getChargeCalculationType())
+                .amountPaid(BigDecimal.ZERO)
+                .amountWaived(BigDecimal.ZERO)
+                .amountWrittenOff(BigDecimal.ZERO)
+                .amountOutstanding(BigDecimal.ZERO)
+                .percentage(BigDecimal.ZERO)
+                .amountPercentageAppliedTo(BigDecimal.ZERO)
+                .amountOrPercentage(BigDecimal.ZERO)
+                .build();
+
+
             savingsCharges.add(savingsCharge);
         }
         return savingsCharges;

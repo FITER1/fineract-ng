@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.portfolio.loanaccount.data;
 
+import lombok.*;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.charge.data.ChargeData;
@@ -28,60 +29,39 @@ import org.joda.time.LocalDate;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-/**
- * Immutable data object for loan charge data.
- */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class LoanChargeData {
-
-    private final Long id;
-    private final Long chargeId;
-    private final String name;
-    private final EnumOptionData chargeTimeType;
-
-    private final LocalDate dueDate;
-
-    private final EnumOptionData chargeCalculationType;
-
-    private final BigDecimal percentage;
-
-    private final BigDecimal amountPercentageAppliedTo;
-
-    private final CurrencyData currency;
-
-    private final BigDecimal amount;
-
-    private final BigDecimal amountPaid;
-    private final BigDecimal amountWaived;
-    private final BigDecimal amountWrittenOff;
-
-    private final BigDecimal amountOutstanding;
-
-    private final BigDecimal amountOrPercentage;
-
-    private final Collection<ChargeData> chargeOptions;
-
-    private final boolean penalty;
-
-    private final EnumOptionData chargePaymentMode;
-
-    private final boolean paid;
-
-    private final boolean waived;
-
-    private final boolean chargePayable;
-
-    private final Long loanId;
-
-    private final BigDecimal minCap;
-
-    private final BigDecimal maxCap;
-
-    private final Collection<LoanInstallmentChargeData> installmentChargeData;
-
+    private Long id;
+    private Long chargeId;
+    private String name;
+    private EnumOptionData chargeTimeType;
+    private LocalDate dueDate;
+    private EnumOptionData chargeCalculationType;
+    private BigDecimal percentage;
+    private BigDecimal amountPercentageAppliedTo;
+    private CurrencyData currency;
+    private BigDecimal amount;
+    private BigDecimal amountPaid;
+    private BigDecimal amountWaived;
+    private BigDecimal amountWrittenOff;
+    private BigDecimal amountOutstanding;
+    private BigDecimal amountOrPercentage;
+    private Collection<ChargeData> chargeOptions;
+    private boolean penalty;
+    private EnumOptionData chargePaymentMode;
+    private boolean paid;
+    private boolean waived;
+    private boolean chargePayable;
+    private Long loanId;
+    private BigDecimal minCap;
+    private BigDecimal maxCap;
+    private Collection<LoanInstallmentChargeData> installmentChargeData;
     private BigDecimal amountAccrued;
-
     private BigDecimal amountUnrecognized;
-    
 
     public static LoanChargeData template(final Collection<ChargeData> chargeOptions) {
         return new LoanChargeData(null, null, null, null, null, null, null, null, chargeOptions, false, null, false, false, null, null,

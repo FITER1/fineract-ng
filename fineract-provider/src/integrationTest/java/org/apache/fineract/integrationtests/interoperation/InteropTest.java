@@ -91,13 +91,16 @@ public class InteropTest extends BaseIntegrationTest {
         interopHelper = new InteropHelper(requestSpec, responseSpec, savingsExternalId, transactionCode);
     }
 
-    @Test
-    public void testInteroperation() {
+    @Before
+    public void setUp() {
         createClient();
         createSavingsProduct();
         createCharge();
         openSavingsAccount();
+    }
 
+    @Test
+    public void testInteroperation() {
         testParties();
         testRequests();
         testQuotes();

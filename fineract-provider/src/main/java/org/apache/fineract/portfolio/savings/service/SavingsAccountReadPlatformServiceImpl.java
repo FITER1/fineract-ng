@@ -691,7 +691,23 @@ public class SavingsAccountReadPlatformServiceImpl implements SavingsAccountRead
     private Collection<SavingsAccountChargeData> fromChargesToSavingsCharges(final Collection<ChargeData> productCharges) {
         final Collection<SavingsAccountChargeData> savingsCharges = new ArrayList<>();
         for (final ChargeData chargeData : productCharges) {
-            final SavingsAccountChargeData savingsCharge = chargeData.toSavingsAccountChargeData();
+            final SavingsAccountChargeData savingsCharge = SavingsAccountChargeData.builder()
+                .id(chargeData.getId())
+                .name(chargeData.getName())
+                .currency(chargeData.getCurrency())
+                .amount(chargeData.getAmount())
+                .chargeTimeType(chargeData.getChargeTimeType())
+                .chargeCalculationType(chargeData.getChargeCalculationType())
+                .penalty(chargeData.isPenalty())
+                .feeOnMonthDay(chargeData.getFeeOnMonthDay())
+                .feeInterval(chargeData.getFeeInterval())
+                .amountPaid(BigDecimal.ZERO)
+                .amountWaived(BigDecimal.ZERO)
+                .amountWrittenOff(BigDecimal.ZERO)
+                .amountOutstanding(BigDecimal.ZERO)
+                .percentage(BigDecimal.ZERO)
+                .amountPercentageAppliedTo(BigDecimal.ZERO)
+                .build();
             savingsCharges.add(savingsCharge);
         }
         return savingsCharges;

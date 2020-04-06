@@ -146,10 +146,21 @@ public class LoanChargeReadPlatformServiceImpl implements LoanChargeReadPlatform
         final List<EnumOptionData> shareChargeCalculationTypeOptions = null ;
         final List<EnumOptionData> shareChargeTimeTypeOptions = null ;
         final Collection<TaxGroupData> taxGroupOptions = null;
-        return ChargeData.template(null, allowedChargeCalculationTypeOptions, null, allowedChargeTimeOptions, null,
-                loansChargeCalculationTypeOptions, loansChargeTimeTypeOptions, savingsChargeCalculationTypeOptions,
-                savingsChargeTimeTypeOptions, clientChargeCalculationTypeOptions, clientChargeTimeTypeOptions, feeFrequencyOptions,
-                incomeOrLiabilityAccountOptions, taxGroupOptions, shareChargeCalculationTypeOptions, shareChargeTimeTypeOptions);
+        return ChargeData.builder()
+            .chargeCalculationTypeOptions(allowedChargeCalculationTypeOptions)
+            .chargeTimeTypeOptions(allowedChargeTimeOptions)
+            .chargeCalculationTypeOptions(loansChargeCalculationTypeOptions)
+            .chargeTimeTypeOptions(loansChargeTimeTypeOptions)
+            .savingsChargeCalculationTypeOptions(savingsChargeCalculationTypeOptions)
+            .savingsChargeTimeTypeOptions(savingsChargeTimeTypeOptions)
+            .clientChargeCalculationTypeOptions(clientChargeCalculationTypeOptions)
+            .clientChargeTimeTypeOptions(clientChargeTimeTypeOptions)
+            .feeFrequencyOptions(feeFrequencyOptions)
+            .incomeOrLiabilityAccountOptions(incomeOrLiabilityAccountOptions)
+            .taxGroupOptions(taxGroupOptions)
+            .shareChargeCalculationTypeOptions(shareChargeCalculationTypeOptions)
+            .shareChargeTimeTypeOptions(shareChargeTimeTypeOptions)
+            .build();
     }
 
     @Override

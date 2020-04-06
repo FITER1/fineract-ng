@@ -93,7 +93,41 @@ public class ChargesApiResource {
         ChargeData charge = this.readPlatformService.retrieveCharge(chargeId);
         if (settings.isTemplate()) {
             final ChargeData templateData = this.readPlatformService.retrieveNewChargeDetails();
-            charge = ChargeData.withTemplate(charge, templateData);
+            charge = ChargeData.builder()
+                .id(charge.getId())
+                .name(charge.getName())
+                .amount(charge.getAmount())
+                .currency(charge.getCurrency())
+                .chargeTimeType(charge.getChargeTimeType())
+                .chargeAppliesTo(charge.getChargeAppliesTo())
+                .chargeCalculationType(charge.getChargeCalculationType())
+                .chargePaymentMode(charge.getChargePaymentMode())
+                .penalty(charge.isPenalty())
+                .active(charge.isActive())
+                .taxGroup(charge.getTaxGroup())
+                .feeOnMonthDay(charge.getFeeOnMonthDay())
+                .feeInterval(charge.getFeeInterval())
+                .minCap(charge.getMinCap())
+                .maxCap(charge.getMaxCap())
+                .feeFrequency(charge.getFeeFrequency())
+                .incomeOrLiabilityAccount(charge.getIncomeOrLiabilityAccount())
+                .currencyOptions(templateData.getCurrencyOptions())
+                .chargeCalculationTypeOptions(templateData.getChargeCalculationTypeOptions())
+                .chargeAppliesToOptions(templateData.getChargeAppliesToOptions())
+                .chargeTimeTypeOptions(templateData.getChargeTimeTypeOptions())
+                .chargePaymetModeOptions(templateData.getChargePaymetModeOptions())
+                .loanChargeCalculationTypeOptions(templateData.getLoanChargeCalculationTypeOptions())
+                .loanChargeTimeTypeOptions(templateData.getLoanChargeTimeTypeOptions())
+                .savingsChargeCalculationTypeOptions(templateData.getSavingsChargeCalculationTypeOptions())
+                .savingsChargeTimeTypeOptions(templateData.getSavingsChargeTimeTypeOptions())
+                .clientChargeCalculationTypeOptions(templateData.getClientChargeCalculationTypeOptions())
+                .clientChargeTimeTypeOptions(templateData.getClientChargeTimeTypeOptions())
+                .feeFrequencyOptions(templateData.getFeeFrequencyOptions())
+                .incomeOrLiabilityAccountOptions(templateData.getIncomeOrLiabilityAccountOptions())
+                .taxGroupOptions(templateData.getTaxGroupOptions())
+                .shareChargeCalculationTypeOptions(templateData.getShareChargeCalculationTypeOptions())
+                .shareChargeTimeTypeOptions(templateData.getShareChargeTimeTypeOptions())
+                .build();
         }
 
         return this.toApiJsonSerializer.serialize(settings, charge, this.CHARGES_DATA_PARAMETERS);

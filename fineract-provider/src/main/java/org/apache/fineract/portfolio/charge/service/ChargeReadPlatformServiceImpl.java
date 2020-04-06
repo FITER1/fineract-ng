@@ -136,11 +136,24 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
                 .retrieveSharesCalculationTypes();
         final List<EnumOptionData> shareChargeTimeTypeOptions = this.chargeDropdownReadPlatformService.retrieveSharesCollectionTimeTypes();
         final Collection<TaxGroupData> taxGroupOptions = this.taxReadPlatformService.retrieveTaxGroupsForLookUp();
-        return ChargeData.template(currencyOptions, allowedChargeCalculationTypeOptions, allowedChargeAppliesToOptions,
-                allowedChargeTimeOptions, chargePaymentOptions, loansChargeCalculationTypeOptions, loansChargeTimeTypeOptions,
-                savingsChargeCalculationTypeOptions, savingsChargeTimeTypeOptions, clientChargeCalculationTypeOptions,
-                clientChargeTimeTypeOptions, feeFrequencyOptions, incomeOrLiabilityAccountOptions, taxGroupOptions,
-                shareChargeCalculationTypeOptions, shareChargeTimeTypeOptions);
+        return ChargeData.builder()
+            .currencyOptions(currencyOptions)
+            .chargeCalculationTypeOptions(allowedChargeCalculationTypeOptions)
+            .chargeAppliesToOptions(allowedChargeAppliesToOptions)
+            .chargeTimeTypeOptions(allowedChargeTimeOptions)
+            .chargePaymetModeOptions(chargePaymentOptions)
+            .chargeCalculationTypeOptions(loansChargeCalculationTypeOptions)
+            .chargeTimeTypeOptions(loansChargeTimeTypeOptions)
+            .savingsChargeCalculationTypeOptions(savingsChargeCalculationTypeOptions)
+            .savingsChargeTimeTypeOptions(savingsChargeTimeTypeOptions)
+            .clientChargeCalculationTypeOptions(clientChargeCalculationTypeOptions)
+            .clientChargeTimeTypeOptions(clientChargeTimeTypeOptions)
+            .feeFrequencyOptions(feeFrequencyOptions)
+            .incomeOrLiabilityAccountOptions(incomeOrLiabilityAccountOptions)
+            .taxGroupOptions(taxGroupOptions)
+            .shareChargeCalculationTypeOptions(shareChargeCalculationTypeOptions)
+            .shareChargeTimeTypeOptions(shareChargeTimeTypeOptions)
+            .build();
     }
 
     @Override
@@ -193,12 +206,6 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
         return this.namedParameterJdbcTemplate.query(sql, paramMap, rm);
     }
 
-    /**
-     * @param excludeChargeTimes
-     * @param excludeClause
-     * @param params
-     * @return
-     */
     private void processChargeExclusionsForLoans(ChargeTimeType[] excludeChargeTimes, StringBuilder excludeClause) {
         if (excludeChargeTimes != null && excludeChargeTimes.length > 0) {
             StringBuilder sb = new StringBuilder();
@@ -351,9 +358,25 @@ public class ChargeReadPlatformServiceImpl implements ChargeReadPlatformService 
                 taxGroupData = TaxGroupData.lookup(taxGroupId, taxGroupName);
             }
 
-            return ChargeData.instance(id, name, amount, currency, chargeTimeType, chargeAppliesToType, chargeCalculationType,
-                    chargePaymentMode, feeOnMonthDay, feeInterval, penalty, active, minCap, maxCap, feeFrequencyType, glAccountData,
-                    taxGroupData);
+            return ChargeData.builder()
+                .id(id)
+                .name(name)
+                .amount(amount)
+                .currency(currency)
+                .chargeTimeType(chargeTimeType)
+                .chargeAppliesTo(chargeAppliesToType)
+                .chargeCalculationType(chargeCalculationType)
+                .chargePaymentMode(chargePaymentMode)
+                .feeOnMonthDay(feeOnMonthDay)
+                .feeInterval(feeInterval)
+                .penalty(penalty)
+                .active(active)
+                .minCap(minCap)
+                .maxCap(maxCap)
+                .feeFrequency(feeFrequencyType)
+                .incomeOrLiabilityAccount(glAccountData)
+                .taxGroup(taxGroupData)
+                .build();
         }
     }
 

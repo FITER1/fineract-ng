@@ -55,6 +55,7 @@ import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 import org.apache.fineract.portfolio.paymenttype.service.PaymentTypeReadPlatformService;
 import org.apache.fineract.portfolio.savings.*;
 import org.apache.fineract.portfolio.savings.data.*;
+import org.apache.fineract.portfolio.savings.domain.SavingsAccountCharge;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType;
 import org.apache.fineract.portfolio.savings.exception.DepositAccountNotFoundException;
 import org.apache.fineract.portfolio.tax.data.TaxGroupData;
@@ -1319,7 +1320,23 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
     private Collection<SavingsAccountChargeData> fromChargesToSavingsCharges(final Collection<ChargeData> productCharges) {
         final Collection<SavingsAccountChargeData> savingsCharges = new ArrayList<>();
         for (final ChargeData chargeData : productCharges) {
-            final SavingsAccountChargeData savingsCharge = chargeData.toSavingsAccountChargeData();
+            final SavingsAccountChargeData savingsCharge = SavingsAccountChargeData.builder()
+                .id(chargeData.getId())
+                .name(chargeData.getName())
+                .currency(chargeData.getCurrency())
+                .amount(chargeData.getAmount())
+                .chargeTimeType(chargeData.getChargeTimeType())
+                .chargeCalculationType(chargeData.getChargeCalculationType())
+                .penalty(chargeData.isPenalty())
+                .feeOnMonthDay(chargeData.getFeeOnMonthDay())
+                .feeInterval(chargeData.getFeeInterval())
+                .amountPaid(BigDecimal.ZERO)
+                .amountWaived(BigDecimal.ZERO)
+                .amountWrittenOff(BigDecimal.ZERO)
+                .amountOutstanding(BigDecimal.ZERO)
+                .percentage(BigDecimal.ZERO)
+                .amountPercentageAppliedTo(BigDecimal.ZERO)
+                .build();
             savingsCharges.add(savingsCharge);
         }
         return savingsCharges;

@@ -1005,7 +1005,19 @@ public class LoanAccountData {
         final Collection<LoanChargeData> charges = new ArrayList<LoanChargeData>();
         for (final ChargeData charge : product.charges()) {
             if (!charge.isOverdueInstallmentCharge()) {
-                charges.add(charge.toLoanChargeData());
+                charges.add(LoanChargeData.builder()
+                    .id(charge.getId())
+                    .name(charge.getName())
+                    .currency(charge.getCurrency())
+                    .amount(charge.getAmount())
+                    .chargeTimeType(charge.getChargeTimeType())
+                    .chargeCalculationType(charge.getChargeCalculationType())
+                    .penalty(charge.isPenalty())
+                    .chargePaymentMode(charge.getChargePaymentMode())
+                    .minCap(charge.getMinCap())
+                    .maxCap(charge.getMaxCap())
+                    .percentage(charge.getChargeCalculationType().getId()==2 ? charge.getAmount() : null)
+                    .build());
             }
         }
 
@@ -1121,7 +1133,19 @@ public class LoanAccountData {
 
         final Collection<LoanChargeData> charges = new ArrayList<LoanChargeData>();
         for (final ChargeData charge : product.charges()) {
-            charges.add(charge.toLoanChargeData());
+            charges.add(LoanChargeData.builder()
+                .id(charge.getId())
+                .name(charge.getName())
+                .currency(charge.getCurrency())
+                .amount(charge.getAmount())
+                .chargeTimeType(charge.getChargeTimeType())
+                .chargeCalculationType(charge.getChargeCalculationType())
+                .penalty(charge.isPenalty())
+                .chargePaymentMode(charge.getChargePaymentMode())
+                .minCap(charge.getMinCap())
+                .maxCap(charge.getMaxCap())
+                .percentage(charge.getChargeCalculationType().getId()==2 ? charge.getAmount() : null)
+                .build());
         }
 
         return new LoanAccountData(acc.id, acc.accountNo, acc.status, acc.externalId, acc.clientId, acc.clientAccountNo, acc.clientName,
