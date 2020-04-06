@@ -26,7 +26,9 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Build with Gradle
-        run: ./gradlew clean build docker dockerPush -x test
+        # TODO: disk is currently full, will move to AWS ECR
+        # run: ./gradlew clean build docker dockerPush -x test
+        run: ./gradlew clean build docker -x test
         env:
           GPR_USERNAME: ${{ secrets.GPR_USERNAME }}
           GPR_PASSWORD: ${{ secrets.GPR_PASSWORD }}
