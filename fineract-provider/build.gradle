@@ -20,8 +20,6 @@ apply plugin: "org.springframework.boot"
 apply plugin: "distribution"
 apply plugin: "com.palantir.docker"
 apply plugin: "com.gorylenko.gradle-git-properties"
-// apply plugin: "openjpa"
-// apply plugin: "com.ewerk.gradle.plugins.querydsl"
 
 description = "Fineract"
 
@@ -39,26 +37,6 @@ springBoot {
         }
     }
 }
-
-// openjpa {
-//     persistenceXml 'tmp/persistence.xml'
-//     includes = ['**/AbstractPersistableCustom.class', '**/domain/*.class']
-//     enhance {
-//         enforcePropertyRestrictions true
-//     }
-// }
-
-/*
-querydsl {
-    jpa = false
-    springDataMongo = false
-    querydslDefault = true
-    aptOptions = [
-        'querydsl.entityAccessors=true',
-        'querydsl.useFields=false'
-    ]
-}
-*/
 
 dependencies {
     runtimeOnly "org.springframework.boot:spring-boot-devtools"
@@ -118,15 +96,26 @@ dependencies {
     implementation "com.querydsl:querydsl-jpa"
     implementation "com.querydsl:querydsl-jpa-codegen"
     implementation "com.querydsl:querydsl-apt"
+    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-core"
+    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-extensions"
+    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-extensions-scripting"
+    implementation "pentaho-reporting-engine:pentaho-reporting-engine-wizard-core"
+    implementation "pentaho-library:libbase"
+    implementation "pentaho-library:libdocbundle"
+    implementation "pentaho-library:libfonts"
+    implementation "pentaho-library:libformat"
+    implementation "pentaho-library:libformula"
+    implementation "pentaho-library:libloader"
+    implementation "pentaho-library:librepository"
+    implementation "pentaho-library:libserializer"
+    implementation "pentaho-library:libsparkline"
+    implementation "pentaho-library:libxml"
 
     testCompile "junit:junit"
     testCompile "org.mockito:mockito-core"
     testCompile "com.jayway.restassured:rest-assured"
     testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "org.testcontainers:mysql"
-    // testCompile "org.testcontainers:localstack"
-    // testCompile "com.avides.springboot.testcontainer:springboot-testcontainer-activemq"
-    // testCompile "com.avides.springboot.testcontainer:springboot-testcontainer-mysql"
 
     integrationTestImplementation "junit:junit"
     integrationTestImplementation "com.jayway.restassured:rest-assured"
@@ -158,7 +147,8 @@ docker {
     name "docker.pkg.github.com/fiter1/fineract-ng/fineract:latest"
     tag "build", "docker.pkg.github.com/fiter1/fineract-ng/fineract:${project.version}"
     dependsOn fatJarTar
-    files tasks.fatJarTar.outputs
+    def reportFiles = fileTree(dir: 'pentahoReports').getFiles()
+    files tasks.fatJarTar.outputs, reportFiles
 }
 
 jar {
