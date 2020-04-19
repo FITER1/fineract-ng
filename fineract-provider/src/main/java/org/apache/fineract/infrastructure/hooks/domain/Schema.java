@@ -47,5 +47,5 @@ public class Schema extends AbstractPersistableCustom<Long> {
 	private String placeholder;
 
 	@Column(name = "optional", nullable = false)
-	private boolean optional = false;
+	private boolean optional;
 }

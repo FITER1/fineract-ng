@@ -26,6 +26,6 @@ import lombok.*;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class JournalEntryAssociationParametersData {
-    private boolean transactionDetailsRequired = false;
-    private boolean runningBalanceRequired = false;
+    private boolean transactionDetailsRequired;
+    private boolean runningBalanceRequired;
 }

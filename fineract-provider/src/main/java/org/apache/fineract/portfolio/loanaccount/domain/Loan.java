@@ -275,12 +275,14 @@ public class Loan extends AbstractPersistableCustom<Long> {
     private LoanSummary summary;
 
     @Transient
-    private boolean accountNumberRequiresAutoGeneration = false;
+    private boolean accountNumberRequiresAutoGeneration;
+
     @Transient
     private LoanRepaymentScheduleTransactionProcessorFactory transactionProcessorFactory;
 
     @Transient
     private LoanLifecycleStateMachine loanLifecycleStateMachine;
+
     @Transient
     private LoanSummaryWrapper loanSummaryWrapper;
 

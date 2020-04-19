@@ -42,7 +42,7 @@ public class DataValidatorBuilder {
     private String arrayPart;
     private Integer arrayIndex;
     private Object value;
-    private boolean ignoreNullValue = false;
+    private boolean ignoreNullValue;
 
     public DataValidatorBuilder(final List<ApiParameterError> dataValidationErrors) {
         this.dataValidationErrors = dataValidationErrors;

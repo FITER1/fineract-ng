@@ -36,6 +36,7 @@ import java.util.Set;
 public class FineractEntityRelation extends AbstractPersistableCustom<Long> {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "relationId", orphanRemoval = true)
+    @Builder.Default
     private Set<FineractEntityToEntityMapping> fineractEntityToEntityMapping = new HashSet<>();
     
     @Column(name = "from_entity_type", nullable = false, length = 10)

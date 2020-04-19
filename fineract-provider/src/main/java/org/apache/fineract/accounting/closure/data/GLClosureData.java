@@ -62,5 +62,6 @@ public class GLClosureData {
 
     private String comments;
 
+    @Builder.Default
     private Collection<OfficeData> allowedOffices = new ArrayList<>();
 }

@@ -56,10 +56,10 @@ public class LoanInstallmentCharge extends AbstractPersistableCustom<Long> imple
     private BigDecimal amountThroughChargePayment;
 
     @Column(name = "is_paid_derived", nullable = false)
-    private boolean paid = false;
+    private boolean paid;
 
     @Column(name = "waived", nullable = false)
-    private boolean waived = false;
+    private boolean waived;
 
     public LoanInstallmentCharge() {
         // TODO Auto-generated constructor stub

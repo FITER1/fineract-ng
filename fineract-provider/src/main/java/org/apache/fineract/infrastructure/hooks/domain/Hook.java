@@ -53,9 +53,11 @@ public class Hook extends AbstractAuditableCustom<AppUser, Long> {
     private Boolean isActive;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "hook", orphanRemoval = true, fetch=FetchType.EAGER)
+    @Builder.Default
     private Set<HookResource> events = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "hook", orphanRemoval = true, fetch=FetchType.EAGER)
+    @Builder.Default
     private Set<HookConfiguration> config = new HashSet<>();
 
     @ManyToOne(optional = true)

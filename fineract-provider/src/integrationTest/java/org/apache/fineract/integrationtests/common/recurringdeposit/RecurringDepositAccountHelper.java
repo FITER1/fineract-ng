@@ -109,7 +109,7 @@ public class RecurringDepositAccountHelper {
     private String mandatoryRecommendedDepositAmount = "2000";
     private String submittedOnDate = "";
     private String expectedFirstDepositOnDate = "";
-    private boolean isCalendarInherited = false;
+    private boolean isCalendarInherited;
 
     public String build(final String clientId, final String productId, final String penalInterestType) {
         final HashMap<String, Object> map = new HashMap<>();

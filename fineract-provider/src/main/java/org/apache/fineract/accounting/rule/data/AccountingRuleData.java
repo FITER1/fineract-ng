@@ -45,7 +45,9 @@ public class AccountingRuleData {
     private List<AccountingTagRuleData> creditTags;
     private List<AccountingTagRuleData> debitTags;
     // template
+    @Builder.Default
     private List<OfficeData> allowedOffices = new ArrayList<>();
+    @Builder.Default
     private List<GLAccountData> allowedAccounts = new ArrayList<>();
     private Collection<CodeValueData> allowedCreditTagOptions;
     private Collection<CodeValueData> allowedDebitTagOptions;

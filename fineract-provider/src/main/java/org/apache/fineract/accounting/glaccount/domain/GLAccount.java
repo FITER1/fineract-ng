@@ -59,7 +59,7 @@ public class GLAccount extends AbstractPersistableCustom<Long> {
 
     @Builder.Default
     @Column(name = "disabled", nullable = false)
-    private boolean disabled = false;
+    private boolean disabled;
 
     @Builder.Default
     @Column(name = "manual_journal_entries_allowed", nullable = false)

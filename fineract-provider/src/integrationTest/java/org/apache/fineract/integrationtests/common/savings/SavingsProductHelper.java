@@ -91,7 +91,7 @@ public class SavingsProductHelper {
     private String enforceMinRequiredBalance = "false";
     private Boolean withHoldTax = false;
     private String taxGroupId = null;
-    private boolean isDormancyTrackingActive = false;
+    private boolean isDormancyTrackingActive;
     private String daysToInactive = null;
     private String daysToDormancy = null;
     private String daysToEscheat = null;

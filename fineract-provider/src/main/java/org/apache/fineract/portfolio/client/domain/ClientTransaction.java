@@ -85,6 +85,7 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
     private AppUser appUser;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "clientTransaction", orphanRemoval = true, fetch=FetchType.EAGER)
+    @Builder.Default
     private Set<ClientChargePaidBy> clientChargePaidByCollection = new HashSet<>();
 
     @Transient

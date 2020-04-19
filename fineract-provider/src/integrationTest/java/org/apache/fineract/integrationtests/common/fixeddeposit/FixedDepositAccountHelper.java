@@ -97,7 +97,7 @@ public class FixedDepositAccountHelper {
     private final String depositPeriodFrequencyId = MONTHS;
     private String submittedOnDate = "";
     private String savingsId = null;
-    private boolean transferInterest = false;
+    private boolean transferInterest;
 
     public String build(final String clientId, final String productId, final String penalInterestType) {
         final HashMap<String, Object> map = new HashMap<>();

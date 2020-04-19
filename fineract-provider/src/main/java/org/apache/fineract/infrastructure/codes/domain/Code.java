@@ -43,7 +43,7 @@ public class Code extends AbstractPersistableCustom<Long> {
     private String name;
 
     @Column(name = "is_system_defined")
-    private boolean systemDefined = false;
+    private boolean systemDefined;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "code", orphanRemoval = true)
     private Set<CodeValue> values;

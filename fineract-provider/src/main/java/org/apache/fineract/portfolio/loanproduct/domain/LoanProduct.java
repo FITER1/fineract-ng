@@ -160,11 +160,11 @@ public class LoanProduct extends AbstractPersistableCustom<Long> {
 
 
     @Column(name = "can_use_for_topup", nullable = false)
-    private boolean canUseForTopup = false;
+    private boolean canUseForTopup;
 
     // TODO: @Aleks verify that this is still working as expected
     @Column(name = "is_equal_amortization", nullable = false, insertable = false, updatable = false)
-    private boolean isEqualAmortization = false;
+    private boolean isEqualAmortization;
 
     public static LoanProduct assembleFromJson(final Fund fund, final LoanTransactionProcessingStrategy loanTransactionProcessingStrategy,
             final List<Charge> productCharges, final JsonCommand command, final AprCalculator aprCalculator, FloatingRate floatingRate) {

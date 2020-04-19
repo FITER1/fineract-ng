@@ -87,13 +87,13 @@ public class LoanCharge extends AbstractPersistableCustom<Long> {
     private BigDecimal amountOutstanding;
 
     @Column(name = "is_penalty", nullable = false)
-    private boolean penaltyCharge = false;
+    private boolean penaltyCharge;
 
     @Column(name = "is_paid_derived", nullable = false)
-    private boolean paid = false;
+    private boolean paid;
 
     @Column(name = "waived", nullable = false)
-    private boolean waived = false;
+    private boolean waived;
 
     @Column(name = "min_cap", scale = 6, precision = 19)
     private BigDecimal minCap;

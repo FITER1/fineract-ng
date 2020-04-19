@@ -198,7 +198,7 @@ public class SearchReadPlatformServiceImpl implements SearchReadPlatformService 
 
     private static final class AdHocQuerySearchMapper implements RowMapper<AdHocSearchQueryData> {
 
-        private boolean isWhereClauseAdded = false;
+        private boolean isWhereClauseAdded;
 
         // TODO- build the query dynamically based on selected entity types, for
         // now adding query for only loan entity.

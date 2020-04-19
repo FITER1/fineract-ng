@@ -28,7 +28,7 @@ public class LoanTransactionBuilder {
     @SuppressWarnings("unused")
     private LocalDate transactionDate = LocalDate.now();
     @SuppressWarnings("unused")
-    private boolean repayment = false;
+    private boolean repayment;
 
     /**
      * public LoanTransaction build() {

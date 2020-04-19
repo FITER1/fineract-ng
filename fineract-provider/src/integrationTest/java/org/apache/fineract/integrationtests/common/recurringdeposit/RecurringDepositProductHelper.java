@@ -99,7 +99,7 @@ public class RecurringDepositProductHelper {
     private final String maxDepositAmount = "1000000";
     private Account[] accountList = null;
     private List<HashMap<String, String>> chartSlabs = null;
-    private boolean isPrimaryGroupingByAmount = false;
+    private boolean isPrimaryGroupingByAmount;
     private Boolean withHoldTax = false;
     private String taxGroupId = null;
 

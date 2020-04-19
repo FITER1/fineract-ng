@@ -39,7 +39,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     private String defaultFailureUrl;
-    private boolean forwardToDestination = false;
+    private boolean forwardToDestination;
     private boolean allowSessionCreation = true;
     private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 

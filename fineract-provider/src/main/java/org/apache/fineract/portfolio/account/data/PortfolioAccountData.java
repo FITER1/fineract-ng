@@ -41,5 +41,6 @@ public class PortfolioAccountData {
     private Long fieldOfficerId;
     private String fieldOfficerName;
     private CurrencyData currency;
+    @Builder.Default
     private BigDecimal amtForTransfer = BigDecimal.ZERO;
 }

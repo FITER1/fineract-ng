@@ -23,6 +23,7 @@ import org.apache.fineract.infrastructure.security.service.PlatformSecurityConte
 import org.apache.fineract.spm.domain.LookupTable;
 import org.apache.fineract.spm.domain.Survey;
 import org.apache.fineract.spm.repository.LookupTableRepository;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

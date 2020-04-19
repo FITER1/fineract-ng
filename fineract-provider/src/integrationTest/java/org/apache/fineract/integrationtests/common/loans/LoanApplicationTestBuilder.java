@@ -66,7 +66,7 @@ public class LoanApplicationTestBuilder {
     private String repaymentsStartingFromDate = null;
 
     private String calendarId;
-    private boolean syncDisbursementWithMeeting = false;
+    private boolean syncDisbursementWithMeeting;
     private List<HashMap<String, Object>> datatables = null;
 
     public String build(final String clientID, final String groupID, final String loanProductId, final String savingsID) {

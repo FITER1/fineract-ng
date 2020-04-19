@@ -19,6 +19,7 @@
 package org.apache.fineract.portfolio.charge.data;
 
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import org.apache.fineract.accounting.glaccount.data.GLAccountData;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
@@ -40,7 +41,7 @@ import java.util.Map;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class ChargeData implements Comparable<ChargeData>, Serializable {
+public class ChargeData implements Serializable {
     private Long id;
     private String name;
     private boolean active;
@@ -59,10 +60,10 @@ public class ChargeData implements Comparable<ChargeData>, Serializable {
     private GLAccountData incomeOrLiabilityAccount;
     private TaxGroupData taxGroup;
     private Collection<CurrencyData> currencyOptions;
-    private List<EnumOptionData> chargeCalculationTypeOptions;//
-    private List<EnumOptionData> chargeAppliesToOptions;//
-    private List<EnumOptionData> chargeTimeTypeOptions;//
-    private List<EnumOptionData> chargePaymetModeOptions;//
+    private List<EnumOptionData> chargeCalculationTypeOptions;
+    private List<EnumOptionData> chargeAppliesToOptions;
+    private List<EnumOptionData> chargeTimeTypeOptions;
+    private List<EnumOptionData> chargePaymetModeOptions;
     private List<EnumOptionData> loanChargeCalculationTypeOptions;
     private List<EnumOptionData> loanChargeTimeTypeOptions;
     private List<EnumOptionData> savingsChargeCalculationTypeOptions;
@@ -75,13 +76,7 @@ public class ChargeData implements Comparable<ChargeData>, Serializable {
     private Map<String, List<GLAccountData>> incomeOrLiabilityAccountOptions;
     private Collection<TaxGroupData> taxGroupOptions;
 
-    @Override
-    public int compareTo(final ChargeData obj) {
-        if (obj == null) { return -1; }
-
-        return obj.id.compareTo(this.id);
-    }
-
+    @JsonIgnore
     public boolean isOverdueInstallmentCharge() {
         boolean isOverdueInstallmentCharge = false;
         if (this.chargeTimeType != null) {

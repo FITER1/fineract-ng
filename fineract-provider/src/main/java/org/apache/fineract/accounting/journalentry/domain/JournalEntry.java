@@ -80,10 +80,10 @@ public class JournalEntry extends AbstractAuditableCustom<AppUser, Long> {
     private Long shareTransactionId;
 
     @Column(name = "reversed", nullable = false)
-    private boolean reversed = false;
+    private boolean reversed;
 
     @Column(name = "manual_entry", nullable = false)
-    private boolean manualEntry = false;
+    private boolean manualEntry;
 
     @Column(name = "entry_date")
     // @Temporal(TemporalType.DATE)

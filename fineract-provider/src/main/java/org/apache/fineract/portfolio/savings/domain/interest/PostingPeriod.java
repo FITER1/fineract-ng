@@ -54,8 +54,8 @@ public class PostingPeriod {
     private final SavingsInterestCalculationType interestCalculationType;
 
     // include in compounding interest
-    private boolean interestTransfered = false;
-    private boolean isUserPosting = false;
+    private boolean interestTransfered;
+    private boolean isUserPosting;
 
     // minimum balance for interest calculation
     private final Money minBalanceForInterestCalculation;

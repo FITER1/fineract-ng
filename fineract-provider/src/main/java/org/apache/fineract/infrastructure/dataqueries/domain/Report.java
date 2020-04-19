@@ -67,6 +67,7 @@ public final class Report extends AbstractPersistableCustom<Long> {
     private String reportSql;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "report", orphanRemoval = true, fetch=FetchType.EAGER)
+    @Builder.Default
     private Set<ReportParameterUsage> reportParameterUsages = new HashSet<>();
     
     @Column(name = "self_service_user_report")

@@ -66,7 +66,7 @@ public class AdHoc extends AbstractAuditableCustom<AppUser, Long> {
     private Long reportRunEvery;
 
 	@Column(name = "IsActive", nullable = false)
-    private boolean active = false;
+    private boolean active;
    	
     public static AdHoc fromJson(final JsonCommand command) {
         final String name = command.stringValueOfParameterNamed(AdHocJsonInputParams.NAME.getValue());

@@ -120,7 +120,7 @@ public final class Group extends AbstractPersistableCustom<Long> {
     private String accountNumber;
     
     @Transient
-    private boolean accountNumberRequiresAutoGeneration = false;
+    private boolean accountNumberRequiresAutoGeneration;
 
     @OneToMany(mappedBy="group",cascade = CascadeType.REMOVE)
     private Set<GroupRole> groupRole;

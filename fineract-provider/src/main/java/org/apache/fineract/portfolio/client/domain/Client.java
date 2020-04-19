@@ -129,7 +129,7 @@ public final class Client extends AbstractPersistableCustom<Long> {
     private Set<Group> groups;
 
     @Transient
-    private boolean accountNumberRequiresAutoGeneration = false;
+    private boolean accountNumberRequiresAutoGeneration;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "closure_reason_cv_id")

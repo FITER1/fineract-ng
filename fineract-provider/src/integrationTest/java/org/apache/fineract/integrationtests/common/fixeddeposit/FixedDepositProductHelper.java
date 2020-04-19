@@ -101,7 +101,7 @@ public class FixedDepositProductHelper {
     private final String interestCalculationDaysInYearType = DAYS_365;
     private Account[] accountList = null;
     private List<HashMap<String, String>> chartSlabs = null;
-    private boolean isPrimaryGroupingByAmount = false;
+    private boolean isPrimaryGroupingByAmount;
     private Boolean withHoldTax = false;
     private String taxGroupId = null;
 

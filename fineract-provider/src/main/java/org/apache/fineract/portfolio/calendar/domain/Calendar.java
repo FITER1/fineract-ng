@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.portfolio.calendar.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -73,7 +70,7 @@ public class Calendar extends AbstractAuditableCustom<AppUser, Long> {
     private Integer typeId;
 
     @Column(name = "repeating", nullable = false)
-    private boolean repeating = false;
+    private boolean repeating;
 
     @Column(name = "recurrence", length = 100)
     private String recurrence;
@@ -93,6 +90,7 @@ public class Calendar extends AbstractAuditableCustom<AppUser, Long> {
     
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "calendar_id")
+    @Builder.Default
     private Set<CalendarHistory> calendarHistory = new HashSet<>();
 
     public Calendar(final String title, final String description, final String location, final LocalDate startDate,

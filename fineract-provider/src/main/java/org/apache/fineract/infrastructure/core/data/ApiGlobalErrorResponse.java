@@ -63,6 +63,7 @@ public class ApiGlobalErrorResponse {
      */
     @XmlElementWrapper(name = "errors")
     @XmlElement(name = "errorResponse")
+    @Builder.Default
     private List<ApiParameterError> errors = new ArrayList<>();
 
     public static ApiGlobalErrorResponse unAuthenticated() {

@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.organisation.office.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.joda.time.LocalDate;
@@ -42,6 +39,7 @@ public class Office extends AbstractPersistableCustom<Long> {
 
     @OneToMany(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
+    @Builder.Default
     private List<Office> children = new LinkedList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.useradministration.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
@@ -50,6 +47,7 @@ public class Role extends AbstractPersistableCustom<Long> implements Serializabl
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "m_role_permission", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
+    @Builder.Default
     private Set<Permission> permissions = new HashSet<>();
 
     public boolean hasPermissionTo(final String permissionCode) {

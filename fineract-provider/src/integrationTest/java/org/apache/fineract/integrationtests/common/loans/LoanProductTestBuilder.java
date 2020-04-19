@@ -124,7 +124,7 @@ public class LoanProductTestBuilder {
     private Integer recalculationRestFrequencyOnDayType = null;
     private Integer recalculationCompoundingFrequencyDayOfWeekType = null;
     private Integer recalculationRestFrequencyDayOfWeekType = null;
-    private boolean syncExpectedWithDisbursementDate = false;
+    private boolean syncExpectedWithDisbursementDate;
 
     public String build(final String chargeId) {
         final HashMap<String, Object> map = new HashMap<>();

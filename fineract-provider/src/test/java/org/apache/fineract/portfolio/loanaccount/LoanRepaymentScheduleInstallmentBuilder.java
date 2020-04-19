@@ -39,8 +39,8 @@ public class LoanRepaymentScheduleInstallmentBuilder {
     private Money interest = new MoneyBuilder().build();
     private final Money feeCharges = new MoneyBuilder().build();
     private final Money penaltyCharges = new MoneyBuilder().build();
-    private boolean completed = false;
-    private boolean recalculatedInterestComponent = false;
+    private boolean completed;
+    private boolean recalculatedInterestComponent;
 
     public LoanRepaymentScheduleInstallmentBuilder(final MonetaryCurrency currencyDetail) {
         this.currencyDetail = currencyDetail;

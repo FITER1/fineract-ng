@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.portfolio.account.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
@@ -62,7 +59,7 @@ public class AccountTransferTransaction extends AbstractPersistableCustom<Long> 
     private LoanTransaction fromLoanTransaction;
 
     @Column(name = "is_reversed", nullable = false)
-    private boolean reversed = false;
+    private boolean reversed;
 
     // @Temporal(TemporalType.DATE)
     @Column(name = "transaction_date")

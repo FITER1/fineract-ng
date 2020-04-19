@@ -53,8 +53,7 @@ public class CalendarData {
     private Integer duration = 0;
     @Builder.Default
     private EnumOptionData type = CalendarEnumerations.calendarType(CalendarType.COLLECTION);
-    @Builder.Default
-    private boolean repeating = false;
+    private boolean repeating;
     private String recurrence;
     @Builder.Default
     private EnumOptionData frequency = CalendarEnumerations.calendarFrequencyType(CalendarFrequencyType.DAILY);

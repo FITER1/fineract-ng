@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.organisation.provisioning.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractAuditableCustom;
 import org.apache.fineract.useradministration.domain.AppUser;
@@ -43,8 +40,10 @@ public class ProvisioningCriteria extends AbstractAuditableCustom<AppUser, Long>
     private String criteriaName;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "criteria", orphanRemoval = true, fetch=FetchType.EAGER)
+    @Builder.Default
     Set<ProvisioningCriteriaDefinition> provisioningCriteriaDefinition = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "criteria", orphanRemoval = true, fetch=FetchType.EAGER)
+    @Builder.Default
     Set<LoanProductProvisionCriteria> loanProductMapping = new HashSet<>();
 }

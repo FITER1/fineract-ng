@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.infrastructure.reportmailingjob.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -97,6 +94,7 @@ public class ReportMailingJob extends AbstractAuditableCustom<AppUser, Long> {
     private String previousRunErrorMessage;
     
     @Column(name = "number_of_runs", nullable = false)
+    @Builder.Default
     private Integer numberOfRuns = 0;
     
     @Column(name = "is_active", nullable = false)

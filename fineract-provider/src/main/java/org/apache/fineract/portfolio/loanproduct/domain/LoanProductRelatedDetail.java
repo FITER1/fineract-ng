@@ -124,7 +124,7 @@ public class LoanProductRelatedDetail implements LoanProductMinimumRepaymentSche
     private boolean isInterestRecalculationEnabled;
     
     @Column(name = "is_equal_amortization", nullable = false)
-    private boolean isEqualAmortization = false;
+    private boolean isEqualAmortization;
 
     public static LoanProductRelatedDetail createFrom(final MonetaryCurrency currency, final BigDecimal principal,
             final BigDecimal nominalInterestRatePerPeriod, final PeriodFrequencyType interestRatePeriodFrequencyType,

@@ -46,7 +46,7 @@ public class EntityDatatableChecks extends AbstractPersistableCustom<Long> {
 	private Long status;
 
 	@Column(name = "system_defined")
-	private boolean systemDefined = false;
+	private boolean systemDefined;
 
 	@Column(name = "product_id")
 	private Long productId;

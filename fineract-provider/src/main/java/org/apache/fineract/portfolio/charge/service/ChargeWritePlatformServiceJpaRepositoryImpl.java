@@ -27,6 +27,7 @@ import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
+import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.entityaccess.domain.FineractEntityAccessType;
@@ -397,12 +398,12 @@ public class ChargeWritePlatformServiceJpaRepositoryImpl implements ChargeWriteP
             charge.getName()); }
         if (!charge.isPenalty() && ChargeTimeType.fromInt(charge.getChargeTimeType()).isOverdueInstallment()) { throw new ChargeMustBePenaltyException(charge.getName()); }
 
-        if (command.isChangeInLongParameterNamed(ChargesApiConstants.glAccountIdParamName, charge.getIncomeAccountId())) {
+        if (command.isChangeInLongParameterNamed(ChargesApiConstants.glAccountIdParamName, Optional.ofNullable(charge.getAccount()).map(AbstractPersistableCustom::getId).orElse(null))) {
             final Long newValue = command.longValueOfParameterNamed(ChargesApiConstants.glAccountIdParamName);
             actualChanges.put(ChargesApiConstants.glAccountIdParamName, newValue);
         }
 
-        if (command.isChangeInLongParameterNamed(ChargesApiConstants.taxGroupIdParamName, charge.getTaxGroupId())) {
+        if (command.isChangeInLongParameterNamed(ChargesApiConstants.taxGroupIdParamName, Optional.ofNullable(charge.getTaxGroup()).map(AbstractPersistableCustom::getId).orElse(null))) {
             final Long newValue = command.longValueOfParameterNamed(ChargesApiConstants.taxGroupIdParamName);
             actualChanges.put(ChargesApiConstants.taxGroupIdParamName, newValue);
             if(charge.getTaxGroup() != null){

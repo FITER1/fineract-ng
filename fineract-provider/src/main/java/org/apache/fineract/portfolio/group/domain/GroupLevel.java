@@ -38,10 +38,10 @@ public class GroupLevel extends AbstractPersistableCustom<Long> {
     private String levelName;
 
     @Column(name = "recursable", nullable = false)
-    private boolean recursable = false;
+    private boolean recursable;
 
     @Column(name = "can_have_clients", nullable = false)
-    private boolean canHaveClients = false;
+    private boolean canHaveClients;
 
     public GroupLevel() {
 

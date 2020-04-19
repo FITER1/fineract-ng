@@ -18,10 +18,7 @@
  */
 package org.apache.fineract.portfolio.calendar.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.joda.time.LocalDate;
@@ -66,7 +63,7 @@ public class CalendarHistory extends AbstractPersistableCustom<Long> {
     private Integer typeId;
 
     @Column(name = "repeating", nullable = false)
-    private boolean repeating = false;
+    private boolean repeating;
 
     @Column(name = "recurrence", length = 100)
     private String recurrence;
