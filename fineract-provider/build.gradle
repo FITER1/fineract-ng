@@ -131,7 +131,6 @@ dependencies {
     implementation "com.querydsl:querydsl-codegen"
     implementation "com.querydsl:querydsl-jpa"
     implementation "com.querydsl:querydsl-jpa-codegen"
-    implementation "com.querydsl:querydsl-apt"
     implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-core"
     implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-extensions"
     implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-extensions-scripting"

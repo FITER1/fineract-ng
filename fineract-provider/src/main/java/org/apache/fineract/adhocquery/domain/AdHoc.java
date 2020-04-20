@@ -65,7 +65,7 @@ public class AdHoc extends AbstractAuditableCustom<AppUser, Long> {
     @Column(name = "report_run_every")
     private Long reportRunEvery;
 
-	@Column(name = "IsActive", nullable = false)
+	@Column(name = "isactive", nullable = false)
     private boolean active;
    	
     public static AdHoc fromJson(final JsonCommand command) {

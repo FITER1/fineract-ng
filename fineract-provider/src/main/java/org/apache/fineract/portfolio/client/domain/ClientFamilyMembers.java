@@ -43,13 +43,13 @@ public class ClientFamilyMembers extends AbstractPersistableCustom<Long> {
     private Client client;
 
     @Column(name = "firstname")
-    private String firstName;
+    private String firstname;
 
     @Column(name = "middlename")
-    private String middleName;
+    private String middlename;
 
     @Column(name = "lastname")
-    private String lastName;
+    private String lastname;
 
     @Column(name = "qualification")
     private String qualification;

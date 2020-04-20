@@ -19,7 +19,7 @@
 package org.apache.fineract.infrastructure.security.api;
 
 import io.swagger.annotations.*;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.serialization.ToApiJsonSerializer;
@@ -39,10 +39,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import javax.persistence.Entity;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.*;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
@@ -58,9 +60,15 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AuthenticationApiResource {
 
+    @Builder
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @EqualsAndHashCode
+    @Entity
     public static class AuthenticateRequest {
-        public String username;
-        public String password;
+        private String username;
+        private String password;
     }
 
     private final DaoAuthenticationProvider customAuthenticationProvider;
@@ -73,22 +81,23 @@ public class AuthenticationApiResource {
     @Produces({ MediaType.APPLICATION_JSON })
     @ApiOperation(value = "Verify authentication", notes = "Authenticates the credentials provided and returns the set roles and permissions allowed.")
     @ApiResponses({@ApiResponse(code = 200, message = "", response = AuthenticationApiResourceSwagger.PostAuthenticationResponse.class), @ApiResponse(code = 400, message = "Unauthenticated. Please login")})
-    public String authenticate(final String apiRequestBodyAsJson) {
+    public String authenticate(AuthenticateRequest request) {
+        // NOTE: let's make an effort and do new stuff the proper way, i. e. no more manual JSON parsing with GSON... Jackson is faster and does a better job
+        // IMPORTANT: never log credentials! I removed the credentials from the illegal argument exception
         // TODO FINERACT-819: sort out Jersey so JSON conversion does not have to be done explicitly via GSON here, but implicit by arg
-        AuthenticateRequest request = new Gson().fromJson(apiRequestBodyAsJson, AuthenticateRequest.class);
         if (request == null) {
-            throw new IllegalArgumentException("Invalid JSON in BODY (no longer URL param; see FINERACT-726) of POST to /authentication: " + apiRequestBodyAsJson);
+            throw new IllegalArgumentException("Invalid JSON in BODY (no longer URL param; see FINERACT-726) of POST to /authentication: " + request.getUsername());
         }
         if (request.username == null || request.password == null) {
-            throw new IllegalArgumentException("Username or Password is null in JSON (see FINERACT-726) of POST to /authentication: " + apiRequestBodyAsJson + "; username=" + request.username + ", password=" + request.password);
+            throw new IllegalArgumentException("Username or Password is null in JSON (see FINERACT-726) of POST to /authentication; username=" + request.username + ", password=" + request.password);
         }
 
-        final Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
+        final Authentication authentication = new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword());
         final Authentication authenticationCheck = this.customAuthenticationProvider.authenticate(authentication);
 
         final Collection<String> permissions = new ArrayList<>();
         AuthenticatedUserData authenticatedUserData = AuthenticatedUserData.builder()
-            .username(username)
+            .username(request.getUsername())
             .permissions(permissions)
             .build();
 
@@ -130,14 +139,14 @@ public class AuthenticationApiResource {
                     principal.hasSpecificPermissionTo(TwoFactorConstants.BYPASS_TWO_FACTOR_PERMISSION);
             if (this.springSecurityPlatformSecurityContext.doesPasswordHasToBeRenewed(principal)) {
                 authenticatedUserData = AuthenticatedUserData.builder()
-                    .username(username)
+                    .username(request.getUsername())
                     .userId(principal.getId())
                     .base64EncodedAuthenticationKey(new String(base64EncodedAuthenticationKey))
                     .twoFactorAuthenticationRequired(isTwoFactorRequired)
                     .build();
             } else {
                 authenticatedUserData = AuthenticatedUserData.builder()
-                    .username(username)
+                    .username(request.getUsername())
                     .officeId(officeId)
                     .officeName(officeName)
                     .staffId(staffId)

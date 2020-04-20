@@ -137,9 +137,9 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 		
 		ClientFamilyMembers clientFamilyMembers = ClientFamilyMembers.builder()
 			.client(client)
-			.firstName(firstName)
-			.middleName(middleName)
-			.lastName(lastName)
+			.firstname(firstName)
+			.middlename(middleName)
+			.lastname(lastName)
 			.qualification(qualification)
 			.mobileNumber(mobileNumber)
 			.age(age)
@@ -276,9 +276,9 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 			
 			familyMember = ClientFamilyMembers.builder()
 				.client(client)
-				.firstName(firstName)
-				.middleName(middleName)
-				.lastName(lastName)
+				.firstname(firstName)
+				.middlename(middleName)
+				.lastname(lastName)
 				.qualification(qualification)
 				.mobileNumber(mobileNumber)
 				.age(age)
@@ -342,17 +342,17 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 		
 		if (command.stringValueOfParameterNamed("firstName") != null) {
 			firstName = command.stringValueOfParameterNamed("firstName");
-			clientFamilyMember.setFirstName(firstName);
+			clientFamilyMember.setFirstname(firstName);
 			}
 		
 		if (command.stringValueOfParameterNamed("middleName") != null) {
 			middleName = command.stringValueOfParameterNamed("middleName");
-			clientFamilyMember.setMiddleName(middleName);
+			clientFamilyMember.setMiddlename(middleName);
 			}
 		
 		if (command.stringValueOfParameterNamed("lastName") != null) {
 			lastName = command.stringValueOfParameterNamed("lastName");
-			clientFamilyMember.setLastName(lastName);
+			clientFamilyMember.setLastname(lastName);
 			}
 		
 		
