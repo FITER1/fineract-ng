@@ -93,12 +93,12 @@ public class ShareAccountReadPlatformServiceImpl implements ShareAccountReadPlat
                     .retrieveMinimumActivePeriodFrequencyTypeOptions();
             final Collection<SavingsAccountData> clientSavingsAccounts = this.savingsAccountReadPlatformService
                     .retrieveActiveForLookup(clientId, DepositAccountType.SAVINGS_DEPOSIT, productData.getCurrency().getCode());
-            toReturn = new ShareAccountData(client.id(), client.displayName(), productData.getCurrency(), charges, marketPrice,
+            toReturn = new ShareAccountData(client.getId(), client.getDisplayName(), productData.getCurrency(), charges, marketPrice,
                     minimumActivePeriodFrequencyTypeOptions, lockinPeriodFrequencyTypeOptions, clientSavingsAccounts, productData.getNominaltShares());
         } else {
             Collection<ProductData> productOptions = service.retrieveAllForLookup();
             final Collection<ChargeData> chargeOptions = this.chargeReadPlatformService.retrieveSharesApplicableCharges();
-            toReturn = new ShareAccountData(client.id(), client.displayName(), productOptions, chargeOptions);
+            toReturn = new ShareAccountData(client.getId(), client.getDisplayName(), productOptions, chargeOptions);
         }
         return toReturn;
     }

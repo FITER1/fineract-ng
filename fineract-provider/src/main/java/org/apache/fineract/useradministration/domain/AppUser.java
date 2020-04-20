@@ -106,6 +106,7 @@ public class AppUser extends AbstractPersistableCustom<Long> implements Platform
     
     @OneToMany(cascade = CascadeType.ALL,  orphanRemoval = true, fetch=FetchType.EAGER)
     @JoinColumn(name = "appuser_id", referencedColumnName= "id", nullable = false)
+    @Builder.Default
     private Set<AppUserClientMapping> appUserClientMappings = new HashSet<>();
 
     @Override

@@ -317,7 +317,7 @@ public class AuditReadPlatformServiceImpl implements AuditReadPlatformService {
             if (StringUtils.isNotBlank(clientIdStr)) {
                 clientId = Long.valueOf(clientIdStr);
                 final ClientData client = this.clientReadPlatformService.retrieveOne(clientId);
-                commandAsJsonMap.put("clientName", client.displayName());
+                commandAsJsonMap.put("clientName", client.getDisplayName());
             } else {
                 commandAsJsonMap.put("clientName", "");
             }

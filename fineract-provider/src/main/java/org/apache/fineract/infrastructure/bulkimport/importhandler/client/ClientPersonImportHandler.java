@@ -162,10 +162,28 @@ public class ClientPersonImportHandler implements ImportHandler {
                 .build();
             addressList = new ArrayList<>(Arrays.asList(addressDataObj));
         }
-        return ClientData.importClientPersonInstance(legalFormId,row.getRowNum(),firstName,lastName,middleName,submittedOn,activationDate,active,externalId,
-				officeId, staffId, mobileNo, dob, clientTypeId, genderId, clientClassicationId, isStaff,
-				addressList, locale, dateFormat);
-
+        return ClientData.builder()
+            .legalFormId(legalFormId)
+            .rowIndex(row.getRowNum())
+            .firstname(firstName)
+            .lastname(lastName)
+            .middlename(middleName)
+            .submittedOnDate(submittedOn)
+            .activationDate(activationDate)
+            .active(active)
+            .externalId(externalId)
+            .officeId(officeId)
+            .staffId(staffId)
+            .mobileNo(mobileNo)
+            .dateOfBirth(dob)
+            .clientTypeId(clientTypeId)
+            .genderId(genderId)
+            .clientClassificationId(clientClassicationId)
+            .isStaff(isStaff)
+            .address(addressList)
+            .locale(locale)
+            .dateFormat(dateFormat)
+            .build();
 	}
 
     public Count importEntity(String dateFormat) {

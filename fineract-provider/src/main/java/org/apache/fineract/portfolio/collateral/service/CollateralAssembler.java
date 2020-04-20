@@ -64,11 +64,19 @@ public class CollateralAssembler {
                     final BigDecimal value = this.fromApiJsonHelper.extractBigDecimalNamed("value", collateralItemElement, locale);
 
                     if (id == null) {
-                        collateralItems.add(LoanCollateral.from(collateralType, value, description));
+                        collateralItems.add(LoanCollateral.builder()
+                            .type(collateralType)
+                            .value(value)
+                            .description(description)
+                            .build());
                     } else {
-                        final LoanCollateral loanCollateralItem = this.loanCollateralRepository.findById(id)
+                        LoanCollateral loanCollateralItem = this.loanCollateralRepository.findById(id)
                                 .orElseThrow(() -> new CollateralNotFoundException(id));
-                        loanCollateralItem.assembleFrom(collateralType, value, description);
+                        loanCollateralItem = loanCollateralItem.toBuilder()
+                            .type(collateralType)
+                            .value(value)
+                            .description(description)
+                            .build();
                         collateralItems.add(loanCollateralItem);
                     }
                 }

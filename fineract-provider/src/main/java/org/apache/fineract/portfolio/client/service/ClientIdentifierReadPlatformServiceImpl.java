@@ -109,7 +109,14 @@ public class ClientIdentifierReadPlatformServiceImpl implements ClientIdentifier
                 .mandatory(false)
                 .build();
             final String status = ClientIdentifierStatus.fromInt(rs.getInt("status")).getCode();
-            return ClientIdentifierData.singleItem(id, clientId, documentType, documentKey, status, description);
+            return ClientIdentifierData.builder()
+                .id(id)
+                .clientId(clientId)
+                .documentType(documentType)
+                .documentKey(documentKey)
+                .status(status)
+                .description(description)
+                .build();
         }
 
     }

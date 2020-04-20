@@ -18,7 +18,10 @@
  */
 package org.apache.fineract.portfolio.client.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
@@ -81,24 +84,4 @@ public class ClientFamilyMembers extends AbstractPersistableCustom<Long> {
     @Column(name = "date_of_birth")
     // @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
-
-    private ClientFamilyMembers(final Client client, final String firstName, final String middleName, final String lastName, final String qualification, final String mobileNumber, final Long age, final Boolean isDependent, final CodeValue relationship, final CodeValue maritalStatus, final CodeValue gender, final Date dateOfBirth, final CodeValue profession) {
-        this.client = client;
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.lastName = lastName;
-        this.qualification = qualification;
-        this.age = age;
-        this.mobileNumber = mobileNumber;
-        this.isDependent = isDependent;
-        this.relationship = relationship;
-        this.maritalStatus = maritalStatus;
-        this.gender = gender;
-        this.dateOfBirth = dateOfBirth;
-        this.profession = profession;
-    }
-
-    public static ClientFamilyMembers fromJson(final Client client, final String firstName, final String middleName, final String lastName, final String qualification, final String mobileNumber, final Long age, final Boolean isDependent, final CodeValue relationship, final CodeValue maritalStatus, final CodeValue gender, final Date dateOfBirth, final CodeValue profession) {
-        return new ClientFamilyMembers(client, firstName, middleName, lastName, qualification, mobileNumber, age, isDependent, relationship, maritalStatus, gender, dateOfBirth, profession);
-    }
 }

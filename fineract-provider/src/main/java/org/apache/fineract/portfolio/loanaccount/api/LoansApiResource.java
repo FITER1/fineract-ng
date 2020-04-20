@@ -272,9 +272,9 @@ public class LoansApiResource {
                     accountLinkingOptions = new ArrayList<>();
                     if(members != null){
                     	for (ClientData clientData : members) {
-                            Integer loanCounter = this.loanReadPlatformService.retriveLoanCounter(clientData.id(), productId);
-                            memberLoanCycle.put(clientData.id(), loanCounter);
-                            accountLinkingOptions.addAll(getaccountLinkingOptions(newLoanAccount, clientData.id(), groupId));
+                            Integer loanCounter = this.loanReadPlatformService.retriveLoanCounter(clientData.getId(), productId);
+                            memberLoanCycle.put(clientData.getId(), loanCounter);
+                            accountLinkingOptions.addAll(getaccountLinkingOptions(newLoanAccount, clientData.getId(), groupId));
                         }
                     }
                     

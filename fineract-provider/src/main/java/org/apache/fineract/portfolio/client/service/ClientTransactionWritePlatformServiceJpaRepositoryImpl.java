@@ -53,16 +53,16 @@ public class ClientTransactionWritePlatformServiceJpaRepositoryImpl implements C
         clientTransaction.setReversed(true);
 
         // revert any charges paid back to their original state
-        if (clientTransaction.isPayChargeTransaction() || clientTransaction.isWaiveChargeTransaction()) {
+        if (ClientTransactionType.PAY_CHARGE.getValue().equals(clientTransaction.getTypeOf()) || ClientTransactionType.WAIVE_CHARGE.getValue().equals(clientTransaction.getTypeOf())) {
             // undo charge
             final Set<ClientChargePaidBy> chargesPaidBy = clientTransaction.getClientChargePaidByCollection();
             for (final ClientChargePaidBy clientChargePaidBy : chargesPaidBy) {
                 final ClientCharge clientCharge = clientChargePaidBy.getClientCharge();
                 clientCharge.setCurrency(
                         organisationCurrencyRepository.findOneWithNotFoundDetection(clientCharge.getCharge().getCurrencyCode()));
-                if (clientTransaction.isPayChargeTransaction()) {
+                if (ClientTransactionType.PAY_CHARGE.getValue().equals(clientTransaction.getTypeOf())) {
                     clientCharge.undoPayment(clientTransaction.getAmount());
-                } else if (clientTransaction.isWaiveChargeTransaction()) {
+                } else if (ClientTransactionType.WAIVE_CHARGE.getValue().equals(clientTransaction.getTypeOf())) {
                     clientCharge.undoWaiver(clientTransaction.getAmount());
                 }
             }

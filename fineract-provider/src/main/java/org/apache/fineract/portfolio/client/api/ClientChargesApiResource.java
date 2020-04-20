@@ -103,7 +103,9 @@ public class ClientChargesApiResource {
         this.context.authenticatedUser().validateHasReadPermission(ClientApiConstants.CLIENT_CHARGES_RESOURCE_NAME);
 
         final Collection<ChargeData> chargeOptions = this.chargeReadPlatformService.retrieveAllChargesApplicableToClients();
-        final ClientChargeData clientChargeData = ClientChargeData.template(chargeOptions);
+        final ClientChargeData clientChargeData = ClientChargeData.builder()
+            .chargeOptions(chargeOptions)
+            .build();
 
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
         return this.toApiJsonSerializer.serialize(settings, clientChargeData, ClientApiConstants.CLIENT_CHARGES_RESPONSE_DATA_PARAMETERS);
@@ -132,7 +134,28 @@ public class ClientChargesApiResource {
                 Collection<ClientTransactionData> clientTransactionDatas = this.clientTransactionReadPlatformService
                         .retrieveAllTransactions(clientId, chargeId);
                 if (!CollectionUtils.isEmpty(clientTransactionDatas)) {
-                    clientCharge = ClientChargeData.addAssociations(clientCharge, clientTransactionDatas);
+                    clientCharge = ClientChargeData.builder()
+                        .id(clientCharge.getId())
+                        .clientId(clientCharge.getClientId())
+                        .chargeId(clientCharge.getChargeId())
+                        .name(clientCharge.getName())
+                        .chargeTimeType(clientCharge.getChargeTimeType())
+                        .dueDate(clientCharge.getDueDate())
+                        .chargeCalculationType(clientCharge.getChargeCalculationType())
+                        .currency(clientCharge.getCurrency())
+                        .amount(clientCharge.getAmount())
+                        .amountPaid(clientCharge.getAmountPaid())
+                        .amountWaived(clientCharge.getAmountWaived())
+                        .amountWrittenOff(clientCharge.getAmountWrittenOff())
+                        .amountOutstanding(clientCharge.getAmountOutstanding())
+                        // .penalty(clientCharge.getIsPenalty())
+                        .paid(clientCharge.getPenalty())
+                        .waived(clientCharge.getWaived())
+                        .active(clientCharge.getActive())
+                        .inactivationDate(clientCharge.getInactivationDate())
+                        .chargeOptions(clientCharge.getChargeOptions())
+                        .clientTransactionDatas(clientTransactionDatas)
+                        .build();
                 }
             }
         }

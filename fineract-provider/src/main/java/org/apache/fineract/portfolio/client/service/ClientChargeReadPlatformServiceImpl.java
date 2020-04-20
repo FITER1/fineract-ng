@@ -26,7 +26,6 @@ import org.apache.fineract.infrastructure.core.service.PaginationHelper;
 import org.apache.fineract.infrastructure.core.service.SearchParameters;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
-import org.apache.fineract.portfolio.charge.data.ChargeData;
 import org.apache.fineract.portfolio.charge.service.ChargeEnumerations;
 import org.apache.fineract.portfolio.client.api.ClientApiConstants;
 import org.apache.fineract.portfolio.client.data.ClientChargeData;
@@ -40,7 +39,6 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
 
 @Service
 @RequiredArgsConstructor
@@ -86,12 +84,26 @@ public class ClientChargeReadPlatformServiceImpl implements ClientChargeReadPlat
             final Boolean isActive = rs.getBoolean("isActive");
             final LocalDate inactivationDate = JdbcSupport.getLocalDate(rs, "inactivationDate");
 
-            final Collection<ChargeData> chargeOptions = null;
-
-            return ClientChargeData.instance(id, clientId, chargeId, name, chargeTimeType, dueDate, chargeCalculationType, currency, amount,
-                    amountPaid, amountWaived, amountWrittenOff, amountOutstanding, penalty, isPaid, isWaived, isActive, inactivationDate,
-                    chargeOptions);
-
+            return ClientChargeData.builder()
+                .id(id)
+                .clientId(clientId)
+                .chargeId(chargeId)
+                .name(name)
+                .chargeTimeType(chargeTimeType)
+                .dueDate(dueDate)
+                .chargeCalculationType(chargeCalculationType)
+                .currency(currency)
+                .amount(amount)
+                .amountPaid(amountPaid)
+                .amountWaived(amountWaived)
+                .amountWrittenOff(amountWrittenOff)
+                .amountOutstanding(amountOutstanding)
+                .penalty(penalty)
+                .paid(isPaid)
+                .waived(isWaived)
+                .active(isActive)
+                .inactivationDate(inactivationDate)
+                .build();
         }
 
         public String schema() {

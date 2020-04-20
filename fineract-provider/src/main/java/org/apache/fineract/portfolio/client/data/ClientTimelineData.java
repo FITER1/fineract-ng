@@ -18,49 +18,27 @@
  */
 package org.apache.fineract.portfolio.client.data;
 
+import lombok.*;
 import org.joda.time.LocalDate;
 
-/**
- * Immutable data object represent the important time-line events of a loan
- * application and loan.
- */
-@SuppressWarnings("unused")
-public class ClientTimelineData {
+import java.io.Serializable;
 
-    private final LocalDate submittedOnDate;
-    private final String submittedByUsername;
-    private final String submittedByFirstname;
-    private final String submittedByLastname;
-
-    private final LocalDate activatedOnDate;
-    private final String activatedByUsername;
-    private final String activatedByFirstname;
-    private final String activatedByLastname;
-
-    private final LocalDate closedOnDate;
-    private final String closedByUsername;
-    private final String closedByFirstname;
-    private final String closedByLastname;
-
-    public ClientTimelineData(final LocalDate submittedOnDate, final String submittedByUsername, final String submittedByFirstname,
-            final String submittedByLastname, final LocalDate activatedOnDate, final String activatedByUsername,
-            final String activatedByFirstname, final String activatedByLastname, final LocalDate closedOnDate,
-            final String closedByUsername, final String closedByFirstname, final String closedByLastname) {
-        this.submittedOnDate = submittedOnDate;
-        this.submittedByUsername = submittedByUsername;
-        this.submittedByFirstname = submittedByFirstname;
-        this.submittedByLastname = submittedByLastname;
-
-        this.activatedOnDate = activatedOnDate;
-        this.activatedByUsername = activatedByUsername;
-        this.activatedByFirstname = activatedByFirstname;
-        this.activatedByLastname = activatedByLastname;
-
-        this.closedOnDate = closedOnDate;
-        this.closedByUsername = closedByUsername;
-        this.closedByFirstname = closedByFirstname;
-        this.closedByLastname = closedByLastname;
-
-    }
-
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+public class ClientTimelineData implements Serializable {
+    private LocalDate submittedOnDate;
+    private String submittedByUsername;
+    private String submittedByFirstname;
+    private String submittedByLastname;
+    private LocalDate activatedOnDate;
+    private String activatedByUsername;
+    private String activatedByFirstname;
+    private String activatedByLastname;
+    private LocalDate closedOnDate;
+    private String closedByUsername;
+    private String closedByFirstname;
+    private String closedByLastname;
 }

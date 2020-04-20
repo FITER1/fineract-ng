@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.client.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
@@ -29,10 +30,7 @@ import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.command.ClientIdentifierCommand;
-import org.apache.fineract.portfolio.client.domain.Client;
-import org.apache.fineract.portfolio.client.domain.ClientIdentifier;
-import org.apache.fineract.portfolio.client.domain.ClientIdentifierRepository;
-import org.apache.fineract.portfolio.client.domain.ClientRepositoryWrapper;
+import org.apache.fineract.portfolio.client.domain.*;
 import org.apache.fineract.portfolio.client.exception.ClientIdentifierNotFoundException;
 import org.apache.fineract.portfolio.client.exception.DuplicateClientIdentifierException;
 import org.apache.fineract.portfolio.client.serialization.ClientIdentifierCommandFromApiJsonDeserializer;
@@ -41,6 +39,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.PersistenceException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Slf4j
@@ -74,7 +73,7 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
             documentTypeId = documentType.getId();
             documentTypeLabel = documentType.getLabel();
 
-            final ClientIdentifier clientIdentifier = ClientIdentifier.fromJson(client, documentType, command);
+            final ClientIdentifier clientIdentifier = create(client, documentType, command);
 
             this.clientIdentifierRepository.save(clientIdentifier);
 
@@ -113,7 +112,7 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
             final ClientIdentifier clientIdentifierForUpdate = this.clientIdentifierRepository.findById(identifierId)
                     .orElseThrow(() -> new ClientIdentifierNotFoundException(identifierId));
 
-            final Map<String, Object> changes = clientIdentifierForUpdate.update(command);
+            final Map<String, Object> changes = update(clientIdentifierForUpdate, command);
 
             if (changes.containsKey("documentTypeId")) {
                 documentType = this.codeValueRepository.findOneWithNotFoundDetection(documentTypeId);
@@ -121,7 +120,7 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
 
                 documentTypeId = documentType.getId();
                 documentTypeLabel = documentType.getLabel();
-                clientIdentifierForUpdate.update(documentType);
+                clientIdentifierForUpdate.setDocumentType(documentType);
             }
 
             if (changes.containsKey("documentTypeId") && changes.containsKey("documentKey")) {
@@ -129,10 +128,10 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
                 documentKey = clientIdentifierCommand.getDocumentKey();
             } else if (changes.containsKey("documentTypeId") && !changes.containsKey("documentKey")) {
                 documentTypeId = clientIdentifierCommand.getDocumentTypeId();
-                documentKey = clientIdentifierForUpdate.documentKey();
+                documentKey = clientIdentifierForUpdate.getDocumentKey();
             } else if (!changes.containsKey("documentTypeId") && changes.containsKey("documentKey")) {
-                documentTypeId = clientIdentifierForUpdate.documentTypeId();
-                documentKey = clientIdentifierForUpdate.documentKey();
+                documentTypeId = clientIdentifierForUpdate.getDocumentType().getId();
+                documentKey = clientIdentifierForUpdate.getDocumentKey();
             }
 
             if (!changes.isEmpty()) {
@@ -172,6 +171,55 @@ public class ClientIdentifierWritePlatformServiceJpaRepositoryImpl implements Cl
                 .clientId(clientId) //
                 .resourceId(identifierId) //
                 .build();
+    }
+
+    private ClientIdentifier create(final Client client, final CodeValue documentType, final JsonCommand command) {
+        final String documentKey = command.stringValueOfParameterNamed("documentKey");
+        final String description = command.stringValueOfParameterNamed("description");
+        final String status = command.stringValueOfParameterNamed("status");
+        ClientIdentifierStatus statusEnum = ClientIdentifierStatus.valueOf(status.toUpperCase());
+        return ClientIdentifier.builder()
+            .client(client)
+            .documentType(documentType)
+            .documentKey(documentKey)
+            .status(statusEnum.getValue())
+            .description(description)
+            .active(statusEnum.isActive() ? statusEnum.getValue() : null)
+            .build();
+    }
+
+    private Map<String, Object> update(final ClientIdentifier clientIdentifier, final JsonCommand command) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
+
+        final String documentTypeIdParamName = "documentTypeId";
+        if (command.isChangeInLongParameterNamed(documentTypeIdParamName, clientIdentifier.getDocumentType().getId())) {
+            final Long newValue = command.longValueOfParameterNamed(documentTypeIdParamName);
+            actualChanges.put(documentTypeIdParamName, newValue);
+        }
+
+        final String documentKeyParamName = "documentKey";
+        if (command.isChangeInStringParameterNamed(documentKeyParamName, clientIdentifier.getDocumentKey())) {
+            final String newValue = command.stringValueOfParameterNamed(documentKeyParamName);
+            actualChanges.put(documentKeyParamName, newValue);
+            clientIdentifier.setDocumentKey(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        final String descriptionParamName = "description";
+        if (command.isChangeInStringParameterNamed(descriptionParamName, clientIdentifier.getDescription())) {
+            final String newValue = command.stringValueOfParameterNamed(descriptionParamName);
+            actualChanges.put(descriptionParamName, newValue);
+            clientIdentifier.setDescription(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        final String statusParamName = "status";
+        if(command.isChangeInStringParameterNamed(statusParamName, ClientIdentifierStatus.fromInt(clientIdentifier.getStatus()).getCode())){
+            final String newValue = command.stringValueOfParameterNamed(descriptionParamName);
+            actualChanges.put(descriptionParamName, ClientIdentifierStatus.valueOf(newValue));
+            clientIdentifier.setStatus(ClientIdentifierStatus.valueOf(newValue).getValue());
+        }
+
+        return actualChanges;
     }
 
     private void handleClientIdentifierDataIntegrityViolation(final String documentTypeLabel, final Long documentTypeId,

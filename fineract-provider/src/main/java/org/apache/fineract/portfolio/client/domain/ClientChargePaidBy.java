@@ -18,7 +18,10 @@
  */
 package org.apache.fineract.portfolio.client.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
@@ -44,8 +47,4 @@ public class ClientChargePaidBy extends AbstractPersistableCustom<Long> {
 
     @Column(name = "amount", scale = 6, precision = 19, nullable = false)
     private BigDecimal amount;
-
-    public static ClientChargePaidBy instance(final ClientTransaction clientTransaction, final ClientCharge clientCharge, final BigDecimal amount) {
-        return new ClientChargePaidBy(clientTransaction, clientCharge, amount);
-    }
 }

@@ -235,9 +235,9 @@ public class StandingInstructionApiResource {
             }
             if (associationParameters.contains("template")) {
                 final StandingInstructionData templateData = this.standingInstructionReadPlatformService.retrieveTemplate(
-                        standingInstructionData.getFromClient().officeId(), standingInstructionData.getFromClient().id(), standingInstructionData
+                        standingInstructionData.getFromClient().getOfficeId(), standingInstructionData.getFromClient().getId(), standingInstructionData
                                 .getFromAccount().getId(), standingInstructionData.fromAccountType().getValue(), standingInstructionData
-                                .getToClient().officeId(), standingInstructionData.getToClient().id(), standingInstructionData.getToAccount()
+                                .getToClient().getOfficeId(), standingInstructionData.getToClient().getId(), standingInstructionData.getToAccount()
                                 .getId(), standingInstructionData.toAccountType().getValue(), standingInstructionData.transferType()
                                 .getValue());
                 standingInstructionData = StandingInstructionData.builder()

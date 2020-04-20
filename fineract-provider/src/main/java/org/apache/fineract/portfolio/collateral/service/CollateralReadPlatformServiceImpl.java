@@ -84,7 +84,13 @@ public class CollateralReadPlatformServiceImpl implements CollateralReadPlatform
             final CurrencyData currencyData = new CurrencyData(currencyCode, currencyName, currencyDecimalPlaces, inMultiplesOf,
                     currencyDisplaySymbol, currencyNameCode);
 
-            return CollateralData.instance(id, type, value, description, currencyData);
+            return CollateralData.builder()
+                .id(id)
+                .type(type)
+                .value(value)
+                .description(description)
+                .currency(currencyData)
+                .build();
         }
     }
 

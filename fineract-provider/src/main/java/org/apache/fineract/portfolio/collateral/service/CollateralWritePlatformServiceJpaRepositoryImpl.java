@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.collateral.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.codes.domain.CodeValueRepositoryWrapper;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
@@ -45,6 +46,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Slf4j
@@ -70,7 +73,7 @@ public class CollateralWritePlatformServiceJpaRepositoryImpl implements Collater
             final Loan loan = this.loanRepositoryWrapper.findOneWithNotFoundDetection(loanId, true);
             final CodeValue collateralType = this.codeValueRepository.findOneByCodeNameAndIdWithNotFoundDetection(
                     CollateralApiConstants.COLLATERAL_CODE_NAME, collateralCommand.getCollateralTypeId());
-            final LoanCollateral collateral = LoanCollateral.fromJson(loan, collateralType, command);
+            final LoanCollateral collateral = createNew(loan, collateralType, command);
 
             /**
              * Collaterals may be added only when the loan associated with them
@@ -108,13 +111,13 @@ public class CollateralWritePlatformServiceJpaRepositoryImpl implements Collater
             final LoanCollateral collateralForUpdate = this.collateralRepository.findById(collateralId)
                     .orElseThrow(() -> new CollateralNotFoundException(loanId, collateralId));
 
-            final Map<String, Object> changes = collateralForUpdate.update(command);
+            final Map<String, Object> changes = update(collateralForUpdate, command);
 
             if (changes.containsKey(COLLATERAL_JSON_INPUT_PARAMS.COLLATERAL_TYPE_ID.getValue())) {
 
                 collateralType = this.codeValueRepository.findOneByCodeNameAndIdWithNotFoundDetection(
                         CollateralApiConstants.COLLATERAL_CODE_NAME, collateralTypeId);
-                collateralForUpdate.setCollateralType(collateralType);
+                collateralForUpdate.setType(collateralType);
             }
 
             /**
@@ -162,5 +165,44 @@ public class CollateralWritePlatformServiceJpaRepositoryImpl implements Collater
         log.error(dve.getMessage(), dve);
         throw new PlatformDataIntegrityException("error.msg.collateral.unknown.data.integrity.issue",
                 "Unknown data integrity issue with resource.");
+    }
+
+    private LoanCollateral createNew(final Loan loan, final CodeValue collateralType, final JsonCommand command) {
+        final String description = command.stringValueOfParameterNamed(COLLATERAL_JSON_INPUT_PARAMS.DESCRIPTION.getValue());
+        final BigDecimal value = command.bigDecimalValueOfParameterNamed(COLLATERAL_JSON_INPUT_PARAMS.VALUE.getValue());
+
+        return LoanCollateral.builder()
+            .loan(loan)
+            .type(collateralType)
+            .value(value)
+            .description(description)
+            .build();
+    }
+
+    private Map<String, Object> update(LoanCollateral loanCollateral, final JsonCommand command) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
+
+        final String collateralTypeIdParamName = COLLATERAL_JSON_INPUT_PARAMS.COLLATERAL_TYPE_ID.getValue();
+        if (command.isChangeInLongParameterNamed(collateralTypeIdParamName, loanCollateral.getType().getId())) {
+            final Long newValue = command.longValueOfParameterNamed(collateralTypeIdParamName);
+            actualChanges.put(collateralTypeIdParamName, newValue);
+        }
+
+        final String descriptionParamName = COLLATERAL_JSON_INPUT_PARAMS.DESCRIPTION.getValue();
+        if (command.isChangeInStringParameterNamed(descriptionParamName, loanCollateral.getDescription())) {
+            final String newValue = command.stringValueOfParameterNamed(descriptionParamName);
+            actualChanges.put(descriptionParamName, newValue);
+            loanCollateral.setDescription(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        final String valueParamName = COLLATERAL_JSON_INPUT_PARAMS.VALUE.getValue();
+        if (command.isChangeInBigDecimalParameterNamed(valueParamName, loanCollateral.getValue())) {
+            final BigDecimal newValue = command.bigDecimalValueOfParameterNamed(valueParamName);
+            actualChanges.put(valueParamName, newValue);
+            loanCollateral.setValue(newValue);
+        }
+
+        return actualChanges;
     }
 }

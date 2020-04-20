@@ -122,8 +122,19 @@ public class ClientTransactionReadPlatformServiceImpl implements ClientTransacti
             final CurrencyData currency = new CurrencyData(currencyCode, currencyName, currencyDigits, inMultiplesOf, currencyDisplaySymbol,
                     currencyNameCode);
 
-            return ClientTransactionData.create(id, officeId, officeName, transactionType, date, currency, paymentDetailData, amount,
-                    externalId, submittedOnDate, reversed);
+            return ClientTransactionData.builder()
+                .id(id)
+                .officeId(officeId)
+                .officeName(officeName)
+                .type(transactionType)
+                .date(date)
+                .currency(currency)
+                .paymentDetailData(paymentDetailData)
+                .amount(amount)
+                .externalId(externalId)
+                .submittedOnDate(submittedOnDate)
+                .reversed(reversed)
+                .build();
         }
     }
 

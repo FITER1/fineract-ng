@@ -47,10 +47,4 @@ public class ClientAddress extends AbstractPersistableCustom<Long> {
 
 	@Column(name = "is_active")
 	private boolean active;
-
-	public static ClientAddress fromJson(final boolean isActive, final Client client, final Address address,
-			final CodeValue address_type) {
-
-		return new ClientAddress(client, address, address_type, isActive);
-	}
 }

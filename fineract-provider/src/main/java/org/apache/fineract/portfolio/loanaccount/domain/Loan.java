@@ -497,7 +497,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
 
     private Set<LoanCollateral> associateWithThisLoan(final Set<LoanCollateral> collateral) {
         for (final LoanCollateral item : collateral) {
-            item.associateWith(this);
+            item.setLoan(this);
         }
         return collateral;
     }

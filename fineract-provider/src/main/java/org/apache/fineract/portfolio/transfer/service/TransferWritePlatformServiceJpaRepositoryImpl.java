@@ -452,10 +452,15 @@ public class TransferWritePlatformServiceJpaRepositoryImpl implements TransferWr
 
 		this.noteWritePlatformService.createAndPersistClientNote(client, jsonCommand);
 		Date proposedTransferDate = transferDate != null ? transferDate.toDate() : null;
-		this.clientTransferDetailsRepositoryWrapper
-				.save(ClientTransferDetails.instance(client.getId(), client.getOffice().getId(),
-						destinationOffice.getId(), proposedTransferDate, transferEventType.getValue(),
-						DateUtils.getLocalDateTimeOfTenant().toDate(), this.context.authenticatedUser().getId()));
+		this.clientTransferDetailsRepositoryWrapper.save(ClientTransferDetails.builder()
+            .id(client.getId())
+            .fromOfficeId(client.getOffice().getId())
+            .toOfficeId(destinationOffice.getId())
+            .proposedTransferDate(proposedTransferDate)
+            .transferEventType(transferEventType.getValue())
+            .proposedTransferDate(DateUtils.getLocalDateTimeOfTenant().toDate())
+            .submittedBy(this.context.authenticatedUser().getId())
+            .build());
 	}
 
     private List<Client> assembleListOfClients(final JsonCommand command) {

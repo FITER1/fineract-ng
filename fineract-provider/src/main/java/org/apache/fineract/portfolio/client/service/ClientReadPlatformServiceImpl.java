@@ -141,10 +141,23 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
         final List<DatatableData> datatableTemplates = this.entityDatatableChecksReadService
                 .retrieveTemplates(StatusEnum.CREATE.getCode().longValue(), EntityTables.CLIENT.getName(), null);
 
-        return ClientData.template(defaultOfficeId, LocalDate.now(), offices, staffOptions, null, genderOptions, savingsProductDatas,
-                clientTypeOptions, clientClassificationOptions, clientNonPersonConstitutionOptions, clientNonPersonMainBusinessLineOptions,
-				clientLegalFormOptions, familyMemberOptions, new ArrayList<AddressData>(Arrays.asList(address)),
-				isAddressEnabled, datatableTemplates);
+        return ClientData.builder()
+            .officeId(defaultOfficeId)
+            .submittedOnDate(LocalDate.now())
+            .officeOptions(offices)
+            .staffOptions(staffOptions)
+            .genderOptions(genderOptions)
+            .savingProductOptions(savingsProductDatas)
+            .clientTypeOptions(clientTypeOptions)
+            .clientClassificationOptions(clientClassificationOptions)
+            .clientNonPersonConstitutionOptions(clientNonPersonConstitutionOptions)
+            .clientNonPersonMainBusinessLineOptions(clientNonPersonMainBusinessLineOptions)
+            .clientLegalFormOptions(clientLegalFormOptions)
+            .familyMemberOptions(familyMemberOptions)
+            .address(Collections.singletonList(address))
+            .isAddressEnabled(isAddressEnabled)
+            .datatables(datatableTemplates)
+            .build();
 	}
 
     @Override
@@ -271,7 +284,54 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
             final Collection<GroupGeneralData> parentGroups = this.jdbcTemplate.query(clientGroupsSql, this.clientGroupsMapper,
                     new Object[] { clientId });
 
-            return ClientData.setParentGroups(clientData, parentGroups);
+            return ClientData.builder()
+                .id(clientData.getId())
+                .accountNo(clientData.getAccountNo())
+                .status(clientData.getStatus())
+                .active(clientData.getStatus()!=null ? clientData.getStatus().getId()==300L : null)
+                .subStatus(clientData.getSubStatus())
+                .officeId(clientData.getOfficeId())
+                .officeName(clientData.getOfficeName())
+                .transferToOfficeId(clientData.getTransferToOfficeId())
+                .transferToOfficeName(clientData.getTransferToOfficeName())
+                .firstname(clientData.getFirstname())
+                .middlename(clientData.getMiddlename())
+                .lastname(clientData.getLastname())
+                .fullname(clientData.getFullname())
+                .displayName(clientData.getDisplayName())
+                .externalId(clientData.getExternalId())
+                .mobileNo(clientData.getMobileNo())
+                .emailAddress(clientData.getEmailAddress())
+                .dateOfBirth(clientData.getDateOfBirth())
+                .gender(clientData.getGender())
+                .activationDate(clientData.getActivationDate())
+                .imageId(clientData.getImageId())
+                .imagePresent(clientData.getImageId()!=null ? true : null)
+                .staffId(clientData.getStaffId())
+                .staffName(clientData.getStaffName())
+                .officeOptions(clientData.getOfficeOptions())
+                .staffOptions(clientData.getStaffOptions())
+                .timeline(clientData.getTimeline())
+                .savingProductOptions(clientData.getSavingProductOptions())
+                .savingsProductId(clientData.getSavingsProductId())
+                .savingsProductName(clientData.getSavingsProductName())
+                .savingsAccountId(clientData.getSavingsAccountId())
+                .savingAccountOptions(clientData.getSavingAccountOptions())
+                .clientType(clientData.getClientType())
+                .clientClassification(clientData.getClientClassification())
+                .clientTypeOptions(clientData.getClientTypeOptions())
+                .clientClassificationOptions(clientData.getClientClassificationOptions())
+                .clientNonPersonConstitutionOptions(clientData.getClientNonPersonConstitutionOptions())
+                .clientNonPersonMainBusinessLineOptions(clientData.getClientNonPersonMainBusinessLineOptions())
+                .clientNonPersonDetails(clientData.getClientNonPersonDetails())
+                .clientLegalFormOptions(clientData.getClientLegalFormOptions())
+                .familyMemberOptions(clientData.getFamilyMemberOptions())
+                .legalForm(clientData.getLegalForm())
+                .address(clientData.getAddress())
+                .isAddressEnabled(clientData.getIsAddressEnabled())
+                .isStaff(clientData.getIsStaff())
+                .groups(parentGroups)
+                .build();
 
         } catch (final EmptyResultDataAccessException e) {
             throw new ClientNotFoundException(clientId);
@@ -514,17 +574,64 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
                 .build();
             final String remarks = rs.getString("remarks");
 
-            final ClientNonPersonData clientNonPerson = new ClientNonPersonData(constitution, incorpNo, incorpValidityTill, mainBusinessLine, remarks);
+            final ClientNonPersonData clientNonPerson = ClientNonPersonData.builder()
+                .constitution(constitution)
+                .incorpNumber(incorpNo)
+                .incorpValidityTillDate(incorpValidityTill)
+                .mainBusinessLine(mainBusinessLine)
+                .remarks(remarks)
+                .build();
 
-            final ClientTimelineData timeline = new ClientTimelineData(submittedOnDate, submittedByUsername, submittedByFirstname,
-                    submittedByLastname, activationDate, activatedByUsername, activatedByFirstname, activatedByLastname, closedOnDate,
-                    closedByUsername, closedByFirstname, closedByLastname);
+            final ClientTimelineData timeline = ClientTimelineData.builder()
+                .submittedOnDate(submittedOnDate)
+                .submittedByUsername(submittedByUsername)
+                .submittedByFirstname(submittedByFirstname)
+                .submittedByLastname(submittedByLastname)
+                .activatedOnDate(activationDate)
+                .activatedByUsername(activatedByUsername)
+                .activatedByFirstname(activatedByFirstname)
+                .activatedByLastname(activatedByLastname)
+                .closedOnDate(closedOnDate)
+                .closedByUsername(closedByUsername)
+                .closedByFirstname(closedByFirstname)
+                .closedByLastname(closedByLastname)
+                .build();
 
-            return ClientData.instance(accountNo, status, subStatus, officeId, officeName, transferToOfficeId, transferToOfficeName, id,
-                    firstname, middlename, lastname, fullname, displayName, externalId, mobileNo, emailAddress, dateOfBirth, gender, activationDate,
-                    imageId, staffId, staffName, timeline, savingsProductId, savingsProductName, savingsAccountId, clienttype,
-                    classification, legalForm, clientNonPerson, isStaff);
-
+            return ClientData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .status(status)
+                .active(status!=null ? status.getId()==300L : null)
+                .subStatus(subStatus)
+                .officeId(officeId)
+                .officeName(officeName)
+                .transferToOfficeId(transferToOfficeId)
+                .transferToOfficeName(transferToOfficeName)
+                .firstname(firstname)
+                .middlename(middlename)
+                .lastname(lastname)
+                .fullname(fullname)
+                .displayName(displayName)
+                .externalId(externalId)
+                .mobileNo(mobileNo)
+                .emailAddress(emailAddress)
+                .dateOfBirth(dateOfBirth)
+                .gender(gender)
+                .activationDate(activationDate)
+                .imageId(imageId)
+                .imagePresent(imageId!=null ? true : null)
+                .staffId(staffId)
+                .staffName(staffName)
+                .timeline(timeline)
+                .savingsProductId(savingsProductId)
+                .savingsProductName(savingsProductName)
+                .savingsAccountId(savingsAccountId)
+                .clientType(clienttype)
+                .clientClassification(classification)
+                .legalForm(legalForm)
+                .clientNonPersonDetails(clientNonPerson)
+                .isStaff(isStaff)
+                .build();
         }
     }
 
@@ -729,17 +836,64 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
                 .build();
             final String remarks = rs.getString("remarks");
 
-            final ClientNonPersonData clientNonPerson = new ClientNonPersonData(constitution, incorpNo, incorpValidityTill, mainBusinessLine, remarks);
+            final ClientNonPersonData clientNonPerson = ClientNonPersonData.builder()
+                .constitution(constitution)
+                .incorpNumber(incorpNo)
+                .incorpValidityTillDate(incorpValidityTill)
+                .mainBusinessLine(mainBusinessLine)
+                .remarks(remarks)
+                .build();
 
-            final ClientTimelineData timeline = new ClientTimelineData(submittedOnDate, submittedByUsername, submittedByFirstname,
-                    submittedByLastname, activationDate, activatedByUsername, activatedByFirstname, activatedByLastname, closedOnDate,
-                    closedByUsername, closedByFirstname, closedByLastname);
+            final ClientTimelineData timeline = ClientTimelineData.builder()
+                .submittedOnDate(submittedOnDate)
+                .submittedByUsername(submittedByUsername)
+                .submittedByFirstname(submittedByFirstname)
+                .submittedByLastname(submittedByLastname)
+                .activatedOnDate(activationDate)
+                .activatedByUsername(activatedByUsername)
+                .activatedByFirstname(activatedByFirstname)
+                .activatedByLastname(activatedByLastname)
+                .closedOnDate(closedOnDate)
+                .closedByUsername(closedByUsername)
+                .closedByFirstname(closedByFirstname)
+                .closedByLastname(closedByLastname)
+                .build();
 
-            return ClientData.instance(accountNo, status, subStatus, officeId, officeName, transferToOfficeId, transferToOfficeName, id,
-                    firstname, middlename, lastname, fullname, displayName, externalId, mobileNo, emailAddress, dateOfBirth, gender, activationDate,
-                    imageId, staffId, staffName, timeline, savingsProductId, savingsProductName, savingsAccountId, clienttype,
-                    classification, legalForm, clientNonPerson, isStaff);
-
+            return ClientData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .status(status)
+                .active(status!=null ? status.getId()==300L : null)
+                .subStatus(subStatus)
+                .officeId(officeId)
+                .officeName(officeName)
+                .transferToOfficeId(transferToOfficeId)
+                .transferToOfficeName(transferToOfficeName)
+                .firstname(firstname)
+                .middlename(middlename)
+                .lastname(lastname)
+                .fullname(fullname)
+                .displayName(displayName)
+                .externalId(externalId)
+                .mobileNo(mobileNo)
+                .emailAddress(emailAddress)
+                .dateOfBirth(dateOfBirth)
+                .gender(gender)
+                .activationDate(activationDate)
+                .imageId(imageId)
+                .imagePresent(imageId!=null ? true : null)
+                .staffId(staffId)
+                .staffName(staffName)
+                .timeline(timeline)
+                .savingsProductId(savingsProductId)
+                .savingsProductName(savingsProductName)
+                .savingsAccountId(savingsAccountId)
+                .clientType(clienttype)
+                .clientClassification(classification)
+                .legalForm(legalForm)
+                .clientNonPersonDetails(clientNonPerson)
+                .isStaff(isStaff)
+                .build();
         }
     }
 
@@ -788,7 +942,12 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
             final Long officeId = rs.getLong("officeId");
             final String officeName = rs.getString("officeName");
 
-            return ClientData.lookup(id, displayName, officeId, officeName);
+            return ClientData.builder()
+                .id(id)
+                .displayName(displayName)
+                .officeId(officeId)
+                .officeName(officeName)
+                .build();
         }
     }
 
@@ -829,7 +988,17 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
             final Long officeId = rs.getLong("officeId");
             final String officeName = rs.getString("officeName");
 
-            return ClientData.clientIdentifier(id, accountNo, firstname, middlename, lastname, fullname, displayName, officeId, officeName);
+            return ClientData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .firstname(firstname)
+                .middlename(middlename)
+                .lastname(lastname)
+                .fullname(fullname)
+                .displayName(displayName)
+                .officeId(officeId)
+                .officeName(officeName)
+                .build();
         }
     }
 
@@ -844,13 +1013,10 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
     @Override
     public ClientData retrieveAllNarrations(final String clientNarrations) {
         final List<CodeValueData> narrations = new ArrayList<>(this.codeValueReadPlatformService.retrieveCodeValuesByCode(clientNarrations));
-        final Collection<CodeValueData> clientTypeOptions = null;
-        final Collection<CodeValueData> clientClassificationOptions = null;
-        final Collection<CodeValueData> clientNonPersonConstitutionOptions = null;
-        final Collection<CodeValueData> clientNonPersonMainBusinessLineOptions = null;
-        final List<EnumOptionData> clientLegalFormOptions = null;
-        return ClientData.template(null, null, null, null, narrations, null, null, clientTypeOptions, clientClassificationOptions,
-        		clientNonPersonConstitutionOptions, clientNonPersonMainBusinessLineOptions, clientLegalFormOptions,null,null,null, null);
+
+        return ClientData.builder()
+            .narrations(narrations)
+            .build();
     }
 
 	@Override

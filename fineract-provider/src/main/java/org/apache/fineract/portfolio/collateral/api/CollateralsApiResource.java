@@ -72,7 +72,9 @@ public class CollateralsApiResource {
         this.context.authenticatedUser().validateHasReadPermission(this.resourceNameForPermission);
 
         final Collection<CodeValueData> codeValues = this.codeValueReadPlatformService.retrieveCodeValuesByCode("LoanCollateral");
-        final CollateralData collateralData = CollateralData.template(codeValues);
+        final CollateralData collateralData = CollateralData.builder()
+            .allowedCollateralTypes(codeValues)
+            .build();
 
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
         return this.apiJsonSerializerService.serialize(settings, collateralData, RESPONSE_DATA_PARAMETERS);
@@ -103,16 +105,23 @@ public class CollateralsApiResource {
             @PathParam("collateralId") @ApiParam(value = "collateralId") final Long CollateralId) {
         this.context.authenticatedUser().validateHasReadPermission(this.resourceNameForPermission);
 
-        CollateralData CollateralData = this.collateralReadPlatformService.retrieveCollateral(loanId, CollateralId);
+        CollateralData collateralData = this.collateralReadPlatformService.retrieveCollateral(loanId, CollateralId);
 
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
         if (settings.isTemplate()) {
             final Collection<CodeValueData> codeValues = this.codeValueReadPlatformService
                     .retrieveCodeValuesByCode(CollateralApiConstants.COLLATERAL_CODE_NAME);
-            CollateralData = CollateralData.template(CollateralData, codeValues);
+            collateralData = CollateralData.builder()
+                .id(collateralData.getId())
+                .type(collateralData.getType())
+                .value(collateralData.getValue())
+                .description(collateralData.getDescription())
+                .currency(collateralData.getCurrency())
+                .allowedCollateralTypes(codeValues)
+                .build();
         }
 
-        return this.apiJsonSerializerService.serialize(settings, CollateralData, RESPONSE_DATA_PARAMETERS);
+        return this.apiJsonSerializerService.serialize(settings, collateralData, RESPONSE_DATA_PARAMETERS);
     }
 
     @POST

@@ -117,8 +117,15 @@ public class ClientEntityImportHandler implements ImportHandler {
         }
         String remarks = ImportHandlerUtils.readAsString(ClientEntityConstants.REMARKS_COL, row);
 
-        ClientNonPersonData clientNonPersonData= ClientNonPersonData.importInstance(incorporationNo,incorporationTill,remarks,
-                mainBusinessId,constitutionId,locale,dateFormat);
+        ClientNonPersonData clientNonPersonData= ClientNonPersonData.builder()
+            .incorpNumber(incorporationNo)
+            .incorpValidityTillDate(incorporationTill)
+            .remarks(remarks)
+            .mainBusinessLineId(mainBusinessId)
+            .constitutionId(constitutionId)
+            .locale(locale)
+            .dateFormat(dateFormat)
+            .build();
 
         String externalId= ImportHandlerUtils.readAsString(ClientEntityConstants.EXTERNAL_ID_COL, row);
 
@@ -175,11 +182,27 @@ public class ClientEntityImportHandler implements ImportHandler {
                 .stateProvinceId(stateProvinceId)
                 .countryId(countryId)
                 .build();
-            addressList = new ArrayList<AddressData>(Arrays.asList(addressDataObj));
+            addressList = new ArrayList<>(Arrays.asList(addressDataObj));
         }
-        return ClientData.importClientEntityInstance(legalFormId,row.getRowNum(),name,officeId,clientTypeId,clientClassicationId,
-				staffId, active, activationDate, submittedOn, externalId, incorportionDate, mobileNo,
-				clientNonPersonData, addressList, locale, dateFormat);
+        return ClientData.builder()
+            .legalFormId(legalFormId)
+            .rowIndex(row.getRowNum())
+            .displayName(name)
+            .officeId(officeId)
+            .clientTypeId(clientTypeId)
+            .clientClassificationId(clientClassicationId)
+            .staffId(staffId)
+            .active(active)
+            .activationDate(activationDate)
+            .submittedOnDate(submittedOn)
+            .externalId(externalId)
+            .dateOfBirth(incorportionDate)
+            .mobileNo(mobileNo)
+            .clientNonPersonDetails(clientNonPersonData)
+            .address(addressList)
+            .locale(locale)
+            .dateFormat(dateFormat)
+            .build();
 	}
 
     public Count importEntity(String dateFormat) {

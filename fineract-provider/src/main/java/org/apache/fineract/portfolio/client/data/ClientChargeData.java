@@ -18,132 +18,44 @@
  */
 package org.apache.fineract.portfolio.client.data;
 
+import lombok.*;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 import org.apache.fineract.portfolio.charge.data.ChargeData;
+import org.codehaus.jackson.annotate.JsonProperty;
 import org.joda.time.LocalDate;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 
-@SuppressWarnings("unused")
-public class ClientChargeData {
-
-    private final Long id;
-
-    private final Long clientId;
-
-    private final Long chargeId;
-
-    private final String name;
-
-    private final EnumOptionData chargeTimeType;
-
-    private final LocalDate dueDate;
-
-    private final EnumOptionData chargeCalculationType;
-
-    private final CurrencyData currency;
-
-    private final BigDecimal amount;
-
-    private final BigDecimal amountPaid;
-
-    private final BigDecimal amountWaived;
-
-    private final BigDecimal amountWrittenOff;
-
-    private final BigDecimal amountOutstanding;
-
-    private final boolean penalty;
-
-    private final Boolean isActive;
-
-    private final Boolean isPaid;
-
-    private final Boolean isWaived;
-
-    private final LocalDate inactivationDate;
-
-    private final Collection<ChargeData> chargeOptions;
-
-    private final Collection<ClientTransactionData> clientTransactionDatas;
-
-    public static ClientChargeData instance(Long id, Long clientId, Long chargeId, String name, EnumOptionData chargeTimeType,
-            LocalDate dueDate, EnumOptionData chargeCalculationType, CurrencyData currency, BigDecimal amount, BigDecimal amountPaid,
-            BigDecimal amountWaived, BigDecimal amountWrittenOff, BigDecimal amountOutstanding, boolean penalty, Boolean isPaid,
-            Boolean isWaived, Boolean isActive, LocalDate inactivationDate, Collection<ChargeData> chargeOptions) {
-        Collection<ClientTransactionData> clientTransactionDatas = null;
-        return new ClientChargeData(id, clientId, chargeId, name, chargeTimeType, dueDate, chargeCalculationType, currency, amount,
-                amountPaid, amountWaived, amountWrittenOff, amountOutstanding, penalty, isPaid, isWaived, isActive, inactivationDate,
-                chargeOptions, clientTransactionDatas);
-    }
-
-    public static ClientChargeData addAssociations(ClientChargeData clientChargeData,
-            Collection<ClientTransactionData> clientTransactionDatas) {
-        return new ClientChargeData(clientChargeData.id, clientChargeData.clientId, clientChargeData.chargeId, clientChargeData.name,
-                clientChargeData.chargeTimeType, clientChargeData.dueDate, clientChargeData.chargeCalculationType,
-                clientChargeData.currency, clientChargeData.amount, clientChargeData.amountPaid, clientChargeData.amountWaived,
-                clientChargeData.amountWrittenOff, clientChargeData.amountOutstanding, clientChargeData.penalty, clientChargeData.isPaid,
-                clientChargeData.isWaived, clientChargeData.isActive, clientChargeData.inactivationDate, clientChargeData.chargeOptions,
-                clientTransactionDatas);
-    }
-
-    public static ClientChargeData template(final Collection<ChargeData> chargeOptions) {
-        final Long id = null;
-        final Long clientId = null;
-        final Long chargeId = null;
-        final String name = null;
-        final EnumOptionData chargeTimeType = null;
-        final LocalDate dueDate = null;
-        final EnumOptionData chargeCalculationType = null;
-        final CurrencyData currency = null;
-        final BigDecimal amount = null;
-        final BigDecimal amountPaid = null;
-        final BigDecimal amountWaived = null;
-        final BigDecimal amountWrittenOff = null;
-        final BigDecimal amountOutstanding = null;
-        final Boolean penalty = false;
-        final Boolean isPaid = null;
-        final Boolean isActive = null;
-        final Boolean isWaived = null;
-        final LocalDate inactivationDate = null;
-        final Collection<ClientTransactionData> clientTransactionDatas = null;
-
-        return new ClientChargeData(id, clientId, chargeId, name, chargeTimeType, dueDate, chargeCalculationType, currency, amount,
-                amountPaid, amountWaived, amountWrittenOff, amountOutstanding, penalty, isPaid, isWaived, isActive, inactivationDate,
-                chargeOptions, clientTransactionDatas);
-    }
-
-    private ClientChargeData(Long id, Long clientId, Long chargeId, String name, EnumOptionData chargeTimeType, LocalDate dueDate,
-            EnumOptionData chargeCalculationType, CurrencyData currency, BigDecimal amount, BigDecimal amountPaid, BigDecimal amountWaived,
-            BigDecimal amountWrittenOff, BigDecimal amountOutstanding, boolean penalty, Boolean isPaid, Boolean isWaived, Boolean isActive,
-            LocalDate inactivationDate, Collection<ChargeData> chargeOptions, Collection<ClientTransactionData> clientTransactionDatas) {
-        super();
-        this.id = id;
-        this.clientId = clientId;
-        this.chargeId = chargeId;
-        this.name = name;
-        this.chargeTimeType = chargeTimeType;
-        this.dueDate = dueDate;
-        this.chargeCalculationType = chargeCalculationType;
-        this.currency = currency;
-        this.amount = amount;
-        this.amountPaid = amountPaid;
-        this.amountWaived = amountWaived;
-        this.amountWrittenOff = amountWrittenOff;
-        this.amountOutstanding = amountOutstanding;
-        this.penalty = penalty;
-        this.isPaid = isPaid;
-        this.isWaived = isWaived;
-        this.isActive = isActive;
-        this.inactivationDate = inactivationDate;
-
-        // template related fields
-        this.chargeOptions = chargeOptions;
-
-        /// associations
-        this.clientTransactionDatas = clientTransactionDatas;
-    }
-
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+public class ClientChargeData implements Serializable {
+    private Long id;
+    private Long clientId;
+    private Long chargeId;
+    private String name;
+    private EnumOptionData chargeTimeType;
+    private LocalDate dueDate;
+    private EnumOptionData chargeCalculationType;
+    private CurrencyData currency;
+    private BigDecimal amount;
+    private BigDecimal amountPaid;
+    private BigDecimal amountWaived;
+    private BigDecimal amountWrittenOff;
+    private BigDecimal amountOutstanding;
+    private Boolean penalty;
+    @JsonProperty("is_active")
+    private Boolean active;
+    @JsonProperty("is_paid")
+    private Boolean paid;
+    @JsonProperty("is_waived")
+    private Boolean waived;
+    private LocalDate inactivationDate;
+    private Collection<ChargeData> chargeOptions;
+    private Collection<ClientTransactionData> clientTransactionDatas;
 }

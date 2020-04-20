@@ -295,8 +295,8 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
 
         final ClientData clientAccount = this.clientReadPlatformService.retrieveOne(clientId);
         final LocalDate expectedDisbursementDate = DateUtils.getLocalDateOfTenant();
-        LoanAccountData loanTemplateDetails = LoanAccountData.clientDefaults(clientAccount.id(), clientAccount.accountNo(),
-                clientAccount.displayName(), clientAccount.officeId(), expectedDisbursementDate);
+        LoanAccountData loanTemplateDetails = LoanAccountData.clientDefaults(clientAccount.getId(), clientAccount.getAccountNo(),
+                clientAccount.getDisplayName(), clientAccount.getOfficeId(), expectedDisbursementDate);
 
         if (productId != null) {
             final LoanProductData selectedProduct = this.loanProductReadPlatformService.retrieveLoanProduct(productId);
@@ -1391,8 +1391,8 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
         final ClientData clientAccount = this.clientReadPlatformService.retrieveOne(clientId);
         final LocalDate expectedDisbursementDate = DateUtils.getLocalDateOfTenant();
 
-        return LoanAccountData.clientDefaults(clientAccount.id(), clientAccount.accountNo(), clientAccount.displayName(),
-                clientAccount.officeId(), expectedDisbursementDate);
+        return LoanAccountData.clientDefaults(clientAccount.getId(), clientAccount.getAccountNo(), clientAccount.getDisplayName(),
+                clientAccount.getOfficeId(), expectedDisbursementDate);
     }
 
     @Override

@@ -34,6 +34,7 @@ import org.apache.fineract.organisation.holiday.domain.HolidayRepositoryWrapper;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.organisation.workingdays.domain.WorkingDaysRepositoryWrapper;
 import org.apache.fineract.portfolio.charge.domain.Charge;
+import org.apache.fineract.portfolio.charge.domain.ChargeCalculationType;
 import org.apache.fineract.portfolio.charge.domain.ChargeRepositoryWrapper;
 import org.apache.fineract.portfolio.charge.exception.ChargeCannotBeAppliedToException;
 import org.apache.fineract.portfolio.client.api.ClientApiConstants;
@@ -84,7 +85,7 @@ public class ClientChargeWritePlatformServiceJpaRepositoryImpl implements Client
                 throw new ChargeCannotBeAppliedToException("client", errorMessage, charge.getId());
             }
 
-            final ClientCharge clientCharge = ClientCharge.createNew(client, charge, command);
+            final ClientCharge clientCharge = createNew(client, charge, command);
             final DateTimeFormatter fmt = DateTimeFormat.forPattern(command.dateFormat());
             final List<ApiParameterError> dataValidationErrors = new ArrayList<>();
             final DataValidatorBuilder baseDataValidator = new DataValidatorBuilder(dataValidationErrors)
@@ -137,12 +138,24 @@ public class ClientChargeWritePlatformServiceJpaRepositoryImpl implements Client
             final Map<String, Object> changes = new LinkedHashMap<>();
             final PaymentDetail paymentDetail = this.paymentDetailWritePlatformService.createAndPersistPaymentDetail(command, changes);
 
-            ClientTransaction clientTransaction = ClientTransaction.payCharge(client, client.getOffice(), paymentDetail, transactionDate,
-                    chargePaid, clientCharge.getCurrency().getCode(), getAppUserIfPresent());
+            ClientTransaction clientTransaction = ClientTransaction.builder()
+                .client(client)
+                .office(client.getOffice())
+                .paymentDetail(paymentDetail)
+                .typeOf(ClientTransactionType.PAY_CHARGE.getValue())
+                .dateOf(transactionDate.toDate())
+                .amount(chargePaid.getAmount())
+                .currencyCode(clientCharge.getCurrency().getCode())
+                .appUser(getAppUserIfPresent())
+                .build();
             this.clientTransactionRepository.saveAndFlush(clientTransaction);
 
             // update charge paid by associations
-            final ClientChargePaidBy chargePaidBy = ClientChargePaidBy.instance(clientTransaction, clientCharge, amountPaid);
+            final ClientChargePaidBy chargePaidBy = ClientChargePaidBy.builder()
+                .clientTransaction(clientTransaction)
+                .clientCharge(clientCharge)
+                .amount(amountPaid)
+                .build();
             clientTransaction.getClientChargePaidByCollection().add(chargePaidBy);
 
             // generate accounting entries
@@ -179,12 +192,25 @@ public class ClientChargeWritePlatformServiceJpaRepositoryImpl implements Client
             Money waivedAmount = clientCharge.waive();
 
             // create Waiver Transaction
-            ClientTransaction clientTransaction = ClientTransaction.waiver(client, client.getOffice(), transactionDate, waivedAmount,
-                    clientCharge.getCurrency().getCode(), getAppUserIfPresent());
+            ClientTransaction clientTransaction = ClientTransaction.builder()
+                .client(client)
+                .office(client.getOffice())
+                .typeOf(ClientTransactionType.WAIVE_CHARGE.getValue())
+                .dateOf(transactionDate.toDate())
+                .amount(waivedAmount.getAmount())
+                .reversed(false)
+                .createdDate(DateUtils.getDateOfTenant())
+                .currencyCode(clientCharge.getCurrency().getCode())
+                .appUser(getAppUserIfPresent())
+                .build();
             this.clientTransactionRepository.save(clientTransaction);
 
             // update charge paid by associations
-            final ClientChargePaidBy chargePaidBy = ClientChargePaidBy.instance(clientTransaction, clientCharge, waivedAmount.getAmount());
+            final ClientChargePaidBy chargePaidBy = ClientChargePaidBy.builder()
+                .clientTransaction(clientTransaction)
+                .clientCharge(clientCharge)
+                .amount(waivedAmount.getAmount())
+                .build();
             clientTransaction.getClientChargePaidByCollection().add(chargePaidBy);
 
             return CommandProcessingResult.builder().transactionId(clientTransaction.getId().toString())//
@@ -221,6 +247,45 @@ public class ClientChargeWritePlatformServiceJpaRepositoryImpl implements Client
         }
     }
 
+    private static ClientCharge createNew(final Client client, final Charge charge, final JsonCommand command) {
+        BigDecimal amount = command.bigDecimalValueOfParameterNamed(ClientApiConstants.amountParamName);
+        final LocalDate dueDate = command.localDateValueOfParameterNamed(ClientApiConstants.dueAsOfDateParamName);
+        final boolean status = true;
+        // Derive from charge definition if not passed in as a parameter
+        amount = (amount == null) ? charge.getAmount() : amount;
+        ClientCharge clientCharge = ClientCharge.builder()
+            .client(client)
+            .charge(charge)
+            .penaltyCharge(charge.isPenalty())
+            .chargeTime(charge.getChargeTimeType())
+            .amount(amount)
+            .dueDate(dueDate!=null ? dueDate.toDate() : null)
+            .chargeCalculation(charge.getChargeCalculation())
+            .status(status)
+            .build();
+
+        switch (ChargeCalculationType.fromInt(clientCharge.getChargeCalculation())) {
+            case INVALID:
+                clientCharge.setAmount(null);
+                clientCharge.setAmountPaid(null);
+                clientCharge.setAmountOutstanding(BigDecimal.ZERO);
+                clientCharge.setAmountWaived(null);
+                clientCharge.setAmountWrittenOff(null);
+                break;
+            case FLAT:
+                clientCharge.setAmount(null);
+                clientCharge.setAmountPaid(null);
+                clientCharge.setAmountOutstanding(amount);
+                clientCharge.setAmountWaived(null);
+                clientCharge.setAmountWrittenOff(null);
+                break;
+            default:
+                break;
+        }
+
+        return clientCharge;
+    }
+
     /**
      * Validates transaction to ensure that <br>
      * charge is active <br>
@@ -248,7 +313,7 @@ public class ClientChargeWritePlatformServiceJpaRepositoryImpl implements Client
         final DataValidatorBuilder baseDataValidator = new DataValidatorBuilder(dataValidationErrors)
                 .resource(ClientApiConstants.CLIENT_CHARGES_RESOURCE_NAME);
 
-        if (clientCharge.isNotActive()) {
+        if (!clientCharge.isStatus()) {
             baseDataValidator.reset().failWithCodeNoParameterAddedToErrorCode("charge.is.not.active");
             if (!dataValidationErrors.isEmpty()) { throw new PlatformApiDataValidationException(dataValidationErrors); }
         }

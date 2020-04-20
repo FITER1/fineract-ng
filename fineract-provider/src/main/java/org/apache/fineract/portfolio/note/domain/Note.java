@@ -175,10 +175,6 @@ public class Note extends AbstractAuditableCustom<AppUser, Long> {
         return actualChanges;
     }
 
-    public boolean isNotAgainstClientWithIdOf(final Long clientId) {
-        return !this.client.identifiedBy(clientId);
-    }
-
     public String getNote() {
         return note;
     }

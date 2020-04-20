@@ -94,7 +94,9 @@ public class ClientIdentifiersApiResource {
         this.context.authenticatedUser().validateHasReadPermission(this.resourceNameForPermissions);
 
         final Collection<CodeValueData> codeValues = this.codeValueReadPlatformService.retrieveCodeValuesByCode("Customer Identifier");
-        final ClientIdentifierData clientIdentifierData = ClientIdentifierData.template(codeValues);
+        final ClientIdentifierData clientIdentifierData = ClientIdentifierData.builder()
+            .allowedDocumentTypes(codeValues)
+            .build();
 
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());
         return this.toApiJsonSerializer.serialize(settings, clientIdentifierData, CLIENT_IDENTIFIER_DATA_PARAMETERS);
@@ -121,7 +123,7 @@ public class ClientIdentifiersApiResource {
                 // need to fetch client info
                 final ClientData clientInfo = this.clientReadPlatformService.retrieveClientByIdentifier(e.getDocumentTypeId(),
                         e.getIdentifierKey());
-                rethrowas = new DuplicateClientIdentifierException(clientInfo.displayName(), clientInfo.officeName(),
+                rethrowas = new DuplicateClientIdentifierException(clientInfo.getDisplayName(), clientInfo.getOfficeName(),
                         e.getIdentifierType(), e.getIdentifierKey());
             }
             throw rethrowas;
@@ -145,7 +147,15 @@ public class ClientIdentifiersApiResource {
                 clientIdentifierId);
         if (settings.isTemplate()) {
             final Collection<CodeValueData> codeValues = this.codeValueReadPlatformService.retrieveCodeValuesByCode("Customer Identifier");
-            clientIdentifierData = ClientIdentifierData.template(clientIdentifierData, codeValues);
+            clientIdentifierData = ClientIdentifierData.builder()
+                .id(clientIdentifierData.getId())
+                .clientId(clientIdentifierData.getClientId())
+                .documentType(clientIdentifierData.getDocumentType())
+                .documentKey(clientIdentifierData.getDocumentKey())
+                .description(clientIdentifierData.getDescription())
+                .status(clientIdentifierData.getStatus())
+                .allowedDocumentTypes(codeValues)
+                .build();
         }
 
         return this.toApiJsonSerializer.serialize(settings, clientIdentifierData, CLIENT_IDENTIFIER_DATA_PARAMETERS);
@@ -173,7 +183,7 @@ public class ClientIdentifiersApiResource {
             if (e.getDocumentTypeId() != null) {
                 final ClientData clientInfo = this.clientReadPlatformService.retrieveClientByIdentifier(e.getDocumentTypeId(),
                         e.getIdentifierKey());
-                reThrowAs = new DuplicateClientIdentifierException(clientInfo.displayName(), clientInfo.officeName(),
+                reThrowAs = new DuplicateClientIdentifierException(clientInfo.getDisplayName(), clientInfo.getOfficeName(),
                         e.getIdentifierType(), e.getIdentifierKey());
             }
             throw reThrowAs;

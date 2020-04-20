@@ -57,7 +57,6 @@ public class GLAccount extends AbstractPersistableCustom<Long> {
     @Column(name = "gl_code", nullable = false, length = 100)
     private String glCode;
 
-    @Builder.Default
     @Column(name = "disabled", nullable = false)
     private boolean disabled;
 

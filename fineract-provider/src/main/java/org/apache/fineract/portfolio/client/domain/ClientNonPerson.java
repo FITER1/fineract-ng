@@ -18,19 +18,16 @@
  */
 package org.apache.fineract.portfolio.client.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
-import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
-import org.apache.fineract.portfolio.client.api.ClientApiConstants;
-import org.joda.time.LocalDate;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
 
 @SuperBuilder
 @Data
@@ -62,100 +59,4 @@ public class ClientNonPerson extends AbstractPersistableCustom<Long> {
 	
 	@Column(name = "remarks", length = 150)
 	private String remarks;
-	
-
-	public static ClientNonPerson createNew(final Client client, final CodeValue constitution, final CodeValue mainBusinessLine, String incorpNumber, LocalDate incorpValidityTill, String remarks) {
-        validate(client, incorpValidityTill);
-
-	    return ClientNonPerson.builder()
-            .client(client)
-            .constitution(constitution)
-            .mainBusinessLine(mainBusinessLine)
-            .incorpNumber(incorpNumber)
-            .incorpValidityTill(incorpValidityTill==null ? null : incorpValidityTill.toDateTimeAtStartOfDay().toDate())
-            .remarks(remarks)
-            .build();
-	}
-
-	private static void validate(final Client client, LocalDate incorpValidityTill) {
-        final List<ApiParameterError> dataValidationErrors = new ArrayList<>();
-
-        if (incorpValidityTill!=null && client.dateOfBirthLocalDate() != null && client.dateOfBirthLocalDate().isAfter(incorpValidityTill)) {
-            final String defaultUserMessage = "incorpvaliditytill date cannot be after the incorporation date";
-            final ApiParameterError error = ApiParameterError.parameterError("error.msg.clients.incorpValidityTill.after.incorp.date", defaultUserMessage, ClientApiConstants.incorpValidityTillParamName, incorpValidityTill);
-            dataValidationErrors.add(error);
-        }
-
-        if (!dataValidationErrors.isEmpty()) {
-            throw new PlatformApiDataValidationException(dataValidationErrors);
-        }
-    }
-
-	private LocalDate getIncorpValidityTillLocalDate() {
-        LocalDate incorpValidityTillLocalDate = null;
-        if (this.incorpValidityTill != null) {
-            incorpValidityTillLocalDate = LocalDate.fromDateFields(this.incorpValidityTill);
-        }
-        return incorpValidityTillLocalDate;
-    }
-
-	private Long constitutionId() {
-        Long constitutionId = null;
-        if (this.constitution != null) {
-            constitutionId = this.constitution.getId();
-        }
-        return constitutionId;
-    }
-	
-	private Long mainBusinessLineId() {
-        Long mainBusinessLineId = null;
-        if (this.mainBusinessLine != null) {
-            mainBusinessLineId = this.mainBusinessLine.getId();
-        }
-        return mainBusinessLineId;
-    }
-	
-	public Map<String, Object> update(final JsonCommand command) {
-		
-		final Map<String, Object> actualChanges = new LinkedHashMap<>(9);
-		
-		if (command.isChangeInStringParameterNamed(ClientApiConstants.incorpNumberParamName, this.incorpNumber)) {
-            final String newValue = command.stringValueOfParameterNamed(ClientApiConstants.incorpNumberParamName);
-            actualChanges.put(ClientApiConstants.incorpNumberParamName, newValue);
-            this.incorpNumber = StringUtils.defaultIfEmpty(newValue, null);
-        }
-		
-		if (command.isChangeInStringParameterNamed(ClientApiConstants.remarksParamName, this.remarks)) {
-            final String newValue = command.stringValueOfParameterNamed(ClientApiConstants.remarksParamName);
-            actualChanges.put(ClientApiConstants.remarksParamName, newValue);
-            this.remarks = StringUtils.defaultIfEmpty(newValue, null);
-        }
-		
-		final String dateFormatAsInput = command.dateFormat();
-        final String localeAsInput = command.locale();
-        
-		if (command.isChangeInLocalDateParameterNamed(ClientApiConstants.incorpValidityTillParamName, getIncorpValidityTillLocalDate())) {
-            final String valueAsInput = command.stringValueOfParameterNamed(ClientApiConstants.incorpValidityTillParamName);
-            actualChanges.put(ClientApiConstants.incorpValidityTillParamName, valueAsInput);
-            actualChanges.put(ClientApiConstants.dateFormatParamName, dateFormatAsInput);
-            actualChanges.put(ClientApiConstants.localeParamName, localeAsInput);
-
-            final LocalDate newValue = command.localDateValueOfParameterNamed(ClientApiConstants.incorpValidityTillParamName);
-            this.incorpValidityTill = newValue.toDate();
-        }
-		
-		if (command.isChangeInLongParameterNamed(ClientApiConstants.constitutionIdParamName, constitutionId())) {
-            final Long newValue = command.longValueOfParameterNamed(ClientApiConstants.constitutionIdParamName);
-            actualChanges.put(ClientApiConstants.constitutionIdParamName, newValue);
-        }
-		
-		if (command.isChangeInLongParameterNamed(ClientApiConstants.mainBusinessLineIdParamName, mainBusinessLineId())) {
-            final Long newValue = command.longValueOfParameterNamed(ClientApiConstants.mainBusinessLineIdParamName);
-            actualChanges.put(ClientApiConstants.mainBusinessLineIdParamName, newValue);
-        }
-		
-		//validate();
-
-        return actualChanges;
-	}
 }

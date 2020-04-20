@@ -137,7 +137,7 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
 
         if (mostRelevantFromClientId != null) {
             fromClient = this.clientReadPlatformService.retrieveOne(mostRelevantFromClientId);
-            mostRelevantFromOfficeId = fromClient.officeId();
+            mostRelevantFromOfficeId = fromClient.getOfficeId();
             Long[] loanStatus = null;
             if (mostRelevantFromAccountType == 1) {
                 loanStatus = new Long[] { 300L, 700L };
@@ -172,7 +172,7 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
 
         if (mostRelevantToClientId != null) {
             toClient = this.clientReadPlatformService.retrieveOne(mostRelevantToClientId);
-            mostRelevantToOfficeId = toClient.officeId();
+            mostRelevantToOfficeId = toClient.getOfficeId();
 
             toClientOptions = this.clientReadPlatformService.retrieveAllForLookupByOfficeId(mostRelevantToOfficeId);
 
@@ -477,11 +477,21 @@ public class StandingInstructionReadPlatformServiceImpl implements StandingInstr
 
             final Long fromClientId = JdbcSupport.getLong(rs, "fromClientId");
             final String fromClientName = rs.getString("fromClientName");
-            final ClientData fromClient = ClientData.lookup(fromClientId, fromClientName, fromOfficeId, fromOfficeName);
+            final ClientData fromClient = ClientData.builder()
+                .id(fromClientId)
+                .displayName(fromClientName)
+                .officeId(fromOfficeId)
+                .officeName(fromOfficeName)
+                .build();
 
             final Long toClientId = JdbcSupport.getLong(rs, "toClientId");
             final String toClientName = rs.getString("toClientName");
-            final ClientData toClient = ClientData.lookup(toClientId, toClientName, toOfficeId, toOfficeName);
+            final ClientData toClient = ClientData.builder()
+                .id(toClientId)
+                .displayName(toClientName)
+                .officeId(toOfficeId)
+                .officeName(toOfficeName)
+                .build();
 
             final Long fromSavingsAccountId = JdbcSupport.getLong(rs, "fromSavingsAccountId");
             final String fromSavingsAccountNo = rs.getString("fromSavingsAccountNo");

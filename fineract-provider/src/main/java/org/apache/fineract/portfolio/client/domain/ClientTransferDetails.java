@@ -19,11 +19,16 @@
 
 package org.apache.fineract.portfolio.client.domain;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.Date;
 
 @SuperBuilder
@@ -57,13 +62,4 @@ public class ClientTransferDetails extends AbstractPersistableCustom<Long> {
 
 	@Column(name = "submitted_by", nullable = false)
 	private Long submittedBy;
-
-	public static ClientTransferDetails instance(final Long clientId, final Long fromOfficeId, final Long toOfficeId,
-			final Date proposedTransferDate, final Integer transferEventType, final Date submittedOn,
-			final Long submittedBy) {
-		return new ClientTransferDetails(clientId, fromOfficeId, toOfficeId, proposedTransferDate, transferEventType,
-				submittedOn, submittedBy);
-
-	}
-
 }

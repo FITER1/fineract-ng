@@ -135,7 +135,21 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 					
 		}
 		
-		ClientFamilyMembers clientFamilyMembers=ClientFamilyMembers.fromJson(client, firstName, middleName, lastName, qualification,mobileNumber,age,isDependent, relationship, maritalStatus, gender, dateOfBirth, profession);
+		ClientFamilyMembers clientFamilyMembers = ClientFamilyMembers.builder()
+			.client(client)
+			.firstName(firstName)
+			.middleName(middleName)
+			.lastName(lastName)
+			.qualification(qualification)
+			.mobileNumber(mobileNumber)
+			.age(age)
+			.isDependent(isDependent)
+			.relationship(relationship)
+			.maritalStatus(maritalStatus)
+			.gender(gender)
+			.dateOfBirth(dateOfBirth)
+			.profession(profession)
+			.build();
 		
 		this.clientFamilyRepository.save(clientFamilyMembers);
 		
@@ -260,7 +274,21 @@ public class ClientFamilyMembersWritePlatformServiceImpl implements ClientFamily
 						
 			}
 			
-			familyMember=ClientFamilyMembers.fromJson(client, firstName, middleName, lastName, qualification,mobileNumber,age,isDependent, relationship, maritalStatus, gender, dateOfBirth, profession);
+			familyMember = ClientFamilyMembers.builder()
+				.client(client)
+				.firstName(firstName)
+				.middleName(middleName)
+				.lastName(lastName)
+				.qualification(qualification)
+				.mobileNumber(mobileNumber)
+				.age(age)
+				.isDependent(isDependent)
+				.relationship(relationship)
+				.maritalStatus(maritalStatus)
+				.gender(gender)
+				.dateOfBirth(dateOfBirth)
+				.profession(profession)
+				.build();
 			
 			this.clientFamilyRepository.save(familyMember);	
 			

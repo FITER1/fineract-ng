@@ -676,7 +676,7 @@ public class GroupingTypesWritePlatformServiceJpaRepositoryImpl implements Group
             for (final String clientId : clientMembersArray) {
                 final Long id = Long.valueOf(clientId);
                 final Client client = this.clientRepositoryWrapper.findOneWithNotFoundDetection(id);
-                if (!client.isOfficeIdentifiedBy(groupOfficeId)) {
+                if (!client.getOffice().getId().equals(groupOfficeId)) {
                     final String errorMessage = "Client with identifier " + clientId + " must have the same office as group.";
                     throw new InvalidOfficeException("client", "attach.to.group", errorMessage, clientId, groupOfficeId);
                 }

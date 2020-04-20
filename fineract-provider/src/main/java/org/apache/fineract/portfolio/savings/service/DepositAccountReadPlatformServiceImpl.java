@@ -55,7 +55,6 @@ import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 import org.apache.fineract.portfolio.paymenttype.service.PaymentTypeReadPlatformService;
 import org.apache.fineract.portfolio.savings.*;
 import org.apache.fineract.portfolio.savings.data.*;
-import org.apache.fineract.portfolio.savings.domain.SavingsAccountCharge;
 import org.apache.fineract.portfolio.savings.domain.SavingsAccountStatusType;
 import org.apache.fineract.portfolio.savings.exception.DepositAccountNotFoundException;
 import org.apache.fineract.portfolio.tax.data.TaxGroupData;
@@ -273,7 +272,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
         Collection<SavingsAccountData> savingsAccountDatas = null;
         if (clientId != null) {
             client = this.clientReadPlatformService.retrieveOne(clientId);
-            officeId = client.officeId();
+            officeId = client.getOfficeId();
             savingsAccountDatas = this.savingsAccountReadPlatformService.retrieveActiveForLookup(clientId,
                     DepositAccountType.SAVINGS_DEPOSIT);
         }
@@ -378,7 +377,7 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
 
             String clientName = null;
             if (client != null) {
-                clientName = client.displayName();
+                clientName = client.getDisplayName();
             }
 
             String groupName = null;
@@ -1127,8 +1126,8 @@ public class DepositAccountReadPlatformServiceImpl implements DepositAccountRead
             Long clientId = null;
             String clientName = null;
             if (this.client != null) {
-                clientId = this.client.id();
-                clientName = this.client.displayName();
+                clientId = this.client.getId();
+                clientName = this.client.getDisplayName();
             }
 
             Long groupId = null;

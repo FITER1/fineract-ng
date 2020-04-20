@@ -154,8 +154,12 @@ public class AppUserReadPlatformServiceImpl implements AppUserReadPlatformServic
         	Set<ClientData> clients = new HashSet<>();
         	for(AppUserClientMapping clientMap : user.getAppUserClientMappings()){
         		Client client = clientMap.getClient();
-        		clients.add(ClientData.lookup(client.getId(), client.getDisplayName(), 
-        				client.getOffice().getId(), client.getOffice().getName()));
+                clients.add(ClientData.builder()
+                    .id(client.getId())
+                    .displayName(client.getDisplayName())
+                    .officeId(client.getOffice().getId())
+                    .officeName(client.getOffice().getName())
+                    .build());
         	}
         	retUser.setClients(clients);
         }

@@ -21,6 +21,7 @@ package org.apache.fineract.portfolio.client.service;
 import com.google.gson.JsonElement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandProcessingService;
@@ -34,13 +35,16 @@ import org.apache.fineract.infrastructure.configuration.data.GlobalConfiguration
 import org.apache.fineract.infrastructure.configuration.domain.ConfigurationDomainService;
 import org.apache.fineract.infrastructure.configuration.service.ConfigurationReadPlatformService;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
+import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidationException;
 import org.apache.fineract.infrastructure.core.exception.PlatformDataIntegrityException;
 import org.apache.fineract.infrastructure.core.serialization.FromJsonHelper;
 import org.apache.fineract.infrastructure.dataqueries.data.EntityTables;
 import org.apache.fineract.infrastructure.dataqueries.data.StatusEnum;
 import org.apache.fineract.infrastructure.dataqueries.service.EntityDatatableChecksWritePlatformService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.apache.fineract.infrastructure.security.service.RandomPasswordGenerator;
 import org.apache.fineract.organisation.office.domain.Office;
 import org.apache.fineract.organisation.office.domain.OfficeRepositoryWrapper;
 import org.apache.fineract.organisation.staff.domain.Staff;
@@ -235,7 +239,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
                 }
             }
             
-            final Client newClient = Client.createNew(currentUser, clientOffice, clientParentGroup, staff, savingsProductId, gender,
+            final Client newClient = createNew(currentUser, clientOffice, clientParentGroup, staff, savingsProductId, gender,
                     clientType, clientClassification, legalFormValue, command);
             this.clientRepository.save(newClient);
             boolean rollbackTransaction = false;
@@ -253,7 +257,8 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             }
             if (newClient.isAccountNumberRequiresAutoGeneration()) {
                 AccountNumberFormat accountNumberFormat = this.accountNumberFormatRepository.findByAccountType(EntityAccountType.CLIENT);
-                newClient.updateAccountNo(accountNumberGenerator.generate(newClient, accountNumberFormat));
+                newClient.setAccountNumber(accountNumberGenerator.generate(newClient, accountNumberFormat));
+                newClient.setAccountNumberRequiresAutoGeneration(true);
                 this.clientRepository.save(newClient);
             }
                         
@@ -336,7 +341,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 	        			clientNonPersonMainBusinessLineId);
 	        }
 
-	    	final ClientNonPerson newClientNonPerson = ClientNonPerson.createNew(client, clientNonPersonConstitution, clientNonPersonMainBusinessLine, incorpNumber, incorpValidityTill, remarks);
+	    	final ClientNonPerson newClientNonPerson = createNewNonPerson(client, clientNonPersonConstitution, clientNonPersonMainBusinessLine, incorpNumber, incorpValidityTill, remarks);
 
 	    	this.clientNonPersonRepository.save(newClientNonPerson);
 		}
@@ -358,7 +363,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
 
             this.context.validateAccessRights(clientHierarchy);
 
-            final Map<String, Object> changes = clientForUpdate.update(command);
+            final Map<String, Object> changes = update(clientForUpdate, command);
 
             if (changes.containsKey(ClientApiConstants.staffIdParamName)) {
 
@@ -451,7 +456,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             if(clientNonPersonForUpdate != null)
             {
             	final JsonElement clientNonPersonElement = command.jsonElement(ClientApiConstants.clientNonPersonDetailsParamName);
-            	final Map<String, Object> clientNonPersonChanges = clientNonPersonForUpdate.update(JsonCommand.fromExistingCommand(command, clientNonPersonElement));
+            	final Map<String, Object> clientNonPersonChanges = updateNonPerson(clientNonPersonForUpdate, JsonCommand.fromExistingCommand(command, clientNonPersonElement));
 
                 if (clientNonPersonChanges.containsKey(ClientApiConstants.constitutionIdParamName)) {
 
@@ -540,6 +545,319 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
             handleDataIntegrityIssues(command, dve.getMostSpecificCause(), dve);
             return new CommandProcessingResult();
         }
+    }
+
+    private Client createNew(final AppUser currentUser,
+                             final Office clientOffice,
+                             final Group clientParentGroup,
+                             final Staff staff,
+                             final Long savingsProductId,
+                             final CodeValue gender,
+                             final CodeValue clientType,
+                             final CodeValue clientClassification,
+                             final Integer legalForm,
+                             final JsonCommand command) {
+
+        final String accountNo = command.stringValueOfParameterNamed(ClientApiConstants.accountNoParamName);
+        final String externalId = command.stringValueOfParameterNamed(ClientApiConstants.externalIdParamName);
+        final String mobileNo = command.stringValueOfParameterNamed(ClientApiConstants.mobileNoParamName);
+        final String emailAddress = command.stringValueOfParameterNamed(ClientApiConstants.emailAddressParamName);
+
+        final String firstname = command.stringValueOfParameterNamed(ClientApiConstants.firstnameParamName);
+        final String middlename = command.stringValueOfParameterNamed(ClientApiConstants.middlenameParamName);
+        final String lastname = command.stringValueOfParameterNamed(ClientApiConstants.lastnameParamName);
+        final String fullname = command.stringValueOfParameterNamed(ClientApiConstants.fullnameParamName);
+
+        final boolean isStaff = command.booleanPrimitiveValueOfParameterNamed(ClientApiConstants.isStaffParamName);
+
+        final LocalDate dataOfBirth = command.localDateValueOfParameterNamed(ClientApiConstants.dateOfBirthParamName);
+
+        ClientStatus status = ClientStatus.PENDING;
+        boolean active = false;
+        if (command.hasParameter("active")) {
+            active = command.booleanPrimitiveValueOfParameterNamed(ClientApiConstants.activeParamName);
+        }
+
+        LocalDate activationDate = null;
+        LocalDate officeJoiningDate = null;
+        if (active) {
+            status = ClientStatus.ACTIVE;
+            activationDate = command.localDateValueOfParameterNamed(ClientApiConstants.activationDateParamName);
+            officeJoiningDate = activationDate;
+        }
+
+        LocalDate submittedOnDate = LocalDate.now();
+        if (active && submittedOnDate.isAfter(activationDate)) {
+            submittedOnDate = activationDate;
+        }
+        if (command.hasParameter(ClientApiConstants.submittedOnDateParamName)) {
+            submittedOnDate = command.localDateValueOfParameterNamed(ClientApiConstants.submittedOnDateParamName);
+        }
+
+        Client client = Client.builder()
+            .submittedBy(currentUser)
+            .status(status.getValue())
+            .office(clientOffice)
+            .firstname(StringUtils.trim(firstname))
+            .middlename(StringUtils.trim(middlename))
+            .lastname(StringUtils.trim(lastname))
+            .fullname(StringUtils.trim(fullname))
+            .activationDate(activationDate!=null ? activationDate.toDateTimeAtStartOfDay().toDate() : null)
+            .officeJoiningDate(officeJoiningDate!=null ? officeJoiningDate.toDateTimeAtStartOfDay().toDate() : null)
+            .externalId(StringUtils.trim(externalId))
+            .mobileNo(StringUtils.trim(mobileNo))
+            .emailAddress(StringUtils.trim(emailAddress))
+            .staff(staff)
+            .submittedOnDate(submittedOnDate.toDate())
+            .savingsProductId(savingsProductId)
+            .dateOfBirth(dataOfBirth!=null ? dataOfBirth.toDateTimeAtStartOfDay().toDate() : null)
+            .gender(gender)
+            .clientType(clientType)
+            .clientClassification(clientClassification)
+            .legalForm(legalForm)
+            .staffFlag(isStaff)
+            .build();
+
+        if (StringUtils.isBlank(accountNo)) {
+            client.setAccountNumber(new RandomPasswordGenerator(19).generate());
+            client.setAccountNumberRequiresAutoGeneration(true);
+        } else {
+            client.setAccountNumber(accountNo);
+        }
+
+        if (clientParentGroup != null) {
+            client.setGroups(Collections.singleton(clientParentGroup));
+        }
+
+        client.deriveDisplayName();
+        client.validate();
+
+        return client;
+    }
+
+    private ClientNonPerson createNewNonPerson(final Client client, final CodeValue constitution, final CodeValue mainBusinessLine, String incorpNumber, LocalDate incorpValidityTill, String remarks) {
+        validateNonPerson(client, incorpValidityTill);
+
+        return ClientNonPerson.builder()
+            .client(client)
+            .constitution(constitution)
+            .mainBusinessLine(mainBusinessLine)
+            .incorpNumber(incorpNumber)
+            .incorpValidityTill(incorpValidityTill==null ? null : incorpValidityTill.toDateTimeAtStartOfDay().toDate())
+            .remarks(remarks)
+            .build();
+    }
+
+    private void validateNonPerson(final Client client, LocalDate incorpValidityTill) {
+        final List<ApiParameterError> dataValidationErrors = new ArrayList<>();
+
+        if (incorpValidityTill!=null && client.dateOfBirthLocalDate() != null && client.dateOfBirthLocalDate().isAfter(incorpValidityTill)) {
+            final String defaultUserMessage = "incorpvaliditytill date cannot be after the incorporation date";
+            final ApiParameterError error = ApiParameterError.parameterError("error.msg.clients.incorpValidityTill.after.incorp.date", defaultUserMessage, ClientApiConstants.incorpValidityTillParamName, incorpValidityTill);
+            dataValidationErrors.add(error);
+        }
+
+        if (!dataValidationErrors.isEmpty()) {
+            throw new PlatformApiDataValidationException(dataValidationErrors);
+        }
+    }
+
+    private Map<String, Object> updateNonPerson(final ClientNonPerson nonPerson, final JsonCommand command) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(9);
+
+        if (command.isChangeInStringParameterNamed(ClientApiConstants.incorpNumberParamName, nonPerson.getIncorpNumber())) {
+            final String newValue = command.stringValueOfParameterNamed(ClientApiConstants.incorpNumberParamName);
+            actualChanges.put(ClientApiConstants.incorpNumberParamName, newValue);
+            nonPerson.setIncorpNumber(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        if (command.isChangeInStringParameterNamed(ClientApiConstants.remarksParamName, nonPerson.getRemarks())) {
+            final String newValue = command.stringValueOfParameterNamed(ClientApiConstants.remarksParamName);
+            actualChanges.put(ClientApiConstants.remarksParamName, newValue);
+            nonPerson.setRemarks(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        final String dateFormatAsInput = command.dateFormat();
+        final String localeAsInput = command.locale();
+
+        if (command.isChangeInLocalDateParameterNamed(ClientApiConstants.incorpValidityTillParamName, LocalDate.fromDateFields(nonPerson.getIncorpValidityTill()))) {
+            final String valueAsInput = command.stringValueOfParameterNamed(ClientApiConstants.incorpValidityTillParamName);
+            actualChanges.put(ClientApiConstants.incorpValidityTillParamName, valueAsInput);
+            actualChanges.put(ClientApiConstants.dateFormatParamName, dateFormatAsInput);
+            actualChanges.put(ClientApiConstants.localeParamName, localeAsInput);
+
+            final LocalDate newValue = command.localDateValueOfParameterNamed(ClientApiConstants.incorpValidityTillParamName);
+            nonPerson.setIncorpValidityTill(newValue.toDate());
+        }
+
+        if (command.isChangeInLongParameterNamed(ClientApiConstants.constitutionIdParamName, nonPerson.getConstitution().getId())) {
+            final Long newValue = command.longValueOfParameterNamed(ClientApiConstants.constitutionIdParamName);
+            actualChanges.put(ClientApiConstants.constitutionIdParamName, newValue);
+        }
+
+        if (command.isChangeInLongParameterNamed(ClientApiConstants.mainBusinessLineIdParamName, nonPerson.getMainBusinessLine().getId())) {
+            final Long newValue = command.longValueOfParameterNamed(ClientApiConstants.mainBusinessLineIdParamName);
+            actualChanges.put(ClientApiConstants.mainBusinessLineIdParamName, newValue);
+        }
+
+        //validate();
+
+        return actualChanges;
+    }
+
+    private Map<String, Object> update(final Client client, final JsonCommand command) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(9);
+
+        if (command.isChangeInIntegerParameterNamed(ClientApiConstants.statusParamName, client.getStatus())) {
+            final Integer newValue = command.integerValueOfParameterNamed(ClientApiConstants.statusParamName);
+            actualChanges.put(ClientApiConstants.statusParamName, ClientEnumerations.status(newValue));
+            client.setStatus(ClientStatus.fromInt(newValue).getValue());
+        }
+
+        if (command.isChangeInStringParameterNamed(ClientApiConstants.accountNoParamName, client.getAccountNumber())) {
+            final String newValue = command.stringValueOfParameterNamed(ClientApiConstants.accountNoParamName);
+            actualChanges.put(ClientApiConstants.accountNoParamName, newValue);
+            client.setAccountNumber(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        if (command.isChangeInStringParameterNamed(ClientApiConstants.externalIdParamName, client.getExternalId())) {
+            final String newValue = command.stringValueOfParameterNamed(ClientApiConstants.externalIdParamName);
+            actualChanges.put(ClientApiConstants.externalIdParamName, newValue);
+            client.setExternalId(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        if (command.isChangeInStringParameterNamed(ClientApiConstants.mobileNoParamName, client.getMobileNo())) {
+            final String newValue = command.stringValueOfParameterNamed(ClientApiConstants.mobileNoParamName);
+            actualChanges.put(ClientApiConstants.mobileNoParamName, newValue);
+            client.setMobileNo(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        if (command.isChangeInStringParameterNamed(ClientApiConstants.emailAddressParamName, client.getEmailAddress())) {
+            final String newValue = command.stringValueOfParameterNamed(ClientApiConstants.emailAddressParamName);
+            actualChanges.put(ClientApiConstants.emailAddressParamName, newValue);
+            client.setEmailAddress(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        if (command.isChangeInStringParameterNamed(ClientApiConstants.firstnameParamName, client.getFirstname())) {
+            final String newValue = command.stringValueOfParameterNamed(ClientApiConstants.firstnameParamName);
+            actualChanges.put(ClientApiConstants.firstnameParamName, newValue);
+            client.setFirstname(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        if (command.isChangeInStringParameterNamed(ClientApiConstants.middlenameParamName, client.getMiddlename())) {
+            final String newValue = command.stringValueOfParameterNamed(ClientApiConstants.middlenameParamName);
+            actualChanges.put(ClientApiConstants.middlenameParamName, newValue);
+            client.setMiddlename(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        if (command.isChangeInStringParameterNamed(ClientApiConstants.lastnameParamName, client.getLastname())) {
+            final String newValue = command.stringValueOfParameterNamed(ClientApiConstants.lastnameParamName);
+            actualChanges.put(ClientApiConstants.lastnameParamName, newValue);
+            client.setLastname(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        if (command.isChangeInStringParameterNamed(ClientApiConstants.fullnameParamName, client.getFullname())) {
+            final String newValue = command.stringValueOfParameterNamed(ClientApiConstants.fullnameParamName);
+            actualChanges.put(ClientApiConstants.fullnameParamName, newValue);
+            client.setFullname(newValue);
+        }
+
+        if (client.getStaff()!=null && command.isChangeInLongParameterNamed(ClientApiConstants.staffIdParamName, client.getStaff().getId())) {
+            final Long newValue = command.longValueOfParameterNamed(ClientApiConstants.staffIdParamName);
+            actualChanges.put(ClientApiConstants.staffIdParamName, newValue);
+        }
+
+        if (client.getGender()!=null && command.isChangeInLongParameterNamed(ClientApiConstants.genderIdParamName, client.getGender().getId())) {
+            final Long newValue = command.longValueOfParameterNamed(ClientApiConstants.genderIdParamName);
+            actualChanges.put(ClientApiConstants.genderIdParamName, newValue);
+        }
+
+        if (command.isChangeInLongParameterNamed(ClientApiConstants.savingsProductIdParamName, client.getSavingsProductId())) {
+            final Long newValue = command.longValueOfParameterNamed(ClientApiConstants.savingsProductIdParamName);
+            actualChanges.put(ClientApiConstants.savingsProductIdParamName, newValue);
+        }
+
+        if (client.getClientType()!=null && command.isChangeInLongParameterNamed(ClientApiConstants.clientTypeIdParamName, client.getClientType().getId())) {
+            final Long newValue = command.longValueOfParameterNamed(ClientApiConstants.clientTypeIdParamName);
+            actualChanges.put(ClientApiConstants.clientTypeIdParamName, newValue);
+        }
+
+        if (client.getClientClassification()!=null && command.isChangeInLongParameterNamed(ClientApiConstants.clientClassificationIdParamName, client.getClientClassification().getId())) {
+            final Long newValue = command.longValueOfParameterNamed(ClientApiConstants.clientClassificationIdParamName);
+            actualChanges.put(ClientApiConstants.clientClassificationIdParamName, newValue);
+        }
+
+        if (command.isChangeInIntegerParameterNamed(ClientApiConstants.legalFormIdParamName, client.getLegalForm())) {
+            final Integer newValue = command.integerValueOfParameterNamed(ClientApiConstants.legalFormIdParamName);
+            if(newValue != null)
+            {
+                LegalForm legalForm = LegalForm.fromInt(newValue);
+                if(legalForm != null)
+                {
+                    actualChanges.put(ClientApiConstants.legalFormIdParamName, ClientEnumerations.legalForm(newValue));
+                    client.setLegalForm(legalForm.getValue());
+                    if(legalForm.isPerson()){
+                        client.setFullname(null);
+                    }else if(legalForm.isEntity()){
+                        client.setFirstname(null);
+                        client.setLastname(null);
+                        client.setDisplayName(null);
+                    }
+                }
+                else
+                {
+                    actualChanges.put(ClientApiConstants.legalFormIdParamName, null);
+                    client.setLegalForm(null);
+                }
+            }
+            else
+            {
+                actualChanges.put(ClientApiConstants.legalFormIdParamName, null);
+                client.setLegalForm(null);
+            }
+        }
+
+        final String dateFormatAsInput = command.dateFormat();
+        final String localeAsInput = command.locale();
+
+        if (command.isChangeInLocalDateParameterNamed(ClientApiConstants.activationDateParamName, client.getActivationLocalDate())) {
+            final String valueAsInput = command.stringValueOfParameterNamed(ClientApiConstants.activationDateParamName);
+            actualChanges.put(ClientApiConstants.activationDateParamName, valueAsInput);
+            actualChanges.put(ClientApiConstants.dateFormatParamName, dateFormatAsInput);
+            actualChanges.put(ClientApiConstants.localeParamName, localeAsInput);
+
+            final LocalDate newValue = command.localDateValueOfParameterNamed(ClientApiConstants.activationDateParamName);
+            client.setActivationDate(newValue.toDate());
+            client.setOfficeJoiningDate(client.getActivationDate());
+        }
+
+        if (command.isChangeInLocalDateParameterNamed(ClientApiConstants.dateOfBirthParamName, LocalDate.fromDateFields(client.getDateOfBirth()))) {
+            final String valueAsInput = command.stringValueOfParameterNamed(ClientApiConstants.dateOfBirthParamName);
+            actualChanges.put(ClientApiConstants.dateOfBirthParamName, valueAsInput);
+            actualChanges.put(ClientApiConstants.dateFormatParamName, dateFormatAsInput);
+            actualChanges.put(ClientApiConstants.localeParamName, localeAsInput);
+
+            final LocalDate newValue = command.localDateValueOfParameterNamed(ClientApiConstants.dateOfBirthParamName);
+            client.setDateOfBirth(newValue.toDate());
+        }
+
+        if (command.isChangeInLocalDateParameterNamed(ClientApiConstants.submittedOnDateParamName, client.getSubmittedOnDate())) {
+            final String valueAsInput = command.stringValueOfParameterNamed(ClientApiConstants.submittedOnDateParamName);
+            actualChanges.put(ClientApiConstants.submittedOnDateParamName, valueAsInput);
+            actualChanges.put(ClientApiConstants.dateFormatParamName, dateFormatAsInput);
+            actualChanges.put(ClientApiConstants.localeParamName, localeAsInput);
+
+            final LocalDate newValue = command.localDateValueOfParameterNamed(ClientApiConstants.submittedOnDateParamName);
+            client.setSubmittedOnDate(newValue.toDate());
+        }
+
+        client.validateUpdate();
+
+        client.deriveDisplayName();
+
+        return actualChanges;
     }
 
     private CommandProcessingResult openSavingsAccount(final Client client, final DateTimeFormatter fmt) {
@@ -707,7 +1025,7 @@ public class ClientWritePlatformServiceJpaRepositoryImpl implements ClientWriteP
         final Long savingsId = command.longValueOfParameterNamed(ClientApiConstants.savingsAccountIdParamName);
         if (savingsId != null) {
             savingsAccount = this.savingsRepositoryWrapper.findOneWithNotFoundDetection(savingsId);
-            if (!savingsAccount.getClient().identifiedBy(clientId)) {
+            if (!savingsAccount.getClient().getId().equals(clientId)) {
                 String defaultUserMessage = "saving account must belongs to client";
                 throw new InvalidClientSavingProductException("saving.account", "must.belongs.to.client", defaultUserMessage, savingsId,
                         clientForUpdate.getId());

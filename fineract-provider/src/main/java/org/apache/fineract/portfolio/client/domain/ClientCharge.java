@@ -20,14 +20,11 @@ package org.apache.fineract.portfolio.client.domain;
 
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.organisation.office.domain.OrganisationCurrency;
 import org.apache.fineract.portfolio.charge.domain.Charge;
-import org.apache.fineract.portfolio.charge.domain.ChargeCalculationType;
-import org.apache.fineract.portfolio.client.api.ClientApiConstants;
 import org.joda.time.LocalDate;
 
 import javax.persistence.*;
@@ -96,35 +93,6 @@ public class ClientCharge extends AbstractPersistableCustom<Long> {
     @Transient
     private OrganisationCurrency currency;
 
-    public static ClientCharge createNew(final Client client, final Charge charge, final JsonCommand command) {
-        BigDecimal amount = command.bigDecimalValueOfParameterNamed(ClientApiConstants.amountParamName);
-        final LocalDate dueDate = command.localDateValueOfParameterNamed(ClientApiConstants.dueAsOfDateParamName);
-        final boolean status = true;
-        // Derive from charge definition if not passed in as a parameter
-        amount = (amount == null) ? charge.getAmount() : amount;
-        return new ClientCharge(client, charge, amount, dueDate, status);
-    }
-
-    private ClientCharge(final Client client, final Charge charge, final BigDecimal amount, final LocalDate dueDate, final boolean status) {
-
-        this.client = client;
-        this.charge = charge;
-        this.penaltyCharge = charge.isPenalty();
-        this.chargeTime = charge.getChargeTimeType();
-        this.dueDate = (dueDate == null) ? null : dueDate.toDate();
-        this.chargeCalculation = charge.getChargeCalculation();
-
-        BigDecimal chargeAmount = charge.getAmount();
-        if (amount != null) {
-            chargeAmount = amount;
-        }
-
-        populateDerivedFields(chargeAmount);
-
-        this.paid = determineIfFullyPaid();
-        this.status = status;
-    }
-
     public Money pay(final Money amountPaid) {
         Money amountPaidToDate = Money.of(this.getCurrency(), this.amountPaid);
         Money amountOutstanding = Money.of(this.getCurrency(), this.amountOutstanding);
@@ -132,7 +100,7 @@ public class ClientCharge extends AbstractPersistableCustom<Long> {
         amountOutstanding = amountOutstanding.minus(amountPaid);
         this.amountPaid = amountPaidToDate.getAmount();
         this.amountOutstanding = amountOutstanding.getAmount();
-        this.paid = determineIfFullyPaid();
+        this.paid = BigDecimal.ZERO.equals(calculateOutstanding());
         return Money.of(this.getCurrency(), this.amountOutstanding);
     }
 
@@ -164,32 +132,7 @@ public class ClientCharge extends AbstractPersistableCustom<Long> {
         this.status = true;
     }
 
-    private void populateDerivedFields(final BigDecimal amount) {
-        switch (ChargeCalculationType.fromInt(this.chargeCalculation)) {
-            case INVALID:
-                this.amount = null;
-                this.amountPaid = null;
-                this.amountOutstanding = BigDecimal.ZERO;
-                this.amountWaived = null;
-                this.amountWrittenOff = null;
-            break;
-            case FLAT:
-                this.amount = amount;
-                this.amountPaid = null;
-                this.amountOutstanding = amount;
-                this.amountWaived = null;
-                this.amountWrittenOff = null;
-            break;
-            default:
-            break;
-        }
-    }
-
-    private boolean determineIfFullyPaid() {
-        return BigDecimal.ZERO.equals(calculateOutstanding());
-    }
-
-    private BigDecimal calculateOutstanding() {
+    public BigDecimal calculateOutstanding() {
         BigDecimal amountPaidLocal = BigDecimal.ZERO;
         if (this.amountPaid != null) {
             amountPaidLocal = this.amountPaid;
@@ -218,24 +161,12 @@ public class ClientCharge extends AbstractPersistableCustom<Long> {
         return dueDate;
     }
 
-    public boolean isActive() {
-        return this.status;
-    }
-
-    public boolean isNotActive() {
-        return !this.status;
-    }
-
     public Long getClientId() {
         return client.getId();
     }
 
     public Long getOfficeId() {
         return this.client.getOffice().getId();
-    }
-
-    public void setCurrency(OrganisationCurrency currency) {
-        this.currency = currency;
     }
 
     public MonetaryCurrency getCurrency() {

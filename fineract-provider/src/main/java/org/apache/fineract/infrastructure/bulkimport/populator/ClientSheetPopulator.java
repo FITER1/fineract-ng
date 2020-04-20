@@ -62,8 +62,8 @@ public class ClientSheetPopulator extends AbstractWorkbookPopulator {
 	private void setClientNameToClientIdMap() {
 		clientNameToClientId = new HashMap<>();
 		for (ClientData clientData : allClients) {
-			clientNameToClientId.put(clientData.displayName().trim() + "(" + clientData.id() + ")",
-					clientData.id());
+			clientNameToClientId.put(clientData.getDisplayName().trim() + "(" + clientData.getId() + ")",
+					clientData.getId());
 		}
 	}
 
@@ -82,14 +82,14 @@ public class ClientSheetPopulator extends AbstractWorkbookPopulator {
 		officeToClients = new HashMap<>();
 		for (ClientData person : allClients) {
 			addToOfficeClientMap(person.getOfficeName().trim().replaceAll("[ )(]", "_"),
-					person.displayName().trim() + "(" + person.id() + ")");
+					person.getDisplayName().trim() + "(" + person.getId() + ")");
 		}
 	}
 
 	private void setClientNameToSavingsAccountsIdsMap(){
 		clientNameToSavingsAccountIds=new HashMap<>();
 		for (ClientData client: allClients) {
-			clientNameToSavingsAccountIds.put(client.displayName().trim() + "(" + client.id() + ")",client.getSavingsAccountId());
+			clientNameToSavingsAccountIds.put(client.getDisplayName().trim() + "(" + client.getId() + ")",client.getSavingsAccountId());
 		}
 
 	}

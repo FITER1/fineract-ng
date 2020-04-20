@@ -23,7 +23,6 @@ import lombok.experimental.SuperBuilder;
 import org.apache.fineract.accounting.glaccount.domain.GLAccount;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.organisation.monetary.domain.MonetaryCurrency;
 import org.apache.fineract.organisation.monetary.domain.Money;
 import org.apache.fineract.organisation.office.domain.Office;
@@ -91,48 +90,6 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
     @Transient
     private OrganisationCurrency currency;
 
-    public static ClientTransaction payCharge(final Client client, final Office office, PaymentDetail paymentDetail, final LocalDate date,
-            final Money amount, final String currencyCode, final AppUser appUser) {
-        final boolean isReversed = false;
-        final String externalId = null;
-
-        return ClientTransaction.builder()
-            .client(client)
-            .office(office)
-            .paymentDetail(paymentDetail)
-            .typeOf(ClientTransactionType.PAY_CHARGE.getValue())
-            .dateOf(date.toDate())
-            .amount(amount.getAmount())
-            .reversed(isReversed)
-            .externalId(externalId)
-            .createdDate(DateUtils.getDateOfTenant())
-            .currencyCode(currencyCode)
-            .appUser(appUser)
-            .build();
-    }
-
-    public static ClientTransaction waiver(final Client client, final Office office, final LocalDate date, final Money amount,
-            final String currencyCode, final AppUser appUser) {
-        final boolean isReversed = false;
-        final String externalId = null;
-        final PaymentDetail paymentDetail = null;
-
-
-        return ClientTransaction.builder()
-            .client(client)
-            .office(office)
-            .paymentDetail(paymentDetail)
-            .typeOf(ClientTransactionType.WAIVE_CHARGE.getValue())
-            .dateOf(date.toDate())
-            .amount(amount.getAmount())
-            .reversed(isReversed)
-            .externalId(externalId)
-            .createdDate(DateUtils.getDateOfTenant())
-            .currencyCode(currencyCode)
-            .appUser(appUser)
-            .build();
-    }
-
     /**
      * Converts the content of this Client Transaction to a map which can be
      * passed to the accounting module
@@ -148,7 +105,7 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
         thisTransactionData.put("officeId", this.office.getId());
         thisTransactionData.put("type", transactionType);
         thisTransactionData.put("reversed", Boolean.valueOf(this.reversed));
-        thisTransactionData.put("date", getTransactionDate());
+        thisTransactionData.put("date", LocalDate.fromDateFields(this.dateOf));
         thisTransactionData.put("currencyCode", this.currencyCode);
         thisTransactionData.put("amount", this.amount);
 
@@ -179,23 +136,11 @@ public class ClientTransaction extends AbstractPersistableCustom<Long> {
         return thisTransactionData;
     }
 
-    public boolean isPayChargeTransaction() {
-        return ClientTransactionType.PAY_CHARGE.getValue().equals(this.typeOf);
-    }
-
-    public boolean isWaiveChargeTransaction() {
-        return ClientTransactionType.WAIVE_CHARGE.getValue().equals(this.typeOf);
-    }
-
     public Money getAmount() {
         return Money.of(MonetaryCurrency.builder()
             .code(this.currency.getCode())
             .digitsAfterDecimal(this.currency.getDecimalPlaces())
             .inMultiplesOf(this.currency.getInMultiplesOf())
             .build(), this.amount);
-    }
-
-    public LocalDate getTransactionDate() {
-        return new LocalDate(this.dateOf);
     }
 }
