@@ -88,11 +88,6 @@ public class SpringSecurityPlatformSecurityContext implements PlatformSecurityCo
             final Authentication auth = context.getAuthentication();
             if (auth != null) {
                 currentUser = (AppUser) auth.getPrincipal();
-
-                // TODO: @Aleks this is a workaround to avoid detached entity exceptions
-                if(currentUser!=null) {
-                    currentUser = appUserRepository.findById(currentUser.getId()).orElse(null);
-                }
             }
         }
 

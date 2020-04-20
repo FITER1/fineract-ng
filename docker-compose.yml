@@ -30,14 +30,13 @@ services:
       driver: none
     volumes:
       - ./fineract-db/docker:/docker-entrypoint-initdb.d
-      #- /tmp/fineract:/var/lib/mysql
     networks:
       - fineract
     environment:
       - MYSQL_ROOT_PASSWORD=mysql
-      #- MYSQL_DATABASE=mifostenant-default
     ports:
       - "3306:3306"
+    command: mysqld --sql_mode=""
   activemq:
     image: rmohr/activemq:5.15.9-alpine
     logging:
@@ -101,6 +100,9 @@ services:
       - FINERACT_CORS_ALLOWED_METHODS=*
       - FINERACT_CORS_ALLOWED_ORIGINS=*
       - FINERACT_BASE_URL=/fineract-provider/api/v1
+      - FINERACT_REPORT_DB_URL=jdbc:mysql://mysql:3306/mifostenant-default
+      - FINERACT_REPORT_DB_USERNAME=root
+      - FINERACT_REPORT_DB_PASSWORD=mysql
     networks:
       - fineract
     depends_on:
@@ -110,4 +112,4 @@ services:
       - "8080:8080"
       - "8443:8443"
       - "8008:8008"
-    command: sh -c "java -agentlib:jdwp=transport=dt_socket,server=y,address=*:8008,suspend=n -Xmx512m -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom -Duser.timezone=UTC -Djava.net.preferIPv4Stack=true --illegal-access=permit --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED --add-exports=java.base/sun.nio.ch=ALL-UNNAMED -jar fineract-provider*.jar --spring.profiles.active=default,basicauth"
+    command: sh -c "java -agentlib:jdwp=transport=dt_socket,server=y,address=*:8008,suspend=n -Xmx2048m -Djava.awt.headless=true -Dfile.encoding=UTF-8 -Djava.security.egd=file:/dev/./urandom -Duser.timezone=UTC -Djava.net.preferIPv4Stack=true --illegal-access=permit --add-exports=java.base/jdk.internal.misc=ALL-UNNAMED --add-exports=java.base/sun.nio.ch=ALL-UNNAMED -jar fineract-provider*.jar --spring.profiles.active=default,basicauth"

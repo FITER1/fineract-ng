@@ -45,10 +45,10 @@ public class ClientFamilyMembers extends AbstractPersistableCustom<Long> {
     @Column(name = "firstname")
     private String firstName;
 
-    @Column(name = "middleName")
+    @Column(name = "middlename")
     private String middleName;
 
-    @Column(name = "lastName")
+    @Column(name = "lastname")
     private String lastName;
 
     @Column(name = "qualification")
@@ -81,7 +81,7 @@ public class ClientFamilyMembers extends AbstractPersistableCustom<Long> {
     @JoinColumn(name = "profession_cv_id")
     private CodeValue profession;
 
-    @Column(name = "date_of_birth")
+    @Column(name = "date_of_birth", nullable = true)
     // @Temporal(TemporalType.DATE)
     private Date dateOfBirth;
 }

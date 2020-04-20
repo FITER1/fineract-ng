@@ -19,6 +19,7 @@
 package org.apache.fineract.infrastructure.documentmanagement.contentrepository;
 
 import com.lowagie.text.pdf.codec.Base64;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.core.boot.FineractProperties;
 import org.apache.fineract.infrastructure.core.domain.Base64EncodedImage;
@@ -28,17 +29,18 @@ import org.apache.fineract.infrastructure.documentmanagement.data.FileData;
 import org.apache.fineract.infrastructure.documentmanagement.data.ImageData;
 import org.apache.fineract.infrastructure.documentmanagement.domain.StorageType;
 import org.apache.fineract.infrastructure.documentmanagement.exception.ContentManagementException;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.*;
 
 @Slf4j
+@RequiredArgsConstructor
+@Component
 public class FileSystemContentRepository implements ContentRepository {
 
     public static final String FINERACT_BASE_DIR = System.getProperty("user.home") + File.separator + ".fineract";
 
-    @Autowired
-    public FineractProperties fineractProperties;
+    private final FineractProperties fineractProperties;
 
     @Override
     public String saveFile(final InputStream uploadedInputStream, final DocumentCommand documentCommand) {

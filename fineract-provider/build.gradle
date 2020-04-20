@@ -131,15 +131,27 @@ dependencies {
     implementation "com.querydsl:querydsl-codegen"
     implementation "com.querydsl:querydsl-jpa"
     implementation "com.querydsl:querydsl-jpa-codegen"
+    implementation "com.querydsl:querydsl-apt"
+    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-core"
+    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-extensions"
+    implementation "pentaho-reporting-engine:pentaho-reporting-engine-classic-extensions-scripting"
+    implementation "pentaho-reporting-engine:pentaho-reporting-engine-wizard-core"
+    implementation "pentaho-library:libbase"
+    implementation "pentaho-library:libdocbundle"
+    implementation "pentaho-library:libfonts"
+    implementation "pentaho-library:libformat"
+    implementation "pentaho-library:libformula"
+    implementation "pentaho-library:libloader"
+    implementation "pentaho-library:librepository"
+    implementation "pentaho-library:libserializer"
+    implementation "pentaho-library:libsparkline"
+    implementation "pentaho-library:libxml"
 
     testCompile "junit:junit"
     testCompile "org.mockito:mockito-core"
     testCompile "com.jayway.restassured:rest-assured"
     testCompile "org.springframework.boot:spring-boot-starter-test"
     testCompile "org.testcontainers:mysql"
-    // testCompile "org.testcontainers:localstack"
-    // testCompile "com.avides.springboot.testcontainer:springboot-testcontainer-activemq"
-    // testCompile "com.avides.springboot.testcontainer:springboot-testcontainer-mysql"
 
     integrationTestImplementation "junit:junit"
     integrationTestImplementation "com.jayway.restassured:rest-assured"
@@ -159,6 +171,7 @@ tasks.distZip.enabled = false
 def distributionsCopySpec = copySpec {
     into("fineract") {
         from "${buildDir}/${libsDirName}"
+        from "${buildDir}/pentahoReports" // TODO: @Frank verify if this is the correct folder
         include { FileTreeElement details ->
             details.file.name.endsWith("-application.jar")
         }

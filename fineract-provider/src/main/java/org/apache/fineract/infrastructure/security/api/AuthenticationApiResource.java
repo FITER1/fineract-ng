@@ -39,11 +39,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
@@ -53,8 +52,16 @@ import java.util.Set;
 @Profile("basicauth")
 @Scope("singleton")
 @Api(value = "Authentication HTTP Basic", description = "An API capability that allows client applications to verify authentication details using HTTP Basic Authentication.")
+@SwaggerDefinition(tags = {
+    @Tag(name = "Authentication HTTP Basic", description = "An API capability that allows client applications to verify authentication details using HTTP Basic Authentication.")
+})
 @RequiredArgsConstructor
 public class AuthenticationApiResource {
+
+    public static class AuthenticateRequest {
+        public String username;
+        public String password;
+    }
 
     private final DaoAuthenticationProvider customAuthenticationProvider;
     private final ToApiJsonSerializer<AuthenticatedUserData> apiJsonSerializerService;
@@ -62,10 +69,19 @@ public class AuthenticationApiResource {
     private final TwoFactorUtils twoFactorUtils;
 
     @POST
+    @Consumes({ MediaType.APPLICATION_JSON })
     @Produces({ MediaType.APPLICATION_JSON })
     @ApiOperation(value = "Verify authentication", notes = "Authenticates the credentials provided and returns the set roles and permissions allowed.")
     @ApiResponses({@ApiResponse(code = 200, message = "", response = AuthenticationApiResourceSwagger.PostAuthenticationResponse.class), @ApiResponse(code = 400, message = "Unauthenticated. Please login")})
-    public String authenticate(@QueryParam("username") @ApiParam(value = "username") final String username, @QueryParam("password") @ApiParam(value = "password") final String password) {
+    public String authenticate(final String apiRequestBodyAsJson) {
+        // TODO FINERACT-819: sort out Jersey so JSON conversion does not have to be done explicitly via GSON here, but implicit by arg
+        AuthenticateRequest request = new Gson().fromJson(apiRequestBodyAsJson, AuthenticateRequest.class);
+        if (request == null) {
+            throw new IllegalArgumentException("Invalid JSON in BODY (no longer URL param; see FINERACT-726) of POST to /authentication: " + apiRequestBodyAsJson);
+        }
+        if (request.username == null || request.password == null) {
+            throw new IllegalArgumentException("Username or Password is null in JSON (see FINERACT-726) of POST to /authentication: " + apiRequestBodyAsJson + "; username=" + request.username + ", password=" + request.password);
+        }
 
         final Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
         final Authentication authenticationCheck = this.customAuthenticationProvider.authenticate(authentication);
@@ -85,7 +101,7 @@ public class AuthenticationApiResource {
             byte[] base64EncodedAuthenticationKey = null;
 
             try {
-                base64EncodedAuthenticationKey = new Base64().encode((username + ":" + password).getBytes());
+                base64EncodedAuthenticationKey = new Base64().encode((request.username + ":" + request.password).getBytes());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -120,7 +136,6 @@ public class AuthenticationApiResource {
                     .twoFactorAuthenticationRequired(isTwoFactorRequired)
                     .build();
             } else {
-
                 authenticatedUserData = AuthenticatedUserData.builder()
                     .username(username)
                     .officeId(officeId)
@@ -135,7 +150,6 @@ public class AuthenticationApiResource {
                     .twoFactorAuthenticationRequired(isTwoFactorRequired)
                     .build();
             }
-
         }
 
         return this.apiJsonSerializerService.serialize(authenticatedUserData);

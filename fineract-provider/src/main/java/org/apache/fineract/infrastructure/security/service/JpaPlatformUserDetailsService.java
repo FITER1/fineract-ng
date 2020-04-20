@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.security.domain.PlatformUser;
 import org.apache.fineract.infrastructure.security.domain.PlatformUserRepository;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
@@ -39,6 +40,8 @@ public class JpaPlatformUserDetailsService implements PlatformUserDetailsService
 
     @Override
     @Cacheable(value = "usersByUsername")
+    // TODO: @Frank above annotation should be good; what do you try to fix with @CachePut? because this function is not manipulating the user data in any way...
+    // @CachePut(value = "usersByUsername")
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException, DataAccessException {
 
         // Retrieve active users only
@@ -47,7 +50,9 @@ public class JpaPlatformUserDetailsService implements PlatformUserDetailsService
 
         final PlatformUser appUser = this.platformUserRepository.findByUsernameAndDeletedAndEnabled(username, deleted, enabled);
 
-        if (appUser == null) { throw new UsernameNotFoundException(username + ": not found"); }
+        if (appUser == null) {
+            throw new UsernameNotFoundException(username + ": not found");
+        }
 
         return appUser;
     }

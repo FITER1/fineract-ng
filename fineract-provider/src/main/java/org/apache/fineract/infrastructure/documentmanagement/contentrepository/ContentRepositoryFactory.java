@@ -31,13 +31,14 @@ import org.springframework.stereotype.Component;
 public class ContentRepositoryFactory {
 
     private final ApplicationContext applicationContext;
+    private final FileSystemContentRepository fileSystemContentRepository;
     private final ExternalServicesPropertiesReadPlatformService externalServicesReadPlatformService;
 
     public ContentRepository getRepository() {
         final ConfigurationDomainService configurationDomainServiceJpa = this.applicationContext.getBean("configurationDomainServiceJpa",
                 ConfigurationDomainService.class);
         if (configurationDomainServiceJpa.isAmazonS3Enabled()) { return createS3DocumentStore(); }
-        return new FileSystemContentRepository();
+        return this.fileSystemContentRepository;
     }
 
     public ContentRepository getRepository(final StorageType documentStoreType) {

@@ -23,7 +23,9 @@ ENV PATH /opt/fineract:$PATH
 WORKDIR /opt/fineract
 
 ADD fineract-provider-*.tgz /opt/
+COPY *.properties /root/.mifosx/pentahoReports/
+COPY *.prpt /root/.mifosx/pentahoReports/
 
 EXPOSE 8443
 
-CMD ["java", "-Xmx512m", "-Djava.security.egd=file:/dev/./urandom", "-Duser.timezone=UTC", "-Djava.net.preferIPv4Stack=true", "--illegal-access=permit", "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED", "--add-exports=java.base/sun.nio.ch=ALL-UNNAMED", "-jar", "fineract-provider*.jar", "--spring.profiles.active=default,basicauth"]
+CMD ["java", "-Xmx2048m", "-Djava.security.egd=file:/dev/./urandom", "-Duser.timezone=UTC", "-Djava.net.preferIPv4Stack=true", "--illegal-access=permit", "--add-exports=java.base/jdk.internal.misc=ALL-UNNAMED", "--add-exports=java.base/sun.nio.ch=ALL-UNNAMED", "-jar", "fineract-provider*.jar", "--spring.profiles.active=default,basicauth"]

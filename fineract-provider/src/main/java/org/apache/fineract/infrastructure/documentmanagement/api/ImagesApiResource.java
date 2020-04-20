@@ -36,7 +36,6 @@ import org.apache.fineract.portfolio.client.data.ClientData;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -44,10 +43,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import java.io.InputStream;
 
-@Path("{entity}/{entityId}/images")
-@Component
+@Path("entities/{entity}/{entityId}/images")
 @Scope("singleton")
-@Api(value = "DomainName//api//v1//{entity}//{entityId}//images", description = "")
+@Api(value = "entities/{entity}/{entityId}/images", description = "")
 @RequiredArgsConstructor
 public class ImagesApiResource {
 

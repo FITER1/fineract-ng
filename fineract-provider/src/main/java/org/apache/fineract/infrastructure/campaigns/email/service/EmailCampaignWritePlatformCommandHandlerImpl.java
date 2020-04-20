@@ -51,6 +51,7 @@ import org.apache.fineract.infrastructure.documentmanagement.contentrepository.F
 import org.apache.fineract.infrastructure.jobs.annotation.CronTarget;
 import org.apache.fineract.infrastructure.jobs.exception.JobExecutionException;
 import org.apache.fineract.infrastructure.jobs.service.JobName;
+import org.apache.fineract.infrastructure.report.service.ReportingProcessService;
 import org.apache.fineract.infrastructure.reportmailingjob.helper.IPv4Helper;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.calendar.service.CalendarUtils;
@@ -97,6 +98,7 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
     private final SavingsAccountRepository savingsAccountRepository;
     private final EmailMessageJobEmailService emailMessageJobEmailService;
     private final FineractProperties fineractProperties;
+    private final ReportingProcessService pentahoReportingProcessService;
 
     @Transactional
     @Override
@@ -701,8 +703,8 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
             final Map<String, String> reportParams, final String reportName, final StringBuilder errorLog) {
 
         try {
-            final ByteArrayOutputStream byteArrayOutputStream = this.readReportingService.generatePentahoReportAsOutputStream(reportName,
-                    emailAttachmentFileFormat.getValue(), reportParams, null, emailCampaign.getApprovedBy(), errorLog);
+            final ByteArrayOutputStream byteArrayOutputStream = this.pentahoReportingProcessService.generateReportAsOutputStream(reportName,
+                    reportParams, emailCampaign.getApprovedBy(), null);
 
             final String fileLocation = FileSystemContentRepository.FINERACT_BASE_DIR + File.separator + "";
             final String fileNameWithoutExtension = fileLocation + File.separator + reportName;
@@ -725,8 +727,10 @@ public class EmailCampaignWritePlatformCommandHandlerImpl implements EmailCampai
             }
 
         } catch (IOException | PlatformDataIntegrityException e) {
-            errorLog.append("The ReportMailingJobWritePlatformServiceImpl.executeReportMailingJobs threw an IOException " + "exception: "
-                    + e.getMessage() + " ---------- ");
+            // TODO: why?!? we fill this StringBuffer and then what? this will never be displayed anywhere and just uses memory for nothing...
+            errorLog.append("The ReportMailingJobWritePlatformServiceImpl.executeReportMailingJobs threw an exception: ")
+                    .append(e.getMessage())
+                    .append(" ---------- ");
         }
         return null;
     }

@@ -46,6 +46,7 @@ import java.util.Set;
 @Path("glclosures")
 @Component
 @Scope("singleton")
+@Component
 @Api(tags = {"Accounting Closure"})
 @SwaggerDefinition(tags = {
         @Tag(name = "Accounting Closure", description = "An accounting closure indicates that no more journal entries may be logged (or reversed) in the system, either manually or via the portfolio with an entry date prior to the defined closure date\\n\" + \"\\n\" + \"Field Descriptions\\n\" + \"closingDate\\n\" + \"The date for which the accounting closure is defined\\n\" + \"officeId\\n\" + \"The identifer of the branch for which accounting has been closed\\n\" + \"comments\\n\" + \"Description associated with an Accounting closure")

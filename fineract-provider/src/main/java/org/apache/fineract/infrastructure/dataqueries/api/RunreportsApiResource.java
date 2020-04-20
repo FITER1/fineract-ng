@@ -76,7 +76,7 @@ public class RunreportsApiResource {
 
         checkUserPermissionForReport(reportName, parameterType);
 
-        String parameterTypeValue = null;
+        String parameterTypeValue;
         if (!parameterType) {
             parameterTypeValue = "report";
             String reportType = this.readExtraDataAndReportingService.getReportType(reportName, isSelfServiceUserReport);
