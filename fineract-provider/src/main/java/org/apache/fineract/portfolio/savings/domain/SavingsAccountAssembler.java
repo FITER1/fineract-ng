@@ -92,8 +92,10 @@ public class SavingsAccountAssembler {
         if (groupId != null) {
             group = this.groupRepository.findOneWithNotFoundDetection(groupId);
             accountType = AccountType.GROUP;
-            if (group.isNotActive()) {
-                if (group.isCenter()) { throw new CenterNotActiveException(groupId); }
+            if (!group.isActive()) {
+                if (group.getGroupLevel().isCenter()) {
+                    throw new CenterNotActiveException(groupId);
+                }
                 throw new GroupNotActiveException(groupId);
             }
         }
@@ -274,8 +276,10 @@ public class SavingsAccountAssembler {
 
         if (group != null) {
             accountType = AccountType.GROUP;
-            if (group.isNotActive()) {
-                if (group.isCenter()) { throw new CenterNotActiveException(group.getId()); }
+            if (!group.isActive()) {
+                if (group.getGroupLevel().isCenter()) {
+                    throw new CenterNotActiveException(group.getId());
+                }
                 throw new GroupNotActiveException(group.getId());
             }
         }

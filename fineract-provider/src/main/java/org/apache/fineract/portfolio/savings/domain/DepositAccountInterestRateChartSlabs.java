@@ -70,7 +70,7 @@ public class DepositAccountInterestRateChartSlabs extends AbstractPersistableCus
         Set<DepositAccountInterestIncentives> depositInterestIncentives = new HashSet<>();
         Set<InterestIncentives> incentives = interestRateChartSlab.setOfInterestIncentives();
         for (InterestIncentives incentive : incentives) {
-            depositInterestIncentives.add(DepositAccountInterestIncentives.from(null, incentive.interestIncentivesFields()));
+            depositInterestIncentives.add(DepositAccountInterestIncentives.from(null, incentive.getInterestIncentivesFields()));
         }
         DepositAccountInterestRateChartSlabs chartSlabs = new DepositAccountInterestRateChartSlabs(slabFields,
                 depositAccountInterestRateChart, depositInterestIncentives);

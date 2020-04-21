@@ -52,12 +52,12 @@ public class DepositAccountInterestRateChart extends AbstractPersistableCustom<L
     }
 
     public static DepositAccountInterestRateChart from(InterestRateChart productChart) {
-        final Set<InterestRateChartSlab> chartSlabs = productChart.setOfChartSlabs();
+        final Set<InterestRateChartSlab> chartSlabs = productChart.getSafeChartSlabs();
         final Set<DepositAccountInterestRateChartSlabs> depostiChartSlabs = new HashSet<>();
         for (InterestRateChartSlab interestRateChartSlab : chartSlabs) {
             depostiChartSlabs.add(DepositAccountInterestRateChartSlabs.from(interestRateChartSlab, null));
         }
-        final DepositAccountInterestRateChart depositChart = new DepositAccountInterestRateChart(productChart.chartFields(), null,
+        final DepositAccountInterestRateChart depositChart = new DepositAccountInterestRateChart(productChart.getChartFields(), null,
                 depostiChartSlabs);
         // update deposit account interest rate chart ference to chart Slabs
         depositChart.updateChartSlabsReference();
@@ -129,7 +129,7 @@ public class DepositAccountInterestRateChart extends AbstractPersistableCustom<L
                 Set<DepositAccountInterestIncentives> depositInterestIncentives = slab.setOfIncentives();
                 for (DepositAccountInterestIncentives incentives : depositInterestIncentives) {
                     AttributeIncentiveCalculation attributeIncentiveCalculation = AttributeIncentiveCalculationFactory
-                            .findAttributeIncentiveCalculation(incentives.interestIncentivesFields().entiryType());
+                            .findAttributeIncentiveCalculation(incentives.interestIncentivesFields().getEntiryTypeEnum());
                     IncentiveDTO incentiveDTO = new IncentiveDTO(client, effectiveInterestRate, incentives.interestIncentivesFields());
                     effectiveInterestRate = attributeIncentiveCalculation.calculateIncentive(incentiveDTO);
                 }

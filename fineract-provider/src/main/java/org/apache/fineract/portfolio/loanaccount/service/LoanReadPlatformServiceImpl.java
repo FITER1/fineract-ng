@@ -332,12 +332,31 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
         // get group associations
         final Collection<ClientData> membersOfGroup = this.clientReadPlatformService.retrieveClientMembersOfGroup(groupId);
         if (!CollectionUtils.isEmpty(membersOfGroup)) {
-            final Collection<ClientData> activeClientMembers = null;
-            final Collection<CalendarData> calendarsData = null;
-            final CalendarData collectionMeetingCalendar = null;
-            final Collection<GroupRoleData> groupRoles = null;
-            groupAccount = GroupGeneralData.withAssocations(groupAccount, membersOfGroup, activeClientMembers, groupRoles, calendarsData,
-                    collectionMeetingCalendar);
+            groupAccount = GroupGeneralData.builder()
+                .id(groupAccount.getId())
+                .accountNo(groupAccount.getAccountNo())
+                .name(groupAccount.getName())
+                .externalId(groupAccount.getExternalId())
+                .status(groupAccount.getStatus())
+                .activationDate(groupAccount.getActivationDate())
+                .officeId(groupAccount.getOfficeId())
+                .officeName(groupAccount.getOfficeName())
+                .centerId(groupAccount.getCenterId())
+                .centerName(groupAccount.getCenterName())
+                .staffId(groupAccount.getStaffId())
+                .staffName(groupAccount.getStaffName())
+                .hierarchy(groupAccount.getHierarchy())
+                .groupLevel(groupAccount.getGroupLevel())
+                .centerOptions(groupAccount.getCenterOptions())
+                .officeOptions(groupAccount.getOfficeOptions())
+                .staffOptions(groupAccount.getStaffOptions())
+                .clientOptions(groupAccount.getClientOptions())
+                .availableRoles(groupAccount.getAvailableRoles())
+                .selectedRole(groupAccount.getSelectedRole())
+                .closureReasons(groupAccount.getClosureReasons())
+                .timeline(groupAccount.getTimeline())
+                .clientMembers(membersOfGroup)
+                .build();
         }
 
         final LocalDate expectedDisbursementDate = DateUtils.getLocalDateOfTenant();
@@ -833,8 +852,20 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
                 final Integer groupStatusEnum = JdbcSupport.getInteger(rs, "statusEnum");
                 final EnumOptionData groupStatus = ClientEnumerations.status(groupStatusEnum);
                 final LocalDate activationDate = JdbcSupport.getLocalDate(rs, "activationDate");
-                groupData = GroupGeneralData.instance(groupId, groupAccountNo, groupName, groupExternalId, groupStatus, activationDate,
-                        groupOfficeId, null, groupParentId, centerName, groupStaffId, null, groupHierarchy, groupLevel, null);
+                groupData = GroupGeneralData.builder()
+                    .id(groupId)
+                    .accountNo(groupAccountNo)
+                    .name(groupName)
+                    .externalId(groupExternalId)
+                    .status(groupStatus)
+                    .activationDate(activationDate)
+                    .officeId(groupOfficeId)
+                    .centerId(groupParentId)
+                    .centerName(centerName)
+                    .staffId(groupStaffId)
+                    .hierarchy(groupHierarchy)
+                    .groupLevel(groupLevel)
+                    .build();
             }
 
             final Integer loanCounter = JdbcSupport.getInteger(rs, "loanCounter");
@@ -1411,12 +1442,31 @@ public class LoanReadPlatformServiceImpl implements LoanReadPlatformService {
         // get group associations
         final Collection<ClientData> membersOfGroup = this.clientReadPlatformService.retrieveActiveClientMembersOfGroup(groupId);
         if (!CollectionUtils.isEmpty(membersOfGroup)) {
-            final Collection<ClientData> activeClientMembers = null;
-            final Collection<CalendarData> calendarsData = null;
-            final CalendarData collectionMeetingCalendar = null;
-            final Collection<GroupRoleData> groupRoles = null;
-            groupAccount = GroupGeneralData.withAssocations(groupAccount, membersOfGroup, activeClientMembers, groupRoles, calendarsData,
-                    collectionMeetingCalendar);
+            groupAccount = GroupGeneralData.builder()
+                .id(groupAccount.getId())
+                .accountNo(groupAccount.getAccountNo())
+                .name(groupAccount.getName())
+                .externalId(groupAccount.getExternalId())
+                .status(groupAccount.getStatus())
+                .activationDate(groupAccount.getActivationDate())
+                .officeId(groupAccount.getOfficeId())
+                .officeName(groupAccount.getOfficeName())
+                .centerId(groupAccount.getCenterId())
+                .centerName(groupAccount.getCenterName())
+                .staffId(groupAccount.getStaffId())
+                .staffName(groupAccount.getStaffName())
+                .hierarchy(groupAccount.getHierarchy())
+                .groupLevel(groupAccount.getGroupLevel())
+                .centerOptions(groupAccount.getCenterOptions())
+                .officeOptions(groupAccount.getOfficeOptions())
+                .staffOptions(groupAccount.getStaffOptions())
+                .clientOptions(groupAccount.getClientOptions())
+                .availableRoles(groupAccount.getAvailableRoles())
+                .selectedRole(groupAccount.getSelectedRole())
+                .closureReasons(groupAccount.getClosureReasons())
+                .timeline(groupAccount.getTimeline())
+                .clientMembers(membersOfGroup)
+                .build();
         }
 
         return LoanAccountData.groupDefaults(groupAccount, expectedDisbursementDate);

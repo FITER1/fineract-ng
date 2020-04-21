@@ -146,15 +146,28 @@ public class CenterImportHandler implements ImportHandler {
             if (groupName==null||groupName.equals(""))
                 break;
             Long groupId = ImportHandlerUtils.getIdByName(workbook.getSheet(TemplatePopulateImportConstants.GROUP_SHEET_NAME), groupName);
-            GroupGeneralData group = new GroupGeneralData(groupId);
+            GroupGeneralData group = GroupGeneralData.builder()
+                .id(groupId)
+                .build();
             if (!containsGroupId(groupMembers,groupId)) {
                 groupMembers.add(group);
             }
         }
 
         statuses.add(status);
-        return CenterData.importInstance(centerName,groupMembers,activationDate, active,submittedOn, externalId,
-                officeId, staffId, row.getRowNum(),dateFormat,locale);
+        return CenterData.builder()
+            .name(centerName)
+            .groupMembers(groupMembers)
+            .activationDate(activationDate)
+            .active(active)
+            .submittedOnDate(submittedOn)
+            .externalId(externalId)
+            .officeId(officeId)
+            .staffId(staffId)
+            .rowIndex(row.getRowNum())
+            .dateFormat(dateFormat)
+            .locale(locale)
+            .build();
     }
 
     private boolean containsGroupId(List<GroupGeneralData> groupMembers,Long groupId){

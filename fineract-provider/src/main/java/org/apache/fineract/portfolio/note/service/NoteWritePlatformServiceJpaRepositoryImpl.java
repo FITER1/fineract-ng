@@ -95,7 +95,7 @@ public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatf
                 .commandId(command.commandId()) //
                 .resourceId(newNote.getId()) //
                 .groupId(group.getId()) //
-                .officeId(group.officeId()) //
+                .officeId(group.getOfficeId()) //
                 .build();
     }
 
@@ -264,7 +264,7 @@ public class NoteWritePlatformServiceJpaRepositoryImpl implements NoteWritePlatf
                 .commandId(command.commandId()) //
                 .resourceId(noteForUpdate.getId()) //
                 .groupId(group.getId()) //
-                .officeId(group.officeId()) //
+                .officeId(group.getOfficeId()) //
                 .changes(changes).build();
     }
 

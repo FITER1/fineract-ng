@@ -33,10 +33,10 @@ public class ClientAttributeIncentiveCalculation extends AttributeIncentiveCalcu
         BigDecimal interest = incentiveDTO.interest();
         final InterestIncentivesFields incentivesFields = incentiveDTO.incentives();
         boolean applyIncentive = false;
-        switch (incentivesFields.attributeName()) {
+        switch (incentivesFields.getAttributeNameEnum()) {
             case GENDER:
                 if (client.genderId() != null) {
-                    applyIncentive = applyIncentive(incentivesFields.conditionType(), Long.valueOf(incentivesFields.attributeValue()),
+                    applyIncentive = applyIncentive(incentivesFields.getConditionTypeEnum(), Long.valueOf(incentivesFields.getAttributeValue()),
                             client.genderId());
                 }
             break;
@@ -44,19 +44,19 @@ public class ClientAttributeIncentiveCalculation extends AttributeIncentiveCalcu
                 if (client.getDateOfBirth() != null) {
                     final LocalDate dobLacalDate = LocalDate.fromDateFields(client.getDateOfBirth());
                     final int age = Years.yearsBetween(dobLacalDate, LocalDate.now()).getYears();
-                    applyIncentive = applyIncentive(incentivesFields.conditionType(), Long.valueOf(incentivesFields.attributeValue()),
+                    applyIncentive = applyIncentive(incentivesFields.getConditionTypeEnum(), Long.valueOf(incentivesFields.getAttributeValue()),
                             Long.valueOf(age));
                 }
             break;
             case CLIENT_TYPE:
                 if (client.clientTypeId() != null) {
-                    applyIncentive = applyIncentive(incentivesFields.conditionType(), Long.valueOf(incentivesFields.attributeValue()),
+                    applyIncentive = applyIncentive(incentivesFields.getConditionTypeEnum(), Long.valueOf(incentivesFields.getAttributeValue()),
                             client.clientTypeId());
                 }
             break;
             case CLIENT_CLASSIFICATION:
                 if (client.clientClassificationId() != null) {
-                    applyIncentive = applyIncentive(incentivesFields.conditionType(), Long.valueOf(incentivesFields.attributeValue()),
+                    applyIncentive = applyIncentive(incentivesFields.getConditionTypeEnum(), Long.valueOf(incentivesFields.getAttributeValue()),
                             client.clientClassificationId());
                 }
             break;
@@ -66,12 +66,12 @@ public class ClientAttributeIncentiveCalculation extends AttributeIncentiveCalcu
 
         }
         if (applyIncentive) {
-            switch (incentivesFields.incentiveType()) {
+            switch (incentivesFields.getIncentiveTypeEnum()) {
                 case FIXED:
-                    interest = incentivesFields.amount();
+                    interest = incentivesFields.getAmount();
                 break;
                 case INCENTIVE:
-                    interest = interest.add(incentivesFields.amount());
+                    interest = interest.add(incentivesFields.getAmount());
                 break;
                 default:
                 break;

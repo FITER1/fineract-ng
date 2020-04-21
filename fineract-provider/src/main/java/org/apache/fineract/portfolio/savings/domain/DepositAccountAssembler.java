@@ -144,8 +144,8 @@ public class DepositAccountAssembler {
         if (group != null && client != null) {
             if (!group.hasClientAsMember(client)) { throw new ClientNotInGroupException(clientId, groupId); }
             accountType = AccountType.JLG;
-            if (group.isNotActive()) {
-                if (group.isCenter()) { throw new CenterNotActiveException(groupId); }
+            if (!group.isActive()) {
+                if (group.getGroupLevel().isCenter()) { throw new CenterNotActiveException(groupId); }
                 throw new GroupNotActiveException(groupId);
             }
         }

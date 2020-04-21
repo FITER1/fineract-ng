@@ -337,7 +337,7 @@ public class LoanAccountDomainServiceJpa implements LoanAccountDomainService {
         }
         final Group group = loan.group();
         if (group != null) {
-            if (group.isNotActive()) { throw new GroupNotActiveException(group.getId()); }
+            if (!group.isActive()) { throw new GroupNotActiveException(group.getId()); }
         }
     }
 

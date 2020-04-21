@@ -38,6 +38,7 @@ import org.apache.fineract.portfolio.group.serialization.GroupRolesDataValidator
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Slf4j
@@ -67,7 +68,11 @@ public class GroupRolesWritePlatformServiceJpaRepositoryImpl implements GroupRol
 
             final Group group = this.groupRepository.findOneWithNotFoundDetection(command.getGroupId());
             if (!group.hasClientAsMember(client)) { throw new ClientNotInGroupException(clientId, command.getGroupId()); }
-            final GroupRole groupRole = GroupRole.createGroupRole(group, client, role);
+            final GroupRole groupRole = GroupRole.builder()
+                .group(group)
+                .client(client)
+                .role(role)
+                .build();
             this.groupRoleRepository.save(groupRole);
             return CommandProcessingResult.builder().clientId(client.getId()).groupId(group.getId())
                     .resourceId(groupRole.getId()).build();
@@ -106,7 +111,7 @@ public class GroupRolesWritePlatformServiceJpaRepositoryImpl implements GroupRol
             final Group group = this.groupRepository.findOneWithNotFoundDetection(command.getGroupId());
 
             final GroupRole groupRole = this.groupRoleRepository.findOneWithNotFoundDetection(command.entityId());
-            final Map<String, Object> actualChanges = groupRole.update(command);
+            final Map<String, Object> actualChanges = update(groupRole, command);
 
             if (actualChanges.containsKey(GroupingTypesApiConstants.roleParamName)) {
                 final Long newValue = command.longValueOfParameterNamed(GroupingTypesApiConstants.roleParamName);
@@ -115,7 +120,7 @@ public class GroupRolesWritePlatformServiceJpaRepositoryImpl implements GroupRol
                 if (newValue != null) {
                     role = this.codeValueRepository.findOneWithNotFoundDetection(newValue);
                 }
-                groupRole.updateRole(role);
+                groupRole.setRole(role);
             }
 
             if (actualChanges.containsKey(GroupingTypesApiConstants.clientIdParamName)) {
@@ -126,7 +131,7 @@ public class GroupRolesWritePlatformServiceJpaRepositoryImpl implements GroupRol
                     client = this.clientRepository.findOneWithNotFoundDetection(newValue);
                     if (!group.hasClientAsMember(client)) { throw new ClientNotInGroupException(newValue, command.getGroupId()); }
                 }
-                groupRole.updateClient(client);
+                groupRole.setClient(client);
             }
 
             this.groupRoleRepository.saveAndFlush(groupRole);
@@ -147,4 +152,21 @@ public class GroupRolesWritePlatformServiceJpaRepositoryImpl implements GroupRol
         return CommandProcessingResult.builder().resourceId(groupRole.getId()).build();
     }
 
+
+    private Map<String, Object> update(final GroupRole groupRole, final JsonCommand command) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(2);
+
+        if (command.isChangeInLongParameterNamed(GroupingTypesApiConstants.clientIdParamName, groupRole.getClient().getId())) {
+            final Long newValue = command.longValueOfParameterNamed(GroupingTypesApiConstants.clientIdParamName);
+            actualChanges.put(GroupingTypesApiConstants.clientIdParamName, newValue);
+        }
+
+        if (command.isChangeInLongParameterNamed(GroupingTypesApiConstants.roleParamName, groupRole.getRole().getId())) {
+            final Long newValue = command.longValueOfParameterNamed(GroupingTypesApiConstants.roleParamName);
+            actualChanges.put(GroupingTypesApiConstants.roleParamName, newValue);
+        }
+
+        return actualChanges;
+    }
 }

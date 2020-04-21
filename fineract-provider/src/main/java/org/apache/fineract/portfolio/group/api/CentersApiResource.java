@@ -183,8 +183,31 @@ public class CentersApiResource {
 
         final boolean template = ApiParameterHelper.template(uriInfo.getQueryParameters());
         if (template) {
-            final CenterData templateCenter = this.centerReadPlatformService.retrieveTemplate(center.officeId(), staffInSelectedOfficeOnly);
-            center = CenterData.withTemplate(templateCenter, center);
+            final CenterData templateCenter = this.centerReadPlatformService.retrieveTemplate(center.getOfficeId(), staffInSelectedOfficeOnly);
+            center = CenterData.builder()
+                .id(center.getId())
+                .accountNo(center.getAccountNo())
+                .name(center.getName())
+                .externalId(center.getExternalId())
+                .status(center.getStatus())
+                .activationDate(center.getActivationDate())
+                .officeId(center.getOfficeId())
+                .officeName(center.getOfficeName())
+                .staffId(center.getStaffId())
+                .staffName(center.getStaffName())
+                .hierarchy(center.getHierarchy())
+                .groupMembers(center.getGroupMembers())
+                .timeline(center.getTimeline())
+                .totalCollected(center.getTotalCollected())
+                .totalOverdue(center.getTotalOverdue())
+                .totaldue(center.getTotaldue())
+                .installmentDue(center.getInstallmentDue())
+                .officeOptions(templateCenter.getOfficeOptions())
+                .staffOptions(templateCenter.getStaffOptions())
+                .groupMembersOptions(templateCenter.getGroupMembersOptions())
+                .collectionMeetingCalendar(templateCenter.getCollectionMeetingCalendar())
+                .closureReasons(templateCenter.getClosureReasons())
+                .build();
         }
 
         if (!associationParameters.isEmpty()) {
@@ -249,7 +272,30 @@ public class CentersApiResource {
                 }
             }
 
-            center = CenterData.withAssociations(center, groups, calendarData);
+            center = CenterData.builder()
+                .id(center.getId())
+                .accountNo(center.getAccountNo())
+                .name(center.getName())
+                .externalId(center.getExternalId())
+                .status(center.getStatus())
+                .activationDate(center.getActivationDate())
+                .officeId(center.getOfficeId())
+                .officeName(center.getOfficeName())
+                .staffId(center.getStaffId())
+                .staffName(center.getStaffName())
+                .hierarchy(center.getHierarchy())
+                .officeOptions(center.getOfficeOptions())
+                .staffOptions(center.getStaffOptions())
+                .groupMembersOptions(center.getGroupMembersOptions())
+                .closureReasons(center.getClosureReasons())
+                .timeline(center.getTimeline())
+                .totalCollected(center.getTotalCollected())
+                .totalOverdue(center.getTotalOverdue())
+                .totaldue(center.getTotaldue())
+                .installmentDue(center.getInstallmentDue())
+                .collectionMeetingCalendar(calendarData)
+                .groupMembers(groups)
+                .build();
         }
 
         final ApiRequestJsonSerializationSettings settings = this.apiRequestParameterHelper.process(uriInfo.getQueryParameters());

@@ -22,6 +22,7 @@ import lombok.*;
 import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.organisation.monetary.data.CurrencyData;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Collection;
 
@@ -30,7 +31,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class CollateralData {
+public class CollateralData implements Serializable {
     private Long id;
     private CodeValueData type;
     private BigDecimal value;

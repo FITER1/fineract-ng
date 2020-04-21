@@ -129,12 +129,25 @@ public class InterestRateChartReadPlatformServiceImpl implements InterestRateCha
 
         final List<CodeValueData> clientClassificationOptions = new ArrayList<>(
                 this.codeValueReadPlatformService.retrieveCodeValuesByCode(ClientApiConstants.CLIENT_CLASSIFICATION));
-        return InterestRateChartData.withTemplate(chartData, this.chartDropdownReadPlatformService.retrievePeriodTypeOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveEntityTypeOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveAttributeNameOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveConditionTypeOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveIncentiveTypeOptions(), genderOptions, clientTypeOptions,
-                clientClassificationOptions);
+        return InterestRateChartData.builder()
+            .id(chartData.getId())
+            .name(chartData.getName())
+            .description(chartData.getDescription())
+            .fromDate(chartData.getFromDate())
+            .endDate(chartData.getEndDate())
+            .primaryGroupingByAmount(chartData.isPrimaryGroupingByAmount())
+            .productId(chartData.getProductId())
+            .productName(chartData.getProductName())
+            .chartSlabs(chartData.getChartSlabs())
+            .periodTypes(this.chartDropdownReadPlatformService.retrievePeriodTypeOptions())
+            .entityTypeOptions(this.interestIncentiveDropdownReadPlatformService.retrieveEntityTypeOptions())
+            .attributeNameOptions(this.interestIncentiveDropdownReadPlatformService.retrieveAttributeNameOptions())
+            .conditionTypeOptions(this.interestIncentiveDropdownReadPlatformService.retrieveConditionTypeOptions())
+            .incentiveTypeOptions(this.interestIncentiveDropdownReadPlatformService.retrieveIncentiveTypeOptions())
+            .genderOptions(genderOptions)
+            .clientTypeOptions(clientTypeOptions)
+            .clientClassificationOptions(clientClassificationOptions)
+            .build();
     }
 
     @Override
@@ -153,12 +166,16 @@ public class InterestRateChartReadPlatformServiceImpl implements InterestRateCha
 
         final List<CodeValueData> clientClassificationOptions = new ArrayList<>(
                 this.codeValueReadPlatformService.retrieveCodeValuesByCode(ClientApiConstants.CLIENT_CLASSIFICATION));
-        return InterestRateChartData.template(this.chartDropdownReadPlatformService.retrievePeriodTypeOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveEntityTypeOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveAttributeNameOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveConditionTypeOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveIncentiveTypeOptions(), genderOptions, clientTypeOptions,
-                clientClassificationOptions);
+        return InterestRateChartData.builder()
+            .periodTypes(this.chartDropdownReadPlatformService.retrievePeriodTypeOptions())
+            .entityTypeOptions(this.interestIncentiveDropdownReadPlatformService.retrieveEntityTypeOptions())
+            .attributeNameOptions(this.interestIncentiveDropdownReadPlatformService.retrieveAttributeNameOptions())
+            .conditionTypeOptions(this.interestIncentiveDropdownReadPlatformService.retrieveConditionTypeOptions())
+            .incentiveTypeOptions(this.interestIncentiveDropdownReadPlatformService.retrieveIncentiveTypeOptions())
+            .genderOptions(genderOptions)
+            .clientTypeOptions(clientTypeOptions)
+            .clientClassificationOptions(clientClassificationOptions)
+            .build();
     }
 
     private static final class InterestRateChartExtractor implements ResultSetExtractor<Collection<InterestRateChartData>> {
@@ -260,7 +277,16 @@ public class InterestRateChartReadPlatformServiceImpl implements InterestRateCha
             final Long savingsProductId = JdbcSupport.getLongDefaultToNullIfZero(rs, "savingsProductId");
             final String savingsProductName = rs.getString("savingsProductName");
 
-            return InterestRateChartData.instance(id, name, description, fromDate, endDate, isPrimaryGroupingByAmount, savingsProductId, savingsProductName);
+            return InterestRateChartData.builder()
+                .id(id)
+                .name(name)
+                .description(description)
+                .fromDate(fromDate)
+                .endDate(endDate)
+                .primaryGroupingByAmount(isPrimaryGroupingByAmount)
+                .productId(savingsProductId)
+                .productName(savingsProductName)
+                .build();
         }
 
     }
@@ -322,8 +348,17 @@ public class InterestRateChartReadPlatformServiceImpl implements InterestRateCha
             final CurrencyData currency = new CurrencyData(currencyCode, currencyName, currencyDigits, inMultiplesOf,
                     currencyDisplaySymbol, currencyNameCode);
 
-            return InterestRateChartSlabData.instance(id, description, periodType, fromPeriod, toPeriod, amountRangeFrom, amountRangeTo,
-                    annualInterestRate, currency);
+            return InterestRateChartSlabData.builder()
+                .id(id)
+                .description(description)
+                .periodType(periodType)
+                .fromPeriod(fromPeriod)
+                .toPeriod(toPeriod)
+                .amountRangeFrom(amountRangeFrom)
+                .amountRangeTo(amountRangeTo)
+                .annualInterestRate(annualInterestRate)
+                .currency(currency)
+                .build();
         }
 
     }
@@ -360,7 +395,7 @@ public class InterestRateChartReadPlatformServiceImpl implements InterestRateCha
                         chartSlabData = chartSlabsMapper.mapRow(rs, ircIndex++);
                     }
                     final InterestIncentiveData incentiveData = incentiveMapper.mapRow(rs, ircdIndex++);
-                    if (incentiveData != null) {
+                    if (incentiveData != null && chartSlabData != null) {
                         chartSlabData.addIncentives(incentiveData);
                     }
                 } else {
@@ -398,9 +433,16 @@ public class InterestRateChartReadPlatformServiceImpl implements InterestRateCha
                 final EnumOptionData incentiveTypeData = InterestIncentivesEnumerations.incentiveType(incentiveType);
                 final BigDecimal amount = rs.getBigDecimal("amount");
 
-                return InterestIncentiveData.instance(id, entityTypeData, attributeNameData, conditionTypeData, attributeValue,
-                        attributeValueDesc, incentiveTypeData, amount);
-
+                return InterestIncentiveData.builder()
+                    .id(id)
+                    .entityType(entityTypeData)
+                    .attributeName(attributeNameData)
+                    .conditionType(conditionTypeData)
+                    .attributeValue(attributeValue)
+                    .attributeValueDesc(attributeValueDesc)
+                    .incentiveType(incentiveTypeData)
+                    .amount(amount)
+                    .build();
             }
         }
     }

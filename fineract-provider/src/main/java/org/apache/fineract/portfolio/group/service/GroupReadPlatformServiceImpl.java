@@ -36,7 +36,6 @@ import org.apache.fineract.organisation.office.data.OfficeData;
 import org.apache.fineract.organisation.office.service.OfficeReadPlatformService;
 import org.apache.fineract.organisation.staff.data.StaffData;
 import org.apache.fineract.organisation.staff.service.StaffReadPlatformService;
-import org.apache.fineract.portfolio.client.data.ClientData;
 import org.apache.fineract.portfolio.group.api.GroupingTypesApiConstants;
 import org.apache.fineract.portfolio.group.data.CenterData;
 import org.apache.fineract.portfolio.group.data.GroupGeneralData;
@@ -99,15 +98,13 @@ public class GroupReadPlatformServiceImpl implements GroupReadPlatformService {
         final Collection<CodeValueData> availableRoles = this.codeValueReadPlatformService
                 .retrieveCodeValuesByCode(GroupingTypesApiConstants.GROUP_ROLE_NAME);
 
-        final Long centerId = null;
-        final String accountNo = null;
-        final String centerName = null;
-        final Long staffId = null;
-        final String staffName = null;
-        final Collection<ClientData> clientOptions = null;
-        
-        return GroupGeneralData.template(defaultOfficeId, centerId, accountNo, centerName, staffId, staffName, centerOptions, officeOptions,
-                staffOptions, clientOptions, availableRoles);
+        return GroupGeneralData.builder()
+            .officeId(defaultOfficeId)
+            .centerOptions(centerOptions)
+            .officeOptions(officeOptions)
+            .staffOptions(staffOptions)
+            .availableRoles(availableRoles)
+            .build();
     }
 
     private Long defaultToUsersOfficeIfNull(final Long officeId) {
@@ -284,7 +281,11 @@ public class GroupReadPlatformServiceImpl implements GroupReadPlatformService {
             final Long id = JdbcSupport.getLong(rs, "id");
             final String accountNo = rs.getString("accountNo");
             final String displayName = rs.getString("displayName");
-            return GroupGeneralData.lookup(id, accountNo, displayName);
+            return GroupGeneralData.builder()
+                .id(id)
+                .name(displayName)
+                .accountNo(accountNo)
+                .build();
         }
     }
 
@@ -292,7 +293,9 @@ public class GroupReadPlatformServiceImpl implements GroupReadPlatformService {
     public GroupGeneralData retrieveGroupWithClosureReasons() {
         final List<CodeValueData> closureReasons = new ArrayList<>(
                 this.codeValueReadPlatformService.retrieveCodeValuesByCode(GroupingTypesApiConstants.GROUP_CLOSURE_REASON));
-        return GroupGeneralData.withClosureReasons(closureReasons);
+        return GroupGeneralData.builder()
+            .closureReasons(closureReasons)
+            .build();
     }
 
 }

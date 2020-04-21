@@ -25,6 +25,7 @@ import com.google.gson.JsonPrimitive;
 import lombok.*;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
@@ -1836,8 +1837,18 @@ public class Loan extends AbstractPersistableCustom<Long> {
 
         final List<CollateralData> loanCollateralList = new ArrayList<>();
         for (final LoanCollateral loanCollateral : setOfLoanCollateral) {
-
-            final CollateralData data = loanCollateral.toData();
+            final CollateralData data = CollateralData.builder()
+                .id(getId())
+                .type(CodeValueData.builder()
+                    .id(loanCollateral.getType().getId())
+                    .name(loanCollateral.getType().getLabel())
+                    .position(loanCollateral.getType().getPosition())
+                    .active(loanCollateral.getType().isActive())
+                    .mandatory(loanCollateral.getType().isMandatory())
+                    .build())
+                .value(loanCollateral.getValue())
+                .description(loanCollateral.getDescription())
+                .build();
 
             loanCollateralList.add(data);
         }
@@ -2588,19 +2599,18 @@ public class Loan extends AbstractPersistableCustom<Long> {
 
     private BigDecimal constructFloatingInterestRates(final BigDecimal annualNominalInterestRate, final FloatingRateDTO floatingRateDTO,
             final List<LoanTermVariationsData> loanTermVariations) {
-        final LocalDate dateValue = null;
         final boolean isSpecificToInstallment = false;
         BigDecimal interestRate = annualNominalInterestRate;
         if (loanProduct.isLinkedToFloatingInterestRate()) {
-            floatingRateDTO.resetInterestRateDiff();
+            floatingRateDTO.setInterestRateDiff(floatingRateDTO.getActualInterestRateDiff());
             Collection<FloatingRatePeriodData> applicableRates = loanProduct.fetchInterestRates(floatingRateDTO);
             LocalDate interestRateStartDate = DateUtils.getLocalDateOfTenant();
             for (FloatingRatePeriodData periodData : applicableRates) {
                 LoanTermVariationsData loanTermVariation = new LoanTermVariationsData(
-                        LoanEnumerations.loanvariationType(LoanTermVariationType.INTEREST_RATE), periodData.getFromDateAsLocalDate(),
-                        periodData.getInterestRate(), dateValue, isSpecificToInstallment);
-                if (!interestRateStartDate.isBefore(periodData.getFromDateAsLocalDate())) {
-                    interestRateStartDate = periodData.getFromDateAsLocalDate();
+                        LoanEnumerations.loanvariationType(LoanTermVariationType.INTEREST_RATE), periodData.getFromDate(),
+                        periodData.getInterestRate(), null, isSpecificToInstallment);
+                if (!interestRateStartDate.isBefore(periodData.getFromDate())) {
+                    interestRateStartDate = periodData.getFromDate();
                     interestRate = periodData.getInterestRate();
                 }
                 loanTermVariations.add(loanTermVariation);
@@ -4132,7 +4142,7 @@ public class Loan extends AbstractPersistableCustom<Long> {
         if (this.client != null) {
             officeId = this.client.getOffice().getId();
         } else {
-            officeId = this.group.officeId();
+            officeId = this.group.getOfficeId();
         }
         return officeId;
     }

@@ -18,34 +18,19 @@
  */
 package org.apache.fineract.portfolio.collectionsheet.data;
 
+import lombok.*;
 import org.apache.fineract.portfolio.paymenttype.data.PaymentTypeData;
 import org.joda.time.LocalDate;
 
 import java.util.Collection;
 
-/**
- * Immutable data object for collection sheet.
- */
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 public class IndividualCollectionSheetData {
-
-    @SuppressWarnings("unused")
-    private final LocalDate dueDate;
-    @SuppressWarnings("unused")
-    private final Collection<IndividualClientData> clients;
-
-    @SuppressWarnings("unused")
-    private final Collection<PaymentTypeData> paymentTypeOptions;
-
-    public static IndividualCollectionSheetData instance(final LocalDate date, final Collection<IndividualClientData> clients,
-            final Collection<PaymentTypeData> paymentTypeOptions) {
-        return new IndividualCollectionSheetData(date, clients, paymentTypeOptions);
-    }
-
-    private IndividualCollectionSheetData(final LocalDate dueDate, final Collection<IndividualClientData> clients,
-            final Collection<PaymentTypeData> paymentTypeOptions) {
-        this.dueDate = dueDate;
-        this.clients = clients;
-        this.paymentTypeOptions = paymentTypeOptions;
-    }
-
+    private LocalDate dueDate;
+    private Collection<IndividualClientData> clients;
+    private Collection<PaymentTypeData> paymentTypeOptions;
 }

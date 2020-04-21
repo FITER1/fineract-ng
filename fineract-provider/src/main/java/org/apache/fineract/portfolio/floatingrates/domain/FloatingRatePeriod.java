@@ -18,17 +18,26 @@
  */
 package org.apache.fineract.portfolio.floatingrates.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
 import org.apache.fineract.portfolio.floatingrates.data.FloatingRateDTO;
 import org.apache.fineract.portfolio.floatingrates.data.FloatingRatePeriodData;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
+@SuperBuilder(toBuilder = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_floating_rates_periods")
 public class FloatingRatePeriod extends AbstractPersistableCustom<Long> {
@@ -44,10 +53,10 @@ public class FloatingRatePeriod extends AbstractPersistableCustom<Long> {
 	private BigDecimal interestRate;
 
 	@Column(name = "is_differential_to_base_lending_rate", nullable = false)
-	private boolean isDifferentialToBaseLendingRate;
+	private boolean differentialToBaseLendingRate;
 
 	@Column(name = "is_active", nullable = false)
-	private boolean isActive;
+	private boolean active;
 
 	@ManyToOne(optional = true, fetch=FetchType.LAZY)
 	@JoinColumn(name = "createdby_id", nullable = false)
@@ -63,97 +72,24 @@ public class FloatingRatePeriod extends AbstractPersistableCustom<Long> {
 	@Column(name = "lastmodified_date", nullable = false)
 	private Date modifiedOn;
 
-	public FloatingRatePeriod() {
-
-	}
-
-	public FloatingRatePeriod(Date fromDate, BigDecimal interestRate,
-			boolean isDifferentialToBaseLendingRate, boolean isActive,
-			AppUser createdBy, AppUser modifiedBy, Date createdOn,
-			Date modifiedOn) {
-		this.fromDate = fromDate;
-		this.interestRate = interestRate;
-		this.isDifferentialToBaseLendingRate = isDifferentialToBaseLendingRate;
-		this.isActive = isActive;
-		this.createdBy = createdBy;
-		this.modifiedBy = modifiedBy;
-		this.createdOn = createdOn;
-		this.modifiedOn = modifiedOn;
-	}
-
-	public void updateFloatingRate(FloatingRate floatingRate) {
-		this.floatingRate = floatingRate;
-	}
-
-	public FloatingRate getFloatingRatesId() {
-		return this.floatingRate;
-	}
-
-	public Date getFromDate() {
-		return this.fromDate;
-	}
-
-	public BigDecimal getInterestRate() {
-		return this.interestRate;
-	}
-
-	public boolean isDifferentialToBaseLendingRate() {
-		return this.isDifferentialToBaseLendingRate;
-	}
-
-	public boolean isActive() {
-		return this.isActive;
-	}
-
-	public AppUser getCreatedBy() {
-		return this.createdBy;
-	}
-
-	public AppUser getModifiedBy() {
-		return this.modifiedBy;
-	}
-
-	public Date getCreatedOn() {
-		return this.createdOn;
-	}
-
-	public Date getModifiedOn() {
-		return this.modifiedOn;
-	}
-
-	public void setModifiedBy(AppUser modifiedBy) {
-		this.modifiedBy = modifiedBy;
-	}
-
-	public void setModifiedOn(Date modifiedOn) {
-		this.modifiedOn = modifiedOn;
-	}
-
-	public void setActive(boolean b) {
-		this.isActive = b;
-	}
-
-	public LocalDate fetchFromDate() {
-		return new LocalDate(this.fromDate);
-	}
-
 	public FloatingRatePeriodData toData(final FloatingRateDTO floatingRateDTO) {
+		BigDecimal interest = this.getInterestRate().add(floatingRateDTO.getInterestRateDiff());
 
-		BigDecimal interest = getInterestRate().add(
-				floatingRateDTO.getInterestRateDiff());
-		if (isDifferentialToBaseLendingRate()) {
-			interest = interest.add(floatingRateDTO
-					.fetchBaseRate(fetchFromDate()));
+		if (this.isDifferentialToBaseLendingRate()) {
+			interest = interest.add(floatingRateDTO.getBaseRate(LocalDate.fromDateFields(getFromDate())));
 		}
 		
-		final LocalDate fromDate = new LocalDateTime(getFromDate()).toLocalDate();
-		final LocalDate createdOn = new LocalDateTime(getCreatedOn()).toLocalDate();
-		final LocalDate modidiedOn = new LocalDateTime(getModifiedOn()).toLocalDate();
-		
-		return new FloatingRatePeriodData(getId(), fromDate, interest,
-				isDifferentialToBaseLendingRate(), isActive(), getCreatedBy()
-						.getUsername(), createdOn, getModifiedBy()
-						.getUsername(), modidiedOn);
+		return FloatingRatePeriodData.builder()
+			.id(this.getId())
+			.fromDate(LocalDate.fromDateFields(this.getFromDate()))
+			.createdOn(LocalDate.fromDateFields(this.getCreatedOn()))
+			.modifiedOn(LocalDate.fromDateFields(this.getModifiedOn()))
+			.differentialToBaseLendingRate(this.isDifferentialToBaseLendingRate())
+			.active(this.isActive())
+			.createdBy(this.getCreatedBy().getUsername())
+			.modifiedBy(this.getModifiedBy().getUsername())
+			.interestRate(interest)
+			.build();
 	}
 
 }

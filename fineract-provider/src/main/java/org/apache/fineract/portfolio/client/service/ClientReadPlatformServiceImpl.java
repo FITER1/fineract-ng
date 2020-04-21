@@ -911,7 +911,11 @@ public class ClientReadPlatformServiceImpl implements ClientReadPlatformService 
             final String groupName = rs.getString("groupName");
             final String accountNo = rs.getString("accountNo");
 
-            return GroupGeneralData.lookup(groupId, accountNo, groupName);
+            return GroupGeneralData.builder()
+                .id(groupId)
+                .name(groupName)
+                .accountNo(accountNo)
+                .build();
         }
     }
 

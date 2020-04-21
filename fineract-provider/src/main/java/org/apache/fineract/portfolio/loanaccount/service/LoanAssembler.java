@@ -198,7 +198,7 @@ public class LoanAssembler {
         if (groupId != null) {
             group = this.groupRepository.findById(groupId)
                     .orElseThrow(() -> new GroupNotFoundException(groupId));
-            if (group.isNotActive()) { throw new GroupNotActiveException(groupId); }
+            if (!group.isActive()) { throw new GroupNotActiveException(groupId); }
         }
 
         if (client != null && group != null) {

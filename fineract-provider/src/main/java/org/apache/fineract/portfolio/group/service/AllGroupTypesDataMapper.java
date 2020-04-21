@@ -110,11 +110,37 @@ public final class AllGroupTypesDataMapper implements RowMapper<GroupGeneralData
         final String activatedByFirstname = rs.getString("activatedByFirstname");
         final String activatedByLastname = rs.getString("activatedByLastname");
 
-        final GroupTimelineData timeline = new GroupTimelineData(submittedOnDate, submittedByUsername, submittedByFirstname,
-                submittedByLastname, activationDate, activatedByUsername, activatedByFirstname, activatedByLastname, closedOnDate,
-                closedByUsername, closedByFirstname, closedByLastname);
+        final GroupTimelineData timeline = GroupTimelineData.builder()
+            .submittedOnDate(submittedOnDate)
+            .submittedByUsername(submittedByUsername)
+            .submittedByFirstname(submittedByFirstname)
+            .submittedByLastname(submittedByLastname)
+            .activatedOnDate(activationDate)
+            .activatedByUsername(activatedByUsername)
+            .activatedByFirstname(activatedByFirstname)
+            .activatedByLastname(activatedByLastname)
+            .closedOnDate(closedOnDate)
+            .closedByUsername(closedByUsername)
+            .closedByFirstname(closedByFirstname)
+            .closedByLastname(closedByLastname)
+            .build();
 
-        return GroupGeneralData.instance(id, accountNo, name, externalId, status, activationDate, officeId, officeName, centerId, centerName, staffId,
-                staffName, hierarchy, groupLevel, timeline);
+        return GroupGeneralData.builder()
+            .id(id)
+            .accountNo(accountNo)
+            .name(name)
+            .externalId(externalId)
+            .status(status)
+            .activationDate(activationDate)
+            .officeId(officeId)
+            .officeName(officeName)
+            .centerId(centerId)
+            .centerName(centerName)
+            .staffId(staffId)
+            .staffName(staffName)
+            .hierarchy(hierarchy)
+            .groupLevel(groupLevel)
+            .timeline(timeline)
+            .build();
     }
 }

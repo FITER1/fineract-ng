@@ -234,10 +234,10 @@ public class FixedDepositProduct extends SavingsProduct {
         final Set<InterestRateChart> charts = this.setOfCharts();
         for (InterestRateChart existingChart : charts) {
             if (!existingChart.equals(comparingChart)) {
-                if (existingChart.chartFields().isOverlapping(comparingChart.chartFields())) {
+                if (existingChart.getChartFields().isOverlapping(comparingChart.getChartFields())) {
                     baseDataValidator.failWithCodeNoParameterAddedToErrorCode("chart.overlapping.from.and.end.dates",
-                            existingChart.getFromDateAsLocalDate(), existingChart.getEndDateAsLocalDate(),
-                            comparingChart.getFromDateAsLocalDate(), comparingChart.getEndDateAsLocalDate());
+                            existingChart.getChartFields().getFromDateAsLocalDate(), existingChart.getChartFields().getEndDateAsLocalDate(),
+                            comparingChart.getChartFields().getFromDateAsLocalDate(), comparingChart.getChartFields().getEndDateAsLocalDate());
                 }
             }
         }
@@ -248,7 +248,7 @@ public class FixedDepositProduct extends SavingsProduct {
         InterestRateChart applicableChart = null;
         if (this.charts != null) {
             for (InterestRateChart chart : this.charts) {
-                if (chart.isApplicableChartFor(target)) {
+                if (chart.getChartFields().isApplicableChartFor(target)) {
                     applicableChart = chart;
                     break;
                 }

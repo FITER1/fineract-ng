@@ -232,8 +232,8 @@ public class GroupsApiResource {
                 }
             }
             if (associationParameters.contains("collectionMeetingCalendar")) {
-                if (group.isChildGroup()) {
-                    calendarData = this.calendarReadPlatformService.retrieveCollctionCalendarByEntity(group.getParentId(),
+                if (group.getCenterId()!=null) {
+                    calendarData = this.calendarReadPlatformService.retrieveCollctionCalendarByEntity(group.getCenterId(),
                             CalendarEntityType.CENTERS.getValue());
                 } else {
                     calendarData = this.calendarReadPlatformService.retrieveCollctionCalendarByEntity(groupId,
@@ -293,22 +293,104 @@ public class GroupsApiResource {
                 }
             }
 
-            group = GroupGeneralData.withAssocations(group, membersOfGroup, activeClientMembers,
-                    groupRoles, calendars, calendarData);
+            group = GroupGeneralData.builder()
+                .id(group.getId())
+                .accountNo(group.getAccountNo())
+                .name(group.getName())
+                .externalId(group.getExternalId())
+                .status(group.getStatus())
+                .activationDate(group.getActivationDate())
+                .officeId(group.getOfficeId())
+                .officeName(group.getOfficeName())
+                .centerId(group.getCenterId())
+                .centerName(group.getCenterName())
+                .staffId(group.getStaffId())
+                .staffName(group.getStaffName())
+                .hierarchy(group.getHierarchy())
+                .groupLevel(group.getGroupLevel())
+                .centerOptions(group.getCenterOptions())
+                .officeOptions(group.getOfficeOptions())
+                .staffOptions(group.getStaffOptions())
+                .clientOptions(group.getClientOptions())
+                .availableRoles(group.getAvailableRoles())
+                .selectedRole(group.getSelectedRole())
+                .closureReasons(group.getClosureReasons())
+                .timeline(group.getTimeline())
+                .clientMembers(membersOfGroup)
+                .activeClientMembers(activeClientMembers)
+                .groupRoles(groupRoles)
+                .calendarsData(calendars)
+                .collectionMeetingCalendar(calendarData)
+                .build();
         }
 
         if (roleId != null) {
             selectedRole = this.groupRolesReadPlatformService.retrieveGroupRole(groupId, roleId);
             if (selectedRole != null) {
-                group = GroupGeneralData.updateSelectedRole(group, selectedRole);
+                group = GroupGeneralData.builder()
+                    .id(group.getId())
+                    .accountNo(group.getAccountNo())
+                    .name(group.getName())
+                    .externalId(group.getExternalId())
+                    .status(group.getStatus())
+                    .activationDate(group.getActivationDate())
+                    .officeId(group.getOfficeId())
+                    .officeName(group.getOfficeName())
+                    .centerId(group.getCenterId())
+                    .centerName(group.getCenterName())
+                    .staffId(group.getStaffId())
+                    .staffName(group.getStaffName())
+                    .hierarchy(group.getHierarchy())
+                    .groupLevel(group.getGroupLevel())
+                    .clientMembers(group.getClientMembers())
+                    .activeClientMembers(group.getActiveClientMembers())
+                    .centerOptions(group.getCenterOptions())
+                    .officeOptions(group.getOfficeOptions())
+                    .staffOptions(group.getStaffOptions())
+                    .clientOptions(group.getClientOptions())
+                    .groupRoles(group.getGroupRoles())
+                    .availableRoles(group.getAvailableRoles())
+                    .calendarsData(group.getCalendarsData())
+                    .collectionMeetingCalendar(group.getCollectionMeetingCalendar())
+                    .closureReasons(group.getClosureReasons())
+                    .selectedRole(selectedRole)
+                    .build();
             }
         }
 
         final boolean template = ApiParameterHelper.template(uriInfo.getQueryParameters());
         if (template) {
-            final GroupGeneralData templateGroup = this.groupReadPlatformService.retrieveTemplate(group.officeId(), false,
+            final GroupGeneralData templateGroup = this.groupReadPlatformService.retrieveTemplate(group.getOfficeId(), false,
                     staffInSelectedOfficeOnly);
-            group = GroupGeneralData.withTemplate(templateGroup, group);
+            group = GroupGeneralData.builder()
+                .id(group.getId())
+                .accountNo(group.getAccountNo())
+                .name(group.getName())
+                .externalId(group.getExternalId())
+                .status(group.getStatus())
+                .activationDate(group.getActivationDate())
+                .officeId(group.getOfficeId())
+                .officeName(group.getOfficeName())
+                .centerId(group.getCenterId())
+                .centerName(group.getCenterName())
+                .staffId(group.getStaffId())
+                .staffName(group.getStaffName())
+                .hierarchy(group.getHierarchy())
+                .groupLevel(group.getGroupLevel())
+                .clientMembers(group.getClientMembers())
+                .activeClientMembers(group.getActiveClientMembers())
+                .groupRoles(group.getGroupRoles())
+                .selectedRole(group.getSelectedRole())
+                .calendarsData(group.getCalendarsData())
+                .collectionMeetingCalendar(group.getCollectionMeetingCalendar())
+                .closureReasons(group.getClosureReasons())
+                .centerOptions(templateGroup.getCenterOptions())
+                .officeOptions(templateGroup.getOfficeOptions())
+                .staffOptions(templateGroup.getStaffOptions())
+                .clientOptions(templateGroup.getClientOptions())
+                .availableRoles(templateGroup.getAvailableRoles())
+                .timeline(templateGroup.getTimeline())
+                .build();
         }
 
         return this.groupGeneralApiJsonSerializer.serialize(settings, group, GroupingTypesApiConstants.GROUP_RESPONSE_DATA_PARAMETERS);

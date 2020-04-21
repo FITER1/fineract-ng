@@ -153,8 +153,20 @@ public class GroupImportHandler implements ImportHandler {
             }
         }
             statuses.add(status);
-            return GroupGeneralData.importInstance(groupName, clientMembers, activationDate, submittedOnDate,active, externalId,
-                    officeId, staffId, centerId, row.getRowNum(),locale,dateFormat);
+            return GroupGeneralData.builder()
+                .name(groupName)
+                .clientMembers(clientMembers)
+                .activationDate(activationDate)
+                .submittedOnDate(submittedOnDate)
+                .active(active)
+                .externalId(externalId)
+                .officeId(officeId)
+                .staffId(staffId)
+                .centerId(centerId)
+                .rowIndex(row.getRowNum())
+                .locale(locale)
+                .dateFormat(dateFormat)
+                .build();
         }
 
    private boolean containsClientId(List<ClientData> clientMembers,Long clientId){

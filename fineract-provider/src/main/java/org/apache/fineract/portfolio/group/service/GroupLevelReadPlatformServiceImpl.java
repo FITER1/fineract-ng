@@ -69,8 +69,17 @@ public class GroupLevelReadPlatformServiceImpl implements GroupLevelReadPlatform
             final boolean recursable = rs.getBoolean("recursable");
             final boolean canHaveClients = rs.getBoolean("canHaveClients");
 
-            return new GroupLevelData(levelId, levelName, parentLevelId, parentLevelName, childLevelId, childLevelName, superParent,
-                    recursable, canHaveClients);
+            return GroupLevelData.builder()
+                .levelId(levelId)
+                .levelName(levelName)
+                .parentLevelId(parentLevelId)
+                .parentLevelName(parentLevelName)
+                .childLevelId(childLevelId)
+                .childLevelName(childLevelName)
+                .superParent(superParent)
+                .recursable(recursable)
+                .canHaveClients(canHaveClients)
+                .build();
         }
 
     }

@@ -268,7 +268,7 @@ public class LoansApiResource {
                         loanAccountGroupData);
                 if (productId != null) {
                     Map<Long, Integer> memberLoanCycle = new HashMap<>();
-                    Collection<ClientData> members = loanAccountGroupData.groupData().clientMembers();
+                    Collection<ClientData> members = loanAccountGroupData.groupData().getClientMembers();
                     accountLinkingOptions = new ArrayList<>();
                     if(members != null){
                     	for (ClientData clientData : members) {

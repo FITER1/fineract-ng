@@ -84,12 +84,26 @@ public class InterestRateChartSlabReadPlatformServiceImpl implements InterestRat
         final List<CodeValueData> clientClassificationOptions = new ArrayList<>(
                 this.codeValueReadPlatformService.retrieveCodeValuesByCode(ClientApiConstants.CLIENT_CLASSIFICATION));
 
-        return InterestRateChartSlabData.withTemplate(chartSlab, this.chartDropdownReadPlatformService.retrievePeriodTypeOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveEntityTypeOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveAttributeNameOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveConditionTypeOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveIncentiveTypeOptions(), genderOptions, clientTypeOptions,
-                clientClassificationOptions);
+        return InterestRateChartSlabData.builder()
+            .id(chartSlab.getId())
+            .description(chartSlab.getDescription())
+            .periodType(chartSlab.getPeriodType())
+            .fromPeriod(chartSlab.getFromPeriod())
+            .toPeriod(chartSlab.getToPeriod())
+            .amountRangeFrom(chartSlab.getAmountRangeFrom())
+            .amountRangeTo(chartSlab.getAmountRangeTo())
+            .annualInterestRate(chartSlab.getAnnualInterestRate())
+            .currency(chartSlab.getCurrency())
+            .incentives(chartSlab.getIncentives())
+            .periodTypes(this.chartDropdownReadPlatformService.retrievePeriodTypeOptions())
+            .entityTypeOptions(this.interestIncentiveDropdownReadPlatformService.retrieveEntityTypeOptions())
+            .attributeNameOptions(this.interestIncentiveDropdownReadPlatformService.retrieveAttributeNameOptions())
+            .conditionTypeOptions(this.interestIncentiveDropdownReadPlatformService.retrieveConditionTypeOptions())
+            .incentiveTypeOptions(this.interestIncentiveDropdownReadPlatformService.retrieveIncentiveTypeOptions())
+            .genderOptions(genderOptions)
+            .clientTypeOptions(clientTypeOptions)
+            .clientClassificationOptions(clientClassificationOptions)
+            .build();
     }
 
     @Override
@@ -102,12 +116,16 @@ public class InterestRateChartSlabReadPlatformServiceImpl implements InterestRat
 
         final List<CodeValueData> clientClassificationOptions = new ArrayList<>(
                 this.codeValueReadPlatformService.retrieveCodeValuesByCode(ClientApiConstants.CLIENT_CLASSIFICATION));
-        return InterestRateChartSlabData.template(this.chartDropdownReadPlatformService.retrievePeriodTypeOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveEntityTypeOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveAttributeNameOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveConditionTypeOptions(),
-                this.interestIncentiveDropdownReadPlatformService.retrieveIncentiveTypeOptions(), genderOptions, clientTypeOptions,
-                clientClassificationOptions);
+        return InterestRateChartSlabData.builder()
+            .periodTypes(this.chartDropdownReadPlatformService.retrievePeriodTypeOptions())
+            .entityTypeOptions(this.interestIncentiveDropdownReadPlatformService.retrieveEntityTypeOptions())
+            .attributeNameOptions(this.interestIncentiveDropdownReadPlatformService.retrieveAttributeNameOptions())
+            .conditionTypeOptions(this.interestIncentiveDropdownReadPlatformService.retrieveConditionTypeOptions())
+            .incentiveTypeOptions(this.interestIncentiveDropdownReadPlatformService.retrieveIncentiveTypeOptions())
+            .genderOptions(genderOptions)
+            .clientTypeOptions(clientTypeOptions)
+            .clientClassificationOptions(clientClassificationOptions)
+            .build();
     }
 
     private static final class InterestRateChartSlabsMapper implements RowMapper<InterestRateChartSlabData> {
@@ -164,8 +182,17 @@ public class InterestRateChartSlabReadPlatformServiceImpl implements InterestRat
             final CurrencyData currency = new CurrencyData(currencyCode, currencyName, currencyDigits, inMultiplesOf,
                     currencyDisplaySymbol, currencyNameCode);
 
-            return InterestRateChartSlabData.instance(id, description, periodType, fromPeriod, toPeriod, amountRangeFrom, amountRangeTo,
-                    annualInterestRate, currency);
+            return InterestRateChartSlabData.builder()
+                .id(id)
+                .description(description)
+                .periodType(periodType)
+                .fromPeriod(fromPeriod)
+                .toPeriod(toPeriod)
+                .amountRangeFrom(amountRangeFrom)
+                .amountRangeTo(amountRangeTo)
+                .annualInterestRate(annualInterestRate)
+                .currency(currency)
+                .build();
         }
 
     }
@@ -203,7 +230,7 @@ public class InterestRateChartSlabReadPlatformServiceImpl implements InterestRat
                     chartDataList.add(chartSlabData);
                 }
                 final InterestIncentiveData incentiveData = incentiveMapper.mapRow(rs, ircdIndex++);
-                if (incentiveData != null) {
+                if (incentiveData != null && chartSlabData != null) {
                     chartSlabData.addIncentives(incentiveData);
                 }
             }
@@ -236,11 +263,16 @@ public class InterestRateChartSlabReadPlatformServiceImpl implements InterestRat
             final EnumOptionData incentiveTypeData = InterestIncentivesEnumerations.incentiveType(incentiveType);
             final BigDecimal amount = rs.getBigDecimal("amount");
 
-            return InterestIncentiveData.instance(id, entityTypeData, attributeNameData, conditionTypeData, attributeValue,
-                    attributeValueDesc, incentiveTypeData, amount);
-
+            return InterestIncentiveData.builder()
+                .id(id)
+                .entityType(entityTypeData)
+                .attributeName(attributeNameData)
+                .conditionType(conditionTypeData)
+                .attributeValue(attributeValue)
+                .attributeValueDesc(attributeValueDesc)
+                .incentiveType(incentiveTypeData)
+                .amount(amount)
+                .build();
         }
-
     }
-
 }

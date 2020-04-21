@@ -149,9 +149,17 @@ public class FloatingRatesReadPlatformServiceImpl implements FloatingRatesReadPl
 				ratePeriods = jdbcTemplate.query(sql, ratePeriodMapper,
 						new Object[] { id });
 			}
-			return new FloatingRateData(id, name, isBaseLendingRate, isActive,
-					createdBy, createdOn, modifiedBy, modifiedOn, ratePeriods,
-					null);
+			return FloatingRateData.builder()
+				.id(id)
+				.name(name)
+				.baseLendingRate(isBaseLendingRate)
+				.active(isActive)
+				.createdBy(createdBy)
+				.createdOn(createdOn)
+				.modifiedBy(modifiedBy)
+				.modifiedOn(modifiedOn)
+				.ratePeriods(ratePeriods)
+				.build();
 		}
 
 		public String schema() {
@@ -190,9 +198,17 @@ public class FloatingRatesReadPlatformServiceImpl implements FloatingRatesReadPl
 			final LocalDate createdOn = JdbcSupport.getLocalDate(rs, "createdOn");
 			final String modifiedBy = rs.getString("modifiedBy");
 			final LocalDate modifiedOn = JdbcSupport.getLocalDate(rs, "modifiedOn");
-			return new FloatingRatePeriodData(id, fromDate, interestRate,
-					isDifferentialToBaseLendingRate, isActive, createdBy,
-					createdOn, modifiedBy, modifiedOn);
+			return FloatingRatePeriodData.builder()
+				.id(id)
+				.fromDate(fromDate)
+				.interestRate(interestRate)
+				.differentialToBaseLendingRate(isDifferentialToBaseLendingRate)
+				.active(isActive)
+				.createdBy(createdBy)
+				.createdOn(createdOn)
+				.modifiedBy(modifiedBy)
+				.modifiedOn(modifiedOn)
+				.build();
 		}
 
 		public String schema() {
@@ -216,8 +232,12 @@ public class FloatingRatesReadPlatformServiceImpl implements FloatingRatesReadPl
 			final String name = rs.getString("name");
 			final boolean isBaseLendingRate = rs
 					.getBoolean("isBaseLendingRate");
-			return new FloatingRateData(id, name, isBaseLendingRate, true,
-					null, null, null, null, null, null);
+			return FloatingRateData.builder()
+				.id(id)
+				.name(name)
+				.baseLendingRate(isBaseLendingRate)
+				.active(true)
+				.build();
 		}
 
 		public String schema() {
@@ -277,8 +297,13 @@ public class FloatingRatesReadPlatformServiceImpl implements FloatingRatesReadPl
 			final BigDecimal blrInterestRate = rs
 					.getBigDecimal("baserate_interest_rate");
 
-			return new InterestRatePeriodData(fromDate, interestRate,
-					isDifferentialToBLR, blrFromDate, blrInterestRate);
+			return InterestRatePeriodData.builder()
+				.fromDate(fromDate)
+				.interestRate(interestRate)
+				.differentialToBLR(isDifferentialToBLR)
+				.blrFromDate(blrFromDate)
+				.blrInterestRate(blrInterestRate)
+				.build();
 		}
 
 		public String schema() {

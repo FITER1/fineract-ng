@@ -178,8 +178,12 @@ public class LoanUtilService {
                 // Do not do anything
             }
 
-            floatingRateDTO = new FloatingRateDTO(isFloatingInterestRate, loan.getDisbursementDate(), interestRateDiff,
-                    baseLendingRatePeriods);
+            floatingRateDTO = FloatingRateDTO.builder()
+                .floatingInterestRate(isFloatingInterestRate)
+                .startDate(loan.getDisbursementDate())
+                .interestRateDiff(interestRateDiff)
+                .baseLendingRatePeriods(baseLendingRatePeriods)
+                .build();
         }
         return floatingRateDTO;
     }

@@ -207,8 +207,10 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
                     if (groupId != null) {
                         final Group group = this.groupRepository.findById(groupId)
                                 .orElseThrow(() -> new GroupNotFoundException(groupId));
-                        if (group.isNotActive()) {
-                            if (group.isCenter()) { throw new CenterNotActiveException(groupId); }
+                        if (!group.isActive()) {
+                            if (group.getGroupLevel().isCenter()) {
+                                throw new CenterNotActiveException(groupId);
+                            }
                             throw new GroupNotActiveException(groupId);
                         }
                         account.update(group);
@@ -459,8 +461,10 @@ public class SavingsApplicationProcessWritePlatformServiceJpaRepositoryImpl impl
         }
         final Group group = account.group();
         if (group != null) {
-            if (group.isNotActive()) {
-                if (group.isCenter()) { throw new CenterNotActiveException(group.getId()); }
+            if (!group.isActive()) {
+                if (group.getGroupLevel().isCenter()) {
+                    throw new CenterNotActiveException(group.getId());
+                }
                 throw new GroupNotActiveException(group.getId());
             }
         }

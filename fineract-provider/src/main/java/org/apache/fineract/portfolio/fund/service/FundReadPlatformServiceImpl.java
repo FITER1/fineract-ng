@@ -52,7 +52,11 @@ public class FundReadPlatformServiceImpl implements FundReadPlatformService {
             final String name = rs.getString("name");
             final String externalId = rs.getString("externalId");
 
-            return FundData.instance(id, name, externalId);
+            return FundData.builder()
+                .id(id)
+                .name(name)
+                .externalId(externalId)
+                .build();
         }
     }
 

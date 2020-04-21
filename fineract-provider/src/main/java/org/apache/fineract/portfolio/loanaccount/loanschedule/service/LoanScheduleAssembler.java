@@ -332,8 +332,12 @@ public class LoanScheduleAssembler {
             } catch (final FloatingRateNotFoundException ex) {
                 // Do not do anything
             }
-            FloatingRateDTO floatingRateDTO = new FloatingRateDTO(isFloatingInterestRate, expectedDisbursementDate, interestRateDiff,
-                    baseLendingRatePeriods);
+            FloatingRateDTO floatingRateDTO = FloatingRateDTO.builder()
+                .floatingInterestRate(isFloatingInterestRate)
+                .startDate(expectedDisbursementDate)
+                .interestRateDiff(interestRateDiff)
+                .baseLendingRatePeriods(baseLendingRatePeriods)
+                .build();
             Collection<FloatingRatePeriodData> applicableRates = loanProduct.fetchInterestRates(floatingRateDTO);
 
             LocalDate interestRateStartDate = DateUtils.getLocalDateOfTenant();
@@ -341,10 +345,10 @@ public class LoanScheduleAssembler {
             final boolean isSpecificToInstallment = false;
             for (FloatingRatePeriodData periodData : applicableRates) {
                 LoanTermVariationsData loanTermVariation = new LoanTermVariationsData(
-                        LoanEnumerations.loanvariationType(LoanTermVariationType.INTEREST_RATE), periodData.getFromDateAsLocalDate(),
+                        LoanEnumerations.loanvariationType(LoanTermVariationType.INTEREST_RATE), periodData.getFromDate(),
                         periodData.getInterestRate(), dateValue, isSpecificToInstallment);
-                if (!interestRateStartDate.isBefore(periodData.getFromDateAsLocalDate())) {
-                    interestRateStartDate = periodData.getFromDateAsLocalDate();
+                if (!interestRateStartDate.isBefore(periodData.getFromDate())) {
+                    interestRateStartDate = periodData.getFromDate();
                     annualNominalInterestRate = periodData.getInterestRate();
                 }
                 loanTermVariations.add(loanTermVariation);

@@ -20,6 +20,7 @@ package org.apache.fineract.portfolio.fund.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.CommandProcessingResult;
@@ -35,6 +36,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.PersistenceException;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 @Slf4j
@@ -56,7 +58,7 @@ public class FundWritePlatformServiceJpaRepositoryImpl implements FundWritePlatf
 
             this.fromApiJsonDeserializer.validateForCreate(command.json());
 
-            final Fund fund = Fund.fromJson(command);
+            final Fund fund = createNew(command);
 
             this.fundRepository.save(fund);
 
@@ -84,7 +86,7 @@ public class FundWritePlatformServiceJpaRepositoryImpl implements FundWritePlatf
             final Fund fund = this.fundRepository.findById(fundId)
                     .orElseThrow(() -> new FundNotFoundException(fundId));
 
-            final Map<String, Object> changes = fund.update(command);
+            final Map<String, Object> changes = update(fund, command);
             if (!changes.isEmpty()) {
                 this.fundRepository.saveAndFlush(fund);
             }
@@ -98,6 +100,38 @@ public class FundWritePlatformServiceJpaRepositoryImpl implements FundWritePlatf
         	handleFundDataIntegrityIssues(command, throwable, dve);
          	return new CommandProcessingResult();
         }
+    }
+
+    private Fund createNew(final JsonCommand command) {
+
+        final String firstnameParamName = "name";
+        final String name = command.stringValueOfParameterNamed(firstnameParamName);
+
+        final String lastnameParamName = "externalId";
+        final String externalId = command.stringValueOfParameterNamed(lastnameParamName);
+
+        return new Fund(name, externalId);
+    }
+
+    private Map<String, Object> update(final Fund fund, final JsonCommand command) {
+
+        final Map<String, Object> actualChanges = new LinkedHashMap<>(7);
+
+        final String nameParamName = "name";
+        if (command.isChangeInStringParameterNamed(nameParamName, fund.getName())) {
+            final String newValue = command.stringValueOfParameterNamed(nameParamName);
+            actualChanges.put(nameParamName, newValue);
+            fund.setName(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        final String externalIdParamName = "externalId";
+        if (command.isChangeInStringParameterNamed(externalIdParamName, fund.getExternalId())) {
+            final String newValue = command.stringValueOfParameterNamed(externalIdParamName);
+            actualChanges.put(externalIdParamName, newValue);
+            fund.setExternalId(StringUtils.defaultIfEmpty(newValue, null));
+        }
+
+        return actualChanges;
     }
 
     /*

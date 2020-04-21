@@ -733,7 +733,7 @@ public class DepositAccountWritePlatformServiceJpaRepositoryImpl implements Depo
         }
         final Group group = account.group();
         if (group != null) {
-            if (group.isNotActive()) { throw new GroupNotActiveException(group.getId()); }
+            if (!group.isActive()) { throw new GroupNotActiveException(group.getId()); }
         }
     }
 

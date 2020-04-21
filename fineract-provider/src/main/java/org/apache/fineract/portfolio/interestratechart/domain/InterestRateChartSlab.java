@@ -103,7 +103,7 @@ public class InterestRateChartSlab extends AbstractPersistableCustom<Long> {
     }
 
     public void addInterestIncentive(InterestIncentives interestIncentives) {
-        interestIncentives.updateInterestRateChartSlab(this);
+        interestIncentives.setInterestRateChartSlab(this);
         setOfInterestIncentives().add(interestIncentives);
     }
 
@@ -143,7 +143,7 @@ public class InterestRateChartSlab extends AbstractPersistableCustom<Long> {
                                 deleteIncentives.put(idParamName, interestIncentiveId);
                             }
                         } else {
-                            interestIncentives.update(incentivesCommand, IncentiveChanges, baseDataValidator, locale);
+                            update(interestIncentives, incentivesCommand, IncentiveChanges, baseDataValidator, locale);
                         }
                     } else {
                         Integer entityType = incentivesCommand.integerValueOfParameterNamed(entityTypeParamName, locale);
@@ -152,10 +152,23 @@ public class InterestRateChartSlab extends AbstractPersistableCustom<Long> {
                         String attributeValue = incentivesCommand.stringValueOfParameterNamed(attributeValueParamName);
                         Integer incentiveType = incentivesCommand.integerValueOfParameterNamed(incentiveTypeparamName, locale);
                         BigDecimal amount = incentivesCommand.bigDecimalValueOfParameterNamed(amountParamName, locale);
-                        InterestIncentivesFields incentivesFields = InterestIncentivesFields.createNew(entityType, attributeName,
-                                conditionType, attributeValue, incentiveType, amount, baseDataValidator);
-                        InterestIncentives incentives = new InterestIncentives(chartSlab, incentivesFields);
-                        chartSlab.addInterestIncentive(incentives);
+                        InterestIncentivesFields incentivesFields = InterestIncentivesFields.builder()
+                            .entityType(entityType)
+                            .attributeName(attributeName)
+                            .conditionType(conditionType)
+                            .attributeValue(attributeValue)
+                            .incentiveType(incentiveType)
+                            .amount(amount)
+                            .build();
+                        incentivesFields.validateIncentiveData(baseDataValidator);
+
+                        InterestIncentives incentives = InterestIncentives.builder()
+                            .interestIncentivesFields(incentivesFields)
+                            .interestRateChartSlab(chartSlab)
+                            .build();
+                        if (chartSlab != null) {
+                            chartSlab.addInterestIncentive(incentives);
+                        }
                     }
                 }
             }
@@ -172,4 +185,48 @@ public class InterestRateChartSlab extends AbstractPersistableCustom<Long> {
         }
     }
 
+    public void update(final InterestIncentives incentives, final JsonCommand command, final Map<String, Object> actualChanges, final DataValidatorBuilder baseDataValidator, final Locale locale) {
+        update(incentives.getInterestIncentivesFields(), command, actualChanges, baseDataValidator, locale);
+    }
+
+    private void update(final InterestIncentivesFields incentiveFields, final JsonCommand command, final Map<String, Object> actualChanges, final DataValidatorBuilder baseDataValidator,
+                       final Locale locale) {
+        if (command.isChangeInIntegerParameterNamed(entityTypeParamName, incentiveFields.getEntityType(), locale)) {
+            final Integer newValue = command.integerValueOfParameterNamed(entityTypeParamName, locale);
+            actualChanges.put(entityTypeParamName, newValue);
+            incentiveFields.setEntityType(newValue);
+        }
+
+        if (command.isChangeInIntegerParameterNamed(attributeNameParamName, incentiveFields.getAttributeName(), locale)) {
+            final Integer newValue = command.integerValueOfParameterNamed(attributeNameParamName, locale);
+            actualChanges.put(attributeNameParamName, newValue);
+            incentiveFields.setAttributeName(newValue);
+        }
+
+        if (command.isChangeInIntegerParameterNamed(conditionTypeParamName, incentiveFields.getConditionType(), locale)) {
+            final Integer newValue = command.integerValueOfParameterNamed(conditionTypeParamName, locale);
+            actualChanges.put(conditionTypeParamName, newValue);
+            incentiveFields.setConditionType(newValue);
+        }
+
+        if (command.isChangeInStringParameterNamed(attributeValueParamName, incentiveFields.getAttributeValue())) {
+            final String newValue = command.stringValueOfParameterNamed(attributeValueParamName);
+            actualChanges.put(attributeValueParamName, newValue);
+            incentiveFields.setAttributeValue(newValue);
+        }
+
+        if (command.isChangeInIntegerParameterNamed(incentiveTypeparamName, incentiveFields.getIncentiveType(), locale)) {
+            final Integer newValue = command.integerValueOfParameterNamed(incentiveTypeparamName, locale);
+            actualChanges.put(incentiveTypeparamName, newValue);
+            incentiveFields.setIncentiveType(newValue);
+        }
+
+        if (command.isChangeInBigDecimalParameterNamed(amountParamName, incentiveFields.getAmount(), locale)) {
+            final BigDecimal newValue = command.bigDecimalValueOfParameterNamed(amountParamName, locale);
+            actualChanges.put(amountParamName, newValue);
+            incentiveFields.setAmount(newValue);
+        }
+
+        incentiveFields.validateIncentiveData(baseDataValidator);
+    }
 }

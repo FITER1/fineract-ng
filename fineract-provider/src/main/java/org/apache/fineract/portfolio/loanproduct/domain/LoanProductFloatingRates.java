@@ -147,8 +147,8 @@ public class LoanProductFloatingRates extends AbstractPersistableCustom<Long> {
     }
 
     public Collection<FloatingRatePeriodData> fetchInterestRates(final FloatingRateDTO floatingRateDTO) {
-        floatingRateDTO.addInterestRateDiff(this.interestRateDifferential);
-        return floatingRate.fetchInterestRates(floatingRateDTO);
+        floatingRateDTO.setInterestRateDiff(floatingRateDTO.getInterestRateDiff().add(this.interestRateDifferential));
+        return floatingRate.getInterestRates(floatingRateDTO);
 
     }
 

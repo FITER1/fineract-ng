@@ -23,19 +23,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.fineract.infrastructure.codes.data.CodeValueData;
 import org.apache.fineract.infrastructure.codes.domain.CodeValue;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-import org.apache.fineract.portfolio.collateral.api.CollateralApiConstants.COLLATERAL_JSON_INPUT_PARAMS;
-import org.apache.fineract.portfolio.collateral.data.CollateralData;
 import org.apache.fineract.portfolio.loanaccount.domain.Loan;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @SuperBuilder(toBuilder = true)
 @Data
@@ -59,21 +52,4 @@ public class LoanCollateral extends AbstractPersistableCustom<Long> {
 
     @Column(name = "description", length = 500)
     private String description;
-
-    public CollateralData toData() {
-        final CodeValueData typeData = CodeValueData.builder()
-            .id(this.type.getId())
-            .name(this.type.getLabel())
-            .position(this.type.getPosition())
-            .active(this.type.isActive())
-            .mandatory(this.type.isMandatory())
-            .build();
-
-        return CollateralData.builder()
-            .id(getId())
-            .type(typeData)
-            .value(this.value)
-            .description(this.description)
-            .build();
-    }
 }

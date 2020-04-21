@@ -134,9 +134,9 @@ public class MeetingWritePlatformServiceJpaRepositoryImpl implements MeetingWrit
              * passed for retrieving CalendarInstance.
              */
             final Group group = this.groupRepository.findById(entityId).get();
-            if (group.isCenter()) {
+            if (group.getGroupLevel().isCenter()) {
                 entityType = CalendarEntityType.CENTERS;
-            } else if (group.isChildGroup()) {
+            } else if (group.getParent()!=null) {
                 entityType = CalendarEntityType.CENTERS;
                 entityId = group.getParent().getId();
             }

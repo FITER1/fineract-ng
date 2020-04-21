@@ -18,22 +18,29 @@
  */
 package org.apache.fineract.portfolio.floatingrates.domain;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.domain.AbstractPersistableCustom;
-import org.apache.fineract.infrastructure.core.serialization.JsonParserHelper;
-import org.apache.fineract.infrastructure.core.service.DateUtils;
 import org.apache.fineract.portfolio.floatingrates.data.FloatingRateDTO;
 import org.apache.fineract.portfolio.floatingrates.data.FloatingRatePeriodData;
 import org.apache.fineract.useradministration.domain.AppUser;
 import org.joda.time.LocalDate;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
+@SuperBuilder(toBuilder = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_floating_rates", uniqueConstraints = { @UniqueConstraint(columnNames = { "name" }, name = "unq_name") })
 public class FloatingRate extends AbstractPersistableCustom<Long> {
@@ -42,10 +49,10 @@ public class FloatingRate extends AbstractPersistableCustom<Long> {
 	private String name;
 
 	@Column(name = "is_base_lending_rate", nullable = false)
-	private boolean isBaseLendingRate;
+	private boolean baseLendingRate;
 
 	@Column(name = "is_active", nullable = false)
-	private boolean isActive;
+	private boolean active;
 
 	@OrderBy(value = "fromDate,id")
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "floatingRate", orphanRemoval = true, fetch=FetchType.EAGER)
@@ -65,177 +72,15 @@ public class FloatingRate extends AbstractPersistableCustom<Long> {
 	@Column(name = "lastmodified_date", nullable = false)
 	private Date modifiedOn;
 
-	public FloatingRate() {
-
-	}
-
-	public FloatingRate(String name, boolean isBaseLendingRate,
-			boolean isActive, List<FloatingRatePeriod> floatingRatePeriods,
-			AppUser createdBy, AppUser modifiedBy, Date createdOn,
-			Date modifiedOn) {
-		this.name = name;
-		this.isBaseLendingRate = isBaseLendingRate;
-		this.isActive = isActive;
-		this.floatingRatePeriods = floatingRatePeriods;
-		this.createdBy = createdBy;
-		this.createdOn = createdOn;
-		this.modifiedBy = modifiedBy;
-		this.modifiedOn = modifiedOn;
-		if (floatingRatePeriods != null) {
-			for (FloatingRatePeriod ratePeriod : floatingRatePeriods) {
-				ratePeriod.updateFloatingRate(this);
-			}
-		}
-	}
-
-	public static FloatingRate createNew(AppUser currentUser,
-			JsonCommand command) {
-
-		final String name = command.stringValueOfParameterNamed("name");
-		final boolean isBaseLendingRate = command
-				.parameterExists("isBaseLendingRate") ? command
-				.booleanPrimitiveValueOfParameterNamed("isBaseLendingRate")
-				: false;
-		final boolean isActive = command.parameterExists("isActive") ? command
-				.booleanPrimitiveValueOfParameterNamed("isActive") : true;
-		final List<FloatingRatePeriod> floatingRatePeriods = getRatePeriods(
-				currentUser, command);
-		final LocalDate currentDate = DateUtils.getLocalDateOfTenant();
-
-		return new FloatingRate(name, isBaseLendingRate, isActive,
-				floatingRatePeriods, currentUser, currentUser,
-				currentDate.toDate(), currentDate.toDate());
-	}
-
-	private static List<FloatingRatePeriod> getRatePeriods(
-			final AppUser currentUser, final JsonCommand command) {
-		if (!command.parameterExists("ratePeriods")) {
-			return null;
-		}
-		List<FloatingRatePeriod> ratePeriods = new ArrayList<>();
-		JsonArray arrayOfParameterNamed = command
-				.arrayOfParameterNamed("ratePeriods");
-		for (final JsonElement ratePeriod : arrayOfParameterNamed) {
-			final JsonObject ratePeriodObject = ratePeriod.getAsJsonObject();
-			final JsonParserHelper helper = new JsonParserHelper();
-			final Date fromDate = helper.extractLocalDateNamed("fromDate",
-					ratePeriod, new HashSet<String>()).toDate();
-			final BigDecimal interestRate = ratePeriodObject
-					.get("interestRate").getAsBigDecimal();
-			final boolean isDifferentialToBaseLendingRate = helper
-					.parameterExists("isDifferentialToBaseLendingRate",
-							ratePeriod) ? ratePeriodObject.get(
-					"isDifferentialToBaseLendingRate").getAsBoolean() : false;
-			final boolean isActive = true;
-			final Date currentDate = DateUtils.getDateOfTenant();
-			ratePeriods.add(new FloatingRatePeriod(fromDate, interestRate,
-					isDifferentialToBaseLendingRate, isActive, currentUser,
-					currentUser, currentDate, currentDate));
-		}
-
-		return ratePeriods;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public boolean isBaseLendingRate() {
-		return this.isBaseLendingRate;
-	}
-
-	public boolean isActive() {
-		return this.isActive;
-	}
-
-	public List<FloatingRatePeriod> getFloatingRatePeriods() {
-		return this.floatingRatePeriods;
-	}
-
-	public AppUser getCreatedBy() {
-		return this.createdBy;
-	}
-
-	public AppUser getModifiedBy() {
-		return this.modifiedBy;
-	}
-
-	public Date getCreatedOn() {
-		return this.createdOn;
-	}
-
-	public Date getModifiedOn() {
-		return this.modifiedOn;
-	}
-
-	public Map<String, Object> update(final JsonCommand command,
-			final AppUser appUser) {
-
-		final Map<String, Object> actualChanges = new LinkedHashMap<>(9);
-
-		if (command.isChangeInStringParameterNamed("name", this.name)) {
-			final String newValue = command.stringValueOfParameterNamed("name");
-			actualChanges.put("name", newValue);
-			this.name = newValue;
-		}
-
-		if (command.isChangeInBooleanParameterNamed("isBaseLendingRate",
-				this.isBaseLendingRate)) {
-			final boolean newValue = command
-					.booleanPrimitiveValueOfParameterNamed("isBaseLendingRate");
-			actualChanges.put("isBaseLendingRate", newValue);
-			this.isBaseLendingRate = newValue;
-		}
-
-		if (command.isChangeInBooleanParameterNamed("isActive", this.isActive)) {
-			final boolean newValue = command
-					.booleanPrimitiveValueOfParameterNamed("isActive");
-			actualChanges.put("isActive", newValue);
-			this.isActive = newValue;
-		}
-
-		final List<FloatingRatePeriod> newRatePeriods = getRatePeriods(appUser,
-				command);
-		if (newRatePeriods != null && !newRatePeriods.isEmpty()) {
-			updateRatePeriods(newRatePeriods, appUser);
-			actualChanges.put("ratePeriods",
-					command.jsonFragment("ratePeriods"));
-		}
-
-		return actualChanges;
-	}
-
-	private void updateRatePeriods(
-			final List<FloatingRatePeriod> newRatePeriods, final AppUser appUser) {
-		final LocalDate today = DateUtils.getLocalDateOfTenant();
-		if (this.floatingRatePeriods != null) {
-			for (FloatingRatePeriod ratePeriod : this.floatingRatePeriods) {
-				LocalDate fromDate = LocalDate.fromDateFields(ratePeriod
-						.getFromDate());
-				if (fromDate.isAfter(today)) {
-					ratePeriod.setActive(false);
-					ratePeriod.setModifiedBy(appUser);
-					ratePeriod.setModifiedOn(today.toDate());
-				}
-			}
-		}
-		for (FloatingRatePeriod newRatePeriod : newRatePeriods) {
-			newRatePeriod.updateFloatingRate(this);
-			this.floatingRatePeriods.add(newRatePeriod);
-		}
-	}
-
-	public Collection<FloatingRatePeriodData> fetchInterestRates(
-			final FloatingRateDTO floatingRateDTO) {
+	@JsonIgnore
+	public Collection<FloatingRatePeriodData> getInterestRates(final FloatingRateDTO floatingRateDTO) {
 		Collection<FloatingRatePeriodData> applicableRates = new ArrayList<>();
 		FloatingRatePeriod previousPeriod = null;
 		boolean addPeriodData = false;
 		for (FloatingRatePeriod floatingRatePeriod : this.floatingRatePeriods) {
 			if (floatingRatePeriod.isActive()) {
 				// will enter
-				if (applicableRates.isEmpty()
-						&& floatingRateDTO.getStartDate().isBefore(
-								floatingRatePeriod.fetchFromDate())) {
+				if (applicableRates.isEmpty() && floatingRateDTO.getStartDate().isBefore(LocalDate.fromDateFields(floatingRatePeriod.getFromDate()))) {
 					if (floatingRateDTO.isFloatingInterestRate()) {
 						addPeriodData = true;
 					}
@@ -243,13 +88,11 @@ public class FloatingRate extends AbstractPersistableCustom<Long> {
 						applicableRates.add(previousPeriod
 								.toData(floatingRateDTO));
 					} else if (!addPeriodData) {
-						applicableRates.add(floatingRatePeriod
-								.toData(floatingRateDTO));
+						applicableRates.add(floatingRatePeriod.toData(floatingRateDTO));
 					}
 				}
 				if (addPeriodData) {
-					applicableRates.add(floatingRatePeriod
-							.toData(floatingRateDTO));
+					applicableRates.add(floatingRatePeriod.toData(floatingRateDTO));
 				}
 				previousPeriod = floatingRatePeriod;
 			}
@@ -259,5 +102,4 @@ public class FloatingRate extends AbstractPersistableCustom<Long> {
 		}
 		return applicableRates;
 	}
-
 }

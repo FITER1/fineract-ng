@@ -204,12 +204,35 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
             final String activatedByFirstname = rs.getString("activatedByFirstname");
             final String activatedByLastname = rs.getString("activatedByLastname");
 
-            final GroupTimelineData timeline = new GroupTimelineData(submittedOnDate, submittedByUsername, submittedByFirstname,
-                    submittedByLastname, activationDate, activatedByUsername, activatedByFirstname, activatedByLastname, closedOnDate,
-                    closedByUsername, closedByFirstname, closedByLastname);
+            final GroupTimelineData timeline = GroupTimelineData.builder()
+                .submittedOnDate(submittedOnDate)
+                .submittedByUsername(submittedByUsername)
+                .submittedByFirstname(submittedByFirstname)
+                .submittedByLastname(submittedByLastname)
+                .activatedOnDate(activationDate)
+                .activatedByUsername(activatedByUsername)
+                .activatedByFirstname(activatedByFirstname)
+                .activatedByLastname(activatedByLastname)
+                .closedOnDate(closedOnDate)
+                .closedByUsername(closedByUsername)
+                .closedByFirstname(closedByFirstname)
+                .closedByLastname(closedByLastname)
+                .build();
 
-            return CenterData.instance(id, accountNo, name, externalId, status, activationDate, officeId, officeName, staffId, staffName,
-                    hierarchy, timeline, null, null, null, null, null);
+            return CenterData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .name(name)
+                .externalId(externalId)
+                .status(status)
+                .activationDate(activationDate)
+                .officeId(officeId)
+                .officeName(officeName)
+                .staffId(staffId)
+                .staffName(staffName)
+                .hierarchy(hierarchy)
+                .timeline(timeline)
+                .build();
         }
     }
 
@@ -293,8 +316,23 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
                 .repeatsOnDayOfMonth(monthOnDay)
                 .build();
 
-            return CenterData.instance(id, accountNo, name, externalId, status, activationDate, officeId, null, staffId, staffName,
-                    hierarchy, null, calendarData, totalCollected, totalOverdue, totaldue, installmentDue);
+            return CenterData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .name(name)
+                .externalId(externalId)
+                .status(status)
+                .activationDate(activationDate)
+                .officeId(officeId)
+                .staffId(staffId)
+                .staffName(staffName)
+                .hierarchy(hierarchy)
+                .collectionMeetingCalendar(calendarData)
+                .totalCollected(totalCollected)
+                .totalOverdue(totalOverdue)
+                .totaldue(totaldue)
+                .installmentDue(installmentDue)
+                .build();
         }
     }
 
@@ -344,12 +382,36 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
             final String activatedByFirstname = rs.getString("activatedByFirstname");
             final String activatedByLastname = rs.getString("activatedByLastname");
 
-            final GroupTimelineData timeline = new GroupTimelineData(submittedOnDate, submittedByUsername, submittedByFirstname,
-                    submittedByLastname, activationDate, activatedByUsername, activatedByFirstname, activatedByLastname, closedOnDate,
-                    closedByUsername, closedByFirstname, closedByLastname);
+            final GroupTimelineData timeline = GroupTimelineData.builder()
+                .submittedOnDate(submittedOnDate)
+                .submittedByUsername(submittedByUsername)
+                .submittedByFirstname(submittedByFirstname)
+                .submittedByLastname(submittedByLastname)
+                .activatedOnDate(activationDate)
+                .activatedByUsername(activatedByUsername)
+                .activatedByFirstname(activatedByFirstname)
+                .activatedByLastname(activatedByLastname)
+                .closedOnDate(closedOnDate)
+                .closedByUsername(closedByUsername)
+                .closedByFirstname(closedByFirstname)
+                .closedByLastname(closedByLastname)
+                .build();
 
-            return GroupGeneralData.instance(id, accountNo, name, externalId, status, activationDate, officeId, officeName, null, null, staffId,
-                    staffName, hierarchy, groupLevel, timeline);
+            return GroupGeneralData.builder()
+                .id(id)
+                .accountNo(accountNo)
+                .name(name)
+                .externalId(externalId)
+                .status(status)
+                .activationDate(activationDate)
+                .officeId(officeId)
+                .officeName(officeName)
+                .staffId(staffId)
+                .staffName(staffName)
+                .hierarchy(hierarchy)
+                .groupLevel(groupLevel)
+                .timeline(timeline)
+                .build();
         }
     }
 
@@ -462,18 +524,13 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
         if (CollectionUtils.isEmpty(staffOptions)) {
             staffOptions = null;
         }
-        final Collection<GroupGeneralData> groupMembersOptions = null;
-        final String accountNo = null;
-        final BigDecimal totalCollected = null;
-        final BigDecimal totalOverdue = null;
-        final BigDecimal totaldue = null;
-        final BigDecimal installmentDue = null;
 
-        // final boolean clientPendingApprovalAllowed =
-        // this.configurationDomainService.isClientPendingApprovalAllowedEnabled();
-
-        return CenterData.template(officeIdDefaulted, accountNo, LocalDate.now(), officeOptions, staffOptions, groupMembersOptions,
-                totalCollected, totalOverdue, totaldue, installmentDue);
+        return CenterData.builder()
+            .officeId(officeIdDefaulted)
+            .activationDate(LocalDate.now())
+            .officeOptions(officeOptions)
+            .staffOptions(staffOptions)
+            .build();
     }
 
     private Long defaultToUsersOfficeIfNull(final Long officeId) {
@@ -505,11 +562,11 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
 
         final CenterData center = retrieveOne(centerId);
 
-        final Long centerOfficeId = center.officeId();
+        final Long centerOfficeId = center.getOfficeId();
         final OfficeData centerOffice = this.officeReadPlatformService.retrieveOffice(centerOfficeId);
 
         StaffData staff = null;
-        final Long staffId = center.staffId();
+        final Long staffId = center.getStaffId();
         String staffName = null;
         if (staffId != null) {
             staff = this.staffReadPlatformService.retrieveStaff(staffId);
@@ -529,8 +586,18 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
             clientOptions = null;
         }
 
-        return GroupGeneralData.template(centerOfficeId, center.getId(), center.getAccountNo(), center.getName(), staffId, staffName, centerOptions,
-                officeOptions, staffOptions, clientOptions, null);
+        return GroupGeneralData.builder()
+            .officeId(centerOfficeId)
+            .centerId(center.getId())
+            .accountNo(center.getAccountNo())
+            .centerName(center.getName())
+            .staffId(staffId)
+            .staffName(staffName)
+            .centerOptions(centerOptions)
+            .officeOptions(officeOptions)
+            .staffOptions(staffOptions)
+            .clientOptions(clientOptions)
+            .build();
     }
 
     @Override
@@ -543,7 +610,9 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
     public CenterData retrieveCenterWithClosureReasons() {
         final List<CodeValueData> closureReasons = new ArrayList<>(
                 this.codeValueReadPlatformService.retrieveCodeValuesByCode(GroupingTypesApiConstants.CENTER_CLOSURE_REASON));
-        return CenterData.withClosureReasons(closureReasons);
+        return CenterData.builder()
+            .closureReasons(closureReasons)
+            .build();
     }
 
     @Override
@@ -577,11 +646,15 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
                 if (staffCenterDataArray.size() <= 0) {
                     Collection<CenterData> meetingFallCenter = new ArrayList<>();
                     meetingFallCenter.add(centerData);
-                    staffCenterDataArray.add(StaffCenterData.instance(centerData.staffId(), centerData.getStaffName(), meetingFallCenter));
+                    staffCenterDataArray.add(StaffCenterData.builder()
+                        .staffId(centerData.getStaffId())
+                        .staffName(centerData.getStaffName())
+                        .meetingFallCenters(meetingFallCenter)
+                        .build());
                 } else {
                     for (StaffCenterData staffCenterData : staffCenterDataArray) {
                         flag = false;
-                        if (staffCenterData.getStaffId().equals(centerData.staffId())) {
+                        if (staffCenterData.getStaffId().equals(centerData.getStaffId())) {
                             staffCenterData.getMeetingFallCenters().add(centerData);
                  
                             
@@ -592,8 +665,11 @@ public class CenterReadPlatformServiceImpl implements CenterReadPlatformService 
                     if (!flag) {
                         Collection<CenterData> meetingFallCenter = new ArrayList<>();
                         meetingFallCenter.add(centerData);
-                        staffCenterDataArray.add(StaffCenterData.instance(centerData.staffId(), centerData.getStaffName(),
-                                meetingFallCenter));
+                        staffCenterDataArray.add(StaffCenterData.builder()
+                            .staffId(centerData.getStaffId())
+                            .staffName(centerData.getStaffName())
+                            .meetingFallCenters(meetingFallCenter)
+                            .build());
                     }
                 }
 

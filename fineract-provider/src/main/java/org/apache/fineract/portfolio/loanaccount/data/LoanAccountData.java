@@ -1769,7 +1769,7 @@ public class LoanAccountData {
     }
 
     public Long groupOfficeId() {
-        return this.group == null ? null : this.group.officeId();
+        return this.group == null ? null : this.group.getOfficeId();
     }
 
     public Long groupId() {

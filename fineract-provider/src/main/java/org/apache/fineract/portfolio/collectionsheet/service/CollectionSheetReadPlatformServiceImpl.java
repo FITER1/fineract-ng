@@ -117,26 +117,71 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
                 if (firstTime || collectionSheetFlatData.getGroupId().equals(prevGroupId)) {
                     if (firstTime || collectionSheetFlatData.getClientId().equals(prevClientId)) {
                         if (collectionSheetFlatData.getLoanId() != null) {
-                            loansDueData.add(collectionSheetFlatData.getLoanDueData());
+                            loansDueData.add(LoanDueData.builder()
+                                .loanId(collectionSheetFlatData.getLoanId())
+                                .accountId(collectionSheetFlatData.getAccountId())
+                                .accountStatusId(collectionSheetFlatData.getAccountStatusId())
+                                .productShortName(collectionSheetFlatData.getProductShortName())
+                                .productId(collectionSheetFlatData.getProductId())
+                                .currency(collectionSheetFlatData.getCurrency())
+                                .disbursementAmount(collectionSheetFlatData.getDisbursementAmount())
+                                .principalDue(collectionSheetFlatData.getPrincipalDue())
+                                .principalPaid(collectionSheetFlatData.getPrincipalPaid())
+                                .interestDue(collectionSheetFlatData.getInterestDue())
+                                .interestPaid(collectionSheetFlatData.getInterestPaid())
+                                .chargesDue(collectionSheetFlatData.getChargesDue())
+                                .feeDue(collectionSheetFlatData.getFeeDue())
+                                .feePaid(collectionSheetFlatData.getFeePaid())
+                                .build());
                         }
                     } else {
-                        final JLGClientData clientData = prevCollectioSheetFlatData.getClientData();
+                        final JLGClientData clientData = JLGClientData.builder()
+                            .clientId(prevCollectioSheetFlatData.getClientId())
+                            .clientName(prevCollectioSheetFlatData.getClientName())
+                            .attendanceType(prevCollectioSheetFlatData.getAttendanceType())
+                            .build();
                         clientData.setLoans(loansDueData);
                         clientsData.add(clientData);
                         loansDueData = new ArrayList<>();
 
                         if (collectionSheetFlatData.getLoanId() != null) {
-                            loansDueData.add(collectionSheetFlatData.getLoanDueData());
+                            loansDueData.add(LoanDueData.builder()
+                                .loanId(collectionSheetFlatData.getLoanId())
+                                .accountId(collectionSheetFlatData.getAccountId())
+                                .accountStatusId(collectionSheetFlatData.getAccountStatusId())
+                                .productShortName(collectionSheetFlatData.getProductShortName())
+                                .productId(collectionSheetFlatData.getProductId())
+                                .currency(collectionSheetFlatData.getCurrency())
+                                .disbursementAmount(collectionSheetFlatData.getDisbursementAmount())
+                                .principalDue(collectionSheetFlatData.getPrincipalDue())
+                                .principalPaid(collectionSheetFlatData.getPrincipalPaid())
+                                .interestDue(collectionSheetFlatData.getInterestDue())
+                                .interestPaid(collectionSheetFlatData.getInterestPaid())
+                                .chargesDue(collectionSheetFlatData.getChargesDue())
+                                .feeDue(collectionSheetFlatData.getFeeDue())
+                                .feePaid(collectionSheetFlatData.getFeePaid())
+                                .build());
                         }
 
                     }
                 } else {
 
-                    final JLGClientData clientData = prevCollectioSheetFlatData.getClientData();
+                    final JLGClientData clientData = JLGClientData.builder()
+                        .clientId(prevCollectioSheetFlatData.getClientId())
+                        .clientName(prevCollectioSheetFlatData.getClientName())
+                        .attendanceType(prevCollectioSheetFlatData.getAttendanceType())
+                        .build();
                     clientData.setLoans(loansDueData);
                     clientsData.add(clientData);
 
-                    final JLGGroupData jlgGroupData = prevCollectioSheetFlatData.getJLGGroupData();
+                    final JLGGroupData jlgGroupData = JLGGroupData.builder()
+                        .groupId(prevCollectioSheetFlatData.getGroupId())
+                        .groupName(prevCollectioSheetFlatData.getGroupName())
+                        .staffId(prevCollectioSheetFlatData.getStaffId())
+                        .staffName(prevCollectioSheetFlatData.getStaffName())
+                        .levelId(prevCollectioSheetFlatData.getLevelId())
+                        .levelName(prevCollectioSheetFlatData.getLevelName())
+                        .build();
                     jlgGroupData.setClients(clientsData);
 
                     jlgGroupsData.add(jlgGroupData);
@@ -145,7 +190,22 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
                     clientsData = new ArrayList<>();
 
                     if (collectionSheetFlatData.getLoanId() != null) {
-                        loansDueData.add(collectionSheetFlatData.getLoanDueData());
+                        loansDueData.add(LoanDueData.builder()
+                            .loanId(collectionSheetFlatData.getLoanId())
+                            .accountId(collectionSheetFlatData.getAccountId())
+                            .accountStatusId(collectionSheetFlatData.getAccountStatusId())
+                            .productShortName(collectionSheetFlatData.getProductShortName())
+                            .productId(collectionSheetFlatData.getProductId())
+                            .currency(collectionSheetFlatData.getCurrency())
+                            .disbursementAmount(collectionSheetFlatData.getDisbursementAmount())
+                            .principalDue(collectionSheetFlatData.getPrincipalDue())
+                            .principalPaid(collectionSheetFlatData.getPrincipalPaid())
+                            .interestDue(collectionSheetFlatData.getInterestDue())
+                            .interestPaid(collectionSheetFlatData.getInterestPaid())
+                            .chargesDue(collectionSheetFlatData.getChargesDue())
+                            .feeDue(collectionSheetFlatData.getFeeDue())
+                            .feePaid(collectionSheetFlatData.getFeePaid())
+                            .build());
                     }
                 }
 
@@ -159,17 +219,33 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
             // client/group or new client / previous group or new client / new
             // group
             if (corrCollectioSheetFlatData != null) {
-                final JLGClientData lastClientData = corrCollectioSheetFlatData.getClientData();
+                final JLGClientData lastClientData = JLGClientData.builder()
+                    .clientId(corrCollectioSheetFlatData.getClientId())
+                    .clientName(corrCollectioSheetFlatData.getClientName())
+                    .attendanceType(corrCollectioSheetFlatData.getAttendanceType())
+                    .build();
                 lastClientData.setLoans(loansDueData);
                 clientsData.add(lastClientData);
 
-                final JLGGroupData jlgGroupData = corrCollectioSheetFlatData.getJLGGroupData();
+                final JLGGroupData jlgGroupData = JLGGroupData.builder()
+                    .groupId(corrCollectioSheetFlatData.getGroupId())
+                    .groupName(corrCollectioSheetFlatData.getGroupName())
+                    .staffId(corrCollectioSheetFlatData.getStaffId())
+                    .staffName(corrCollectioSheetFlatData.getStaffName())
+                    .levelId(corrCollectioSheetFlatData.getLevelId())
+                    .levelName(corrCollectioSheetFlatData.getLevelName())
+                    .build();
                 jlgGroupData.setClients(clientsData);
                 jlgGroupsData.add(jlgGroupData);
             }
 
-            jlgCollectionSheetData = JLGCollectionSheetData.instance(dueDate, loanProducts, jlgGroupsData,
-                    this.attendanceDropdownReadPlatformService.retrieveAttendanceTypeOptions(), paymentOptions);
+            jlgCollectionSheetData = JLGCollectionSheetData.builder()
+                .dueDate(dueDate)
+                .loanProducts(loanProducts)
+                .groups(jlgGroupsData)
+                .attendanceTypeOptions(this.attendanceDropdownReadPlatformService.retrieveAttendanceTypeOptions())
+                .paymentTypeOptions(paymentOptions)
+                .build();
         }
 
         return jlgCollectionSheetData;
@@ -278,9 +354,31 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
             final Integer attendanceTypeId = rs.getInt("attendanceTypeId");
             final EnumOptionData attendanceType = AttendanceEnumerations.attendanceType(attendanceTypeId);
 
-            return new JLGCollectionSheetFlatData(groupName, groupId, staffId, staffName, levelId, levelName, clientName, clientId, loanId,
-                    accountId, accountStatusId, productShortName, productId, currencyData, disbursementAmount, principalDue, principalPaid,
-                    interestDue, interestPaid, chargesDue, attendanceType, feeDue, feePaid);
+            return JLGCollectionSheetFlatData.builder()
+                .groupName(groupName)
+                .groupId(groupId)
+                .staffId(staffId)
+                .staffName(staffName)
+                .levelId(levelId)
+                .levelName(levelName)
+                .clientName(clientName)
+                .clientId(clientId)
+                .loanId(loanId)
+                .accountId(accountId)
+                .accountStatusId(accountStatusId)
+                .productShortName(productShortName)
+                .productId(productId)
+                .currency(currencyData)
+                .disbursementAmount(disbursementAmount)
+                .principalDue(principalDue)
+                .principalPaid(principalPaid)
+                .interestDue(interestDue)
+                .interestPaid(interestPaid)
+                .chargesDue(chargesDue)
+                .attendanceType(attendanceType)
+                .feeDue(feeDue)
+                .feePaid(feePaid)
+                .build();
         }
 
     }
@@ -301,11 +399,11 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
         final GroupGeneralData group = this.groupReadPlatformService.retrieveOne(groupId);
         
         // entityType should be center if it's within a center
-        final CalendarEntityType entityType = (group.isChildGroup()) ? CalendarEntityType.CENTERS : CalendarEntityType.GROUPS;
+        final CalendarEntityType entityType = group.getCenterId()!=null ? CalendarEntityType.CENTERS : CalendarEntityType.GROUPS;
         
         Long entityId = null;
-        if(group.isChildGroup()){
-        	entityId = group.getParentId();
+        if(group.getCenterId()!=null){
+        	entityId = group.getCenterId();
         }else{
         	entityId = group.getId();
         }
@@ -348,8 +446,14 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
         // merge savings data into loan data
         mergeSavingsGroupDataIntoCollectionsheetData(groupsWithSavingsData, collectionSheetData);
 
-        collectionSheetData = JLGCollectionSheetData.withSavingsProducts(collectionSheetData,
-                retrieveSavingsProducts(groupsWithSavingsData));
+        collectionSheetData = JLGCollectionSheetData.builder()
+            .dueDate(collectionSheetData.getDueDate())
+            .loanProducts(collectionSheetData.getLoanProducts())
+            .groups(collectionSheetData.getGroups())
+            .attendanceTypeOptions(collectionSheetData.getAttendanceTypeOptions())
+            .paymentTypeOptions(collectionSheetData.getPaymentTypeOptions())
+            .savingsProducts(retrieveSavingsProducts(groupsWithSavingsData))
+            .build();
 
         return collectionSheetData;
     }
@@ -401,8 +505,8 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
             for (JLGClientData clientSavingsData : clientsSavingsData) {
                 Collection<SavingsDueData> savingsDatas = clientSavingsData.getSavings();
                 for (SavingsDueData savingsDueData : savingsDatas) {
-                    final SavingsProductData savingsProduct = SavingsProductData.lookup(savingsDueData.productId(),
-                            savingsDueData.productName());
+                    final SavingsProductData savingsProduct = SavingsProductData.lookup(savingsDueData.getProductId(),
+                            savingsDueData.getProductName());
                     savingsProduct.setDepositAccountType(savingsDueData.getDepositAccountType());
                     if (!savingsProducts.contains(savingsProduct)) {
                         savingsProducts.add(savingsProduct);
@@ -449,8 +553,14 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
         // merge savings data into loan data
         mergeSavingsGroupDataIntoCollectionsheetData(groupsWithSavingsData, collectionSheetData);
 
-        collectionSheetData = JLGCollectionSheetData.withSavingsProducts(collectionSheetData,
-                retrieveSavingsProducts(groupsWithSavingsData));
+        collectionSheetData = JLGCollectionSheetData.builder()
+            .dueDate(collectionSheetData.getDueDate())
+            .loanProducts(collectionSheetData.getLoanProducts())
+            .groups(collectionSheetData.getGroups())
+            .attendanceTypeOptions(collectionSheetData.getAttendanceTypeOptions())
+            .paymentTypeOptions(collectionSheetData.getPaymentTypeOptions())
+            .savingsProducts(retrieveSavingsProducts(groupsWithSavingsData))
+            .build();
 
         return collectionSheetData;
     }
@@ -551,13 +661,29 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
                 final Long groupId = JdbcSupport.getLong(rs, "groupId");
                 if (previousGroupId != null && groupId.compareTo(previousGroupId) != 0) {
                     // return for next group details
-                    return JLGGroupData.withClients(group, clients);
+                    return JLGGroupData.builder()
+                        .groupId(group.getGroupId())
+                        .groupName(group.getGroupName())
+                        .staffId(group.getStaffId())
+                        .staffName(group.getStaffName())
+                        .levelId(group.getLevelId())
+                        .levelName(group.getLevelName())
+                        .clients(clients)
+                        .build();
                 }
                 client = clientSavingsDataMapper.mapRowData(rs, rowNum);
                 clients.add(client);
             }
 
-            return JLGGroupData.withClients(group, clients);
+            return JLGGroupData.builder()
+                .groupId(group.getGroupId())
+                .groupName(group.getGroupName())
+                .staffId(group.getStaffId())
+                .staffName(group.getStaffName())
+                .levelId(group.getLevelId())
+                .levelName(group.getLevelName())
+                .clients(clients)
+                .build();
         }
 
         @Override
@@ -569,7 +695,14 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
             final String staffName = rs.getString("staffName");
             final Long levelId = JdbcSupport.getLong(rs, "levelId");
             final String levelName = rs.getString("levelName");
-            return JLGGroupData.instance(groupId, groupName, staffId, staffName, levelId, levelName);
+            return JLGGroupData.builder()
+                .groupId(groupId)
+                .groupName(groupName)
+                .staffId(staffId)
+                .staffName(staffName)
+                .levelId(levelId)
+                .levelName(levelName)
+                .build();
         }
     }
 
@@ -594,12 +727,20 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
                 final Long clientId = JdbcSupport.getLong(rs, "clientId");
                 if (previousClientId != null && clientId.compareTo(previousClientId) != 0) {
                     // client id changes then return for next client data
-                    return JLGClientData.withSavings(client, savings);
+                    return JLGClientData.builder()
+                        .clientId(client.getClientId())
+                        .clientName(client.getClientName())
+                        .savings(savings)
+                        .build();
                 }
                 saving = savingsDueDataMapper.mapRow(rs, rowNum);
                 savings.add(saving);
             }
-            return JLGClientData.withSavings(client, savings);
+            return JLGClientData.builder()
+                .clientId(client.getClientId())
+                .clientName(client.getClientName())
+                .savings(savings)
+                .build();
         }
 
         @Override
@@ -612,7 +753,11 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
             // AttendanceEnumerations.attendanceType(attendanceTypeId);
             final EnumOptionData attendanceType = null;
 
-            return JLGClientData.instance(clientId, clientName, attendanceType);
+            return JLGClientData.builder()
+                .clientId(clientId)
+                .clientName(clientName)
+                .attendanceType(attendanceType)
+                .build();
         }
     }
 
@@ -639,7 +784,16 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
             final CurrencyData currency = new CurrencyData(currencyCode, currencyName, currencyDigits, inMultiplesOf,
                     currencyDisplaySymbol, currencyNameCode);
 
-            return SavingsDueData.instance(savingsId, accountId, accountStatusId, productName, productId, currency, dueAmount, depositAccountType);
+            return SavingsDueData.builder()
+                .savingsId(savingsId)
+                .accountId(accountId)
+                .accountStatusId(accountStatusId)
+                .productName(productName)
+                .productId(productId)
+                .currency(currency)
+                .dueAmount(dueAmount)
+                .depositAccountType(depositAccountType)
+                .build();
         }
     }
 
@@ -688,7 +842,11 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
         
         final Collection<PaymentTypeData> paymentOptions = this.paymentTypeReadPlatformService.retrieveAllPaymentTypes();
 
-        return IndividualCollectionSheetData.instance(transactionDate, clientData, paymentOptions);
+        return IndividualCollectionSheetData.builder()
+            .dueDate(transactionDate)
+            .clients(clientData)
+            .paymentTypeOptions(paymentOptions)
+            .build();
 
     }
 
@@ -767,9 +925,24 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
             final BigDecimal feeDue = rs.getBigDecimal("feeDue");
             final BigDecimal feePaid = rs.getBigDecimal("feePaid");
 
-            return new IndividualCollectionSheetLoanFlatData(clientName, clientId, loanId, accountId, accountStatusId, productShortName,
-                    productId, currencyData, disbursementAmount, principalDue, principalPaid, interestDue, interestPaid, chargesDue,
-                    feeDue, feePaid);
+            return IndividualCollectionSheetLoanFlatData.builder()
+                .clientName(clientName)
+                .clientId(clientId)
+                .loanId(loanId)
+                .accountId(accountId)
+                .accountStatusId(accountStatusId)
+                .productShortName(productShortName)
+                .productId(productId)
+                .currency(currencyData)
+                .disbursementAmount(disbursementAmount)
+                .principalDue(principalDue)
+                .principalPaid(principalPaid)
+                .interestDue(interestDue)
+                .interestPaid(interestPaid)
+                .chargesDue(chargesDue)
+                .feeDue(feeDue)
+                .feePaid(feePaid)
+                .build();
         }
 
     }
@@ -827,8 +1000,15 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
                 final Long clientId = JdbcSupport.getLong(rs, "clientId");
                 if (previousClientId == null || clientId.compareTo(previousClientId) != 0) {
                     final String clientName = rs.getString("clientName");
-                    client = IndividualClientData.instance(clientId, clientName);
-                    client = IndividualClientData.withSavings(client, new ArrayList<SavingsDueData>());
+                    client = IndividualClientData.builder()
+                        .clientId(clientId)
+                        .clientName(clientName)
+                        .build();
+                    client = IndividualClientData.builder()
+                        .clientId(client.getClientId())
+                        .clientName(client.getClientName())
+                        .savings(new ArrayList<>())
+                        .build();
                     clientData.add(client);
                     previousClientId = clientId;
                 }
@@ -845,7 +1025,10 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
 
         IndividualClientData clientSavingsData = null;
         for (IndividualCollectionSheetLoanFlatData loanFlatData : loanFlatDatas) {
-            IndividualClientData clientData = loanFlatData.getClientData();
+            IndividualClientData clientData = IndividualClientData.builder()
+                .clientId(loanFlatData.getClientId())
+                .clientName(loanFlatData.getClientName())
+                .build();
             if (clientSavingsData == null || !clientSavingsData.equals(clientData)) {
                 if (clientDatas.contains(clientData)) {
                     final int index = clientDatas.indexOf(clientData);
@@ -858,7 +1041,22 @@ public class CollectionSheetReadPlatformServiceImpl implements CollectionSheetRe
                     clientDatas.add(clientSavingsData);
                 }
             }
-            clientSavingsData.addLoans(loanFlatData.getLoanDueData());
+            clientSavingsData.addLoans(LoanDueData.builder()
+                .loanId(loanFlatData.getLoanId())
+                .accountId(loanFlatData.getAccountId())
+                .accountStatusId(loanFlatData.getAccountStatusId())
+                .productShortName(loanFlatData.getProductShortName())
+                .productId(loanFlatData.getProductId())
+                .currency(loanFlatData.getCurrency())
+                .disbursementAmount(loanFlatData.getDisbursementAmount())
+                .principalDue(loanFlatData.getPrincipalDue())
+                .principalPaid(loanFlatData.getPrincipalPaid())
+                .interestDue(loanFlatData.getInterestDue())
+                .interestPaid(loanFlatData.getInterestPaid())
+                .chargesDue(loanFlatData.getChargesDue())
+                .feeDue(loanFlatData.getFeeDue())
+                .feePaid(loanFlatData.getFeePaid())
+                .build());
         }
     }
 }

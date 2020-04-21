@@ -1513,7 +1513,7 @@ public class SavingsAccount extends AbstractPersistableCustom<Long> {
         if (this.client != null) {
             officeId = this.client.getOffice().getId();
         } else {
-            officeId = this.group.officeId();
+            officeId = this.group.getOfficeId();
         }
         return officeId;
     }

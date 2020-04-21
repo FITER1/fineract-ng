@@ -78,7 +78,7 @@ public class CalendarWritePlatformServiceJpaRepositoryImpl implements CalendarWr
         if (command.getGroupId() != null) {
             centerOrGroup = this.groupRepository.findOneWithNotFoundDetection(command.getGroupId());
             entityActivationDate = centerOrGroup.getActivationLocalDate();
-            entityType = centerOrGroup.isCenter() ? CalendarEntityType.CENTERS : CalendarEntityType.GROUPS;
+            entityType = centerOrGroup.getGroupLevel().isCenter() ? CalendarEntityType.CENTERS : CalendarEntityType.GROUPS;
             entityId = command.getGroupId();
         } else if (command.getLoanId() != null) {
             final Loan loan = this.loanRepositoryWrapper.findOneWithNotFoundDetection(command.getLoanId(), true);
@@ -156,7 +156,7 @@ public class CalendarWritePlatformServiceJpaRepositoryImpl implements CalendarWr
 					.findOneWithNotFoundDetection(groupId);
 			final Group parent = centerOrGroup.getParent();
 			/* Check if it is a Group and belongs to a center */
-			if (centerOrGroup.isGroup() && parent != null) {
+			if (centerOrGroup.getGroupLevel().isGroup() && parent != null) {
 				
 				Integer centerEntityTypeId = CalendarEntityType.CENTERS
 						.getValue();

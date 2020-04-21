@@ -80,7 +80,12 @@ public class GroupRolesReadPlatformServiceImpl implements GroupRolesReadPlatform
                 .active(false)
                 .mandatory(false)
                 .build();
-            return new GroupRoleData(id, role, clientId, clientName);
+            return GroupRoleData.builder()
+                .id(id)
+                .role(role)
+                .clientId(clientId)
+                .clientName(clientName)
+                .build();
         }
 
     }

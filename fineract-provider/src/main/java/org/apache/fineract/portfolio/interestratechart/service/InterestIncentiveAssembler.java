@@ -68,7 +68,14 @@ public class InterestIncentiveAssembler {
         final DataValidatorBuilder baseDataValidator = new DataValidatorBuilder(dataValidationErrors).resource(INCENTIVE_RESOURCE_NAME);
         InterestIncentivesFields incentivesFields = createInterestIncentiveFields(element, baseDataValidator, locale);
         throwExceptionIfValidationWarningsExist(dataValidationErrors);
-        return new InterestIncentives(interestRateChartSlab, incentivesFields);
+        InterestIncentives incentives = InterestIncentives.builder()
+            .interestIncentivesFields(incentivesFields)
+            .interestRateChartSlab(interestRateChartSlab)
+            .build();
+        if (interestRateChartSlab != null) {
+            interestRateChartSlab.addInterestIncentive(incentives);
+        }
+        return incentives;
     }
 
     private InterestIncentivesFields createInterestIncentiveFields(final JsonElement element, final DataValidatorBuilder baseDataValidator,
@@ -79,8 +86,16 @@ public class InterestIncentiveAssembler {
         String attributeValue = this.fromApiJsonHelper.extractStringNamed(attributeValueParamName, element);
         Integer incentiveType = this.fromApiJsonHelper.extractIntegerNamed(incentiveTypeparamName, element, locale);
         BigDecimal amount = this.fromApiJsonHelper.extractBigDecimalNamed(amountParamName, element, locale);
-        return InterestIncentivesFields.createNew(entityType, attributeName, conditionType, attributeValue, incentiveType, amount,
-                baseDataValidator);
+        InterestIncentivesFields incentivesFields = InterestIncentivesFields.builder()
+            .entityType(entityType)
+            .attributeName(attributeName)
+            .conditionType(conditionType)
+            .attributeValue(attributeValue)
+            .incentiveType(incentiveType)
+            .amount(amount)
+            .build();
+        incentivesFields.validateIncentiveData(baseDataValidator);
+        return incentivesFields;
     }
 
     private void throwExceptionIfValidationWarningsExist(final List<ApiParameterError> dataValidationErrors) {

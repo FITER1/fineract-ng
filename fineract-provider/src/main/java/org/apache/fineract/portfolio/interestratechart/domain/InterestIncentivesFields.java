@@ -18,7 +18,7 @@
  */
 package org.apache.fineract.portfolio.interestratechart.domain;
 
-import org.apache.fineract.infrastructure.core.api.JsonCommand;
+import lombok.*;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
 import org.apache.fineract.portfolio.common.domain.ConditionType;
 import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncentiveAttributeName;
@@ -28,11 +28,15 @@ import org.apache.fineract.portfolio.interestratechart.incentive.InterestIncenti
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.math.BigDecimal;
-import java.util.Locale;
-import java.util.Map;
 
-import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.*;
+import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.attributeValueParamName;
+import static org.apache.fineract.portfolio.interestratechart.InterestIncentiveApiConstants.conditionTypeParamName;
 
+@Builder(toBuilder = true)
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
 @Embeddable
 public class InterestIncentivesFields {
 
@@ -54,118 +58,38 @@ public class InterestIncentivesFields {
     @Column(name = "amount", scale = 6, precision = 19, nullable = false)
     private BigDecimal amount;
 
-    protected InterestIncentivesFields() {
-
-    }
-
-    public static InterestIncentivesFields createNew(final Integer entityType, final Integer attributeName, final Integer conditionType,
-            final String attributeValue, final Integer incentiveType, final BigDecimal amount, final DataValidatorBuilder baseDataValidator) {
-        return new InterestIncentivesFields(entityType, attributeName, conditionType, attributeValue, incentiveType, amount,
-                baseDataValidator);
-    }
-
-    private InterestIncentivesFields(final Integer entityType, final Integer attributeName, final Integer conditionType,
-            final String attributeValue, final Integer incentiveType, final BigDecimal amount, final DataValidatorBuilder baseDataValidator) {
-        this.entityType = entityType;
-        this.attributeName = attributeName;
-        this.attributeValue = attributeValue;
-        this.conditionType = conditionType;
-        this.incentiveType = incentiveType;
-        this.amount = amount;
-        validateIncentiveData(baseDataValidator);
-    }
-
-    public InterestIncentiveAttributeName attributeName() {
+    public InterestIncentiveAttributeName getAttributeNameEnum() {
         return InterestIncentiveAttributeName.fromInt(this.attributeName);
     }
 
-    public ConditionType conditionType() {
+    public ConditionType getConditionTypeEnum() {
         return ConditionType.fromInt(this.conditionType);
     }
 
-    public String attributeValue() {
-        return this.attributeValue;
-    }
-
-    public InterestIncentiveType incentiveType() {
+    public InterestIncentiveType getIncentiveTypeEnum() {
         return InterestIncentiveType.fromInt(this.incentiveType);
     }
 
-    public BigDecimal amount() {
-        return this.amount;
-    }
-
-    public InterestIncentiveEntityType entiryType() {
+    public InterestIncentiveEntityType getEntiryTypeEnum() {
         return InterestIncentiveEntityType.fromInt(this.entityType);
     }
 
-    public void update(final JsonCommand command, final Map<String, Object> actualChanges, final DataValidatorBuilder baseDataValidator,
-            final Locale locale) {
-        if (command.isChangeInIntegerParameterNamed(entityTypeParamName, this.entityType, locale)) {
-            final Integer newValue = command.integerValueOfParameterNamed(entityTypeParamName, locale);
-            actualChanges.put(entityTypeParamName, newValue);
-            this.entityType = newValue;
-        }
-
-        if (command.isChangeInIntegerParameterNamed(attributeNameParamName, this.attributeName, locale)) {
-            final Integer newValue = command.integerValueOfParameterNamed(attributeNameParamName, locale);
-            actualChanges.put(attributeNameParamName, newValue);
-            this.attributeName = newValue;
-        }
-
-        if (command.isChangeInIntegerParameterNamed(conditionTypeParamName, this.conditionType, locale)) {
-            final Integer newValue = command.integerValueOfParameterNamed(conditionTypeParamName, locale);
-            actualChanges.put(conditionTypeParamName, newValue);
-            this.conditionType = newValue;
-        }
-
-        if (command.isChangeInStringParameterNamed(attributeValueParamName, this.attributeValue)) {
-            final String newValue = command.stringValueOfParameterNamed(attributeValueParamName);
-            actualChanges.put(attributeValueParamName, newValue);
-            this.attributeValue = newValue;
-        }
-
-        if (command.isChangeInIntegerParameterNamed(incentiveTypeparamName, this.incentiveType, locale)) {
-            final Integer newValue = command.integerValueOfParameterNamed(incentiveTypeparamName, locale);
-            actualChanges.put(incentiveTypeparamName, newValue);
-            this.incentiveType = newValue;
-        }
-
-        if (command.isChangeInBigDecimalParameterNamed(amountParamName, this.amount, locale)) {
-            final BigDecimal newValue = command.bigDecimalValueOfParameterNamed(amountParamName, locale);
-            actualChanges.put(amountParamName, newValue);
-            this.amount = newValue;
-        }
-
-        validateIncentiveData(baseDataValidator);
-
-    }
-
+    // TODO: @Aleks stuff like this should be in a separate validator class
     public void validateIncentiveData(final DataValidatorBuilder baseDataValidator) {
 
-        switch (attributeName()) {
+        switch (getAttributeNameEnum()) {
             case GENDER:
-                baseDataValidator.reset().parameter(attributeValueParamName).value(this.attributeValue).longGreaterThanZero();
-                baseDataValidator.reset().parameter(conditionTypeParamName).value(this.conditionType)
-                        .isOneOfTheseValues(ConditionType.EQUAL.getValue(), ConditionType.NOT_EQUAL.getValue());
-            break;
-            case AGE:
-                baseDataValidator.reset().parameter(attributeValueParamName).value(this.attributeValue).longGreaterThanZero();
-            break;
             case CLIENT_CLASSIFICATION:
-                baseDataValidator.reset().parameter(attributeValueParamName).value(this.attributeValue).longGreaterThanZero();
-                baseDataValidator.reset().parameter(conditionTypeParamName).value(this.conditionType)
-                        .isOneOfTheseValues(ConditionType.EQUAL.getValue(), ConditionType.NOT_EQUAL.getValue());
-            break;
             case CLIENT_TYPE:
                 baseDataValidator.reset().parameter(attributeValueParamName).value(this.attributeValue).longGreaterThanZero();
                 baseDataValidator.reset().parameter(conditionTypeParamName).value(this.conditionType)
                         .isOneOfTheseValues(ConditionType.EQUAL.getValue(), ConditionType.NOT_EQUAL.getValue());
-            break;
-
+                break;
+            case AGE:
+                baseDataValidator.reset().parameter(attributeValueParamName).value(this.attributeValue).longGreaterThanZero();
+                break;
             default:
             break;
         }
     }
-
 }

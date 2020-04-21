@@ -609,7 +609,7 @@ public void checkForProductMixRestrictions(final Loan loan) {
             if (changes.containsKey(groupIdParamName)) {
                 final Long groupId = command.longValueOfParameterNamed(groupIdParamName);
                 final Group group = this.groupRepository.findOneWithNotFoundDetection(groupId);
-                if (group.isNotActive()) { throw new GroupNotActiveException(groupId); }
+                if (!group.isActive()) { throw new GroupNotActiveException(groupId); }
 
                 existingLoanApplication.updateGroup(group);
             }
@@ -1314,7 +1314,7 @@ public void checkForProductMixRestrictions(final Loan loan) {
         }
         final Group group = loan.group();
         if (group != null) {
-            if (group.isNotActive()) { throw new GroupNotActiveException(group.getId()); }
+            if (!group.isActive()) { throw new GroupNotActiveException(group.getId()); }
         }
     }
 
