@@ -20,6 +20,11 @@ package org.apache.fineract.portfolio.interestratechart.domain;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.apache.fineract.infrastructure.core.api.JsonCommand;
 import org.apache.fineract.infrastructure.core.data.ApiParameterError;
 import org.apache.fineract.infrastructure.core.data.DataValidatorBuilder;
@@ -28,7 +33,6 @@ import org.apache.fineract.infrastructure.core.exception.PlatformApiDataValidati
 import org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants;
 import org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants;
 import org.apache.fineract.portfolio.savings.SavingsPeriodFrequencyType;
-import org.joda.time.LocalDate;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -39,6 +43,12 @@ import static org.apache.fineract.portfolio.interestratechart.InterestRateChartA
 import static org.apache.fineract.portfolio.interestratechart.InterestRateChartApiConstants.*;
 import static org.apache.fineract.portfolio.interestratechart.InterestRateChartSlabApiConstants.*;
 
+@SuperBuilder(toBuilder = true)
+@Data
+@NoArgsConstructor
+// TODO: @Aleks enable this again
+// @AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_interest_rate_chart")
 public class InterestRateChart extends AbstractPersistableCustom<Long> {
@@ -49,10 +59,6 @@ public class InterestRateChart extends AbstractPersistableCustom<Long> {
     @OneToMany(mappedBy = "interestRateChart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<InterestRateChartSlab> chartSlabs = new HashSet<>();
 
-    protected InterestRateChart() {
-        //
-    }
-
     public static InterestRateChart createNew(InterestRateChartFields chartFields, Collection<InterestRateChartSlab> interestRateChartSlabs) {
 
         return new InterestRateChart(chartFields, new HashSet<>(interestRateChartSlabs));
@@ -61,8 +67,7 @@ public class InterestRateChart extends AbstractPersistableCustom<Long> {
     private InterestRateChart(InterestRateChartFields chartFields, Set<InterestRateChartSlab> interestRateChartSlabs) {
 
         final List<ApiParameterError> dataValidationErrors = new ArrayList<>();
-        final DataValidatorBuilder baseDataValidator = new DataValidatorBuilder(dataValidationErrors)
-                .resource(INTERESTRATE_CHART_RESOURCE_NAME);
+        final DataValidatorBuilder baseDataValidator = new DataValidatorBuilder(dataValidationErrors).resource(INTERESTRATE_CHART_RESOURCE_NAME);
         this.chartFields = chartFields;
         // validate before setting the other fields
         this.validateChartSlabs(baseDataValidator);
@@ -73,7 +78,7 @@ public class InterestRateChart extends AbstractPersistableCustom<Long> {
     }
 
     public void validateChartSlabs(DataValidatorBuilder baseDataValidator) {
-        Collection<InterestRateChartSlab> chartSlabs = this.setOfChartSlabs();
+        Collection<InterestRateChartSlab> chartSlabs = this.getSafeChartSlabs();
 
         Integer tmpPeriodType = null;
         List<InterestRateChartSlab> chartSlabsList = new ArrayList<>(chartSlabs);
@@ -161,7 +166,7 @@ public class InterestRateChart extends AbstractPersistableCustom<Long> {
     }
 
     public void addChartSlabs(Collection<InterestRateChartSlab> interestRateChartSlabsSet) {
-        Set<InterestRateChartSlab> existingChartSlabs = setOfChartSlabs();
+        Set<InterestRateChartSlab> existingChartSlabs = getSafeChartSlabs();
         for (InterestRateChartSlab newChartSlabs : interestRateChartSlabsSet) {
             newChartSlabs.setInterestRateChart(this);
             existingChartSlabs.add(newChartSlabs);
@@ -170,10 +175,10 @@ public class InterestRateChart extends AbstractPersistableCustom<Long> {
 
     public void addChartSlab(InterestRateChartSlab newChartSlab) {
         newChartSlab.setInterestRateChart(this);
-        setOfChartSlabs().add(newChartSlab);
+        getSafeChartSlabs().add(newChartSlab);
     }
 
-    public Set<InterestRateChartSlab> setOfChartSlabs() {
+    public Set<InterestRateChartSlab> getSafeChartSlabs() {
         if (this.chartSlabs == null) {
             this.chartSlabs = new HashSet<>();
         }
@@ -210,8 +215,8 @@ public class InterestRateChart extends AbstractPersistableCustom<Long> {
             if (!existingChart.equals(this)) {
                 if (this.chartFields.isOverlapping(existingChart.chartFields)) {
                     baseDataValidator.failWithCodeNoParameterAddedToErrorCode("chart.overlapping.from.and.end.dates",
-                            existingChart.getFromDateAsLocalDate(), existingChart.getEndDateAsLocalDate(), this.getFromDateAsLocalDate(),
-                            this.getEndDateAsLocalDate());
+                            existingChart.getChartFields().getFromDateAsLocalDate(), existingChart.getChartFields().getEndDateAsLocalDate(), this.getChartFields().getFromDateAsLocalDate(),
+                            this.getChartFields().getEndDateAsLocalDate());
                 }
             }
         }
@@ -235,7 +240,7 @@ public class InterestRateChart extends AbstractPersistableCustom<Long> {
                         if (chartSlab == null) {
                             baseDataValidator.parameter(idParamName).value(chartSlabId).failWithCode("no.chart.slab.associated.with.id");
                         } else if (chartSlabsCommand.parameterExists(deleteParamName)) {
-                            if (this.removeChartSlab(chartSlab)) {
+                            if (this.getSafeChartSlabs().remove(chartSlab)) {
                                 deleteChartSlabs.put(idParamName, chartSlabId);
                             }
                         } else {
@@ -284,7 +289,7 @@ public class InterestRateChart extends AbstractPersistableCustom<Long> {
     }
 
     public InterestRateChartSlab findChartSlab(Long chartSlabId) {
-        final Set<InterestRateChartSlab> chartSlabs = setOfChartSlabs();
+        final Set<InterestRateChartSlab> chartSlabs = getSafeChartSlabs();
 
         for (InterestRateChartSlab interestRateChartSlab : chartSlabs) {
             if (interestRateChartSlab.getId().equals(chartSlabId)) { return interestRateChartSlab; }
@@ -292,28 +297,7 @@ public class InterestRateChart extends AbstractPersistableCustom<Long> {
         return null;
     }
 
-    private boolean removeChartSlab(InterestRateChartSlab chartSlab) {
-        final Set<InterestRateChartSlab> chartSlabs = setOfChartSlabs();
-        return chartSlabs.remove(chartSlab);
-    }
-
-    public LocalDate getFromDateAsLocalDate() {
-        return this.chartFields.getFromDateAsLocalDate();
-    }
-
-    public LocalDate getEndDateAsLocalDate() {
-        return this.chartFields.getEndDateAsLocalDate();
-    }
-
     private void throwExceptionIfValidationWarningsExist(final List<ApiParameterError> dataValidationErrors) {
         if (!dataValidationErrors.isEmpty()) { throw new PlatformApiDataValidationException(dataValidationErrors); }
-    }
-
-    public InterestRateChartFields chartFields() {
-        return this.chartFields;
-    }
-
-    public boolean isApplicableChartFor(final LocalDate target) {
-        return this.chartFields.isApplicableChartFor(target);
     }
 }
