@@ -18,22 +18,13 @@
  */
 package org.apache.fineract.infrastructure.jobs.api;
 
-import java.util.List;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.fineract.commands.domain.CommandWrapper;
 import org.apache.fineract.commands.service.CommandWrapperBuilder;
@@ -53,6 +44,20 @@ import org.apache.fineract.infrastructure.security.exception.NoAuthorizationExce
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.UriInfo;
+import java.util.List;
 
 @Path("jobs")
 @Consumes({ MediaType.APPLICATION_JSON })
@@ -125,7 +130,8 @@ public class SchedulerJobApiResource {
     @POST
     @Path("{" + SchedulerJobApiConstants.JOB_ID + "}")
     @ApiOperation(value = "Run a Job", notes = "Manually Execute Specific Job.")
-    @ApiResponses({@ApiResponse(code = 200, message = "POST: jobs/1?command=executeJob")})
+    @ApiImplicitParams({@ApiImplicitParam(value = "body", required = true, paramType = "body", dataType = "body", format = "body", dataTypeClass = SchedulerJobApiResourceSwagger.PostExecuteJobRequest.class)})
+    @ApiResponses({@ApiResponse(code = 200, message = "POST: jobs/1?command=executeJob", response = SchedulerJobApiResourceSwagger.PostExecuteJobResponse.class)})
     public Response executeJob(@PathParam(SchedulerJobApiConstants.JOB_ID) @ApiParam(value = "jobId") final Long jobId,
             @QueryParam(SchedulerJobApiConstants.COMMAND) @ApiParam(value = "command") final String commandParam) {
         // check the logged in user have permissions to execute scheduler jobs
@@ -134,14 +140,13 @@ public class SchedulerJobApiResource {
             final String authorizationMessage = "User has no authority to execute scheduler jobs";
             throw new NoAuthorizationException(authorizationMessage);
         }
-        Response response = Response.status(400).build();
+
         if (is(commandParam, SchedulerJobApiConstants.COMMAND_EXECUTE_JOB)) {
             this.jobRegisterService.executeJob(jobId);
-            response = Response.status(202).build();
+            return Response.status(202).build();
         } else {
             throw new UnrecognizedQueryParamException(SchedulerJobApiConstants.COMMAND, commandParam);
         }
-        return response;
     }
 
     @PUT
