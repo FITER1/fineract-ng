@@ -22,21 +22,21 @@ networks:
   fineract: {}
 
 services:
-  mysql:
-    image: mysql:5.7
-    # TODO: the migration scripts have to be fixed (syntax) for MySQL 8
-    #image: mysql:8
-    logging:
-      driver: none
-    volumes:
-      - ./fineract-db/docker:/docker-entrypoint-initdb.d
-    networks:
-      - fineract
-    environment:
-      - MYSQL_ROOT_PASSWORD=mysql
-    ports:
-      - "3306:3306"
-    command: mysqld --sql_mode=""
+#  mysql:
+#    image: mysql:5.7
+#    # TODO: the migration scripts have to be fixed (syntax) for MySQL 8
+#    #image: mysql:8
+#    logging:
+#      driver: none
+#    volumes:
+#      - ./fineract-db/docker:/docker-entrypoint-initdb.d
+#    networks:
+#      - fineract
+#    environment:
+#      - MYSQL_ROOT_PASSWORD=mysql
+#    ports:
+#      - "3306:3306"
+#    command: mysqld --sql_mode=""
   activemq:
     image: rmohr/activemq:5.15.9-alpine
     logging:
@@ -56,7 +56,7 @@ services:
     image: docker.pkg.github.com/fiter1/fineract-ng/fineract:latest
     environment:
       - FINERACT_SERVER_PORT=8443
-      - FINERACT_DB_URL=jdbc:mysql://mysql:3306/mifostenant-default
+      - FINERACT_DB_URL=jdbc:mysql://host.docker.internal:3306/mifostenant-default
       - FINERACT_DB_USERNAME=root
       - FINERACT_DB_PASSWORD=mysql
       - FINERACT_DB_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
@@ -106,7 +106,7 @@ services:
     networks:
       - fineract
     depends_on:
-      - mysql
+#      - mysql
       - activemq
     ports:
       - "8080:8080"

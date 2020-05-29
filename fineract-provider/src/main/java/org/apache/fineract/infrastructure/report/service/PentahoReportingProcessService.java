@@ -64,16 +64,16 @@ public class PentahoReportingProcessService implements ReportingProcessService {
     private static final String REPORTING_INVALID_OUTPUT_TYPE_CODE = "error.msg.invalid.outputType";
     public static final String MIFOS_BASE_DIR = System.getProperty("user.home") + File.separator + ".mifosx";
 
-    private boolean noPentaho;
-    private PlatformSecurityContext context;
-    @Autowired
-    private FineractProperties fineractProperties;
+    private final boolean noPentaho;
+    private final PlatformSecurityContext context;
+    private final FineractProperties fineractProperties;
 
     @Autowired
-    public PentahoReportingProcessService(PlatformSecurityContext context) {
+    public PentahoReportingProcessService(PlatformSecurityContext context, FineractProperties fineractProperties) {
         ClassicEngineBoot.getInstance().start();
         this.noPentaho = false;
         this.context = context;
+        this.fineractProperties = fineractProperties;
     }
 
     @Override
@@ -119,8 +119,7 @@ public class PentahoReportingProcessService implements ReportingProcessService {
 
     private void createReport(String reportName, ByteArrayOutputStream byteArrayOutputStream,
                               String outputType, Map<String, String> reportParams,
-                              AppUser currentUser, Locale locale)
-            throws PlatformDataIntegrityException {
+                              AppUser currentUser, Locale locale) {
 
         ResourceManager manager = new ResourceManager();
         manager.registerDefaults();
@@ -161,8 +160,7 @@ public class PentahoReportingProcessService implements ReportingProcessService {
 
     @Override
     public ByteArrayOutputStream generateReportAsOutputStream(String reportName,
-                                                              Map<String, String> queryParams, AppUser currentUser, Locale locale)
-            throws PlatformDataIntegrityException {
+                                                              Map<String, String> queryParams, AppUser currentUser, Locale locale) {
 
         String outputType = "HTML";
         String outputTypeParam = queryParams.get("output-type");
