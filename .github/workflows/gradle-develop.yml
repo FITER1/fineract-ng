@@ -27,9 +27,6 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew clean build docker dockerPush -x test
-        env:
-          GPR_USERNAME: ${{ secrets.GPR_USERNAME }}
-          GPR_PASSWORD: ${{ secrets.GPR_PASSWORD }}
 
 #      - name: Deploy to sandbox
 #        run: |
