@@ -27,3 +27,14 @@ jobs:
 
       - name: Build with Gradle
         run: ./gradlew clean build docker dockerPush -x test
+
+      - name: Deploy to sandbox
+        run: |
+          echo "$DEMO_SSH_KEY" > key.pem
+          chmod 400 key.pem
+
+          echo "Restart docker container...!!!"
+          ssh -i key.pem -o StrictHostKeyChecking=no $DEMO_URL '/root/deploy-fineract.sh'
+        env:
+          DEMO_SSH_KEY: ${{secrets.DEMO_SSH_KEY}}
+          DEMO_URL: ${{secrets.DEMO_URL}}
