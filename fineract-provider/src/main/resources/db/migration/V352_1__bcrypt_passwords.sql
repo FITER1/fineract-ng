@@ -18,4 +18,4 @@
 --
 
 -- users
-UPDATE `m_appuser` SET `password` = '${appUserPassword}';
+UPDATE `m_appuser` SET `password` = '$<appUserPassword>';
