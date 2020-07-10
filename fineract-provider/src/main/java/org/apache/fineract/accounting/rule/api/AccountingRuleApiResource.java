@@ -65,7 +65,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Path("accountingrules")
-@Component
 @Scope("singleton")
 @Api(tags = {"Accounting Rules"})
 @SwaggerDefinition(tags = {
