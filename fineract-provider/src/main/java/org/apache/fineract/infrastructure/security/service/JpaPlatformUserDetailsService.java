@@ -38,7 +38,7 @@ public class JpaPlatformUserDetailsService implements PlatformUserDetailsService
     private PlatformUserRepository platformUserRepository;
 
     @Override
-    @CachePut(value = "usersByUsername")
+    @Cacheable(value = "usersByUsername" )
     public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException, DataAccessException {
 
         // Retrieve active users only

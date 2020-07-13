@@ -19,12 +19,7 @@
 package org.apache.fineract.infrastructure.security.api;
 
 import com.google.gson.Gson;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.SwaggerDefinition;
-import io.swagger.annotations.Tag;
+import io.swagger.annotations.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
 import org.apache.fineract.infrastructure.core.serialization.ToApiJsonSerializer;
@@ -65,6 +60,7 @@ import java.util.Set;
 public class AuthenticationApiResource {
 
     public static class AuthenticateRequest {
+
         public String username;
         public String password;
     }
@@ -91,13 +87,15 @@ public class AuthenticationApiResource {
     @ApiOperation(value = "Verify authentication", notes = "Authenticates the credentials provided and returns the set roles and permissions allowed.")
     @ApiResponses({@ApiResponse(code = 200, message = "", response = AuthenticationApiResourceSwagger.PostAuthenticationResponse.class), @ApiResponse(code = 400, message = "Unauthenticated. Please login")})
     public String authenticate(final String apiRequestBodyAsJson) {
-        // TODO FINERACT-819: sort out Jersey so JSON conversion does not have to be done explicitly via GSON here, but implicit by arg
+
         AuthenticateRequest request = new Gson().fromJson(apiRequestBodyAsJson, AuthenticateRequest.class);
         if (request == null) {
-            throw new IllegalArgumentException("Invalid JSON in BODY (no longer URL param; see FINERACT-726) of POST to /authentication: " + apiRequestBodyAsJson);
+            throw new IllegalArgumentException(
+                    "Invalid JSON in BODY (no longer URL param; see FINERACT-726) of POST to /authentication: " + apiRequestBodyAsJson);
         }
         if (request.username == null || request.password == null) {
-            throw new IllegalArgumentException("Username or Password is null in JSON (see FINERACT-726) of POST to /authentication: " + apiRequestBodyAsJson + "; username=" + request.username + ", password=" + request.password);
+            throw new IllegalArgumentException("Username or Password is null in JSON (see FINERACT-726) of POST to /authentication: "
+                    + apiRequestBodyAsJson + "; username=" + request.username + ", password=" + request.password);
         }
 
         final Authentication authentication = new UsernamePasswordAuthenticationToken(request.username, request.password);
@@ -139,7 +137,7 @@ public class AuthenticationApiResource {
                     principal.hasSpecificPermissionTo(TwoFactorConstants.BYPASS_TWO_FACTOR_PERMISSION);
             if (this.springSecurityPlatformSecurityContext.doesPasswordHasToBeRenewed(principal)) {
                 authenticatedUserData = new AuthenticatedUserData(request.username, principal.getId(),
-                        new String(base64EncodedAuthenticationKey, StandardCharsets.UTF_8), isTwoFactorRequired);
+                        new String(base64EncodedAuthenticationKey), isTwoFactorRequired);
             } else {
 
                 authenticatedUserData = new AuthenticatedUserData(request.username, officeId, officeName, staffId, staffDisplayName,

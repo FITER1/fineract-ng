@@ -22,21 +22,23 @@ networks:
   fineract: {}
 
 services:
-#  mysql:
-#    image: mysql:5.7
-#    # TODO: the migration scripts have to be fixed (syntax) for MySQL 8
-#    #image: mysql:8
-#    logging:
-#      driver: none
-#    volumes:
-#      - ./fineract-db/docker:/docker-entrypoint-initdb.d
-#    networks:
-#      - fineract
-#    environment:
-#      - MYSQL_ROOT_PASSWORD=mysql
-#    ports:
-#      - "3306:3306"
-#    command: mysqld --sql_mode=""
+  mysql:
+    image: mysql:5.7
+    # TODO: the migration scripts have to be fixed (syntax) for MySQL 8
+    #image: mysql:8
+    logging:
+      driver: none
+    volumes:
+      - ./fineract-db/docker:/docker-entrypoint-initdb.d
+      #- /tmp/fineract:/var/lib/mysql
+    networks:
+      - fineract
+    environment:
+      - MYSQL_ROOT_PASSWORD=mysql
+      #- MYSQL_DATABASE=mifostenant-default
+    ports:
+      - "3306:3306"
+    command: mysqld --sql_mode=""
   activemq:
     image: rmohr/activemq:5.15.9-alpine
     logging:

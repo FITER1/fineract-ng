@@ -52,12 +52,12 @@ public class SelfAuthenticationApiResource {
         this.authenticationApiResource = authenticationApiResource;
     }
 
-    @POST
-    @Consumes({MediaType.APPLICATION_JSON})
-    @Produces({MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "Verify authentication", httpMethod = "POST", notes = "Authenticates the credentials provided and returns the set roles and permissions allowed.\n\n" + "Please visit this link for more info - https://demo.mifos.io/api-docs/apiLive.htm#selfbasicauth")
-    @ApiResponses({@ApiResponse(code = 200, message = "OK", response = SelfAuthenticationApiResourceSwagger.PostSelfAuthenticationResponse.class)})
-    public String authenticate(final String apiRequestBodyAsJson) {
-        return this.authenticationApiResource.authenticate(apiRequestBodyAsJson);
-    }
+	@POST
+	@Produces({ MediaType.APPLICATION_JSON })
+	@ApiOperation(value = "Verify authentication", httpMethod = "POST", notes = "Authenticates the credentials provided and returns the set roles and permissions allowed.\n\n" + "Please visit this link for more info - https://demo.openmf.org/api-docs/apiLive.htm#selfbasicauth")
+	@ApiResponses({@ApiResponse(code = 200, message = "OK", response = SelfAuthenticationApiResourceSwagger.PostSelfAuthenticationResponse.class)})
+	public String authenticate(final String apiRequestBodyAsJson) {
+		return this.authenticationApiResource.authenticate(apiRequestBodyAsJson);
+	}
+
 }

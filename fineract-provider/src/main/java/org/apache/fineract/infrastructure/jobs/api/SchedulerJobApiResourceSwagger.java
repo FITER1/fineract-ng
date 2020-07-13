@@ -92,7 +92,6 @@ final class SchedulerJobApiResourceSwagger {
         public List<JobDetailHistoryDataSwagger> pageItems;
     }
 
-    @ApiModel(value = "PostExecuteJobRequest")
     public final static class PostExecuteJobRequest {
         private PostExecuteJobRequest() {
         }
@@ -103,7 +102,6 @@ final class SchedulerJobApiResourceSwagger {
         public String command;
     }
 
-    @ApiModel(value = "PostExecuteJobResponse")
     public static final class PostExecuteJobResponse {
         private PostExecuteJobResponse() {
         }
