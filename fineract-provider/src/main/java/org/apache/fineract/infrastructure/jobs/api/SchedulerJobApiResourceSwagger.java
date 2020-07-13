@@ -66,7 +66,6 @@ final class SchedulerJobApiResourceSwagger {
         public String cronExpression;
         @ApiModelProperty(example = "false")
         public boolean active;
-
     }
 
     @ApiModel(value = "GetJobsJobIDJobRunHistoryResponse")
@@ -91,6 +90,22 @@ final class SchedulerJobApiResourceSwagger {
         @ApiModelProperty(example = "8")
         public int totalFilteredRecords;
         public List<JobDetailHistoryDataSwagger> pageItems;
+    }
 
+    public final static class PostExecuteJobRequest {
+        private PostExecuteJobRequest() {
+        }
+
+        @ApiModelProperty(example = "1")
+        public Long jobId;
+        @ApiModelProperty(example = "executeJob")
+        public String command;
+    }
+
+    public static final class PostExecuteJobResponse {
+        private PostExecuteJobResponse() {
+        }
+        @ApiModelProperty(example = "1")
+        public Long jobId;
     }
 }

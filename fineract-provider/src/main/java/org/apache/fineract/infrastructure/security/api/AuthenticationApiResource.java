@@ -18,6 +18,7 @@
  */
 package org.apache.fineract.infrastructure.security.api;
 
+import com.google.gson.Gson;
 import io.swagger.annotations.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.fineract.infrastructure.core.data.EnumOptionData;
@@ -54,6 +55,12 @@ import java.util.Set;
 @Api(value = "Authentication HTTP Basic", description = "An API capability that allows client applications to verify authentication details using HTTP Basic Authentication.")
 public class AuthenticationApiResource {
 
+    public static class AuthenticateRequest {
+
+        public String username;
+        public String password;
+    }
+
     private final DaoAuthenticationProvider customAuthenticationProvider;
     private final ToApiJsonSerializer<AuthenticatedUserData> apiJsonSerializerService;
     private final SpringSecurityPlatformSecurityContext springSecurityPlatformSecurityContext;
@@ -74,13 +81,23 @@ public class AuthenticationApiResource {
     @Produces({ MediaType.APPLICATION_JSON })
     @ApiOperation(value = "Verify authentication", notes = "Authenticates the credentials provided and returns the set roles and permissions allowed.")
     @ApiResponses({@ApiResponse(code = 200, message = "", response = AuthenticationApiResourceSwagger.PostAuthenticationResponse.class), @ApiResponse(code = 400, message = "Unauthenticated. Please login")})
-    public String authenticate(@QueryParam("username") @ApiParam(value = "username") final String username, @QueryParam("password") @ApiParam(value = "password") final String password) {
+    public String authenticate(final String apiRequestBodyAsJson) {
 
-        final Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
+        AuthenticateRequest request = new Gson().fromJson(apiRequestBodyAsJson, AuthenticateRequest.class);
+        if (request == null) {
+            throw new IllegalArgumentException(
+                    "Invalid JSON in BODY (no longer URL param; see FINERACT-726) of POST to /authentication: " + apiRequestBodyAsJson);
+        }
+        if (request.username == null || request.password == null) {
+            throw new IllegalArgumentException("Username or Password is null in JSON (see FINERACT-726) of POST to /authentication: "
+                    + apiRequestBodyAsJson + "; username=" + request.username + ", password=" + request.password);
+        }
+
+        final Authentication authentication = new UsernamePasswordAuthenticationToken(request.username, request.password);
         final Authentication authenticationCheck = this.customAuthenticationProvider.authenticate(authentication);
 
         final Collection<String> permissions = new ArrayList<>();
-        AuthenticatedUserData authenticatedUserData = new AuthenticatedUserData(username, permissions);
+        AuthenticatedUserData authenticatedUserData = new AuthenticatedUserData(request.username, permissions);
 
         if (authenticationCheck.isAuthenticated()) {
             final Collection<GrantedAuthority> authorities = new ArrayList<>(authenticationCheck.getAuthorities());
@@ -91,7 +108,7 @@ public class AuthenticationApiResource {
             byte[] base64EncodedAuthenticationKey = null;
 
             try {
-                base64EncodedAuthenticationKey = new Base64().encode((username + ":" + password).getBytes());
+                base64EncodedAuthenticationKey = new Base64().encode((request.username + ":" + request.password).getBytes());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -114,11 +131,11 @@ public class AuthenticationApiResource {
             boolean isTwoFactorRequired = twoFactorUtils.isTwoFactorAuthEnabled() && !
                     principal.hasSpecificPermissionTo(TwoFactorConstants.BYPASS_TWO_FACTOR_PERMISSION);
             if (this.springSecurityPlatformSecurityContext.doesPasswordHasToBeRenewed(principal)) {
-                authenticatedUserData = new AuthenticatedUserData(username, principal.getId(),
+                authenticatedUserData = new AuthenticatedUserData(request.username, principal.getId(),
                         new String(base64EncodedAuthenticationKey), isTwoFactorRequired);
             } else {
 
-                authenticatedUserData = new AuthenticatedUserData(username, officeId, officeName, staffId, staffDisplayName,
+                authenticatedUserData = new AuthenticatedUserData(request.username, officeId, officeName, staffId, staffDisplayName,
                         organisationalRole, roles, permissions, principal.getId(),
                         new String(base64EncodedAuthenticationKey), isTwoFactorRequired);
             }

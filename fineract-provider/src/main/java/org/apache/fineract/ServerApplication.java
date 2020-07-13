@@ -102,7 +102,7 @@ exclude = {
 	@ComponentScan("org.apache.fineract.notification"),
 	@ComponentScan("org.apache.fineract.template"),
 	@ComponentScan("org.apache.fineract.useradministration"),
-	@ComponentScan("org.apache.fineract.batch,"),
+	@ComponentScan("org.apache.fineract.batch"),
 	@ComponentScan("org.apache.fineract.adhocquery"),
 	@ComponentScan("org.apache.fineract.spm")
 })
