@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.fineract.infrastructure.security.domain.PlatformUser;
 import org.apache.fineract.infrastructure.security.domain.PlatformUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
