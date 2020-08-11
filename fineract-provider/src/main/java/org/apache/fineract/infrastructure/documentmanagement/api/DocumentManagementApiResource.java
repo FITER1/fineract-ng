@@ -29,6 +29,7 @@ import org.apache.fineract.infrastructure.documentmanagement.data.FileData;
 import org.apache.fineract.infrastructure.documentmanagement.service.DocumentReadPlatformService;
 import org.apache.fineract.infrastructure.documentmanagement.service.DocumentWritePlatformService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,14 +97,16 @@ public class DocumentManagementApiResource {
 
     // NOTE: Swagger annotations don't work here
     @POST
-    @Consumes({ MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM })
+    @Consumes({ MediaType.MULTIPART_FORM_DATA})
     @Produces({ MediaType.APPLICATION_JSON })
     @ApiOperation(value = "Create a Document", notes = "Note: A document is created using a Multi-part form upload \n" + "\n" + "Body Parts\n" + "\n" + "name : \n" + "Name or summary of the document\n" + "\n" + "description : \n" + "Description of the document\n" + "\n" + "file : \n" + "The file to be uploaded\n" + "\n" + "Mandatory Fields : \n" + "file and description")
     @ApiResponses({@ApiResponse(code = 200, message = "Not Shown (multi-part form data)", response = DocumentManagementApiResourceSwagger.PostEntityTypeEntityIdDocumentsResponse.class)})
     public String createDocument(@PathParam("entityType") final String entityType,
                                  @PathParam("entityId") final Long entityId,
+                                 @HeaderParam("Content-Length") final Long fileSize,
                                  @FormDataParam("file") final InputStream file,
                                  @FormDataParam("file") final FormDataContentDisposition fileDetails,
+                                 @FormDataParam("file") final FormDataBodyPart bodyPart,
                                  @FormDataParam("name") final String name,
                                  @FormDataParam("description") final String description) {
 
@@ -117,7 +120,7 @@ public class DocumentManagementApiResource {
          * permissable
          **/
         final DocumentCommand documentCommand = new DocumentCommand(null, null, entityType, entityId, name, fileDetails.getFileName(),
-            fileDetails.getSize(), fileDetails.getType(), description, null);
+            fileSize, bodyPart.getMediaType().toString(), description, null);
 
         final Long documentId = this.documentWritePlatformService.createDocument(documentCommand, file);
 
@@ -127,7 +130,7 @@ public class DocumentManagementApiResource {
     // NOTE: Swagger annotations don't work here
     @PUT
     @Path("{documentId}")
-    @Consumes({ MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_OCTET_STREAM })
+    @Consumes({ MediaType.MULTIPART_FORM_DATA })
     @Produces({ MediaType.APPLICATION_JSON })
     @ApiOperation(value = "Update a Document", notes = "Note: A document is updated using a Multi-part form upload \n" + "Body Parts\n" + "name\n" + "Name or summary of the document\n" + "description\n" + "Description of the document\n" + "file\n" + "The file to be uploaded")
     @ApiResponses({@ApiResponse(code = 200, message = "Not Shown (multi-part form data)", response = DocumentManagementApiResourceSwagger.PutEntityTypeEntityIdDocumentsResponse.class)})
@@ -136,8 +139,10 @@ public class DocumentManagementApiResource {
                                  @PathParam("documentId") final Long documentId,
                                  @FormDataParam("file") final InputStream inputStream,
                                  @FormDataParam("file") final FormDataContentDisposition fileDetails,
+                                 @FormDataParam("file") final FormDataBodyPart bodyPart,
                                  @FormDataParam("name") final String name,
-                                 @FormDataParam("description") final String description) {
+                                 @FormDataParam("description") final String description,
+                                 @HeaderParam("Content-Length") final Long fileSize) {
 
         final Set<String> modifiedParams = new HashSet<>();
         modifiedParams.add("name");
@@ -154,7 +159,7 @@ public class DocumentManagementApiResource {
             modifiedParams.add("type");
             modifiedParams.add("location");
             documentCommand = new DocumentCommand(modifiedParams, documentId, entityType, entityId, name, fileDetails.getFileName(),
-                fileDetails.getSize(), fileDetails.getType(), description, null);
+                    fileSize, bodyPart.getMediaType().toString(), description, null);
         } else {
             documentCommand = new DocumentCommand(modifiedParams, documentId, entityType, entityId, name, null, null, null, description,
                 null);

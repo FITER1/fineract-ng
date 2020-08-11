@@ -32,6 +32,7 @@ import org.apache.fineract.infrastructure.documentmanagement.service.ImageReadPl
 import org.apache.fineract.infrastructure.documentmanagement.service.ImageWritePlatformService;
 import org.apache.fineract.infrastructure.security.service.PlatformSecurityContext;
 import org.apache.fineract.portfolio.client.data.ClientData;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,17 +75,19 @@ public class ImagesApiResource {
     @Consumes({ MediaType.MULTIPART_FORM_DATA })
     @Produces({ MediaType.APPLICATION_JSON })
     public String addNewClientImage(@PathParam("entity") final String entityName, @PathParam("entityId") final Long entityId,
+                                    @HeaderParam("Content-Length") final Long fileSize,
                                     @FormDataParam("file") final InputStream inputStream,
-                                    @FormDataParam("file") final FormDataContentDisposition fileDetails) {
+                                    @FormDataParam("file") final FormDataContentDisposition fileDetails,
+                                    @FormDataParam("file") final FormDataBodyPart bodyPart) {
         validateEntityTypeforImage(entityName);
         // TODO: vishwas might need more advances validation (like reading magic
         // number) for handling malicious clients
         // and clients not setting mime type
         ContentRepositoryUtils.validateClientImageNotEmpty(fileDetails.getFileName());
-        ContentRepositoryUtils.validateImageMimeType(fileDetails.getType()); // TODO: @aleks check this
+        ContentRepositoryUtils.validateImageMimeType(bodyPart.getMediaType().toString()); // TODO: @aleks check this
 
         final CommandProcessingResult result = this.imageWritePlatformService.saveOrUpdateImage(entityName, entityId,
-                fileDetails.getFileName(), inputStream, fileDetails.getSize());
+                fileDetails.getFileName(), inputStream, fileSize);
 
         return this.toApiJsonSerializer.serialize(result);
     }
@@ -172,9 +175,11 @@ public class ImagesApiResource {
     @Consumes({ MediaType.MULTIPART_FORM_DATA })
     @Produces({ MediaType.APPLICATION_JSON })
     public String updateClientImage(@PathParam("entity") final String entityName, @PathParam("entityId") final Long entityId,
+                                    @HeaderParam("Content-Length") final Long fileSize,
             @FormDataParam("file") final InputStream inputStream,
-            @FormDataParam("file") final FormDataContentDisposition fileDetails) {
-        return addNewClientImage(entityName, entityId, inputStream, fileDetails);
+            @FormDataParam("file") final FormDataContentDisposition fileDetails,
+                                    @FormDataParam("file") final FormDataBodyPart bodyPart) {
+        return addNewClientImage(entityName, entityId, fileSize, inputStream, fileDetails, bodyPart);
     }
 
     /**
