@@ -29,6 +29,7 @@ import org.apache.fineract.portfolio.client.exception.ClientNotFoundException;
 import org.apache.fineract.portfolio.self.client.data.SelfClientDataValidator;
 import org.apache.fineract.portfolio.self.client.service.AppuserClientMapperReadService;
 import org.apache.fineract.useradministration.domain.AppUser;
+import org.glassfish.jersey.media.multipart.FormDataBodyPart;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -240,10 +241,11 @@ public class SelfClientsApiResource {
 	public String addNewClientImage(@PathParam("clientId") final Long clientId,
 			@HeaderParam("Content-Length") final Long fileSize,
 			@FormDataParam("file") final InputStream inputStream,
-			@FormDataParam("file") final FormDataContentDisposition fileDetails) {
+			@FormDataParam("file") final FormDataContentDisposition fileDetails,
+			@FormDataParam("file") final FormDataBodyPart bodyPart) {
 
 		validateAppuserClientsMapping(clientId);
-		return this.imagesApiResource.addNewClientImage(ClientApiConstants.clientEntityName, clientId, inputStream, fileDetails);
+		return this.imagesApiResource.addNewClientImage(ClientApiConstants.clientEntityName, clientId, fileSize, inputStream, fileDetails, bodyPart);
 
 	}
 	
