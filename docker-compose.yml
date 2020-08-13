@@ -58,7 +58,7 @@ services:
     image: docker.pkg.github.com/fiter1/fineract-ng/fineract:latest
     environment:
       - FINERACT_SERVER_PORT=8443
-      - FINERACT_DB_URL=jdbc:mysql://host.docker.internal:3306/mifostenant-default
+      - FINERACT_DB_URL=jdbc:mysql://mysql:3306/mifostenant-default?useUnicode=true&characterEncoding=UTF-8
       - FINERACT_DB_USERNAME=root
       - FINERACT_DB_PASSWORD=mysql
       - FINERACT_DB_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
