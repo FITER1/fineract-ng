@@ -1155,29 +1155,29 @@ public void checkForProductMixRestrictions(final Loan loan) {
                 loan.regenerateRepaymentSchedule(scheduleGeneratorDTO, currentUser);
             }
 
-//            if(loan.isTopup() && loan.getClientId() != null){
-//                final Long loanIdToClose = loan.getTopupLoanDetails().getLoanIdToClose();
-//                final Loan loanToClose = this.loanRepositoryWrapper.findNonClosedLoanThatBelongsToClient(loanIdToClose, loan.getClientId());
-//                if(loanToClose == null){
-//                    throw new GeneralPlatformDomainRuleException("error.msg.loan.to.be.closed.with.topup.is.not.active",
-//                            "Loan to be closed with this topup is not active.");
-//                }
-//
-//                final LocalDate lastUserTransactionOnLoanToClose = loanToClose.getLastUserTransactionDate();
-//                if(loan.getDisbursementDate().isBefore(lastUserTransactionOnLoanToClose)){
-//                    throw new GeneralPlatformDomainRuleException(
-//                            "error.msg.loan.disbursal.date.should.be.after.last.transaction.date.of.loan.to.be.closed",
-//                            "Disbursal date of this loan application "+loan.getDisbursementDate()
-//                                    +" should be after last transaction date of loan to be closed "+ lastUserTransactionOnLoanToClose);
-//                }
-//                BigDecimal loanOutstanding = this.loanReadPlatformService.retrieveLoanPrePaymentTemplate(loanIdToClose,
-//                        expectedDisbursementDate).getAmount();
-//                final BigDecimal firstDisbursalAmount = loan.getFirstDisbursalAmount();
-//                if(loanOutstanding.compareTo(firstDisbursalAmount) > 0){
-//                    throw new GeneralPlatformDomainRuleException("error.msg.loan.amount.less.than.outstanding.of.loan.to.be.closed",
-//                            "Topup loan amount should be greater than outstanding amount of loan to be closed.");
-//                }
-//            }
+            if(loan.isTopup() && loan.getClientId() != null){
+                final Long loanIdToClose = loan.getTopupLoanDetails().getLoanIdToClose();
+                final Loan loanToClose = this.loanRepositoryWrapper.findNonClosedLoanThatBelongsToClient(loanIdToClose, loan.getClientId());
+                if(loanToClose == null){
+                    throw new GeneralPlatformDomainRuleException("error.msg.loan.to.be.closed.with.topup.is.not.active",
+                            "Loan to be closed with this topup is not active.");
+                }
+
+                final LocalDate lastUserTransactionOnLoanToClose = loanToClose.getLastUserTransactionDate();
+                if(loan.getDisbursementDate().isBefore(lastUserTransactionOnLoanToClose)){
+                    throw new GeneralPlatformDomainRuleException(
+                            "error.msg.loan.disbursal.date.should.be.after.last.transaction.date.of.loan.to.be.closed",
+                            "Disbursal date of this loan application "+loan.getDisbursementDate()
+                                    +" should be after last transaction date of loan to be closed "+ lastUserTransactionOnLoanToClose);
+                }
+                BigDecimal loanOutstanding = this.loanReadPlatformService.retrieveLoanPrePaymentTemplate(loanIdToClose,
+                        expectedDisbursementDate).getAmount();
+                final BigDecimal firstDisbursalAmount = loan.getFirstDisbursalAmount();
+                if(loanOutstanding.compareTo(firstDisbursalAmount) > 0){
+                    throw new GeneralPlatformDomainRuleException("error.msg.loan.amount.less.than.outstanding.of.loan.to.be.closed",
+                            "Topup loan amount should be greater than outstanding amount of loan to be closed.");
+                }
+            }
 
             saveAndFlushLoanWithDataIntegrityViolationChecks(loan);
 
