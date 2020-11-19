@@ -144,8 +144,8 @@ def distributionsCopySpec = copySpec {
 task fatJarTar(type: Tar, dependsOn: "bootJar") { with distributionsCopySpec }
 
 docker {
-    name "docker.pkg.github.com/fiter1/fineract-ng/fineract:latest"
-    tag "build", "docker.pkg.github.com/fiter1/fineract-ng/fineract:${project.version}"
+    name "docker.pkg.github.com/fiter1/fineract-ng/fineract-demo:1.0"
+    tag "build", "docker.pkg.github.com/fiter1/fineract-ng/fineract-demo:${project.version}"
     dependsOn fatJarTar
     def reportFiles = fileTree(dir: 'pentahoReports').getFiles()
     files tasks.fatJarTar.outputs, reportFiles
